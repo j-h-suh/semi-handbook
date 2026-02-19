@@ -55,7 +55,7 @@ Overlay는 **나노미터(nm)** 단위의 벡터량이다. x 방향 오차(OVLx)
 ## Overlay 오차가 발생하면 무엇이 깨지는가
 
 
-![[overlay_open_short_cross_section.svg|Overlay 오차에 의한 단선/단락 단면도]]
+![Overlay 오차에 의한 단선/단락 단면도](https://image-proxy.jenghun-suh.workers.dev/images/02_08/overlay_open_short_cross_section.svg)
 
 Overlay가 허용 범위를 벗어나면 칩에 치명적인 결과가 발생한다.
 
@@ -111,7 +111,7 @@ RSS 합산의 의미를 이해하는 것이 중요하다. 만약 스캐너 기�
 ### 3. 웨이퍼 기인 오차 (Wafer-Induced)
 
 
-![[wafer_distortion_patterns.png|웨이퍼 변형 패턴 (Bowl/Saddle/Higher-order)]]
+![웨이퍼 변형 패턴 (Bowl/Saddle/Higher-order)](https://image-proxy.jenghun-suh.workers.dev/images/02_08/wafer_distortion_patterns.png)
 
 웨이퍼 자체의 물리적 특성에 의한 오차다.
 
@@ -124,7 +124,7 @@ RSS 합산의 의미를 이해하는 것이 중요하다. 만약 스캐너 기�
 ### 5. 계측 기인 오차 (Metrology-Induced)
 
 
-![[mark_asymmetry_distortion.svg|마크 비대칭에 의한 측정 왜곡]]
+![마크 비대칭에 의한 측정 왜곡](https://image-proxy.jenghun-suh.workers.dev/images/02_08/mark_asymmetry_distortion.svg)
 
 Overlay를 **측정하는 과정 자체**에서도 오차가 발생한다. 이 오차가 가장 교활한 유형이다 — 실제 Overlay 오차가 아닌데 오차가 있는 것처럼 보이게 만들 수 있기 때문이다.
 

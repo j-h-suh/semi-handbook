@@ -56,7 +56,7 @@ flowchart TB
 ### Data Drift — 입력 분포가 변한다
 
 
-![[data_drift_psi_trend.png|Data Drift 모니터링 — PSI 추이 차트]]
+![Data Drift 모니터링 — PSI 추이 차트](https://image-proxy.jenghun-suh.workers.dev/images/04_05/data_drift_psi_trend.png)
 
 입력 데이터의 통계적 분포가 학습 시와 **달라지는** 현상이다. PM 후 센서 값의 범위가 변하거나, 새 레지스트 로트가 투입되면 레지스트 두께의 분포가 시프트하거나, 여름 → 겨울 전환으로 클린룸 온습도가 변한다.
 
@@ -124,7 +124,7 @@ Shadow 테스트 (병렬 실행, 실 적용 없이 비교) →
 ### Model Registry
 
 
-![[model_registry_timeline.svg|Model Registry 버전 타임라인]]
+![Model Registry 버전 타임라인](https://image-proxy.jenghun-suh.workers.dev/images/04_05/model_registry_timeline.svg)
 
 모든 모델의 버전, 성능, 학습 데이터 기간, 파라미터를 체계적으로 관리한다.
 
