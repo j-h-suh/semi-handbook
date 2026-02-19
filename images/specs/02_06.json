@@ -1,0 +1,189 @@
+{
+  "chapter": "02_06",
+  "chapter_title": "해상도와 DOF",
+  "images": [
+    {
+      "id": "02_06_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "dof_concept_diagram.svg",
+      "title": "초점 심도(DOF) 개념도",
+      "description": "투영 렌즈가 빛을 수렴시키는 과정에서, 초점면(Best Focus)을 중심으로 DOF 범위 내에 웨이퍼 표면이 위치해야 하는 원리. NA가 클수록 DOF가 좁아지는 관계도 표시.",
+      "spec": {
+        "elements": [
+          {"type": "projection_lens", "label": "투영 렌즈 (NA)", "position": "top"},
+          {"type": "converging_rays", "angle_label": "θ (NA = n·sinθ)"},
+          {"type": "focal_plane", "label": "Best Focus (초점면)"},
+          {"type": "dof_range", "label": "DOF = k₂ × λ / NA²", "range_markers": true},
+          {"type": "wafer_surface", "label": "웨이퍼 표면\n(DOF 내에 있어야 함)"},
+          {"type": "topography", "label": "표면 단차\n(이전 공정에 의한 높낮이)"}
+        ],
+        "comparison": {
+          "low_na": {"label": "Low NA → 넓은 DOF, 낮은 해상도", "dof": "wide"},
+          "high_na": {"label": "High NA → 좁은 DOF, 높은 해상도", "dof": "narrow"}
+        },
+        "colors": {
+          "lens": "#87CEEB",
+          "light": "#FFD700",
+          "dof_region": "#90EE90",
+          "wafer": "#C0C0C0",
+          "focal_plane": "#FF4444"
+        },
+        "layout": "vertical_with_comparison",
+        "dimensions": "600x500"
+      }
+    },
+    {
+      "id": "02_06_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "process_window_dose_focus.png",
+      "title": "공정 윈도우 (Dose-Focus 타원)",
+      "description": "Dose(mJ/cm²) vs Focus(nm) 2D 공간에서, CD가 허용 범위 내에 드는 타원형 영역. 가로폭=DOF, 세로폭=Exposure Latitude(EL). 공정이 미세해질수록 타원이 좁아짐.",
+      "spec": {
+        "chart_type": "contour_ellipse",
+        "x_axis": {"label": "Focus (nm)", "range": [-150, 150]},
+        "y_axis": {"label": "Dose (mJ/cm²)", "range": [25, 45]},
+        "ellipses": [
+          {
+            "label": "65nm node",
+            "center_focus": 0,
+            "center_dose": 35,
+            "dof_half_width": 120,
+            "el_half_height": 8,
+            "color": "#4169E1",
+            "alpha": 0.3
+          },
+          {
+            "label": "7nm node",
+            "center_focus": 0,
+            "center_dose": 35,
+            "dof_half_width": 50,
+            "el_half_height": 3,
+            "color": "#FF6347",
+            "alpha": 0.3
+          },
+          {
+            "label": "3nm node (EUV)",
+            "center_focus": 0,
+            "center_dose": 35,
+            "dof_half_width": 30,
+            "el_half_height": 1.5,
+            "color": "#9370DB",
+            "alpha": 0.3
+          }
+        ],
+        "annotations": [
+          {"text": "DOF", "position": "x_axis_range"},
+          {"text": "EL (±10%)", "position": "y_axis_range"},
+          {"text": "공정이 미세해질수록\n윈도우 축소", "position": "top_right"}
+        ],
+        "best_focus_marker": {"x": 0, "y": 35, "label": "Best Focus / Best Dose"},
+        "figsize": [9, 7]
+      }
+    },
+    {
+      "id": "02_06_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "bossung_curve.png",
+      "title": "Bossung 곡선 (Focus vs CD)",
+      "description": "Focus를 가로축, CD를 세로축으로 놓고 Dose별 곡선을 그린 포물선. Dense 패턴(역U자)과 Isolated 패턴(U자)의 대조적 거동.",
+      "spec": {
+        "chart_type": "multi_line",
+        "x_axis": {"label": "Focus (nm)", "range": [-100, 100]},
+        "y_axis": {"label": "CD (nm)", "range": [16, 26]},
+        "data_series": [
+          {
+            "name": "Dense - Low Dose (30 mJ)",
+            "pattern": "dense",
+            "dose": 30,
+            "curve_type": "inverted_parabola",
+            "peak_cd": 22,
+            "best_focus": 0,
+            "curvature": 0.0004,
+            "style": "solid",
+            "color": "#4169E1"
+          },
+          {
+            "name": "Dense - Optimal Dose (35 mJ)",
+            "pattern": "dense",
+            "dose": 35,
+            "curve_type": "inverted_parabola",
+            "peak_cd": 20,
+            "best_focus": 0,
+            "curvature": 0.0003,
+            "style": "solid",
+            "color": "#228B22"
+          },
+          {
+            "name": "Dense - High Dose (40 mJ)",
+            "pattern": "dense",
+            "dose": 40,
+            "curve_type": "inverted_parabola",
+            "peak_cd": 18,
+            "best_focus": 0,
+            "curvature": 0.0004,
+            "style": "solid",
+            "color": "#FF6347"
+          },
+          {
+            "name": "Iso - Optimal Dose (35 mJ)",
+            "pattern": "isolated",
+            "dose": 35,
+            "curve_type": "parabola",
+            "min_cd": 19,
+            "best_focus": 5,
+            "curvature": 0.0003,
+            "style": "dashed",
+            "color": "#FF8C00"
+          }
+        ],
+        "annotations": [
+          {"text": "Dense: 역U자 (Best Focus에서 CD 최대)", "position": "upper_left"},
+          {"text": "Isolated: U자 (Best Focus에서 CD 최소)", "position": "lower_left"},
+          {"text": "CD 규격 상한", "y_value": 21, "style": "hline"},
+          {"text": "CD 규격 하한", "y_value": 19, "style": "hline"}
+        ],
+        "figsize": [10, 7]
+      }
+    },
+    {
+      "id": "02_06_img04",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "na_resolution_dof_tradeoff.png",
+      "title": "NA vs 해상도 vs DOF 트레이드오프",
+      "description": "NA를 높이면 해상도(R)는 선형으로 개선되지만, DOF는 제곱으로 급격히 악화되는 트레이드오프 관계. 이중축 그래프.",
+      "spec": {
+        "chart_type": "dual_y_axis",
+        "x_axis": {"label": "NA", "range": [0.3, 1.4], "ticks": [0.33, 0.55, 0.75, 0.93, 1.20, 1.35]},
+        "y1_axis": {"label": "해상도 R (nm), k₁=0.3", "range": [0, 50], "color": "#4169E1"},
+        "y2_axis": {"label": "DOF (nm), k₂=0.5", "range": [0, 400], "color": "#FF6347"},
+        "data_resolution": [
+          {"na": 0.33, "r": 12.3, "label": "EUV"},
+          {"na": 0.55, "r": 7.4, "label": "High-NA EUV"},
+          {"na": 0.75, "r": 77.2, "label": "ArF dry"},
+          {"na": 0.93, "r": 62.3, "label": "ArF dry max"},
+          {"na": 1.20, "r": 48.3, "label": "ArF-i"},
+          {"na": 1.35, "r": 42.9, "label": "ArF-i max"}
+        ],
+        "data_dof": [
+          {"na": 0.33, "dof": 124},
+          {"na": 0.55, "dof": 45},
+          {"na": 0.75, "dof": 172},
+          {"na": 0.93, "dof": 112},
+          {"na": 1.20, "dof": 67},
+          {"na": 1.35, "dof": 53}
+        ],
+        "note": "DUV(λ=193nm)와 EUV(λ=13.5nm) 각각 별도 계열로 표시",
+        "annotations": [
+          {"text": "NA↑ → R↓ (좋다!)", "position": "left_y"},
+          {"text": "NA↑ → DOF↓↓ (나쁘다!)", "position": "right_y"},
+          {"text": "DOF ∝ 1/NA²", "position": "curve_label"}
+        ],
+        "figsize": [10, 7]
+      }
+    }
+  ]
+}

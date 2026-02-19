@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fafbfc"/>
+      <stop offset="100%" stop-color="#f0f2f5"/>
+    </linearGradient>
+    <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5da0e8"/>
+      <stop offset="100%" stop-color="#3a7bd5"/>
+    </linearGradient>
+    <linearGradient id="onpremGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3dd98a"/>
+      <stop offset="100%" stop-color="#27ae60"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bgGrad)" rx="8"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">On-Premise vs Cloud LLM 비교</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11" fill="#888">팹(Fab) 환경에서의 LLM 적용 전략</text>
+
+  <!-- ════════ LEFT: Cloud LLM ════════ -->
+  <rect x="30" y="65" width="340" height="290" rx="14" fill="#fff" stroke="#4a90d9" stroke-width="2" filter="url(#shadow)"/>
+  <!-- Header -->
+  <rect x="30" y="65" width="340" height="42" rx="14" fill="url(#cloudGrad)"/>
+  <rect x="30" y="93" width="340" height="14" fill="url(#cloudGrad)"/>
+  <text x="200" y="88" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">☁️ Cloud LLM</text>
+  <text x="200" y="102" text-anchor="middle" font-size="10" fill="#d0e4ff">GPT-4 / Claude / Gemini</text>
+
+  <!-- Content -->
+  <text x="55" y="130" font-size="12" font-weight="bold" fill="#4a90d9">성능 Performance</text>
+  <text x="55" y="148" font-size="20" fill="#f39c12">★★★★★</text>
+  <text x="165" y="148" font-size="11" fill="#666">최고 수준</text>
+
+  <line x1="55" y1="158" x2="345" y2="158" stroke="#eee" stroke-width="1"/>
+
+  <text x="55" y="178" font-size="12" font-weight="bold" fill="#e85d5d">🔒 팹 데이터 전송</text>
+  <text x="200" y="178" font-size="12" fill="#e85d5d" font-weight="bold">❌ 불가</text>
+  <text x="55" y="195" font-size="10" fill="#999">영업 비밀 + 고객 NDA → 외부 전송 금지</text>
+
+  <line x1="55" y1="205" x2="345" y2="205" stroke="#eee" stroke-width="1"/>
+
+  <text x="55" y="225" font-size="12" font-weight="bold" fill="#4a90d9">📋 적용 가능 영역</text>
+  <text x="55" y="243" font-size="11" fill="#555">• 일반 지식 Q&amp;A (반도체 교과서 수준)</text>
+  <text x="55" y="259" font-size="11" fill="#555">• 코드 생성 (Python, SQL)</text>
+  <text x="55" y="275" font-size="11" fill="#555">• 교육 / 온보딩 자료</text>
+
+  <line x1="55" y1="285" x2="345" y2="285" stroke="#eee" stroke-width="1"/>
+
+  <text x="55" y="305" font-size="12" font-weight="bold" fill="#4a90d9">💰 비용 모델</text>
+  <text x="55" y="323" font-size="11" fill="#555">API 종량제 (Pay-per-token)</text>
+  <text x="55" y="340" font-size="10" fill="#999">초기 투자 없음, 사용량 비례 과금</text>
+
+  <!-- ════════ RIGHT: On-Premise LLM ════════ -->
+  <rect x="430" y="65" width="340" height="290" rx="14" fill="#fff" stroke="#2ecc71" stroke-width="2" filter="url(#shadow)"/>
+  <!-- Header -->
+  <rect x="430" y="65" width="340" height="42" rx="14" fill="url(#onpremGrad)"/>
+  <rect x="430" y="93" width="340" height="14" fill="url(#onpremGrad)"/>
+  <text x="600" y="88" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">🏭 On-Premise LLM</text>
+  <text x="600" y="102" text-anchor="middle" font-size="10" fill="#d0ffd8">Llama / Mistral / Qwen</text>
+
+  <!-- Content -->
+  <text x="455" y="130" font-size="12" font-weight="bold" fill="#2ecc71">성능 Performance</text>
+  <text x="455" y="148" font-size="20" fill="#f39c12">★★★☆☆</text>
+  <text x="565" y="148" font-size="11" fill="#666">~ ★★★★</text>
+  <text x="620" y="148" font-size="10" fill="#999">(Fine-Tune 시)</text>
+
+  <line x1="455" y1="158" x2="745" y2="158" stroke="#eee" stroke-width="1"/>
+
+  <text x="455" y="178" font-size="12" font-weight="bold" fill="#2ecc71">🔓 팹 데이터 활용</text>
+  <text x="615" y="178" font-size="12" fill="#2ecc71" font-weight="bold">✅ 가능</text>
+  <text x="455" y="195" font-size="10" fill="#999">사내 인프라에서 안전하게 처리</text>
+
+  <line x1="455" y1="205" x2="745" y2="205" stroke="#eee" stroke-width="1"/>
+
+  <text x="455" y="225" font-size="12" font-weight="bold" fill="#2ecc71">📋 적용 가능 영역</text>
+  <text x="455" y="243" font-size="11" fill="#555">• RAG 기반 Q&amp;A (사내 문서 활용)</text>
+  <text x="455" y="259" font-size="11" fill="#555">• 보고서 자동 생성 / FDC 분석</text>
+  <text x="455" y="275" font-size="11" fill="#555">• Text-to-SQL (자연어 → DB 쿼리)</text>
+
+  <line x1="455" y1="285" x2="745" y2="285" stroke="#eee" stroke-width="1"/>
+
+  <text x="455" y="305" font-size="12" font-weight="bold" fill="#2ecc71">💰 비용 모델</text>
+  <text x="455" y="323" font-size="11" fill="#555">GPU 인프라 투자 (A100/H100)</text>
+  <text x="455" y="340" font-size="10" fill="#999">초기 비용 높음, 운영 비용 고정</text>
+
+  <!-- ════════ SECURITY BOUNDARY (center) ════════ -->
+  <line x1="400" y1="70" x2="400" y2="355" stroke="#e85d5d" stroke-width="3" stroke-dasharray="8,4"/>
+  <!-- Shield icon area -->
+  <rect x="379" y="170" width="42" height="42" rx="21" fill="#e85d5d"/>
+  <text x="400" y="198" text-anchor="middle" font-size="20" fill="#fff">🛡️</text>
+  <rect x="365" y="215" width="70" height="22" rx="6" fill="#fdeaea" stroke="#e85d5d" stroke-width="1"/>
+  <text x="400" y="230" text-anchor="middle" font-size="9" font-weight="bold" fill="#e85d5d">보안 경계</text>
+  <text x="400" y="250" text-anchor="middle" font-size="8" fill="#e85d5d">Firewall / Air Gap</text>
+
+  <!-- Blocked arrow (Cloud → Fab data) -->
+  <line x1="370" y1="140" x2="395" y2="140" stroke="#e85d5d" stroke-width="2"/>
+  <text x="400" y="143" font-size="14" fill="#e85d5d">✕</text>
+  <line x1="410" y1="140" x2="430" y2="140" stroke="#e85d5d" stroke-width="2" stroke-dasharray="3,3"/>
+
+  <!-- ════════ BOTTOM: Common Limitations ════════ -->
+  <rect x="60" y="370" width="680" height="75" rx="12" fill="#fff8e7" stroke="#f0c040" stroke-width="1.5"/>
+  <text x="400" y="392" text-anchor="middle" font-size="13" font-weight="bold" fill="#d4850a">⚠️ 공통 한계 — Common Limitations (Cloud &amp; On-Premise 모두 해당)</text>
+
+  <text x="120" y="415" text-anchor="middle" font-size="11" fill="#555">🎭 할루시네이션</text>
+  <text x="120" y="430" text-anchor="middle" font-size="9" fill="#999">Hallucination</text>
+
+  <line x1="220" y1="405" x2="220" y2="435" stroke="#f0d080" stroke-width="1"/>
+
+  <text x="310" y="415" text-anchor="middle" font-size="11" fill="#555">📐 정량적 부정확</text>
+  <text x="310" y="430" text-anchor="middle" font-size="9" fill="#999">Numerical Errors</text>
+
+  <line x1="400" y1="405" x2="400" y2="435" stroke="#f0d080" stroke-width="1"/>
+
+  <text x="490" y="415" text-anchor="middle" font-size="11" fill="#555">⏱️ 실시간 부적합</text>
+  <text x="490" y="430" text-anchor="middle" font-size="9" fill="#999">Not Real-time</text>
+
+  <line x1="580" y1="405" x2="580" y2="435" stroke="#f0d080" stroke-width="1"/>
+
+  <text x="670" y="415" text-anchor="middle" font-size="11" fill="#555">👁️ 인간 검토 필수</text>
+  <text x="670" y="430" text-anchor="middle" font-size="9" fill="#999">Human-in-the-Loop</text>
+
+  <!-- ════════ ANNOTATIONS (bottom) ════════ -->
+  <text x="60" y="465" font-size="9" fill="#999">💡 On-Premise: Fine-Tuning으로 도메인 특화 가능 (§4.5 배포 원칙 적용)  |  Cloud: 교과서 수준 일반 지식에만 활용  |  팹 데이터 = 영업 비밀 + 고객 NDA</text>
+  <text x="60" y="480" font-size="9" fill="#bbb">※ 4.5장 On-Premise 배포 원칙과 동일한 인프라 전략 적용</text>
+</svg>

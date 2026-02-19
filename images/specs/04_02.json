@@ -1,0 +1,107 @@
+{
+  "chapter": "04_02",
+  "chapter_title": "피처 엔지니어링",
+  "images": [
+    {
+      "id": "04_02_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "trace_settling_overshoot.png",
+      "title": "Trace 형상 피처 — Settling Time과 Overshoot",
+      "description": "FDC Trace의 Step Response에서 추출하는 핵심 형상 피처(Settling Time, Overshoot, Rise Time, AUC)를 하나의 RF Power 파형 위에 표기",
+      "spec": {
+        "data": {
+          "x": "시간 (초), 0~10초 범위",
+          "y": "RF Power (W), 목표 500W",
+          "trace_shape": "Step Response: 0→500W 전환, 오버슈트 후 안정화",
+          "key_points": [
+            {"time": 0, "value": 0, "label": "Step 시작"},
+            {"time": 0.5, "value": 550, "label": "Overshoot Peak (10%)"},
+            {"time": 1.0, "value": 510, "label": "Rise Time 끝 (90%)"},
+            {"time": 2.5, "value": 500, "label": "Settling Time 끝 (±2%)"},
+            {"time": 10, "value": 500, "label": "안정 상태"}
+          ]
+        },
+        "annotations": [
+          {"type": "hline", "y": 500, "label": "목표값 (500W)", "linestyle": "--", "color": "#4a90d9"},
+          {"type": "hband", "y_min": 490, "y_max": 510, "label": "±2% 밴드", "color": "#4a90d9", "alpha": 0.1},
+          {"type": "arrow", "from": [0.5, 550], "label": "Overshoot\n= (550-500)/500\n= 10%", "color": "#e85d5d"},
+          {"type": "bracket", "x_start": 0, "x_end": 1.0, "label": "Rise Time\n(10%→90%)", "color": "#2ecc71"},
+          {"type": "bracket", "x_start": 0, "x_end": 2.5, "label": "Settling Time\n(±2% 이내 안정화)", "color": "#f39c12"},
+          {"type": "shaded_area", "x_start": 0, "x_end": 10, "label": "AUC\n(총 에너지)", "color": "#9b59b6", "alpha": 0.1}
+        ],
+        "style": "학술, DPI 300, 10x6 인치, 격자선",
+        "note": "본문 'Settling Time, Overshoot, Rise Time, AUC(Area Under Curve)' 설명을 하나의 그래프에 종합"
+      }
+    },
+    {
+      "id": "04_02_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "feature_importance_top20.png",
+      "title": "Feature Importance — 상위 20개 피처",
+      "description": "XGBoost 기반 CD 예측 모델의 Feature Importance 상위 20개를 수평 바 차트로 표시. 도메인 피처, FDC 피처, 공간 피처의 색상 구분",
+      "spec": {
+        "data": [
+          {"feature": "Focus_오차²", "importance": 0.145, "category": "도메인"},
+          {"feature": "Dose × Resist_두께", "importance": 0.128, "category": "도메인"},
+          {"feature": "PEB_온도_Mean", "importance": 0.098, "category": "FDC"},
+          {"feature": "PM_이후_웨이퍼수", "importance": 0.082, "category": "도메인"},
+          {"feature": "이전층_CD", "importance": 0.075, "category": "Cross-Layer"},
+          {"feature": "Wafer_Radius", "importance": 0.068, "category": "공간"},
+          {"feature": "PEB_온도 × PEB_시간", "importance": 0.055, "category": "도메인"},
+          {"feature": "RF_Power_Std", "importance": 0.048, "category": "FDC"},
+          {"feature": "Dose_실측", "importance": 0.042, "category": "FDC"},
+          {"feature": "Focus_실측", "importance": 0.038, "category": "FDC"},
+          {"feature": "Chamber_Pressure_Mean", "importance": 0.035, "category": "FDC"},
+          {"feature": "Resist_두께", "importance": 0.032, "category": "FDC"},
+          {"feature": "Scan_Speed", "importance": 0.028, "category": "FDC"},
+          {"feature": "이전층_OVL", "importance": 0.025, "category": "Cross-Layer"},
+          {"feature": "Temp_Top-Temp_Bottom", "importance": 0.022, "category": "도메인"},
+          {"feature": "Field_X", "importance": 0.020, "category": "공간"},
+          {"feature": "당일_처리_웨이퍼수", "importance": 0.018, "category": "도메인"},
+          {"feature": "RF/Gas_Flow", "importance": 0.016, "category": "도메인"},
+          {"feature": "현상_시간", "importance": 0.014, "category": "FDC"},
+          {"feature": "Edge_Flag", "importance": 0.011, "category": "공간"}
+        ],
+        "x_label": "Feature Importance",
+        "y_label": "피처명",
+        "colors": {
+          "도메인": "#e85d5d",
+          "FDC": "#4a90d9",
+          "공간": "#2ecc71",
+          "Cross-Layer": "#f39c12"
+        },
+        "style": "수평 바 차트, DPI 300, 10x8 인치, 범례 포함",
+        "note": "본문의 도메인 피처(Focus², Dose×두께, PM_이후_시간, PEB_온도×시간), FDC Summary, 공간 피처, Cross-Layer 피처를 종합하여 구성. Importance 값은 반도체 VM의 전형적 분포"
+      }
+    },
+    {
+      "id": "04_02_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "cross_layer_r2_comparison.png",
+      "title": "Cross-Layer 피처 효과 — R² 비교",
+      "description": "Cross-Layer 피처(이전 층 CD, OVL, 막 두께) 포함 여부에 따른 VM 모델의 R² 향상을 바 차트로 비교",
+      "spec": {
+        "data": [
+          {"model": "FDC Summary Only", "r2": 0.72},
+          {"model": "+ 도메인 피처", "r2": 0.82},
+          {"model": "+ Cross-Layer", "r2": 0.88}
+        ],
+        "x_label": "피처 구성",
+        "y_label": "R² (결정계수)",
+        "colors": ["#4a90d9", "#2ecc71", "#e85d5d"],
+        "y_range": [0.5, 1.0],
+        "bar_labels": true,
+        "annotations": [
+          {"from": 0, "to": 1, "text": "+10%p", "color": "#2ecc71"},
+          {"from": 1, "to": 2, "text": "+6%p", "color": "#e85d5d"},
+          {"from": 0, "to": 2, "text": "총 +16%p\n(10~30% 범위)", "color": "#333333"}
+        ],
+        "style": "세로 바 차트, DPI 300, 8x5 인치",
+        "note": "본문 'Cross-Layer 피처를 포함하면 예측 정확도가 10~30% 향상되는 경우가 많다' 기반. 대표적 수준의 R² 값 사용"
+      }
+    }
+  ]
+}

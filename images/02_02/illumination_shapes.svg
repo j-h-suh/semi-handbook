@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 250" width="800" height="250" font-family="'Segoe UI', 'Noto Sans KR', Arial, sans-serif">
+  <defs>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="250" fill="#0d1117" rx="10"/>
+  
+  <!-- Title -->
+  <text x="400" y="25" text-anchor="middle" fill="#E8E8E8" font-size="15" font-weight="bold">조명 형태 비교 — Pupil Plane 강도 분포</text>
+
+  <!-- ===== Panel 1: Conventional ===== -->
+  <g transform="translate(10, 40)">
+    <rect x="0" y="0" width="185" height="195" rx="8" fill="#12161e" stroke="#2a3040" stroke-width="1"/>
+    <!-- Pupil circle background -->
+    <circle cx="92.5" cy="90" r="60" fill="#1a1a2e" stroke="#FFFFFF" stroke-width="1.5"/>
+    <!-- Conventional: solid center circle -->
+    <circle cx="92.5" cy="90" r="30" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <!-- Label -->
+    <text x="92.5" y="170" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="bold">Conventional</text>
+    <text x="92.5" y="186" text-anchor="middle" fill="#999" font-size="10">중앙 원형 조명, 범용</text>
+  </g>
+
+  <!-- ===== Panel 2: Annular ===== -->
+  <g transform="translate(205, 40)">
+    <rect x="0" y="0" width="185" height="195" rx="8" fill="#12161e" stroke="#2a3040" stroke-width="1"/>
+    <!-- Pupil circle background -->
+    <circle cx="92.5" cy="90" r="60" fill="#1a1a2e" stroke="#FFFFFF" stroke-width="1.5"/>
+    <!-- Annular: ring shape -->
+    <circle cx="92.5" cy="90" r="50" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <circle cx="92.5" cy="90" r="28" fill="#1a1a2e"/>
+    <!-- Label -->
+    <text x="92.5" y="170" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="bold">Annular</text>
+    <text x="92.5" y="186" text-anchor="middle" fill="#999" font-size="10">고리형, 다방향 패턴에 범용적</text>
+  </g>
+
+  <!-- ===== Panel 3: Dipole ===== -->
+  <g transform="translate(400, 40)">
+    <rect x="0" y="0" width="185" height="195" rx="8" fill="#12161e" stroke="#2a3040" stroke-width="1"/>
+    <!-- Pupil circle background -->
+    <circle cx="92.5" cy="90" r="60" fill="#1a1a2e" stroke="#FFFFFF" stroke-width="1.5"/>
+    <!-- Dipole: two poles vertical -->
+    <ellipse cx="92.5" cy="52" rx="20" ry="22" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <ellipse cx="92.5" cy="128" rx="20" ry="22" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <!-- Label -->
+    <text x="92.5" y="170" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="bold">Dipole</text>
+    <text x="92.5" y="186" text-anchor="middle" fill="#999" font-size="10">양극, 한 방향 라인 패턴에 최적</text>
+  </g>
+
+  <!-- ===== Panel 4: Quadrupole ===== -->
+  <g transform="translate(595, 40)">
+    <rect x="0" y="0" width="185" height="195" rx="8" fill="#12161e" stroke="#2a3040" stroke-width="1"/>
+    <!-- Pupil circle background -->
+    <circle cx="92.5" cy="90" r="60" fill="#1a1a2e" stroke="#FFFFFF" stroke-width="1.5"/>
+    <!-- Quadrupole: four poles at 45° diagonals -->
+    <ellipse cx="62.5" cy="60" rx="16" ry="16" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <ellipse cx="122.5" cy="60" rx="16" ry="16" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <ellipse cx="62.5" cy="120" rx="16" ry="16" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <ellipse cx="122.5" cy="120" rx="16" ry="16" fill="#FFD700" opacity="0.85" filter="url(#glow2)"/>
+    <!-- Label -->
+    <text x="92.5" y="170" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="bold">Quadrupole</text>
+    <text x="92.5" y="186" text-anchor="middle" fill="#999" font-size="10">사극, 수직+수평 패턴에 효과적</text>
+  </g>
+</svg>

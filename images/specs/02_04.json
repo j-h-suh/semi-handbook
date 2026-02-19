@@ -1,0 +1,71 @@
+{
+  "chapter": "02_04",
+  "chapter_title": "마스크와 펠리클",
+  "images": [
+    {
+      "id": "02_04_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "euv_reflective_mask_cross_section.svg",
+      "title": "EUV 반사형 마스크 단면도",
+      "description": "EUV 마스크의 다층 구조: 초저열팽창 유리 기판 → Mo/Si 다층 반사경(~40쌍) → TaBN 흡수체 패턴. 빛이 6° 경사 입사하여 반사되는 경로 표시.",
+      "spec": {
+        "elements": [
+          {"type": "substrate", "label": "초저열팽창 유리 기판\n(LTEM Glass)", "thickness": "6.35mm", "color": "#4A4A7A"},
+          {"type": "multilayer", "label": "Mo/Si 다층 반사경\n~40쌍, 각 쌍 ~6.9nm\n반사율 ~67%", "thickness": "280nm", "color_mo": "#708090", "color_si": "#87CEEB"},
+          {"type": "capping_layer", "label": "캡핑층 (Ru)", "thickness": "2.5nm", "color": "#B8860B"},
+          {"type": "absorber", "label": "TaBN 흡수체\n(패턴 영역)\n~60nm", "color": "#2F2F2F", "pattern": true},
+          {"type": "incident_light", "angle": 6, "label": "EUV 입사광\n13.5nm, 6° 경사"}
+        ],
+        "annotations": [
+          {"label": "반사 영역: 흡수체 없음 → EUV 반사 (밝음)", "position": "right_top"},
+          {"label": "흡수 영역: 흡수체 있음 → EUV 흡수 (어두움)", "position": "right_bottom"},
+          {"label": "Mask 3D 효과:\n경사 입사로 인한 그림자(Shadowing)", "position": "left"},
+          {"label": "총 반사율 ~67%\n(11개 거울 통과 후 ~2% 도달)", "position": "bottom"}
+        ],
+        "layout": "vertical_cross_section",
+        "dimensions": "600x500"
+      }
+    },
+    {
+      "id": "02_04_img02",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "phase_shift_mask_interference.png",
+      "title": "위상 반전 마스크(PSM) 간섭 원리",
+      "description": "이진 마스크 vs 위상 반전 마스크(PSM)의 빛 투과 비교. PSM에서 0°와 180° 위상의 빛이 경계에서 상쇄 간섭하여 패턴 경계가 선명해지는 원리.",
+      "spec": {
+        "prompt": "A technical educational diagram comparing binary mask and phase-shift mask (PSM) in photolithography. Top row: Binary Mask shows opaque chrome bars and transparent quartz regions, with the resulting light intensity profile below showing broad, rounded peaks with poor contrast at boundaries. Bottom row: Phase-Shift Mask (Alternating PSM) shows alternating 0° and 180° phase regions between chrome bars, with the resulting light amplitude showing opposite polarity waves that destructively interfere at pattern boundaries, creating sharp zeros. The final intensity profile shows much sharper, well-defined peaks. Labels indicate '0° phase', '180° phase', 'destructive interference at boundary', 'improved resolution'. Clean physics diagram style with wave illustrations.",
+        "style": "physics educational diagram",
+        "aspect_ratio": "16:9"
+      }
+    },
+    {
+      "id": "02_04_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "mask_set_cost_trend.png",
+      "title": "공정 노드별 마스크 세트 비용 추이",
+      "description": "공정 노드가 미세해질수록 마스크 세트 비용이 기하급수적으로 증가하는 추세. 28nm~3nm까지.",
+      "spec": {
+        "chart_type": "bar_with_line",
+        "x_axis": {"label": "공정 노드", "categories": ["28nm", "14nm", "7nm", "5nm", "3nm"]},
+        "y_axis": {"label": "마스크 세트 비용 (백만 달러)", "scale": "linear", "range": [0, 25]},
+        "y2_axis": {"label": "마스크 수 (레이어)", "scale": "linear"},
+        "data_bar": [
+          {"node": "28nm", "cost_million": 2, "mask_count": 40},
+          {"node": "14nm", "cost_million": 5, "mask_count": 60},
+          {"node": "7nm", "cost_million": 10, "mask_count": 80},
+          {"node": "5nm", "cost_million": 15, "mask_count": 90},
+          {"node": "3nm", "cost_million": 20, "mask_count": 100}
+        ],
+        "annotations": [
+          {"text": "~200억 원", "position": "3nm_top"},
+          {"text": "EUV 도입", "position": "7nm", "arrow": true}
+        ],
+        "colors": {"bar": "#4169E1", "line": "#FF6347"},
+        "figsize": [9, 6]
+      }
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "chapter": "03_05",
+  "chapter_title": "APC",
+  "images": [
+    {
+      "id": "03_05_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "apc_cd_before_after.png",
+      "title": "APC 보정 전/후 CD 분포 비교",
+      "description": "APC(EWMA R2R) 적용 전후의 CD 측정값 분포를 히스토그램으로 비교. 보정 전에는 평균 치우침과 넓은 분산이, 보정 후에는 목표값 중심의 좁은 분산이 달성됨을 보여준다.",
+      "spec": {
+        "chart_type": "dual_histogram_overlay",
+        "x_label": "CD (nm)",
+        "y_label": "웨이퍼 수",
+        "target": 20.0,
+        "distributions": [
+          {
+            "label": "APC 보정 전 (σ=0.8nm)",
+            "data_params": {"mean": 20.6, "std": 0.8, "n": 500},
+            "color": "#E74C3C",
+            "alpha": 0.5,
+            "edge_color": "#C0392B"
+          },
+          {
+            "label": "APC 보정 후 (σ=0.35nm)",
+            "data_params": {"mean": 20.05, "std": 0.35, "n": 500},
+            "color": "#3498DB",
+            "alpha": 0.5,
+            "edge_color": "#2980B9"
+          }
+        ],
+        "spec_limits": {
+          "LSL": 18.5,
+          "USL": 21.5,
+          "color": "#8E44AD",
+          "style": "solid"
+        },
+        "target_line": {
+          "value": 20.0,
+          "label": "Target = 20nm",
+          "color": "#2C3E50",
+          "style": "dashed"
+        },
+        "metrics_box": {
+          "before": {"mean": 20.6, "sigma": 0.8, "Cpk": 0.38, "correction_eff": "-"},
+          "after": {"mean": 20.05, "sigma": 0.35, "Cpk": 1.43, "correction_eff": "76%"},
+          "position": "top_right"
+        },
+        "bins": 40,
+        "x_range": [17.5, 22.5],
+        "grid": true,
+        "figsize": [10, 6]
+      }
+    },
+    {
+      "id": "03_05_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "ff_fb_combined_correction.svg",
+      "title": "Feed-Forward + Feedback 결합 보정 개념도",
+      "description": "APC의 두 가지 보정 전략(Feed-Forward: 현재 웨이퍼 상태 반영, Feedback: 이전 로트 추세 추적)이 결합되어 최종 보정값을 산출하는 과정을 보여주는 개념도",
+      "spec": {
+        "layout": "flow_diagram",
+        "elements": [
+          {
+            "id": "wafer_in",
+            "type": "rounded_rect",
+            "label": "웨이퍼 N\n(공정 투입 전)",
+            "color": "#D6EAF8",
+            "border": "#3498DB"
+          },
+          {
+            "id": "ff_measure",
+            "type": "rounded_rect",
+            "label": "사전 측정\n• 정렬 마크\n• 레지스트 두께\n• 웨이퍼 변형",
+            "color": "#D5F5E3",
+            "border": "#27AE60"
+          },
+          {
+            "id": "ff_calc",
+            "type": "process",
+            "label": "Feed-Forward\n보정값 계산\n(웨이퍼 고유 상태)",
+            "color": "#D5F5E3",
+            "border": "#27AE60"
+          },
+          {
+            "id": "fb_data",
+            "type": "database",
+            "label": "이전 로트\nCD/OVL 계측 결과",
+            "color": "#FADBD8",
+            "border": "#E74C3C"
+          },
+          {
+            "id": "fb_calc",
+            "type": "process",
+            "label": "Feedback\nEWMA 예측\n(장기 Drift 추적)",
+            "color": "#FADBD8",
+            "border": "#E74C3C"
+          },
+          {
+            "id": "offset",
+            "type": "rounded_rect",
+            "label": "고정 오프셋\n(장비/챔버 고유)",
+            "color": "#F9E79F",
+            "border": "#F39C12"
+          },
+          {
+            "id": "sum",
+            "type": "circle",
+            "label": "Σ",
+            "color": "#2C3E50",
+            "text_color": "#FFFFFF",
+            "size": "large"
+          },
+          {
+            "id": "recipe",
+            "type": "rounded_rect",
+            "label": "최종 보정값\nΔDose, ΔFocus\nΔOverlay Offset",
+            "color": "#D2B4DE",
+            "border": "#8E44AD"
+          },
+          {
+            "id": "tool",
+            "type": "rounded_rect",
+            "label": "스캐너/장비\n보정 적용 후 공정",
+            "color": "#D6EAF8",
+            "border": "#3498DB"
+          }
+        ],
+        "arrows": [
+          {"from": "wafer_in", "to": "ff_measure"},
+          {"from": "ff_measure", "to": "ff_calc"},
+          {"from": "ff_calc", "to": "sum", "label": "FF 성분"},
+          {"from": "fb_data", "to": "fb_calc"},
+          {"from": "fb_calc", "to": "sum", "label": "FB 성분"},
+          {"from": "offset", "to": "sum", "label": "고정 성분"},
+          {"from": "sum", "to": "recipe"},
+          {"from": "recipe", "to": "tool"},
+          {"from": "tool", "to": "fb_data", "style": "dashed", "label": "계측 결과\n→ 모델 업데이트"}
+        ],
+        "formula_box": {
+          "text": "보정값 = FF(현재 웨이퍼) + FB(이전 추세) + Offset(장비 고유)",
+          "position": "bottom"
+        },
+        "dimensions": "1000x600",
+        "colors": {
+          "feed_forward": "#27AE60",
+          "feedback": "#E74C3C",
+          "offset": "#F39C12",
+          "background": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "id": "03_05_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "cross_layer_apc.svg",
+      "title": "Cross-Layer APC 개념 — 다층 통합 최적화",
+      "description": "기존 독립 레이어별 APC와 Cross-Layer APC의 차이를 보여주는 구조도. 다수 레이어를 통합하여 Layer N의 보정이 N+1, N+2에 미치는 영향까지 고려하는 전체 최적화 개념.",
+      "spec": {
+        "layout": "comparison_side_by_side",
+        "panels": [
+          {
+            "title": "기존: 독립 레이어별 APC",
+            "layers": [
+              {"name": "Layer 3", "apc": "APC₃", "color": "#AED6F1"},
+              {"name": "Layer 4", "apc": "APC₄", "color": "#A9DFBF"},
+              {"name": "Layer 5", "apc": "APC₅", "color": "#F9E79F"}
+            ],
+            "connections": "none",
+            "issue_label": "각 APC가 자기 레이어만 최적화\n→ 레이어간 영향 무시"
+          },
+          {
+            "title": "AI: Cross-Layer APC",
+            "layers": [
+              {"name": "Layer 3", "color": "#AED6F1"},
+              {"name": "Layer 4", "color": "#A9DFBF"},
+              {"name": "Layer 5", "color": "#F9E79F"}
+            ],
+            "central_controller": {
+              "label": "Cross-Layer\nAI Controller",
+              "color": "#D2B4DE",
+              "border": "#8E44AD"
+            },
+            "connections": "bidirectional_to_all",
+            "benefit_label": "Layer 3 보정 → Layer 5 영향 고려\n→ 전체 최적화(Global Optimization)"
+          }
+        ],
+        "wafer_stack_illustration": {
+          "desc": "우측에 웨이퍼 단면(3개 레이어 적층)을 간략 도시",
+          "layers_cross_section": ["M3 (Metal 3)", "ILD", "M4 (Metal 4)", "ILD", "M5 (Metal 5)"],
+          "via_labels": ["Via 3-4", "Via 4-5"]
+        },
+        "dimensions": "1100x500",
+        "colors": {
+          "background": "#FFFFFF",
+          "connection_arrow": "#E74C3C",
+          "ai_controller": "#8E44AD"
+        }
+      }
+    }
+  ]
+}

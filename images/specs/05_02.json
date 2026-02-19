@@ -1,0 +1,219 @@
+{
+  "chapter": "05_02",
+  "chapter_title": "반도체 AI 미래트렌드",
+  "images": [
+    {
+      "id": "05_02_img01",
+      "type": "E",
+      "method": "svg",
+      "filename": "autonomous_fab_maturity.svg",
+      "title": "자율 팹 성숙도 모델 (Level 1~5)",
+      "description": "자율 주행의 Level 0~5에 비유한 팹 자율화 5단계. 현재 위치(Level 2~3)를 강조하고 각 레벨별 AI 역할과 인간 역할을 시각화",
+      "spec": {
+        "layout": "수평 계단형 (좌→우 상승) 또는 수직 피라미드",
+        "levels": [
+          {
+            "level": "Level 1",
+            "name": "모니터링",
+            "ai_role": "SPC/FDC 알람 자동 발생",
+            "human_role": "판단 + 조치 모두 인간",
+            "example": "SPC 관리 한계 이탈 알람"
+          },
+          {
+            "level": "Level 2",
+            "name": "추천",
+            "ai_role": "원인 분석 + 조치 추천",
+            "human_role": "추천 검토 후 실행",
+            "example": "FDC 이상 원인 + 조치안 제시"
+          },
+          {
+            "level": "Level 3",
+            "name": "반자율",
+            "ai_role": "Safety Guard 내 자동 보정",
+            "human_role": "감독 + 예외 처리",
+            "example": "APC R2R 자동 Dose 보정"
+          },
+          {
+            "level": "Level 4",
+            "name": "고자율",
+            "ai_role": "대부분 자동 의사결정",
+            "human_role": "예외 처리만",
+            "example": "디지털 트윈 기반 자동 운영"
+          },
+          {
+            "level": "Level 5",
+            "name": "완전 자율",
+            "ai_role": "전체 팹 AI 운영",
+            "human_role": "전략 수립만",
+            "example": "Lights-Out Fab"
+          }
+        ],
+        "current_position": "Level 2~3 (영역에 따라 다름)",
+        "highlight_range": [2, 3],
+        "colors": {
+          "level1": "#e3f2fd",
+          "level2": "#bbdefb",
+          "level3": "#64b5f6",
+          "level4": "#1e88e5",
+          "level5": "#0d47a1",
+          "current_marker": "#ff5722"
+        },
+        "annotations": [
+          "현재 위치 강조 (빨간 화살표/테두리)",
+          "자율 주행 비유 아이콘 (좌측 작게)",
+          "인간-AI 협업 최적점 표시 (Level 3-4 사이)"
+        ],
+        "size": "1000x500"
+      }
+    },
+    {
+      "id": "05_02_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "foundation_model_architecture.svg",
+      "title": "반도체 Foundation Model 아키텍처",
+      "description": "대규모 공정 데이터로 사전학습 후 특정 팹/장비에 Fine-Tuning하는 3계층 구조도. GPT의 반도체 버전 개념",
+      "spec": {
+        "elements": [
+          "Pre-training Layer: 수십 팹 × 수년 데이터 (FDC, 계측, MES)",
+          "Foundation Model Core: 반도체 공정의 일반적 물리/패턴 이해",
+          "Fine-Tuning Layer: 특정 팹/장비/제품에 소량 데이터 적응",
+          "Application Outputs: VM, FDC, APC, 수율 예측 등"
+        ],
+        "structure": "3-tier 피라미드 또는 탑다운 플로우",
+        "data_flow": [
+          "다수 팹 데이터 → Pre-training (Federated Learning)",
+          "Foundation Model → 일반 지식 (물리, 패턴)",
+          "Fine-Tuning → 특정 팹 적응 (Few-Shot, 수십 웨이퍼)",
+          "Applications → 다양한 태스크 출력"
+        ],
+        "colors": {
+          "pretrain": "#1565c0",
+          "foundation": "#283593",
+          "finetune": "#4caf50",
+          "applications": "#ff9800",
+          "data_arrow": "#757575"
+        },
+        "labels": "한글+영문",
+        "annotations": [
+          "Federated Learning: 데이터 이동 없이 모델 파라미터만 공유",
+          "Few-Shot 적응: 수십 웨이퍼만으로 모델 구축",
+          "Cross-Process 이해: 식각→증착 지식 전이"
+        ],
+        "size": "800x600"
+      }
+    },
+    {
+      "id": "05_02_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "edge_ai_latency_comparison.png",
+      "title": "Edge AI vs 서버 AI 레이턴시 비교",
+      "description": "현재(서버 기반 AI)와 미래(Edge AI) 데이터 처리 경로의 레이턴시를 비교하는 수평 바 차트",
+      "spec": {
+        "chart_type": "horizontal_bar",
+        "data": [
+          {
+            "step": "데이터 수집",
+            "server_ms": 10,
+            "edge_ms": 10
+          },
+          {
+            "step": "서버 전송",
+            "server_ms": 500,
+            "edge_ms": 0
+          },
+          {
+            "step": "추론 (Inference)",
+            "server_ms": 200,
+            "edge_ms": 5
+          },
+          {
+            "step": "보정값 전송",
+            "server_ms": 500,
+            "edge_ms": 0
+          },
+          {
+            "step": "장비 적용",
+            "server_ms": 10,
+            "edge_ms": 5
+          },
+          {
+            "step": "합계",
+            "server_ms": 1220,
+            "edge_ms": 20
+          }
+        ],
+        "x_label": "레이턴시 (ms)",
+        "y_label": "처리 단계",
+        "series_labels": ["서버 AI (현재)", "Edge AI (미래)"],
+        "colors": ["#ef5350", "#4caf50"],
+        "note": "본문 '수 초~수 분 → 밀리초 단위' 설명에 기반한 추정 데이터. 서버 전송 생략이 핵심 차이점",
+        "style": "학술, 격자선, DPI 300, 10x6 인치",
+        "highlight": "합계 바에 총 레이턴시 차이 강조 (60x 개선)"
+      }
+    },
+    {
+      "id": "05_02_img04",
+      "type": "E",
+      "method": "svg",
+      "filename": "semiconductor_ai_roadmap_timeline.svg",
+      "title": "반도체 AI 5~10년 로드맵 타임라인",
+      "description": "2026~2030+ 반도체 AI 기술 발전 타임라인. 본문의 로드맵 텍스트를 시각적 타임라인으로 변환",
+      "spec": {
+        "layout": "수평 타임라인 (연도별 마일스톤)",
+        "milestones": [
+          {
+            "year": "2026",
+            "events": [
+              "High-NA EUV 양산 시작",
+              "MLOps 표준화",
+              "AI-assisted APC 보편화 (Level 3)"
+            ],
+            "color": "#4caf50"
+          },
+          {
+            "year": "2027",
+            "events": [
+              "디지털 트윈 단일 장비 상용화",
+              "LLM 기반 엔지니어 어시스턴트 팹 도입",
+              "Cross-Fab 전이 학습 모델"
+            ],
+            "color": "#2196f3"
+          },
+          {
+            "year": "2028",
+            "events": [
+              "DSA 파일럿 양산",
+              "NIL NAND 확대",
+              "반자율 팹 (Level 3~4) 시작",
+              "Foundation Model 초기 버전"
+            ],
+            "color": "#9c27b0"
+          },
+          {
+            "year": "2029-2030",
+            "events": [
+              "High-NA EUV 2세대",
+              "디지털 트윈 팹 레벨 상용화",
+              "자율 팹 Level 4 선도 기업"
+            ],
+            "color": "#ff9800"
+          },
+          {
+            "year": "2030+",
+            "events": [
+              "0.7nm 노드",
+              "Foundation Model 업계 표준",
+              "양자 컴퓨팅 초기 적용"
+            ],
+            "color": "#f44336"
+          }
+        ],
+        "track_categories": ["리소그래피", "AI/ML", "팹 자율화"],
+        "size": "1100x450",
+        "annotations": ["현재 시점(2026) 강조 마커"]
+      }
+    }
+  ]
+}

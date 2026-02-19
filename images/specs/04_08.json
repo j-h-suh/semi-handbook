@@ -1,0 +1,147 @@
+{
+  "chapter": "04_08",
+  "chapter_title": "강화학습과 최적화",
+  "images": [
+    {
+      "id": "04_08_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "pareto_front_cd_ovl_optimization.png",
+      "title": "Pareto Front — CD vs Overlay 다목적 최적화",
+      "description": "CD 오차와 Overlay 오차의 Multi-Objective Optimization 결과. Pareto Front 위의 해는 모두 최적이며, 최종 선택은 비즈니스 판단",
+      "spec": {
+        "data": {
+          "pareto_front": [
+            {"cd_3sigma": 0.8, "ovl_3sigma": 3.2},
+            {"cd_3sigma": 1.0, "ovl_3sigma": 2.6},
+            {"cd_3sigma": 1.2, "ovl_3sigma": 2.2},
+            {"cd_3sigma": 1.4, "ovl_3sigma": 1.9},
+            {"cd_3sigma": 1.6, "ovl_3sigma": 1.7},
+            {"cd_3sigma": 1.8, "ovl_3sigma": 1.5},
+            {"cd_3sigma": 2.0, "ovl_3sigma": 1.4},
+            {"cd_3sigma": 2.3, "ovl_3sigma": 1.3}
+          ],
+          "non_pareto": [
+            {"cd_3sigma": 1.5, "ovl_3sigma": 2.8},
+            {"cd_3sigma": 1.8, "ovl_3sigma": 2.5},
+            {"cd_3sigma": 1.2, "ovl_3sigma": 3.0},
+            {"cd_3sigma": 2.0, "ovl_3sigma": 2.2},
+            {"cd_3sigma": 1.0, "ovl_3sigma": 3.5},
+            {"cd_3sigma": 2.5, "ovl_3sigma": 1.8},
+            {"cd_3sigma": 1.6, "ovl_3sigma": 2.6},
+            {"cd_3sigma": 2.2, "ovl_3sigma": 2.0}
+          ],
+          "selected_point": {"cd_3sigma": 1.4, "ovl_3sigma": 1.9, "label": "엔지니어 선택점\n(균형)"}
+        },
+        "x_label": "CD 오차 3σ (nm)",
+        "y_label": "Overlay 오차 3σ (nm)",
+        "colors": {
+          "pareto": "#e85d5d",
+          "non_pareto": "#cccccc",
+          "selected": "#2ecc71",
+          "hypervolume": "#e85d5d"
+        },
+        "annotations": [
+          {"region": "pareto_line", "text": "Pareto Front\n(어느 한쪽을 악화시키지 않고는\n다른 쪽을 개선할 수 없는 해)"},
+          {"point": "top-left", "text": "CD 우선"},
+          {"point": "bottom-right", "text": "OVL 우선"},
+          {"region": "shaded", "text": "Hypervolume\n(EHVI 최대화 목표)", "alpha": 0.1}
+        ],
+        "style": "산점도+곡선, DPI 300, 8x6 인치, 격자선",
+        "note": "본문 Pareto Front 설명 + EHVI(Expected Hypervolume Improvement) 개념을 시각화. 본문 '최종 선택은 인간의 몫' 반영"
+      }
+    },
+    {
+      "id": "04_08_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "gp_surrogate_acquisition.png",
+      "title": "GP Surrogate + Acquisition Function 시각화",
+      "description": "Bayesian Optimization의 핵심 구성요소를 시각화. GP의 평균 예측과 불확실성(σ), Acquisition Function(EI)으로 다음 실험 위치를 결정하는 과정",
+      "spec": {
+        "data": {
+          "x_range": [20, 30],
+          "x_label": "Dose (mJ/cm²)",
+          "true_function": "숨겨진 실제 Dose-CD 관계 (U자형)",
+          "observed_points": [
+            {"dose": 21, "cd_error": 2.5},
+            {"dose": 23, "cd_error": 1.2},
+            {"dose": 25, "cd_error": 0.4},
+            {"dose": 27, "cd_error": 0.8},
+            {"dose": 29, "cd_error": 2.0}
+          ],
+          "gp_mean": "관측점을 부드럽게 연결하는 곡선",
+          "gp_uncertainty": "관측점 근처에서 좁고, 관측 없는 영역에서 넓은 ±2σ 밴드"
+        },
+        "subplots": [
+          {
+            "title": "GP Surrogate Model (위)",
+            "y_label": "CD 오차 (nm)",
+            "elements": [
+              "실제 함수 (점선, 회색)",
+              "GP 평균 예측 (실선, 파랑)",
+              "±2σ 불확실성 밴드 (연한 파랑 음영)",
+              "관측 데이터 (빨간 점)",
+              "현재 최적점 표시 (Dose=25, CD_err=0.4)"
+            ]
+          },
+          {
+            "title": "Acquisition Function — EI (아래)",
+            "y_label": "Expected Improvement",
+            "elements": [
+              "EI 곡선 (초록)",
+              "다음 탐색 포인트 (EI 최대점, 화살표 표시)",
+              "탐색-활용 균형: 불확실성 높은 영역(탐색) vs 현재 최적 근처(활용)"
+            ]
+          }
+        ],
+        "colors": {
+          "true_function": "#888888",
+          "gp_mean": "#4a90d9",
+          "uncertainty": "#4a90d9",
+          "observed": "#e85d5d",
+          "acquisition": "#2ecc71",
+          "next_point": "#f39c12"
+        },
+        "style": "2행 서브플롯 (GP + EI), DPI 300, 8x8 인치, 격자선",
+        "note": "본문 'GP의 핵심 강점은 예측값뿐 아니라 불확실성도 제공... EI(Expected Improvement) — 현재 최적값 대비 개선 기대량을 최대화' 기반"
+      }
+    },
+    {
+      "id": "04_08_img03",
+      "type": "E",
+      "method": "svg",
+      "filename": "safe_exploration_stages.svg",
+      "title": "Safe Exploration — 점진적 탐색 범위 확대",
+      "description": "안전한 탐색의 4가지 방법 중 '점진적 확대' 전략을 시각화. 현재 조건 ±1%에서 시작하여 안전 확인 후 ±2%, ±5%로 확대",
+      "spec": {
+        "elements": [
+          "중앙: 현재 최적 레시피 (Dose=25mJ, Focus=0nm)",
+          "1단계 원: ±1% 범위 (24.75~25.25 mJ), 안전 확인 ✅",
+          "2단계 원: ±2% 범위 (24.5~25.5 mJ), 안전 확인 ✅",
+          "3단계 원: ±5% 범위 (23.75~26.25 mJ), 탐색 중...",
+          "Hard Bounds: ±10% 절대 한계 (점선)",
+          "Spec Limit: CD 규격 경계 (빨간 점선)"
+        ],
+        "colors": {
+          "stage1": "#2ecc71",
+          "stage2": "#4a90d9",
+          "stage3": "#f39c12",
+          "hard_bound": "#e85d5d",
+          "center": "#333333",
+          "safe_region": "#2ecc71"
+        },
+        "layout": "동심원 형태, 중앙에서 바깥으로 확대, 2D 평면 (Dose × Focus)",
+        "size": "600x600",
+        "labels": "한글",
+        "annotations": [
+          "Shadow → Full Auto 로드맵과 동일 철학",
+          "각 단계에서 안전 확인 후 다음 단계",
+          "Hard Bounds: 물리적/규격 한계",
+          "4.4장 신뢰 구축 로드맵 참조"
+        ],
+        "note": "본문 '점진적 확대 — 처음에 현재 조건 ±1% 범위에서 시작하여, 안전을 확인한 후 ±2%, ±5%로 점진적으로 탐색 범위를 넓힌다' 직접 반영"
+      }
+    }
+  ]
+}

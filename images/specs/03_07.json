@@ -1,0 +1,45 @@
+{
+  "chapter": "03_07",
+  "chapter_title": "웨이퍼맵 분석",
+  "images": [
+    {
+      "id": "03_07_img01",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "wafer_map_8_patterns.png",
+      "title": "8대 불량 패턴 시각 예시 — 각 패턴별 웨이퍼맵",
+      "description": "반도체 웨이퍼맵에서 관찰되는 8가지 대표 불량 패턴을 각각 독립된 원형 웨이퍼맵으로 시각화. 각 패턴의 특징적 공간 분포와 대표 원인을 함께 표시한다.",
+      "spec": {
+        "prompt": "A technical infographic showing 8 types of semiconductor wafer map defect patterns in a 2x4 grid. Each pattern is displayed as a circular wafer (300mm) with green dots representing good dies and red dots representing defective dies. The 8 patterns are: (1) 'Random' - scattered red dots without pattern, cause: particles, (2) 'Edge' - red dots concentrated around wafer perimeter, cause: coating/CMP edge effect, (3) 'Center' - red dots clustered at wafer center, cause: spin coating center issue, (4) 'Cluster' - a dense group of red dots in one area, cause: local contamination, (5) 'Scratch' - red dots along a diagonal line, cause: CMP or handling scratch, (6) 'Ring' - red dots forming a concentric ring at ~70% radius, cause: spin coating/hot plate, (7) 'Zone' - red dots filling one half/quadrant of wafer, cause: asymmetric gas flow, (8) 'Repeat' - red dots at the same position within each exposure field grid pattern, cause: mask defect. Each wafer should have a clear title in Korean and English, and a one-line cause note. Clean white background, technical illustration style.",
+        "style": "technical_diagram",
+        "dimensions": "1400x800",
+        "color_scheme": {
+          "pass_die": "#2ECC71",
+          "fail_die": "#E74C3C",
+          "wafer_outline": "#95A5A6",
+          "background": "#FFFFFF",
+          "labels": "#2C3E50"
+        }
+      }
+    },
+    {
+      "id": "03_07_img02",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "mixed_pattern_decomposition.png",
+      "title": "혼합 패턴 분해 — Edge + Ring 분리 예시",
+      "description": "실제 양산에서 30-50%를 차지하는 혼합 패턴(Mixed Pattern)을 Multi-label Classification과 패턴 분해로 개별 성분으로 분리하는 과정을 보여주는 개념도.",
+      "spec": {
+        "prompt": "A technical diagram showing wafer map mixed pattern decomposition. On the left, a single circular wafer map (300mm) with red defective dies showing a COMBINED pattern of both Edge ring and Center cluster simultaneously. An arrow labeled 'AI Pattern Decomposition' points to the right side which shows TWO separate wafer maps: (1) 'Edge Component' - only the edge ring defects extracted, labeled 'Cause: CMP edge effect → Action: adjust edge recipe', (2) 'Ring Component' - only the ring pattern defects extracted, labeled 'Cause: PEB hot plate → Action: inspect hot plate uniformity'. Below the decomposition, show a small CNN architecture diagram with Multi-label Sigmoid output showing 'Edge: 0.94, Ring: 0.88, Random: 0.12, Center: 0.05'. Clean technical style with white background, green for good dies, red for bad dies.",
+        "style": "technical_diagram",
+        "dimensions": "1200x500",
+        "color_scheme": {
+          "pass_die": "#2ECC71",
+          "fail_die": "#E74C3C",
+          "arrows": "#2C3E50",
+          "background": "#FFFFFF"
+        }
+      }
+    }
+  ]
+}

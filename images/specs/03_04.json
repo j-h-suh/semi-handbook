@@ -1,0 +1,120 @@
+{
+  "chapter": "03_04",
+  "chapter_title": "FDC",
+  "images": [
+    {
+      "id": "03_04_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "normal_vs_abnormal_trace.png",
+      "title": "정상 vs 이상 Trace 비교 — 식각 RF Power 파형",
+      "description": "식각 장비의 RF Power Trace에서 정상 웨이퍼와 이상 웨이퍼의 차이를 보여주는 시계열 비교 차트. 이상 Trace에서 순간적 전력 강하(Arcing 이벤트)가 발생하는 패턴을 보여준다.",
+      "spec": {
+        "chart_type": "dual_timeseries",
+        "x_label": "시간 (초)",
+        "y_label": "RF Power (W)",
+        "subplot_layout": "2x1_shared_x",
+        "subplots": [
+          {
+            "title": "정상 Trace (Golden Reference)",
+            "color": "#3498DB",
+            "linewidth": 1.5,
+            "data": {
+              "time": [0, 2, 4, 5, 5.5, 6, 10, 20, 30, 40, 50, 55, 56, 57, 58, 60],
+              "rf_power": [0, 0, 0, 50, 200, 500, 500, 500, 500, 500, 500, 500, 200, 50, 0, 0]
+            },
+            "phases": [
+              {"start": 0, "end": 5, "label": "Stabilization", "color": "#FADBD8"},
+              {"start": 5, "end": 55, "label": "Main Etch", "color": "#D5F5E3"},
+              {"start": 55, "end": 60, "label": "Purge", "color": "#D6EAF8"}
+            ]
+          },
+          {
+            "title": "이상 Trace (RF Arcing 이벤트)",
+            "color": "#E74C3C",
+            "linewidth": 1.5,
+            "data": {
+              "time": [0, 2, 4, 5, 5.5, 6, 10, 20, 25, 25.05, 25.1, 25.5, 30, 35, 35.1, 35.15, 35.5, 40, 50, 55, 56, 57, 58, 60],
+              "rf_power": [0, 0, 0, 50, 200, 500, 500, 500, 500, 120, 480, 500, 500, 500, 80, 450, 500, 500, 500, 500, 200, 50, 0, 0]
+            },
+            "anomaly_markers": [
+              {"time": 25, "value": 120, "label": "Arcing\nevent ①", "color": "#E74C3C"},
+              {"time": 35, "value": 80, "label": "Arcing\nevent ②", "color": "#E74C3C"}
+            ]
+          }
+        ],
+        "annotation_box": {
+          "text": "Summary(평균)으로는 두 Trace의 차이가 미미\n→ Summary 기반 FDC는 이상 미탐지\n→ Trace 분석만이 순간적 이상(Transient) 포착",
+          "position": "bottom"
+        },
+        "grid": true,
+        "figsize": [11, 8]
+      }
+    },
+    {
+      "id": "03_04_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "autoencoder_reconstruction_error.png",
+      "title": "Autoencoder 복원 오차 분포 — 정상 vs 이상",
+      "description": "Autoencoder 기반 FDC에서 정상 웨이퍼와 이상 웨이퍼의 복원 오차(Reconstruction Error) 분포가 분리되는 것을 보여주는 히스토그램. 임계값(Threshold) 설정으로 이상 탐지를 수행한다.",
+      "spec": {
+        "chart_type": "overlapping_histogram",
+        "x_label": "Reconstruction Error (MSE)",
+        "y_label": "웨이퍼 수 (빈도)",
+        "distributions": [
+          {
+            "label": "정상 웨이퍼 (n=9,500)",
+            "type": "normal_like",
+            "mean": 0.015,
+            "std": 0.005,
+            "n_samples": 9500,
+            "color": "#3498DB",
+            "alpha": 0.6
+          },
+          {
+            "label": "이상 웨이퍼 (n=500)",
+            "type": "right_skewed",
+            "mean": 0.045,
+            "std": 0.015,
+            "n_samples": 500,
+            "color": "#E74C3C",
+            "alpha": 0.6
+          }
+        ],
+        "threshold": {
+          "value": 0.03,
+          "label": "Threshold = 0.03",
+          "color": "#2C3E50",
+          "style": "dashed",
+          "linewidth": 2
+        },
+        "regions": [
+          {"range": [0, 0.03], "label": "정상 판정", "color": "rgba(52, 152, 219, 0.1)"},
+          {"range": [0.03, 0.1], "label": "이상 판정", "color": "rgba(231, 76, 60, 0.1)"}
+        ],
+        "performance_box": {
+          "text": "Precision: ~92%\nRecall: ~87%\nF1: ~89%\n\n장점: 비지도 학습\n→ 새로운 유형의 이상도 탐지 가능",
+          "position": "top_right"
+        },
+        "bins": 50,
+        "x_range": [0, 0.08],
+        "grid": true,
+        "figsize": [10, 6]
+      }
+    },
+    {
+      "id": "03_04_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "equipment_health_dashboard.png",
+      "title": "Equipment Health Index 대시보드",
+      "description": "FDC 데이터 기반 장비 건강도 모니터링 대시보드의 개념도. 각 장비/챔버별 건강도 지수(0~100), PM 이력, 핵심 센서 추이를 종합적으로 보여주는 UI 목업.",
+      "spec": {
+        "prompt": "A clean, modern dashboard UI mockup for semiconductor Equipment Health monitoring. The dashboard contains: (1) Top row: 6 gauge meters showing health scores for different chambers (A1=95 green, A2=87 yellow, B1=72 orange, B2=91 green, C1=45 red, C2=88 green), each with a circular gauge from 0-100. (2) Middle section: a timeline bar showing PM events as vertical markers on a time axis (last 30 days), with equipment downtime blocks in red and production blocks in green. (3) Bottom left: a small sparkline chart showing RF Power drift trend over 2 weeks. (4) Bottom right: an alert panel listing 'Chamber C1: T² OOC detected, recommend PM inspection' in red text. Clean design with dark header bar, white cards, subtle shadows, similar to a Grafana/Datadog dashboard aesthetic.",
+        "style": "ui_mockup",
+        "dimensions": "1200x700"
+      }
+    }
+  ]
+}

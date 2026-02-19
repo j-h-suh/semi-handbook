@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 350" width="900" height="350" font-family="Arial, Helvetica, sans-serif">
+  <rect width="900" height="350" fill="#fafbfc" rx="8"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#666"/>
+    </marker>
+    <marker id="arrowhead_skip" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f39c12"/>
+    </marker>
+  </defs>
+  <text x="450.0" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">ResNet-18 Architecture — SEM Defect Classification</text>
+  <rect x="30.0" y="120.0" width="50" height="80" rx="6" fill="#333333" fill-opacity="0.85" stroke="#333333" stroke-width="1.5"/>
+  <text x="55.0" y="150.4" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">Input</text>
+  <text x="55.0" y="166.4" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">SEM 64×64×1</text>
+  <rect x="118.3" y="115.0" width="45" height="90" rx="6" fill="#4a90d9" fill-opacity="0.85" stroke="#4a90d9" stroke-width="1.5"/>
+  <text x="140.8" y="149.2" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">Conv1</text>
+  <text x="140.8" y="167.2" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">7×7, 64, s2</text>
+  <rect x="201.7" y="125.0" width="40" height="70" rx="6" fill="#9b59b6" fill-opacity="0.85" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="221.7" y="151.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">MaxPool</text>
+  <text x="221.7" y="165.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">3×3, s2</text>
+  <rect x="280.0" y="110.0" width="55" height="100" rx="6" fill="#2ecc71" fill-opacity="0.85" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="307.5" y="148.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">ResBlock 1</text>
+  <text x="307.5" y="168.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">[3×3, 64]×2</text>
+  <rect x="373.3" y="105.0" width="55" height="110" rx="6" fill="#2ecc71" fill-opacity="0.85" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="400.8" y="146.8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">ResBlock 2</text>
+  <text x="400.8" y="168.8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">[3×3, 128]×2</text>
+  <rect x="466.7" y="100.0" width="55" height="120" rx="6" fill="#2ecc71" fill-opacity="0.85" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="494.2" y="145.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">ResBlock 3</text>
+  <text x="494.2" y="169.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">[3×3, 256]×2</text>
+  <rect x="560.0" y="95.0" width="55" height="130" rx="6" fill="#2ecc71" fill-opacity="0.85" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="587.5" y="144.4" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">ResBlock 4</text>
+  <text x="587.5" y="170.4" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">[3×3, 512]×2</text>
+  <rect x="653.3" y="130.0" width="40" height="60" rx="6" fill="#9b59b6" fill-opacity="0.85" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="673.3" y="152.8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">GAP</text>
+  <text x="673.3" y="164.8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">Global Avg Pool</text>
+  <rect x="731.7" y="125.0" width="50" height="70" rx="6" fill="#e85d5d" fill-opacity="0.85" stroke="#e85d5d" stroke-width="1.5"/>
+  <text x="756.7" y="151.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">FC</text>
+  <text x="756.7" y="165.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">512→Classes</text>
+  <rect x="820.0" y="130.0" width="50" height="60" rx="6" fill="#333333" fill-opacity="0.85" stroke="#333333" stroke-width="1.5"/>
+  <text x="845.0" y="152.8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="white">Output</text>
+  <text x="845.0" y="164.8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="white" opacity="0.9">Softmax</text>
+  <line x1="80.0" y1="160.0" x2="118.3" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="163.3" y1="160.0" x2="201.7" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="241.7" y1="160.0" x2="280.0" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="335.0" y1="160.0" x2="373.3" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="428.3" y1="160.0" x2="466.7" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="521.7" y1="160.0" x2="560.0" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="615.0" y1="160.0" x2="653.3" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="693.3" y1="160.0" x2="731.7" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="781.7" y1="160.0" x2="820.0" y2="160.0" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <path d="M 288.0,110.0 C 288.0,80.0 327.0,80.0 327.0,110.0" fill="none" stroke="#f39c12" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead_skip)"/>
+  <path d="M 381.3,105.0 C 381.3,75.0 420.3,75.0 420.3,105.0" fill="none" stroke="#f39c12" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead_skip)"/>
+  <path d="M 474.7,100.0 C 474.7,70.0 513.7,70.0 513.7,100.0" fill="none" stroke="#f39c12" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead_skip)"/>
+  <path d="M 568.0,95.0 C 568.0,65.0 607.0,65.0 607.0,95.0" fill="none" stroke="#f39c12" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead_skip)"/>
+  <text x="307.5" y="75.0" text-anchor="middle" font-size="8" fill="#f39c12" font-weight="bold">Skip Connection</text>
+  <text x="845.0" y="202.0" text-anchor="middle" font-size="7" fill="#555">Bridge</text>
+  <text x="845.0" y="213.0" text-anchor="middle" font-size="7" fill="#555">Break</text>
+  <text x="845.0" y="224.0" text-anchor="middle" font-size="7" fill="#555">Particle</text>
+  <text x="845.0" y="235.0" text-anchor="middle" font-size="7" fill="#555">Residue</text>
+  <text x="845.0" y="246.0" text-anchor="middle" font-size="7" fill="#555">...</text>
+  <rect x="20" y="265" width="860" height="75" rx="5" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+  <text x="35" y="283" font-size="9" fill="#444">• Skip Connection → 기울기 소실 방지, 잔차 학습</text>
+  <text x="35" y="305" font-size="9" fill="#444">• SEM 64×64 → ResNet-18이면 충분 (더 깊은 모델은 오버피팅 위험)</text>
+  <text x="35" y="327" font-size="9" fill="#444">• 출력: 10~50개 결함 클래스 (Bridge / Break / Particle / Residue / ...)</text>
+  <text x="400.8" y="229.0" text-anchor="middle" font-size="7" fill="#888" font-style="italic">↓ downsample</text>
+  <text x="494.2" y="234.0" text-anchor="middle" font-size="7" fill="#888" font-style="italic">↓ downsample</text>
+  <text x="587.5" y="239.0" text-anchor="middle" font-size="7" fill="#888" font-style="italic">↓ downsample</text>
+</svg>

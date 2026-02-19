@@ -1,0 +1,86 @@
+{
+  "chapter": "04_01",
+  "chapter_title": "반도체 AI 문제정의",
+  "images": [
+    {
+      "id": "04_01_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "asymmetric_loss_function.png",
+      "title": "비대칭 손실 함수 시각화",
+      "description": "CD 오차가 양의 방향(CD 큼→스위칭 속도 저하)과 음의 방향(CD 작음→누설 전류 증가)에서 비용이 다른 비대칭 손실 함수를 MSE 대칭 손실과 비교",
+      "spec": {
+        "data": {
+          "x_range": [-3, 3],
+          "x_label": "CD 오차 (nm)",
+          "y_label": "손실 (Loss)",
+          "curves": [
+            {
+              "name": "대칭 손실 (MSE)",
+              "formula": "y = x²",
+              "color": "#888888",
+              "linestyle": "--"
+            },
+            {
+              "name": "비대칭 손실 (실전)",
+              "formula": "y = 2x² if x < 0 else 0.5x²",
+              "color": "#e85d5d",
+              "linestyle": "-",
+              "note": "음의 오차(CD 작음)가 양의 오차보다 2배 이상 비용"
+            }
+          ]
+        },
+        "annotations": [
+          {"x": -2, "text": "CD 작음\n→ 누설 전류 증가\n→ 전력 소모 ↑", "color": "#e85d5d"},
+          {"x": 2, "text": "CD 큼\n→ 스위칭 속도 ↓", "color": "#4a90d9"}
+        ],
+        "style": "학술, 격자선, DPI 300, 8x5 인치",
+        "legend": true,
+        "note": "본문 '게이트 CD가 작으면 트랜지스터 누설 전류가 증가... 크면 스위칭 속도가 느려진다' 내용 기반"
+      }
+    },
+    {
+      "id": "04_01_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "pareto_front_cd_ovl.png",
+      "title": "Pareto Front — CD vs Overlay 트레이드오프",
+      "description": "CD 오차와 Overlay 오차의 다목적 최적화에서 Pareto Front를 시각화. Front 위의 해는 모두 '최적'이며 엔지니어가 비즈니스 판단으로 선택",
+      "spec": {
+        "data": {
+          "pareto_points": [
+            {"cd_error": 0.3, "ovl_error": 2.8},
+            {"cd_error": 0.5, "ovl_error": 2.2},
+            {"cd_error": 0.7, "ovl_error": 1.8},
+            {"cd_error": 1.0, "ovl_error": 1.5},
+            {"cd_error": 1.3, "ovl_error": 1.3},
+            {"cd_error": 1.6, "ovl_error": 1.2},
+            {"cd_error": 2.0, "ovl_error": 1.1}
+          ],
+          "dominated_points": [
+            {"cd_error": 1.0, "ovl_error": 2.5},
+            {"cd_error": 1.5, "ovl_error": 2.0},
+            {"cd_error": 0.8, "ovl_error": 2.8},
+            {"cd_error": 1.2, "ovl_error": 2.2},
+            {"cd_error": 1.8, "ovl_error": 1.8},
+            {"cd_error": 2.2, "ovl_error": 1.5},
+            {"cd_error": 0.5, "ovl_error": 3.0},
+            {"cd_error": 1.5, "ovl_error": 2.5}
+          ]
+        },
+        "x_label": "CD 오차 3σ (nm)",
+        "y_label": "Overlay 오차 3σ (nm)",
+        "pareto_line_color": "#e85d5d",
+        "pareto_marker": "★",
+        "dominated_color": "#cccccc",
+        "annotations": [
+          {"point": "top-left", "text": "CD 우선 선택점\n(OVL 희생)", "arrow": true},
+          {"point": "bottom-right", "text": "OVL 우선 선택점\n(CD 희생)", "arrow": true},
+          {"region": "above_front", "text": "열등한 해\n(Dominated)", "color": "#999999"}
+        ],
+        "style": "학술, 격자선, DPI 300, 8x6 인치",
+        "note": "본문 'Pareto Front — 하나를 개선하면 다른 하나가 악화되는 최적 경계선' 내용 기반, 데이터는 반도체 공정의 전형적 수준"
+      }
+    }
+  ]
+}

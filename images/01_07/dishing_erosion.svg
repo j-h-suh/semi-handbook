@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="700" height="400">
+<defs>
+  <style>
+    text { font-family: "Noto Sans KR", "AppleGothic", "Malgun Gothic", sans-serif; fill: #333333; }
+  </style>
+</defs>
+<rect width="700" height="400" fill="#ffffff"/>
+<text x="350.0" y="24" text-anchor="middle" style="font-size:14px; font-weight:700;">CMP 디싱(Dishing)과 에로전(Erosion) 현상</text>
+<rect x="50" y="45" width="600" height="120" fill="#c8ddf0" stroke="#a0b8d0" stroke-width="0.5" rx="2"/>
+<rect x="50" y="60" width="600" height="105" fill="#e8e8e0" stroke="none"/>
+<rect x="106.0" y="60" width="8" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.3"/>
+<text x="110.0" y="162" text-anchor="middle" style="font-size:7px; fill:#888;">희소 패턴</text>
+<rect x="175.35714285714286" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="196.78571428571428" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="218.21428571428572" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="239.64285714285714" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="261.07142857142856" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="282.49999999999994" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="303.9285714285714" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<text x="245.0" y="162" text-anchor="middle" style="font-size:7px; fill:#888;">밀집 패턴</text>
+<rect x="325.0" y="60" width="110.0" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.3"/>
+<text x="380.0" y="162" text-anchor="middle" style="font-size:7px; fill:#888;">넓은 Cu</text>
+<rect x="445.35714285714283" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="462.5" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="479.6428571428571" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="496.7857142857143" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="513.9285714285714" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="531.0714285714286" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="548.2142857142858" y="60" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<text x="500.0" y="162" text-anchor="middle" style="font-size:7px; fill:#888;">밀집 패턴</text>
+<rect x="601.0" y="60" width="8" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.3"/>
+<line x1="45" y1="60" x2="655" y2="60" stroke="#5de85d" stroke-width="2.5"/>
+<text x="658" y="63" style="font-size:8px; fill:#5de85d; font-weight:600;">이상적 평탄면</text>
+<text x="50" y="40" style="font-size:11px; font-weight:700;">① 이상적 CMP 결과 (Ideal)</text>
+<rect x="50" y="205" width="600" height="120" fill="#c8ddf0" stroke="#a0b8d0" stroke-width="0.5" rx="2"/>
+<rect x="50" y="220" width="600" height="105" fill="#e8e8e0" stroke="none"/>
+<rect x="106.0" y="220" width="8" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.3"/>
+<text x="110.0" y="322" text-anchor="middle" style="font-size:7px; fill:#888;">희소 패턴</text>
+<rect x="175.35714285714286" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="196.78571428571428" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="218.21428571428572" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="239.64285714285714" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="261.07142857142856" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="282.49999999999994" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="303.9285714285714" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<text x="245.0" y="322" text-anchor="middle" style="font-size:7px; fill:#888;">밀집 패턴</text>
+<rect x="325.0" y="220" width="110.0" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.3"/>
+<text x="380.0" y="322" text-anchor="middle" style="font-size:7px; fill:#888;">넓은 Cu</text>
+<rect x="445.35714285714283" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="462.5" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="479.6428571428571" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="496.7857142857143" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="513.9285714285714" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="531.0714285714286" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<rect x="548.2142857142858" y="220" width="10.714285714285714" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.2"/>
+<text x="500.0" y="322" text-anchor="middle" style="font-size:7px; fill:#888;">밀집 패턴</text>
+<rect x="601.0" y="220" width="8" height="100" fill="#e8a030" stroke="#c08020" stroke-width="0.3"/>
+<path d="M45,220 L170.0,220 C175.0,220 180.0,228 185.0,228 L310.0,228 C315.0,228 320.0,220 325.0,220 L325.0,220 C335.0,220 358.0,232 380.0,232 C402.0,232 425.0,220 435.0,220 L440.0,220 C445.0,220 450.0,228 455.0,228 L550.0,228 C555.0,228 560.0,220 565.0,220 L655,220" fill="white" stroke="none"/>
+<path d="M45,220 L170.0,220 C175.0,220 180.0,228 185.0,228 L310.0,228 C315.0,228 320.0,220 325.0,220 L325.0,220 C335.0,220 358.0,232 380.0,232 C402.0,232 425.0,220 435.0,220 L440.0,220 C445.0,220 450.0,228 455.0,228 L550.0,228 C555.0,228 560.0,220 565.0,220 L655,220" fill="none" stroke="#e85d5d" stroke-width="2.5"/>
+<line x1="45" y1="220" x2="655" y2="220" stroke="#5de85d" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+<line x1="380.0" y1="220" x2="380.0" y2="232" stroke="#c04040" stroke-width="1"/>
+<line x1="372.0" y1="220" x2="388.0" y2="220" stroke="#c04040" stroke-width="0.5"/>
+<line x1="372.0" y1="232" x2="388.0" y2="232" stroke="#c04040" stroke-width="0.5"/>
+<text x="392.0" y="229.0" style="font-size:8px; fill:#c04040; font-weight:600;">디싱</text>
+<text x="392.0" y="238.0" style="font-size:7px; fill:#c04040;">Dishing</text>
+<line x1="245.0" y1="220" x2="245.0" y2="228" stroke="#4040c0" stroke-width="1"/>
+<line x1="237.0" y1="220" x2="253.0" y2="220" stroke="#4040c0" stroke-width="0.5"/>
+<line x1="237.0" y1="228" x2="253.0" y2="228" stroke="#4040c0" stroke-width="0.5"/>
+<text x="233.0" y="227.0" text-anchor="end" style="font-size:8px; fill:#4040c0; font-weight:600;">에로전</text>
+<text x="233.0" y="236.0" text-anchor="end" style="font-size:7px; fill:#4040c0;">Erosion</text>
+<text x="658" y="223" style="font-size:7px; fill:#5de85d;">이상적 표면</text>
+<text x="658" y="233" style="font-size:7px; fill:#e85d5d;">실제 표면</text>
+<text x="50" y="200" style="font-size:11px; font-weight:700;">② 실제 CMP 결과 (Actual — 디싱 + 에로전)</text>
+<rect x="50" y="370" width="12" height="12" fill="#e8a030" stroke="#c08020" stroke-width="0.5"/>
+<text x="66" y="380" style="font-size:9px;">Cu (구리 배선)</text>
+<rect x="160" y="370" width="12" height="12" fill="#e8e8e0" stroke="#c0c0b0" stroke-width="0.5"/>
+<text x="176" y="380" style="font-size:9px;">ILD (절연체)</text>
+<line x1="280" y1="376" x2="300" y2="376" stroke="#5de85d" stroke-width="2.5"/>
+<text x="304" y="380" style="font-size:9px;">이상적 표면</text>
+<line x1="390" y1="376" x2="410" y2="376" stroke="#e85d5d" stroke-width="2.5"/>
+<text x="414" y="380" style="font-size:9px;">실제 표면 (디싱+에로전)</text>
+<text x="350.0" y="392" text-anchor="middle" style="font-size:7px; fill:#aaa;">패턴 밀도(Pattern Density)가 높을수록 에로전 심화  |  넓은 Cu 영역일수록 디싱 심화</text>
+</svg>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300">
+  <defs>
+    <style>
+      text { font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif; }
+      .profile-name { font-size: 13px; font-weight: bold; fill: #222; text-anchor: middle; }
+      .desc { font-size: 11px; fill: #555; text-anchor: middle; }
+      .substrate-label { font-size: 10px; fill: #FFF; text-anchor: middle; font-weight: bold; }
+      .status-good { font-size: 11px; fill: #2E8B57; text-anchor: middle; font-weight: bold; }
+      .status-bad { font-size: 11px; fill: #C0392B; text-anchor: middle; font-weight: bold; }
+    </style>
+    <filter id="shadow" x="-3%" y="-3%" width="106%" height="106%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.12"/>
+    </filter>
+    <!-- Arrow Marker Definition -->
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#C0392B" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="300" fill="#FFFFFF" rx="6"/>
+
+  <!-- Panel separators -->
+  <line x1="200" y1="10" x2="200" y2="290" stroke="#EEE" stroke-width="1"/>
+  <line x1="400" y1="10" x2="400" y2="290" stroke="#EEE" stroke-width="1"/>
+  <line x1="600" y1="10" x2="600" y2="290" stroke="#EEE" stroke-width="1"/>
+
+  <!-- ========== PANEL 1: 이상적 (good) ========== -->
+  <text x="100" y="25" class="profile-name">이상적</text>
+  <text x="100" y="40" class="status-good">✓ 양호</text> <!-- Status line added -->
+
+  <!-- Substrate -->
+  <rect x="30" y="195" width="140" height="25" fill="#808080" rx="2"/>
+  <text x="100" y="212" class="substrate-label">기판</text>
+
+  <!-- Resist profile: perfect rectangle -->
+  <rect x="65" y="100" width="70" height="95" fill="#FF9933" stroke="#E88520" stroke-width="1.5" rx="1" filter="url(#shadow)"/>
+
+  <!-- 90° angle marks -->
+  <polyline points="65,185 65,195 75,195" fill="none" stroke="#2E8B57" stroke-width="1.5"/>
+  <polyline points="135,185 135,195 125,195" fill="none" stroke="#2E8B57" stroke-width="1.5"/>
+
+  <!-- Dimension arrow -->
+  <line x1="55" y1="100" x2="55" y2="195" stroke="#666" stroke-width="0.8"/>
+  <line x1="52" y1="100" x2="58" y2="100" stroke="#666" stroke-width="0.8"/>
+  <line x1="52" y1="195" x2="58" y2="195" stroke="#666" stroke-width="0.8"/>
+
+  <!-- Description (Moved to y=240) -->
+  <text x="100" y="240" class="desc">90° 수직 측벽</text>
+
+
+  <!-- ========== PANEL 2: T-topping (defect) ========== -->
+  <text x="300" y="25" class="profile-name">T-topping</text>
+  <text x="300" y="40" class="status-bad">✗ 결함</text>
+
+  <!-- Substrate -->
+  <rect x="230" y="195" width="140" height="25" fill="#808080" rx="2"/>
+  <text x="300" y="212" class="substrate-label">기판</text>
+
+  <!-- Resist profile: T-shape (top wider) -->
+  <path d="M255,100 L255,195 L345,195 L345,100 L340,100 L340,115 L260,115 L260,100 Z"
+        fill="#FF6347" stroke="#E05040" stroke-width="1.5" filter="url(#shadow)"/>
+  <!-- Top overhang visual fix -->
+  <rect x="248" y="100" width="104" height="18" rx="2" fill="#FF6347" stroke="#E05040" stroke-width="1.5"/>
+
+  <!-- Problem arrows (Fixed: Added marker-end) -->
+  <path d="M230,90 L245,105" stroke="#C0392B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M370,90 L355,105" stroke="#C0392B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Description -->
+  <text x="300" y="240" class="desc">대기 중 아민이</text>
+  <text x="300" y="255" class="desc">표면 산 중화</text>
+
+
+  <!-- ========== PANEL 3: Footing (defect) ========== -->
+  <text x="500" y="25" class="profile-name">Footing</text>
+  <text x="500" y="40" class="status-bad">✗ 결함</text>
+
+  <!-- Substrate -->
+  <rect x="430" y="195" width="140" height="25" fill="#808080" rx="2"/>
+  <text x="500" y="212" class="substrate-label">기판</text>
+
+  <!-- Resist profile: bottom wider (footing) -->
+  <path d="M465,100 L465,170 L452,195 L548,195 L535,170 L535,100 Z"
+        fill="#FF6347" stroke="#E05040" stroke-width="1.5" filter="url(#shadow)"/>
+
+  <!-- Footing highlight (Fixed: Added marker-end to point to footing) -->
+  <!-- Left footing arrow -->
+  <path d="M440,170 L455,185" stroke="#C0392B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <!-- Right footing arrow -->
+  <path d="M560,170 L545,185" stroke="#C0392B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Description -->
+  <text x="500" y="240" class="desc">기판 아민이</text>
+  <text x="500" y="255" class="desc">바닥 산 중화</text>
+
+
+  <!-- ========== PANEL 4: Rounding (defect) ========== -->
+  <text x="700" y="25" class="profile-name">Rounding</text>
+  <text x="700" y="40" class="status-bad">✗ 결함</text>
+
+  <!-- Substrate -->
+  <rect x="630" y="195" width="140" height="25" fill="#808080" rx="2"/>
+  <text x="700" y="212" class="substrate-label">기판</text>
+
+  <!-- Resist profile: top rounded -->
+  <path d="M665,195 L665,120 Q665,100 685,100 L715,100 Q735,100 735,120 L735,195 Z"
+        fill="#FF6347" stroke="#E05040" stroke-width="1.5" filter="url(#shadow)"/>
+
+  <!-- Rounding highlight arcs (Fixed: Added marker-end to point to rounding) -->
+  <!-- Left rounding arrow -->
+  <path d="M650,90 L670,105" stroke="#C0392B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <!-- Right rounding arrow -->
+  <path d="M750,90 L730,105" stroke="#C0392B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Description -->
+  <text x="700" y="240" class="desc">상단 모서리</text>
+  <text x="700" y="255" class="desc">둥글어짐</text>
+
+</svg>

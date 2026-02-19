@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="700" viewBox="0 0 600 700">
+  <defs>
+    <style>
+      text { font-family: 'Arial', 'AppleGothic', sans-serif; }
+      .label { font-size: 11px; fill: #333; }
+      .label-sm { font-size: 9.5px; fill: #555; }
+      .bracket-label { font-size: 13px; font-weight: bold; fill: #333; }
+      .title { font-size: 15px; font-weight: bold; fill: #222; text-anchor: middle; }
+    </style>
+    <!-- Hatching for STI -->
+    <pattern id="stiHatch" patternUnits="userSpaceOnUse" width="6" height="6">
+      <rect width="6" height="6" fill="#fff3b0"/>
+      <path d="M0,6 L6,0" stroke="#ddd090" stroke-width="0.8"/>
+    </pattern>
+    <!-- Arrow marker -->
+    <marker id="arrowUp" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="700" fill="#fafafa"/>
+
+  <!-- Title -->
+  <text x="300" y="28" class="title">칩 단면 구조도 (FEOL + BEOL)</text>
+
+  <!-- ======== LAYERS (bottom to top) ======== -->
+  
+  <!-- Si Substrate: y=610 ~ 670 (Height 60) -->
+  <rect x="90" y="610" width="370" height="60" rx="2" fill="#c8ddf0" stroke="#8ab0d0" stroke-width="1"/>
+  <text x="275" y="645" class="label" text-anchor="middle">실리콘 기판 (Si Substrate)</text>
+
+  <!-- STI trenches: y=580 ~ 610 (Height 30) -->
+  <rect x="140" y="580" width="30" height="30" fill="url(#stiHatch)" stroke="#c0a840" stroke-width="0.8"/>
+  <rect x="230" y="580" width="30" height="30" fill="url(#stiHatch)" stroke="#c0a840" stroke-width="0.8"/>
+  <rect x="320" y="580" width="30" height="30" fill="url(#stiHatch)" stroke="#c0a840" stroke-width="0.8"/>
+  <rect x="410" y="580" width="30" height="30" fill="url(#stiHatch)" stroke="#c0a840" stroke-width="0.8"/>
+  <text x="505" y="598" class="label-sm" text-anchor="start">STI</text>
+
+  <!-- Transistors (FEOL): y=570 ~ 592 (Active) -->
+  <!-- NMOS -->
+  <rect x="175" y="570" width="50" height="22" rx="3" fill="#e85d5d" stroke="#c04040" stroke-width="1"/>
+  <text x="200" y="585" class="label-sm" text-anchor="middle" fill="white">NMOS</text>
+  <!-- Gate: y=558 ~ 572 -->
+  <rect x="193" y="558" width="14" height="14" rx="1" fill="#b04040" stroke="#903030" stroke-width="0.8"/>
+  
+  <!-- PMOS -->
+  <rect x="265" y="570" width="50" height="22" rx="3" fill="#e85d5d" stroke="#c04040" stroke-width="1"/>
+  <text x="290" y="585" class="label-sm" text-anchor="middle" fill="white">PMOS</text>
+  <!-- Gate -->
+  <rect x="283" y="558" width="14" height="14" rx="1" fill="#b04040" stroke="#903030" stroke-width="0.8"/>
+  
+  <!-- NMOS 2 -->
+  <rect x="355" y="570" width="50" height="22" rx="3" fill="#e85d5d" stroke="#c04040" stroke-width="1"/>
+  <text x="380" y="585" class="label-sm" text-anchor="middle" fill="white">NMOS</text>
+  <!-- Gate -->
+  <rect x="373" y="558" width="14" height="14" rx="1" fill="#b04040" stroke="#903030" stroke-width="0.8"/>
+
+  <!-- ILD 0: y=510 ~ 580 (Height 70) -->
+  <rect x="90" y="510" width="370" height="70" fill="#e0e0e0" stroke="#bbb" stroke-width="0.5"/>
+  <text x="505" y="560" class="label-sm" text-anchor="start">ILD₀</text>
+
+  <!-- Contact Layer: y=510 ~ 570 (Height 60) - Connects M1 Bottom to Transistor Top -->
+  <rect x="195" y="510" width="10" height="60" fill="#d08020" stroke="#a06010" stroke-width="0.7"/>
+  <rect x="285" y="510" width="10" height="60" fill="#d08020" stroke="#a06010" stroke-width="0.7"/>
+  <rect x="375" y="510" width="10" height="60" fill="#d08020" stroke="#a06010" stroke-width="0.7"/>
+  <text x="505" y="525" class="label-sm" text-anchor="start">Contact</text>
+
+  <!-- ======== BEOL STARTS ======== -->
+
+  <!-- ILD 1: y=455 ~ 500 (Height 45) -->
+  <rect x="90" y="455" width="370" height="45" fill="#e0e0e0" stroke="#bbb" stroke-width="0.5"/>
+
+  <!-- M1: y=500 ~ 510 (Height 10) -->
+  <rect x="120" y="500" width="60" height="10" rx="1" fill="#e8a030" stroke="#c07818" stroke-width="0.7"/>
+  <rect x="190" y="500" width="55" height="10" rx="1" fill="#e8a030" stroke="#c07818" stroke-width="0.7"/>
+  <rect x="260" y="500" width="60" height="10" rx="1" fill="#e8a030" stroke="#c07818" stroke-width="0.7"/>
+  <rect x="370" y="500" width="50" height="10" rx="1" fill="#e8a030" stroke="#c07818" stroke-width="0.7"/>
+  <text x="505" y="508" class="label" text-anchor="start">M1 (로컬 배선)</text>
+
+  <!-- Via 1: y=455 ~ 500 (Height 45) - Connects M2 Bottom to M1 Top -->
+  <rect x="145" y="455" width="10" height="45" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <rect x="275" y="455" width="10" height="45" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <rect x="400" y="455" width="10" height="45" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <text x="505" y="480" class="label-sm" text-anchor="start">Via 1</text>
+
+  <!-- ILD 2: y=390 ~ 440 (Height 50) -->
+  <rect x="90" y="390" width="370" height="50" fill="#e0e0e0" stroke="#bbb" stroke-width="0.5"/>
+
+  <!-- M2: y=440 ~ 455 (Height 15) -->
+  <rect x="115" y="440" width="80" height="15" rx="1" fill="#e8a030" stroke="#c07818" stroke-width="0.7"/>
+  <rect x="220" y="440" width="70" height="15" rx="1" fill="#e8a030" stroke="#c07818" stroke-width="0.7"/>
+  <rect x="340" y="440" width="85" height="15" rx="1" fill="#e8a030" stroke="#c07818" stroke-width="0.7"/>
+  <text x="505" y="450" class="label" text-anchor="start">M2</text>
+
+  <!-- Via 2: y=390 ~ 440 (Height 50) - Connects M3 Bottom to M2 Top -->
+  <rect x="150" y="390" width="12" height="50" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <rect x="260" y="390" width="12" height="50" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <rect x="380" y="390" width="12" height="50" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <text x="505" y="415" class="label-sm" text-anchor="start">Via 2</text>
+
+  <!-- ILD 3: y=300 ~ 370 (Height 70) -->
+  <rect x="90" y="300" width="370" height="70" fill="#e0e0e0" stroke="#bbb" stroke-width="0.5"/>
+
+  <!-- M3: y=370 ~ 390 (Height 20) -->
+  <rect x="110" y="370" width="100" height="20" rx="2" fill="#e8a030" stroke="#c07818" stroke-width="0.8"/>
+  <rect x="240" y="370" width="90" height="20" rx="2" fill="#e8a030" stroke="#c07818" stroke-width="0.8"/>
+  <rect x="360" y="370" width="80" height="20" rx="2" fill="#e8a030" stroke="#c07818" stroke-width="0.8"/>
+  <text x="505" y="383" class="label" text-anchor="start">M3</text>
+
+  <!-- Via 3: y=300 ~ 370 (Height 70) - Connects M4 Bottom to M3 Top -->
+  <rect x="155" y="300" width="14" height="70" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <rect x="280" y="300" width="14" height="70" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <rect x="395" y="300" width="14" height="70" fill="#d08020" stroke="#a06010" stroke-width="0.6"/>
+  <text x="505" y="335" class="label-sm" text-anchor="start">Via 3</text>
+
+  <!-- M4: y=270 ~ 300 (Height 30) -->
+  <rect x="105" y="270" width="140" height="30" rx="3" fill="#e8a030" stroke="#c07818" stroke-width="1"/>
+  <rect x="270" y="270" width="170" height="30" rx="3" fill="#e8a030" stroke="#c07818" stroke-width="1"/>
+  <text x="505" y="288" class="label" text-anchor="start" font-weight="bold">M4 (글로벌 배선)</text>
+
+  <!-- Passivation: y=220 ~ 270 (Height 50) -->
+  <rect x="90" y="220" width="370" height="50" rx="2" fill="#d4ecd4" stroke="#90b890" stroke-width="1"/>
+  <text x="505" y="248" class="label" text-anchor="start">Passivation</text>
+
+  <!-- Bond Pads: y=205 ~ 270 (Connects to M4) -->
+  <rect x="150" y="205" width="50" height="65" rx="2" fill="#f0c850" stroke="#c09830" stroke-width="1.2"/>
+  <text x="175" y="225" class="label-sm" text-anchor="middle" font-weight="bold">Pad</text>
+  <rect x="340" y="205" width="50" height="65" rx="2" fill="#f0c850" stroke="#c09830" stroke-width="1.2"/>
+  <text x="365" y="225" class="label-sm" text-anchor="middle" font-weight="bold">Pad</text>
+
+  <!-- ======== BRACKET ANNOTATIONS ======== -->
+
+  <!-- FEOL Bracket: y=558 (Gate Top) to 670 (Substrate Bottom) -->
+  <line x1="72" y1="558" x2="72" y2="670" stroke="#c04040" stroke-width="2"/>
+  <line x1="72" y1="558" x2="80" y2="558" stroke="#c04040" stroke-width="2"/>
+  <line x1="72" y1="670" x2="80" y2="670" stroke="#c04040" stroke-width="2"/>
+  <text x="68" y="614" class="bracket-label" text-anchor="middle" fill="#c04040" transform="rotate(-90, 68, 614)">FEOL</text>
+
+  <!-- BEOL Bracket: y=205 (Pad Top) to 558 (Gate Top) -->
+  <!-- Start BEOL at M1 Bottom? Usually BEOL is Contact+Metals. Contact is 510-570. -->
+  <!-- Let's start BEOL bracket at y=510 (Contact Top) or y=570 (Transistor Top). -->
+  <!-- Convention: BEOL starts after FEOL (after Gate). So 558 up to 205. -->
+  <line x1="72" y1="205" x2="72" y2="550" stroke="#0070c0" stroke-width="2"/>
+  <line x1="72" y1="205" x2="80" y2="205" stroke="#0070c0" stroke-width="2"/>
+  <line x1="72" y1="550" x2="80" y2="550" stroke="#0070c0" stroke-width="2"/>
+  <text x="68" y="377" class="bracket-label" text-anchor="middle" fill="#0070c0" transform="rotate(-90, 68, 377)">BEOL</text>
+
+  <!-- Arrow annotation: wires get thicker going up -->
+  <line x1="30" y1="520" x2="30" y2="230" stroke="#666" stroke-width="1.5" marker-end="url(#arrowUp)"/>
+  <text x="26" y="375" class="label-sm" text-anchor="middle" fill="#666" transform="rotate(-90, 26, 375)">배선 두께 증가 ↑</text>
+
+  <!-- Legend -->
+  <rect x="90" y="46" width="12" height="12" fill="#c8ddf0" stroke="#8ab0d0"/>
+  <text x="106" y="56" class="label-sm">Si</text>
+  <rect x="135" y="46" width="12" height="12" fill="#e85d5d" stroke="#c04040"/>
+  <text x="151" y="56" class="label-sm">Transistor</text>
+  <rect x="210" y="46" width="12" height="12" fill="#e8a030" stroke="#c07818"/>
+  <text x="226" y="56" class="label-sm">Metal</text>
+  <rect x="275" y="46" width="12" height="12" fill="#d08020" stroke="#a06010"/>
+  <text x="291" y="56" class="label-sm">Via/Contact</text>
+  <rect x="365" y="46" width="12" height="12" fill="#e0e0e0" stroke="#bbb"/>
+  <text x="381" y="56" class="label-sm">ILD</text>
+  <rect x="415" y="46" width="12" height="12" fill="#d4ecd4" stroke="#90b890"/>
+  <text x="431" y="56" class="label-sm">Passivation</text>
+
+</svg>

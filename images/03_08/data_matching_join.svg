@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" width="1100" height="650">
+  <defs>
+    <marker id="arr-red" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#E74C3C"/>
+    </marker>
+    <marker id="arr-gray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7F8C8D"/>
+    </marker>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      text { font-family: -apple-system, "Apple SD Gothic Neo", sans-serif; }
+      .mono { font-family: "SF Mono", "Menlo", monospace; }
+    </style>
+  </defs>
+
+  <rect width="1100" height="700" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="550" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#2C3E50">이기종 데이터 매칭(Join) 과정</text>
+  <text x="550" y="52" text-anchor="middle" font-size="12" fill="#7F8C8D">반도체 AI 프로젝트의 최대 데이터 병목</text>
+
+  <!-- ===== Table 1: FDC Summary ===== -->
+  <g transform="translate(30, 75)">
+    <rect x="0" y="0" width="320" height="170" rx="8" fill="#D6EAF8" stroke="#3498DB" stroke-width="2" filter="url(#shadow)"/>
+    <text x="160" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C3E50">FDC Summary</text>
+    <text x="160" y="40" text-anchor="middle" font-size="10" fill="#7F8C8D">웨이퍼 단위 · 수만 행/일</text>
+
+    <!-- Header row -->
+    <rect x="10" y="50" width="300" height="22" rx="3" fill="#3498DB" opacity="0.2"/>
+    <text x="20" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Wafer_ID</text>
+    <text x="80" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Equip_ID</text>
+    <text x="145" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Chamber</text>
+    <text x="205" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">RF_Mean</text>
+    <text x="260" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Press_Avg</text>
+
+    <!-- Data row -->
+    <rect x="10" y="75" width="300" height="20" rx="2" fill="#FFFFFF" stroke="#3498DB" stroke-width="0.5"/>
+    <text x="20" y="89" font-size="9" fill="#E74C3C" class="mono" font-weight="bold">W001</text>
+    <text x="80" y="89" font-size="9" fill="#2C3E50" class="mono">ETCH_A</text>
+    <text x="145" y="89" font-size="9" fill="#2C3E50" class="mono">CH1</text>
+    <text x="205" y="89" font-size="9" fill="#2C3E50" class="mono">500.2</text>
+    <text x="260" y="89" font-size="9" fill="#2C3E50" class="mono">20.1</text>
+
+    <!-- More rows indicator -->
+    <text x="160" y="115" text-anchor="middle" font-size="10" fill="#7F8C8D">⋮ (수만 행)</text>
+
+    <!-- Highlight Wafer_ID -->
+    <rect x="12" y="76" width="55" height="18" rx="2" fill="none" stroke="#E74C3C" stroke-width="2" stroke-dasharray="4,2"/>
+  </g>
+
+  <!-- ===== Table 2: MES 이력 ===== -->
+  <g transform="translate(390, 75)">
+    <rect x="0" y="0" width="330" height="170" rx="8" fill="#FADBD8" stroke="#E74C3C" stroke-width="2" filter="url(#shadow)"/>
+    <text x="165" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C3E50">MES 이력</text>
+    <text x="165" y="40" text-anchor="middle" font-size="10" fill="#7F8C8D">스텝 단위 · 수십만 행/일</text>
+
+    <!-- Header row -->
+    <rect x="10" y="50" width="310" height="22" rx="3" fill="#E74C3C" opacity="0.15"/>
+    <text x="18" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Lot_ID</text>
+    <text x="75" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Wafer_No</text>
+    <text x="135" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Step</text>
+    <text x="195" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Equip_ID</text>
+    <text x="260" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Start_Time</text>
+
+    <!-- Data row -->
+    <rect x="10" y="75" width="310" height="20" rx="2" fill="#FFFFFF" stroke="#E74C3C" stroke-width="0.5"/>
+    <text x="18" y="89" font-size="9" fill="#2C3E50" class="mono">L123456</text>
+    <text x="82" y="89" font-size="9" fill="#2C3E50" class="mono">01</text>
+    <text x="135" y="89" font-size="9" fill="#2C3E50" class="mono">ETCH_M1</text>
+    <text x="195" y="89" font-size="9" fill="#2C3E50" class="mono">ETCH_A</text>
+    <text x="260" y="89" font-size="9" fill="#2C3E50" class="mono">14:32:05</text>
+
+    <text x="165" y="115" text-anchor="middle" font-size="10" fill="#7F8C8D">⋮ (수십만 행)</text>
+
+    <!-- Issue callout -->
+    <rect x="60" y="125" width="210" height="35" rx="5" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5"/>
+    <text x="165" y="142" text-anchor="middle" font-size="10" fill="#E74C3C" font-weight="bold">⚠ ID 표기 불일치</text>
+    <text x="165" y="155" text-anchor="middle" font-size="9" fill="#7F8C8D">L123456 vs LOT-123456</text>
+  </g>
+
+  <!-- ===== Table 3: 계측 데이터 ===== -->
+  <g transform="translate(760, 75)">
+    <rect x="0" y="0" width="310" height="170" rx="8" fill="#D5F5E3" stroke="#27AE60" stroke-width="2" filter="url(#shadow)"/>
+    <text x="155" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C3E50">계측 데이터</text>
+    <text x="155" y="40" text-anchor="middle" font-size="10" fill="#7F8C8D">사이트 단위 (5~50점/웨이퍼) · 수천 행/일</text>
+
+    <!-- Header row -->
+    <rect x="10" y="50" width="290" height="22" rx="3" fill="#27AE60" opacity="0.15"/>
+    <text x="18" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Wafer_ID</text>
+    <text x="78" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Site_X</text>
+    <text x="125" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">Site_Y</text>
+    <text x="172" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">CD_nm</text>
+    <text x="218" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">OVL_X</text>
+    <text x="265" y="65" font-size="9" fill="#2C3E50" class="mono" font-weight="bold">OVL_Y</text>
+
+    <!-- Data row -->
+    <rect x="10" y="75" width="290" height="20" rx="2" fill="#FFFFFF" stroke="#27AE60" stroke-width="0.5"/>
+    <text x="18" y="89" font-size="9" fill="#E74C3C" class="mono" font-weight="bold">W001</text>
+    <text x="82" y="89" font-size="9" fill="#2C3E50" class="mono">-45</text>
+    <text x="132" y="89" font-size="9" fill="#2C3E50" class="mono">0</text>
+    <text x="172" y="89" font-size="9" fill="#2C3E50" class="mono">20.3</text>
+    <text x="222" y="89" font-size="9" fill="#2C3E50" class="mono">0.5</text>
+    <text x="268" y="89" font-size="9" fill="#2C3E50" class="mono">-0.2</text>
+
+    <text x="155" y="115" text-anchor="middle" font-size="10" fill="#7F8C8D">⋮ (수천 행)</text>
+
+    <!-- Highlight Wafer_ID -->
+    <rect x="12" y="76" width="55" height="18" rx="2" fill="none" stroke="#E74C3C" stroke-width="2" stroke-dasharray="4,2"/>
+
+    <!-- Issue callout -->
+    <rect x="40" y="125" width="230" height="35" rx="5" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5"/>
+    <text x="155" y="142" text-anchor="middle" font-size="10" fill="#E74C3C" font-weight="bold">⚠ 5~10% 웨이퍼만 존재</text>
+    <text x="155" y="155" text-anchor="middle" font-size="9" fill="#7F8C8D">→ 90% 누락</text>
+  </g>
+
+  <!-- ===== JOIN Symbol & Arrows ===== -->
+  <!-- Center join symbol -->
+  <g transform="translate(475, 290)">
+    <circle cx="75" cy="40" r="35" fill="#E74C3C" opacity="0.1" stroke="#E74C3C" stroke-width="2"/>
+    <text x="75" y="38" text-anchor="middle" font-size="28" fill="#E74C3C" font-weight="bold">⋈</text>
+    <text x="75" y="55" text-anchor="middle" font-size="10" fill="#E74C3C" font-weight="bold">JOIN</text>
+  </g>
+
+  <!-- Arrow: FDC → Join -->
+  <line x1="190" y1="260" x2="520" y2="310" stroke="#E74C3C" stroke-width="2" marker-end="url(#arr-red)"/>
+  <!-- Arrow: MES → Join -->
+  <line x1="555" y1="260" x2="550" y2="295" stroke="#E74C3C" stroke-width="2" marker-end="url(#arr-red)"/>
+  <!-- Arrow: 계측 → Join -->
+  <line x1="915" y1="260" x2="580" y2="310" stroke="#E74C3C" stroke-width="2" marker-end="url(#arr-red)"/>
+
+  <!-- Join Key Labels -->
+  <g transform="translate(410, 280)">
+    <rect x="0" y="0" width="230" height="20" rx="4" fill="#FFFFFF" stroke="#E74C3C" stroke-width="1"/>
+    <text x="115" y="14" text-anchor="middle" font-size="10" fill="#E74C3C" font-weight="bold">KEY: Wafer_ID + Equip_ID + Timestamp</text>
+  </g>
+
+  <!-- ===== 5 Challenges ===== -->
+  <text x="550" y="390" text-anchor="middle" font-size="15" font-weight="bold" fill="#2C3E50">데이터 매칭의 5가지 어려움</text>
+
+  <!-- Challenge boxes -->
+  <g transform="translate(30, 405)">
+    <!-- Challenge 1: 시간 동기화 -->
+    <rect x="0" y="0" width="195" height="80" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="97" y="22" text-anchor="middle" font-size="20">⏱</text>
+    <text x="97" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">시간 동기화</text>
+    <text x="97" y="60" text-anchor="middle" font-size="10" fill="#7F8C8D">장비간 시계 오차 수 초</text>
+
+    <!-- Challenge 2: ID 불일치 -->
+    <rect x="215" y="0" width="195" height="80" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="312" y="22" text-anchor="middle" font-size="18" font-weight="bold" fill="#2C3E50">ID</text>
+    <text x="312" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">ID 불일치</text>
+    <text x="312" y="60" text-anchor="middle" font-size="10" fill="#7F8C8D">표기법 차이</text>
+
+    <!-- Challenge 3: 샘플링 누락 -->
+    <rect x="430" y="0" width="195" height="80" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="527" y="22" text-anchor="middle" font-size="20">📉</text>
+    <text x="527" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">샘플링 누락</text>
+    <text x="527" y="60" text-anchor="middle" font-size="10" fill="#7F8C8D">계측 5~10%만</text>
+
+    <!-- Challenge 4: 공간 스케일 -->
+    <rect x="645" y="0" width="195" height="80" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="742" y="22" text-anchor="middle" font-size="20">📐</text>
+    <text x="742" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">공간 스케일</text>
+    <text x="742" y="60" text-anchor="middle" font-size="10" fill="#7F8C8D">웨이퍼 vs 사이트 vs 다이</text>
+
+    <!-- Challenge 5: 이력 추적 -->
+    <rect x="860" y="0" width="195" height="80" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="957" y="22" text-anchor="middle" font-size="20">🔗</text>
+    <text x="957" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">이력 추적</text>
+    <text x="957" y="60" text-anchor="middle" font-size="10" fill="#7F8C8D">수백 공정 단계 연결</text>
+  </g>
+
+  <!-- ===== Arrow: Join → Result Table ===== -->
+  <line x1="550" y1="365" x2="550" y2="500" stroke="#7F8C8D" stroke-width="2" stroke-dasharray="6,3"/>
+  <polygon points="545,498 550,510 555,498" fill="#7F8C8D"/>
+
+  <!-- ===== Result Table ===== -->
+  <g transform="translate(175, 510)">
+    <rect x="0" y="0" width="750" height="130" rx="10" fill="#EBF5FB" stroke="#2980B9" stroke-width="2.5" filter="url(#shadow)"/>
+    <text x="375" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#2C3E50">통합 학습 테이블</text>
+
+    <!-- Header row -->
+    <rect x="25" y="42" width="700" height="25" rx="4" fill="#2980B9" opacity="0.2"/>
+    <text x="80" y="59" text-anchor="middle" font-size="11" fill="#2C3E50" class="mono" font-weight="bold">Wafer_ID</text>
+    <text x="230" y="59" text-anchor="middle" font-size="11" fill="#2C3E50" class="mono" font-weight="bold">센서 피처들...</text>
+    <text x="430" y="59" text-anchor="middle" font-size="11" fill="#2C3E50" class="mono" font-weight="bold">장비 이력...</text>
+    <text x="620" y="59" text-anchor="middle" font-size="11" fill="#2C3E50" class="mono" font-weight="bold">CD_실측</text>
+
+    <!-- Data rows -->
+    <rect x="25" y="70" width="700" height="20" rx="2" fill="#FFFFFF" stroke="#2980B9" stroke-width="0.5"/>
+    <text x="80" y="84" text-anchor="middle" font-size="10" fill="#2C3E50" class="mono">W001</text>
+    <text x="230" y="84" text-anchor="middle" font-size="10" fill="#2C3E50" class="mono">500.2, 20.1, ...</text>
+    <text x="430" y="84" text-anchor="middle" font-size="10" fill="#2C3E50" class="mono">ETCH_A, CH1, ...</text>
+    <text x="620" y="84" text-anchor="middle" font-size="10" fill="#27AE60" class="mono" font-weight="bold">20.3</text>
+
+    <rect x="25" y="92" width="700" height="20" rx="2" fill="#F8F9FA" stroke="#2980B9" stroke-width="0.5"/>
+    <text x="80" y="106" text-anchor="middle" font-size="10" fill="#BDC3C7" class="mono">W002</text>
+    <text x="230" y="106" text-anchor="middle" font-size="10" fill="#BDC3C7" class="mono">489.7, 19.8, ...</text>
+    <text x="430" y="106" text-anchor="middle" font-size="10" fill="#BDC3C7" class="mono">ETCH_B, CH2, ...</text>
+    <text x="620" y="106" text-anchor="middle" font-size="10" fill="#E74C3C" class="mono" font-weight="bold">NULL ✗</text>
+
+    <!-- Note -->
+    <rect x="200" y="115" width="350" height="14" rx="3" fill="#E74C3C" opacity="0.1"/>
+    <text x="375" y="126" text-anchor="middle" font-size="10" fill="#E74C3C" font-weight="bold">⚠ 전체의 5~10%만 완전한 행 (CD_실측 존재)</text>
+  </g>
+
+</svg>

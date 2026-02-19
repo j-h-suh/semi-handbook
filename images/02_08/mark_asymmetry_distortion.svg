@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <style>
+      text { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; }
+    </style>
+    <marker id="arrowGreen" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+      <path d="M0,0 L6,2 L0,4 Z" fill="#32CD32"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+      <path d="M0,0 L6,2 L0,4 Z" fill="#FF0000"/>
+    </marker>
+    <!-- Grating pattern for symmetric mark -->
+    <pattern id="gratingSymmetric" x="0" y="0" width="16" height="40" patternUnits="userSpaceOnUse">
+      <rect x="2" y="0" width="12" height="40" fill="#4169E1" rx="1"/>
+    </pattern>
+    <!-- Light beam -->
+    <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00ffff" stop-opacity="0.0"/>
+      <stop offset="50%" stop-color="#00ffff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00ffff" stop-opacity="0.0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="#1a1a2e" rx="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="25" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">마크 비대칭에 의한 측정 왜곡 (WIS)</text>
+  
+  <!-- ====== Panel 1: 대칭 마크 (이상적) ====== -->
+  <g transform="translate(10, 38)">
+    <rect width="370" height="220" fill="#0d1117" rx="6" stroke="#333" stroke-width="1"/>
+    <text x="185" y="20" text-anchor="middle" fill="#4169E1" font-size="13" font-weight="bold">대칭 마크 (이상적)</text>
+    
+    <!-- Substrate -->
+    <rect x="30" y="120" width="310" height="50" fill="#C0C0C0" rx="3"/>
+    <text x="185" y="150" text-anchor="middle" fill="#555" font-size="9">기판 (Substrate)</text>
+    
+    <!-- Symmetric gratings -->
+    <rect x="71" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="91" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="111" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="131" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    
+    <rect x="225" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="245" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="265" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="285" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    
+    <!-- Symmetry axis -->
+    <line x1="185" y1="40" x2="185" y2="175" stroke="#32CD32" stroke-width="2" stroke-dasharray="5,3"/>
+    
+    <!-- Light beam indication -->
+    <polygon points="155,35 215,35 200,70 170,70" fill="url(#beamGrad)" opacity="0.5"/>
+    <text x="185" y="48" text-anchor="middle" fill="#00ffff" font-size="8">광학 센서</text>
+    
+    <!-- Center detection -->
+    <circle cx="185" cy="97" r="4" fill="#32CD32"/>
+    <text x="185" y="112" text-anchor="middle" fill="#32CD32" font-size="9" font-weight="bold">정확한 중심</text>
+    
+    <!-- Intensity profile (symmetric) -->
+    <polyline points="60,190 90,185 110,175 130,160 150,170 170,190 185,195 200,190 210,170 230,160 250,175 270,185 300,190" 
+              fill="none" stroke="#4169E1" stroke-width="2"/>
+    <line x1="185" y1="155" x2="185" y2="200" stroke="#32CD32" stroke-width="1.5" stroke-dasharray="3,2"/>
+    
+    <!-- Result -->
+    <text x="185" y="215" text-anchor="middle" fill="#32CD32" font-size="11" font-weight="bold">측정값: 0nm (정확) ✓</text>
+  </g>
+  
+  <!-- ====== Panel 2: 비대칭 마크 (CMP 후) ====== -->
+  <g transform="translate(415, 38)">
+    <rect width="375" height="220" fill="#0d1117" rx="6" stroke="#FF6347" stroke-width="1"/>
+    <text x="187" y="20" text-anchor="middle" fill="#FF6347" font-size="13" font-weight="bold">비대칭 마크 (CMP 후)</text>
+    
+    <!-- Substrate -->
+    <rect x="30" y="120" width="315" height="50" fill="#C0C0C0" rx="3"/>
+    <text x="187" y="150" text-anchor="middle" fill="#555" font-size="9">기판 (Substrate)</text>
+    
+    <!-- Left grating bars (eroded - shorter, rounded tops) -->
+    <rect x="71" y="90" width="14" height="30" fill="#FF6347" rx="4"/>
+    <rect x="91" y="85" width="14" height="35" fill="#FF6347" rx="3"/>
+    <rect x="111" y="80" width="14" height="40" fill="#FF6347" rx="2"/>
+    <rect x="131" y="77" width="14" height="43" fill="#FF6347" rx="2"/>
+    
+    <!-- Right grating bars (intact) -->
+    <rect x="225" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="245" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="265" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    <rect x="285" y="75" width="14" height="45" fill="#4169E1" rx="2"/>
+    
+    <!-- CMP erosion label -->
+    <text x="96" y="70" text-anchor="middle" fill="#FF6347" font-size="8">CMP로 깎임 ↓</text>
+    
+    <!-- True center -->
+    <line x1="185" y1="40" x2="185" y2="175" stroke="#32CD32" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
+    <text x="180" y="45" fill="#32CD32" font-size="7" opacity="0.7" text-anchor="end">실제 중심</text>
+    
+    <!-- False center (shifted RIGHT due to +2nm label) -->
+    <line x1="200" y1="65" x2="200" y2="130" stroke="#FF0000" stroke-width="2" stroke-dasharray="3,2"/>
+    <circle cx="200" cy="97" r="4" fill="#FF0000"/>
+    <text x="205" y="112" text-anchor="start" fill="#FF0000" font-size="9" font-weight="bold">잘못된 중심!</text>
+    
+    <!-- Offset arrow between true and false center -->
+    <line x1="185" y1="135" x2="200" y2="135" stroke="#FF0000" stroke-width="2" marker-end="url(#arrowRed)"/>
+    <text x="192" y="132" text-anchor="middle" fill="#FF0000" font-size="7">+2nm</text>
+    
+    <!-- Light beam -->
+    <polygon points="155,35 215,35 200,70 170,70" fill="url(#beamGrad)" opacity="0.5"/>
+    
+    <!-- Asymmetric intensity profile (Shifted right) -->
+    <polyline points="60,190 85,188 100,185 115,182 135,178 155,185 170,192 200,195 215,190 230,175 250,162 270,172 290,183 305,190" 
+              fill="none" stroke="#FF6347" stroke-width="2"/>
+    <!-- False center on profile -->
+    <line x1="200" y1="160" x2="200" y2="200" stroke="#FF0000" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <!-- True center on profile -->
+    <line x1="185" y1="160" x2="185" y2="200" stroke="#32CD32" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+    
+    <!-- Result -->
+    <text x="187" y="215" text-anchor="middle" fill="#FF0000" font-size="11" font-weight="bold">측정값: +2nm (가짜 오차!) ✕</text>
+  </g>
+  
+  <!-- ====== Bottom Explanation ====== -->
+  <g transform="translate(0, 270)">
+    <rect x="20" y="0" width="760" height="120" fill="#0d1117" rx="6" stroke="#555" stroke-width="1"/>
+    <text x="400" y="20" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">비대칭 마크가 Overlay 측정을 왜곡하는 메커니즘</text>
+    
+    <!-- Step arrows -->
+    <!-- Step 1 -->
+    <circle cx="60" cy="45" r="12" fill="#FF6347" opacity="0.8"/>
+    <text x="60" y="49" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">1</text>
+    <text x="80" y="49" fill="#ddd" font-size="10" text-anchor="start">CMP 연마에 의해 한쪽 측벽이 더 깎임</text>
+    
+    <text x="395" y="45" fill="#555" font-size="16">→</text>
+    
+    <!-- Step 2 -->
+    <circle cx="420" cy="45" r="12" fill="#FF6347" opacity="0.8"/>
+    <text x="420" y="49" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">2</text>
+    <text x="440" y="49" fill="#ddd" font-size="10" text-anchor="start">광학 센서가 비대칭 프로파일의 '중심'을 오인</text>
+    
+    <!-- Step 3 -->
+    <circle cx="60" cy="80" r="12" fill="#FF0000" opacity="0.8"/>
+    <text x="60" y="84" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">3</text>
+    <text x="80" y="84" fill="#ddd" font-size="10" text-anchor="start">실제 정렬은 정확하나 가짜 Overlay 보고</text>
+    
+    <text x="395" y="80" fill="#555" font-size="16">→</text>
+    
+    <!-- Step 4 -->
+    <circle cx="420" cy="80" r="12" fill="#FF0000" opacity="0.8"/>
+    <text x="420" y="84" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">4</text>
+    <text x="440" y="84" fill="#FF0000" font-size="10" text-anchor="start" font-weight="bold">이 값으로 보정 → 오히려 Overlay 악화!</text>
+    
+    <!-- Warning box -->
+    <rect x="440" y="95" width="300" height="18" fill="#FF0000" opacity="0.15" rx="3"/>
+    <text x="590" y="108" text-anchor="middle" fill="#FF6347" font-size="9">⚠ WIS (Wafer Induced Shift)라 불리며, 계통 오차의 주요 원인</text>
+  </g>
+</svg>

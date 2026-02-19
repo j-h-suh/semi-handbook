@@ -1,0 +1,137 @@
+{
+  "chapter": "01_07",
+  "chapter_title": "CMP와 금속배선",
+  "images": [
+    {
+      "id": "01_07_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "beol_metal_layers.svg",
+      "title": "BEOL 배선 계층 구조 (M1~M15)",
+      "description": "현대 칩의 다층 금속 배선 구조. 하부 로컬 배선(M1-M3)이 가늘고 촘촘하고, 상부 글로벌 배선(M10-M15)이 두껍고 넓은 계층 구조를 실제 비율에 가깝게 표현",
+      "spec": {
+        "elements": [
+          "트랜지스터층 (FEOL, 맨 하단)",
+          "Contact Layer",
+          "M1-M3: 로컬 배선 (폭 ~20nm, 피치 ~28nm)",
+          "M4-M9: 중간 배선 (점진적으로 넓어짐)",
+          "M10-M15: 글로벌 배선 (폭 수μm, 전원/클럭)",
+          "Via (각 층간 수직 연결, 엘리베이터 역할)",
+          "Bond Pad (최상부)",
+          "ILD (Inter-Layer Dielectric, Low-k)"
+        ],
+        "layout": "수직 단면도, 아래에서 위로 층이 쌓이며 배선이 점점 두꺼워짐",
+        "colors": {
+          "copper": "#e8a030",
+          "via": "#d08020",
+          "ild": "#e8e8e0",
+          "transistor": "#c8ddf0",
+          "pad": "#c0c0c0"
+        },
+        "size": "500x800",
+        "labels": "한글+영문",
+        "annotations": [
+          "Local (M1-M3) 브라켓",
+          "Intermediate (M4-M9) 브라켓",
+          "Global (M10-M15) 브라켓",
+          "배선 폭/피치 비율 변화 강조"
+        ]
+      }
+    },
+    {
+      "id": "01_07_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "damascene_process_steps.svg",
+      "title": "다마신 공정 6단계 단면도",
+      "description": "듀얼 다마신(Dual Damascene) 공정의 단계별 단면 변화: 유전체 증착 → 트렌치/비아 식각 → 배리어 증착 → Cu 시드 → 전기도금 → CMP",
+      "spec": {
+        "elements": [
+          "Step 1: ILD(유전체) 증착",
+          "Step 2: 포토리소 + 식각 → Via 홀 + Trench 형성",
+          "Step 3: 배리어 메탈 증착 (TaN/Ta, ALD/PVD)",
+          "Step 4: Cu 씨앗층 증착 (PVD)",
+          "Step 5: Cu 전기도금 (Electroplating) - 홈 채움",
+          "Step 6: CMP - 여분 Cu 제거 → 홈 안에만 Cu 배선 잔존"
+        ],
+        "layout": "2×3 그리드 또는 1×6 시퀀스, 각 단계 단면도",
+        "colors": {
+          "dielectric": "#e8e8e0",
+          "barrier": "#a0a0d0",
+          "cu_seed": "#e8c080",
+          "cu_bulk": "#e8a030",
+          "substrate": "#c8ddf0"
+        },
+        "size": "900x400",
+        "labels": "한글+영문",
+        "annotations": [
+          "Via (수직 연결)",
+          "Trench (수평 배선)",
+          "CMP 연마면 표시"
+        ]
+      }
+    },
+    {
+      "id": "01_07_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "dishing_erosion.svg",
+      "title": "CMP 디싱과 에로전 현상",
+      "description": "CMP 후 발생하는 디싱(넓은 금속 영역 오목) 및 에로전(밀집 패턴 영역 전체 가라앉음) 현상을 이상적 결과와 비교",
+      "spec": {
+        "elements": [
+          "이상적 CMP 결과: 완벽하게 평탄한 표면",
+          "디싱 (Dishing): 넓은 Cu 영역이 오목하게 파임",
+          "에로전 (Erosion): Cu+ILD 밀집 영역이 전체적으로 가라앉음",
+          "ILD (절연체) 영역",
+          "Cu (배선) 영역"
+        ],
+        "layout": "상하 비교 (상: 이상적, 하: 디싱+에로전 발생)",
+        "colors": {
+          "copper": "#e8a030",
+          "dielectric": "#e8e8e0",
+          "ideal_surface": "#5de85d",
+          "actual_surface": "#e85d5d"
+        },
+        "size": "700x400",
+        "labels": "한글+영문",
+        "annotations": [
+          "디싱 깊이 표시",
+          "에로전 깊이 표시",
+          "패턴 밀도 (Pattern Density) 차이 표시"
+        ]
+      }
+    },
+    {
+      "id": "01_07_img04",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "rc_delay_vs_gate_delay.png",
+      "title": "RC 지연 vs 게이트 지연 트렌드",
+      "description": "공정 노드별 게이트 지연(감소)과 배선 RC 지연(증가) 추이. RC 지연이 성능 병목이 되는 크로스오버 포인트 표시",
+      "spec": {
+        "data": [
+          {"node_nm": 250, "gate_delay_ps": 20, "rc_delay_ps": 5},
+          {"node_nm": 180, "gate_delay_ps": 14, "rc_delay_ps": 8},
+          {"node_nm": 130, "gate_delay_ps": 10, "rc_delay_ps": 12},
+          {"node_nm": 90, "gate_delay_ps": 7, "rc_delay_ps": 18},
+          {"node_nm": 65, "gate_delay_ps": 5, "rc_delay_ps": 25},
+          {"node_nm": 45, "gate_delay_ps": 3.5, "rc_delay_ps": 35},
+          {"node_nm": 28, "gate_delay_ps": 2.5, "rc_delay_ps": 50},
+          {"node_nm": 14, "gate_delay_ps": 1.5, "rc_delay_ps": 70}
+        ],
+        "x_label": "공정 노드 (nm)",
+        "y_label": "지연 시간 (ps)",
+        "x_scale": "log",
+        "x_invert": true,
+        "annotations": [
+          {"x": 130, "text": "크로스오버\n(RC > Gate)"},
+          {"text": "Cu + Low-k 도입", "x": 180}
+        ],
+        "legend": ["게이트 지연 (Gate Delay)", "배선 RC 지연 (Interconnect RC Delay)"],
+        "style": "학술, 격자선, DPI 300, 10x6 인치",
+        "note": "추정치. 정확한 값은 설계/공정에 따라 다름. 일반적 트렌드를 보여주기 위한 데이터"
+      }
+    }
+  ]
+}

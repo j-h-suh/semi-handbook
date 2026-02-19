@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500"
+     font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#FF4500"/>
+    </marker>
+    <marker id="arrowReflect" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8 0, 0 3, 8 6" fill="#FF8C00"/>
+    </marker>
+    <marker id="arrowBlack" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#333"/>
+    </marker>
+    <linearGradient id="lightGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FFA500" stop-opacity="0.7"/>
+    </linearGradient>
+    <!-- Mo/Si stripe pattern -->
+    <pattern id="mosiPattern" x="0" y="0" width="600" height="14" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="600" height="7" fill="#708090"/>
+      <rect x="0" y="7" width="600" height="7" fill="#87CEEB"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="500" fill="#0D1117" rx="8"/>
+
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" fill="#E6EDF3" font-size="16" font-weight="bold">EUV 반사형 마스크 단면도</text>
+
+  <!-- ===== LAYERS (bottom to top) ===== -->
+  <!-- Substrate: y=300 to y=410 -->
+  <rect x="80" y="300" width="400" height="110" fill="#4A4A7A" stroke="#6A6AAA" stroke-width="1" rx="2"/>
+  <text x="280" y="345" text-anchor="middle" fill="#D0D0FF" font-size="11" font-weight="bold">초저열팽창 유리 기판</text>
+  <text x="280" y="362" text-anchor="middle" fill="#B0B0DD" font-size="10">(LTEM Glass)</text>
+  <text x="280" y="382" text-anchor="middle" fill="#9090BB" font-size="9">두께: 6.35 mm</text>
+
+  <!-- Mo/Si multilayer: y=180 to y=300, 120px representing ~280nm -->
+  <rect x="80" y="180" width="400" height="120" fill="url(#mosiPattern)" stroke="#8899AA" stroke-width="1"/>
+  <!-- Overlay label area -->
+  <rect x="130" y="210" width="180" height="55" fill="rgba(13,17,23,0.75)" rx="4"/>
+  <text x="220" y="228" text-anchor="middle" fill="#87CEEB" font-size="10" font-weight="bold">Mo/Si 다층 반사경</text>
+  <text x="220" y="243" text-anchor="middle" fill="#A0C4E0" font-size="9">~40쌍, 각 쌍 ~6.9 nm</text>
+  <text x="220" y="258" text-anchor="middle" fill="#A0C4E0" font-size="9">반사율 ~67%</text>
+
+  <!-- Capping layer (Ru): y=172 to y=180 -->
+  <rect x="80" y="172" width="400" height="8" fill="#B8860B" stroke="#DAA520" stroke-width="0.5"/>
+  <text x="490" y="179" text-anchor="start" fill="#DAA520" font-size="8">← 캡핑층 (Ru) 2.5nm</text>
+
+  <!-- Absorber patterns (TaBN): only on certain regions -->
+  <!-- Absorber block 1 -->
+  <rect x="80" y="132" width="90" height="40" fill="#2F2F2F" stroke="#555" stroke-width="1" rx="1"/>
+  <!-- Absorber block 2 -->
+  <rect x="240" y="132" width="80" height="40" fill="#2F2F2F" stroke="#555" stroke-width="1" rx="1"/>
+  <!-- Absorber block 3 -->
+  <rect x="390" y="132" width="90" height="40" fill="#2F2F2F" stroke="#555" stroke-width="1" rx="1"/>
+
+  <!-- Absorber label -->
+  <text x="280" y="118" text-anchor="middle" fill="#AAAAAA" font-size="10" font-weight="bold">TaBN 흡수체 (~60 nm)</text>
+
+  <!-- ===== INCIDENT LIGHT (6° angle) ===== -->
+  <!-- Incident beam hitting the open (reflective) region between absorbers -->
+  <!-- Open region center: x~200, top of capping layer y=172 -->
+  <!-- 6° from vertical: dx = sin(6°)*length, dy = cos(6°)*length -->
+  <!-- Incident ray -->
+  <line x1="178" y1="55" x2="200" y2="172" stroke="#FFD700" stroke-width="2.5" 
+        marker-end="url(#arrowhead)" stroke-dasharray="none" opacity="0.9"/>
+  <!-- Reflected ray -->
+  <line x1="200" y2="172" x2="222" y1="55" stroke="#FF8C00" stroke-width="2.5" 
+        opacity="0.7"/>
+  <!-- Reflected arrow at tip -->
+  <polygon points="222,55 218,68 226,68" fill="#FF8C00" opacity="0.7"/>
+
+  <!-- Light label -->
+  <text x="130" y="50" text-anchor="middle" fill="#FFD700" font-size="9" font-weight="bold">EUV 입사광</text>
+  <text x="130" y="62" text-anchor="middle" fill="#FFD700" font-size="8">13.5 nm, 6° 경사</text>
+
+  <!-- Angle arc indicator -->
+  <path d="M 200,120 A 20,20 0 0,0 197,100" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.6"/>
+  <text x="190" y="108" fill="#FFD700" font-size="7">6°</text>
+
+  <!-- ===== ABSORBED LIGHT (on absorber) ===== -->
+  <!-- Light hitting absorber block 2 -->
+  <line x1="260" y1="70" x2="280" y2="132" stroke="#FFD700" stroke-width="2" 
+        marker-end="url(#arrowhead)" opacity="0.5" stroke-dasharray="4,3"/>
+  <text x="295" y="80" fill="#FF6347" font-size="8">흡수 (×)</text>
+  <!-- X mark on absorber -->
+  <line x1="275" y1="137" x2="285" y2="147" stroke="#FF6347" stroke-width="2"/>
+  <line x1="285" y1="137" x2="275" y2="147" stroke="#FF6347" stroke-width="2"/>
+
+  <!-- ===== SHADOW EFFECT ===== -->
+  <!-- Shadow region due to oblique incidence -->
+  <rect x="240" y="172" width="6" height="8" fill="rgba(47,47,47,0.4)" opacity="0.5"/>
+  <line x1="60" y1="200" x2="75" y2="200" stroke="#888" stroke-width="0.5" stroke-dasharray="2,2"/>
+
+  <!-- ===== ANNOTATIONS ===== -->
+  <!-- Right side annotations -->
+  <!-- Annotation box: Reflective region -->
+  <rect x="340" y="50" width="240" height="35" fill="rgba(13,17,23,0.85)" rx="4" stroke="#4CAF50" stroke-width="1"/>
+  <text x="460" y="65" text-anchor="middle" fill="#4CAF50" font-size="9" font-weight="bold">반사 영역</text>
+  <text x="460" y="78" text-anchor="middle" fill="#81C784" font-size="8">흡수체 없음 → EUV 반사 (밝음)</text>
+
+  <!-- Annotation box: Absorption region -->
+  <rect x="340" y="92" width="240" height="35" fill="rgba(13,17,23,0.85)" rx="4" stroke="#FF5722" stroke-width="1"/>
+  <text x="460" y="107" text-anchor="middle" fill="#FF5722" font-size="9" font-weight="bold">흡수 영역</text>
+  <text x="460" y="120" text-anchor="middle" fill="#FF8A65" font-size="8">흡수체 있음 → EUV 흡수 (어두움)</text>
+
+  <!-- Left annotation: Mask 3D effect -->
+  <rect x="5" y="130" width="70" height="55" fill="rgba(13,17,23,0.85)" rx="4" stroke="#FFC107" stroke-width="1"/>
+  <text x="40" y="146" text-anchor="middle" fill="#FFC107" font-size="8" font-weight="bold">Mask 3D 효과</text>
+  <text x="40" y="159" text-anchor="middle" fill="#FFD54F" font-size="7">경사 입사로 인한</text>
+  <text x="40" y="170" text-anchor="middle" fill="#FFD54F" font-size="7">그림자(Shadowing)</text>
+  <text x="40" y="181" text-anchor="middle" fill="#FFD54F" font-size="7">발생</text>
+  <!-- Arrow from annotation to shadow area -->
+  <line x1="75" y1="165" x2="240" y2="175" stroke="#FFC107" stroke-width="0.8" stroke-dasharray="3,2" marker-end="url(#arrowBlack)"/>
+
+  <!-- Bottom annotation -->
+  <rect x="100" y="430" width="360" height="45" fill="rgba(13,17,23,0.85)" rx="6" stroke="#9C27B0" stroke-width="1"/>
+  <text x="280" y="448" text-anchor="middle" fill="#CE93D8" font-size="10" font-weight="bold">총 반사율 ~67%</text>
+  <text x="280" y="464" text-anchor="middle" fill="#BA68C8" font-size="9">(EUV 리소그래피 시스템: 11개 거울 통과 후 웨이퍼에 ~2% 도달)</text>
+
+  <!-- ===== DIMENSION MARKERS ===== -->
+  <!-- Right-side dimension brackets -->
+  <!-- Substrate thickness -->
+  <line x1="485" y1="300" x2="495" y2="300" stroke="#8888AA" stroke-width="0.8"/>
+  <line x1="485" y1="410" x2="495" y2="410" stroke="#8888AA" stroke-width="0.8"/>
+  <line x1="490" y1="300" x2="490" y2="410" stroke="#8888AA" stroke-width="0.8"/>
+  <text x="498" y="360" fill="#8888AA" font-size="7">6.35mm</text>
+
+  <!-- Multilayer thickness -->
+  <line x1="485" y1="180" x2="495" y2="180" stroke="#8899AA" stroke-width="0.8"/>
+  <line x1="485" y1="300" x2="495" y2="300" stroke="#8899AA" stroke-width="0.8"/>
+  <line x1="490" y1="180" x2="490" y2="300" stroke="#8899AA" stroke-width="0.8"/>
+  <text x="498" y="245" fill="#8899AA" font-size="7">~280nm</text>
+
+  <!-- Absorber thickness -->
+  <line x1="485" y1="132" x2="495" y2="132" stroke="#888" stroke-width="0.8"/>
+  <line x1="485" y1="172" x2="495" y2="172" stroke="#888" stroke-width="0.8"/>
+  <line x1="490" y1="132" x2="490" y2="172" stroke="#888" stroke-width="0.8"/>
+  <text x="498" y="155" fill="#888" font-size="7">~60nm</text>
+
+  <!-- ===== LEGEND (REPOSITIONED) ===== -->
+  <!-- Moved to bottom right to avoid overlap with bottom annotation -->
+  <rect x="490" y="445" width="12" height="8" fill="#708090"/>
+  <text x="505" y="452" fill="#AAA" font-size="7">Mo</text>
+  <rect x="530" y="445" width="12" height="8" fill="#87CEEB"/>
+  <text x="545" y="452" fill="#AAA" font-size="7">Si</text>
+
+</svg>

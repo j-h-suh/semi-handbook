@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500"
+     font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <linearGradient id="lensGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a8d8ea"/>
+      <stop offset="100%" stop-color="#87CEEB"/>
+    </linearGradient>
+    <marker id="arrowDown" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M1,1 L4,7 L7,1" fill="none" stroke="#333" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrowUp" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M1,7 L4,1 L7,7" fill="none" stroke="#333" stroke-width="1.2"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="500" fill="#FAFAFA" rx="8"/>
+
+  <!-- Title -->
+  <text x="300" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">초점 심도(DOF) 개념도</text>
+
+  <!-- ===== LEFT: Low NA ===== -->
+  <g transform="translate(0, 0)">
+    <!-- Section label -->
+    <text x="150" y="52" text-anchor="middle" font-size="13" font-weight="bold" fill="#4169E1">Low NA</text>
+    <text x="150" y="68" text-anchor="middle" font-size="10" fill="#666">넓은 DOF, 낮은 해상도</text>
+
+    <!-- Projection Lens -->
+    <ellipse cx="150" cy="95" rx="80" ry="18" fill="url(#lensGrad)" stroke="#5B9BD5" stroke-width="1.5"/>
+    <text x="150" y="100" text-anchor="middle" font-size="10" fill="#333">투영 렌즈 (Low NA)</text>
+
+    <!-- Converging rays - wider angle = smaller NA means gentler convergence -->
+    <line x1="90" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="2" opacity="0.8"/>
+    <line x1="210" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="2" opacity="0.8"/>
+    <line x1="110" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="1.2" opacity="0.5"/>
+    <line x1="190" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="1.2" opacity="0.5"/>
+    <!-- Diverging rays below focus -->
+    <line x1="150" y1="260" x2="90" y2="400" stroke="#FFD700" stroke-width="2" opacity="0.4"/>
+    <line x1="150" y1="260" x2="210" y2="400" stroke="#FFD700" stroke-width="2" opacity="0.4"/>
+
+    <!-- Angle label -->
+    <text x="95" y="175" font-size="9" fill="#B8860B" transform="rotate(-25, 95, 175)">θ (small)</text>
+
+    <!-- DOF region - wide -->
+    <rect x="70" y="200" width="160" height="120" fill="#90EE90" opacity="0.25" rx="4" stroke="#4CAF50" stroke-width="1" stroke-dasharray="4,3"/>
+    <!-- FIX: Moved text x from 235 to 245 to avoid overlap with line at 240 -->
+    <text x="245" y="255" font-size="9" fill="#2E7D32" font-weight="bold">DOF</text>
+    <text x="245" y="268" font-size="8" fill="#2E7D32">(넓음)</text>
+
+    <!-- DOF range markers -->
+    <line x1="240" y1="200" x2="240" y2="210" stroke="#2E7D32" stroke-width="1.5"/>
+    <line x1="237" y1="200" x2="243" y2="200" stroke="#2E7D32" stroke-width="1.5"/>
+    <line x1="240" y1="310" x2="240" y2="320" stroke="#2E7D32" stroke-width="1.5"/>
+    <line x1="237" y1="320" x2="243" y2="320" stroke="#2E7D32" stroke-width="1.5"/>
+    <line x1="240" y1="200" x2="240" y2="320" stroke="#2E7D32" stroke-width="1" stroke-dasharray="3,3"/>
+
+    <!-- Best Focus plane -->
+    <line x1="80" y1="260" x2="220" y2="260" stroke="#FF4444" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="150" y="253" text-anchor="middle" font-size="9" fill="#FF4444" font-weight="bold">Best Focus</text>
+
+    <!-- Wafer surface -->
+    <rect x="85" y="290" width="130" height="8" fill="#C0C0C0" stroke="#999" stroke-width="1"/>
+    <!-- Topography bumps -->
+    <path d="M85,290 L105,290 L105,285 L120,285 L120,290 L145,290 L145,282 L165,282 L165,290 L215,290" fill="none" stroke="#888" stroke-width="1.5"/>
+    <text x="150" y="312" text-anchor="middle" font-size="8" fill="#666">웨이퍼 표면</text>
+  </g>
+
+  <!-- ===== Divider ===== -->
+  <line x1="300" y1="45" x2="300" y2="430" stroke="#DDD" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- ===== RIGHT: High NA ===== -->
+  <g transform="translate(300, 0)">
+    <!-- Section label -->
+    <text x="150" y="52" text-anchor="middle" font-size="13" font-weight="bold" fill="#FF6347">High NA</text>
+    <text x="150" y="68" text-anchor="middle" font-size="10" fill="#666">좁은 DOF, 높은 해상도</text>
+
+    <!-- Projection Lens -->
+    <ellipse cx="150" cy="95" rx="80" ry="18" fill="url(#lensGrad)" stroke="#5B9BD5" stroke-width="1.5"/>
+    <text x="150" y="100" text-anchor="middle" font-size="10" fill="#333">투영 렌즈 (High NA)</text>
+
+    <!-- Converging rays - steeper angle for high NA -->
+    <line x1="70" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="2" opacity="0.8"/>
+    <line x1="230" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="2" opacity="0.8"/>
+    <line x1="100" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="1.2" opacity="0.5"/>
+    <line x1="200" y1="113" x2="150" y2="260" stroke="#FFD700" stroke-width="1.2" opacity="0.5"/>
+    <!-- Diverging rays below focus -->
+    <line x1="150" y1="260" x2="70" y2="400" stroke="#FFD700" stroke-width="2" opacity="0.4"/>
+    <line x1="150" y1="260" x2="230" y2="400" stroke="#FFD700" stroke-width="2" opacity="0.4"/>
+
+    <!-- Angle label -->
+    <text x="82" y="175" font-size="9" fill="#B8860B" transform="rotate(-35, 82, 175)">θ (large)</text>
+
+    <!-- DOF region - narrow -->
+    <rect x="100" y="240" width="100" height="40" fill="#90EE90" opacity="0.25" rx="4" stroke="#FF6347" stroke-width="1" stroke-dasharray="4,3"/>
+    <!-- FIX: Moved text x from 205 to 215 to avoid overlap with line at 210 -->
+    <text x="215" y="255" font-size="9" fill="#D32F2F" font-weight="bold">DOF</text>
+    <text x="215" y="268" font-size="8" fill="#D32F2F">(좁음!)</text>
+
+    <!-- DOF range markers -->
+    <line x1="210" y1="237" x2="210" y2="243" stroke="#D32F2F" stroke-width="1.5"/>
+    <line x1="207" y1="240" x2="213" y2="240" stroke="#D32F2F" stroke-width="1.5"/>
+    <line x1="210" y1="277" x2="210" y2="283" stroke="#D32F2F" stroke-width="1.5"/>
+    <line x1="207" y1="280" x2="213" y2="280" stroke="#D32F2F" stroke-width="1.5"/>
+    <line x1="210" y1="240" x2="210" y2="280" stroke="#D32F2F" stroke-width="1" stroke-dasharray="3,3"/>
+
+    <!-- Best Focus plane -->
+    <line x1="80" y1="260" x2="220" y2="260" stroke="#FF4444" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="150" y="253" text-anchor="middle" font-size="9" fill="#FF4444" font-weight="bold">Best Focus</text>
+
+    <!-- Wafer surface -->
+    <rect x="85" y="290" width="130" height="8" fill="#C0C0C0" stroke="#999" stroke-width="1"/>
+    <!-- Topography bumps -->
+    <path d="M85,290 L105,290 L105,285 L120,285 L120,290 L145,290 L145,282 L165,282 L165,290 L215,290" fill="none" stroke="#888" stroke-width="1.5"/>
+    <text x="150" y="312" text-anchor="middle" font-size="8" fill="#666">웨이퍼 표면</text>
+
+    <!-- Warning: wafer outside DOF -->
+    <text x="150" y="335" text-anchor="middle" font-size="8" fill="#D32F2F">⚠ 표면 단차가 DOF를 초과할 위험!</text>
+  </g>
+
+  <!-- ===== Bottom formula box ===== -->
+  <rect x="100" y="440" width="400" height="50" rx="8" fill="#F0F4FF" stroke="#4169E1" stroke-width="1"/>
+  <text x="300" y="460" text-anchor="middle" font-size="12" fill="#333" font-weight="bold">DOF = k₂ × λ / NA²</text>
+  <text x="300" y="478" text-anchor="middle" font-size="10" fill="#666">NA↑ → DOF↓↓ (제곱 관계)  |  해상도↑ 이면 DOF↓ (트레이드오프)</text>
+
+  <!-- Surface topography label -->
+  <text x="300" y="420" text-anchor="middle" font-size="9" fill="#888">표면 단차 (이전 공정에 의한 높낮이) → DOF 내에 있어야 선명한 패턴 전사 가능</text>
+</svg>

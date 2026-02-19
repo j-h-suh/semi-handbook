@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" width="700" height="500">
+  <defs>
+    <style>
+      text { font-family: Arial, 'AppleGothic', sans-serif; }
+      .title { font-size: 14px; font-weight: bold; fill: #333; }
+      .label { font-size: 10px; fill: #333; }
+      .label-sm { font-size: 8.5px; fill: #555; }
+      .annotation { font-size: 9px; fill: #c04040; font-style: italic; }
+      .section-title { font-size: 13px; font-weight: bold; fill: #2060a0; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#c04040"/>
+    </marker>
+    <marker id="arrowBlk" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="500" fill="#fafafa" rx="6"/>
+
+  <!-- Main Title -->
+  <text x="350" y="28" text-anchor="middle" class="title" font-size="15">와이어 본딩 vs 플립칩 단면 비교</text>
+  <text x="350" y="44" text-anchor="middle" class="label" fill="#777">Wire Bonding vs Flip Chip Cross-Section Comparison</text>
+
+  <!-- ============ WIRE BONDING (Top) ============ -->
+  <text x="30" y="72" class="section-title">▲ 와이어 본딩 (Wire Bonding)</text>
+
+  <!-- EMC Molding outer -->
+  <rect x="120" y="82" width="460" height="140" rx="5" fill="#404040" stroke="#333" stroke-width="1.5"/>
+  <text x="125" y="97" class="label-sm" fill="#bbb">EMC 몰딩</text>
+  <text x="125" y="108" class="label-sm" fill="#999">Epoxy Molding Compound</text>
+
+  <!-- Lead Frame (리드프레임) -->
+  <rect x="140" y="180" width="420" height="22" rx="2" fill="#c0c0c0" stroke="#999" stroke-width="1"/>
+  <!-- Lead Frame legs -->
+  <rect x="100" y="180" width="50" height="22" rx="1" fill="#c0c0c0" stroke="#999" stroke-width="1"/>
+  <rect x="550" y="180" width="50" height="22" rx="1" fill="#c0c0c0" stroke="#999" stroke-width="1"/>
+  <!-- Lead extensions going out -->
+  <rect x="80" y="186" width="30" height="10" fill="#c0c0c0" stroke="#999" stroke-width="1"/>
+  <rect x="590" y="186" width="30" height="10" fill="#c0c0c0" stroke="#999" stroke-width="1"/>
+  <text x="350" y="196" text-anchor="middle" class="label-sm">리드프레임 (Lead Frame)</text>
+
+  <!-- Die Pad -->
+  <rect x="270" y="160" width="160" height="18" rx="1" fill="#d8d8d8" stroke="#999" stroke-width="1"/>
+
+  <!-- Die (face up) -->
+  <rect x="290" y="120" width="120" height="40" rx="2" fill="#c8ddf0" stroke="#6090c0" stroke-width="1.5"/>
+  <text x="350" y="144" text-anchor="middle" class="label" font-weight="bold">Die ↑</text>
+  <text x="350" y="155" text-anchor="middle" class="label-sm">(상향)</text>
+
+  <!-- Bond pads on die -->
+  <rect x="298" y="119" width="8" height="4" fill="#e8c020"/>
+  <rect x="316" y="119" width="8" height="4" fill="#e8c020"/>
+  <rect x="376" y="119" width="8" height="4" fill="#e8c020"/>
+  <rect x="394" y="119" width="8" height="4" fill="#e8c020"/>
+
+  <!-- Au/Cu Wires -->
+  <path d="M302,119 Q280,90 210,180" fill="none" stroke="#e8c020" stroke-width="1.8"/>
+  <path d="M320,119 Q295,85 240,180" fill="none" stroke="#e8c020" stroke-width="1.8"/>
+  <path d="M380,119 Q405,85 460,180" fill="none" stroke="#e8c020" stroke-width="1.8"/>
+  <path d="M398,119 Q420,90 490,180" fill="none" stroke="#e8c020" stroke-width="1.8"/>
+
+  <!-- Wire label -->
+  <text x="200" y="100" class="label" fill="#b09000">Au/Cu 와이어</text>
+  <text x="200" y="112" class="label-sm" fill="#b09000">(Wire)</text>
+
+  <!-- Annotation: wire length -->
+  <line x1="460" y1="105" x2="505" y2="105" stroke="#c04040" stroke-width="0.8" marker-end="url(#arrowhead)"/>
+  <text x="510" y="100" class="annotation">와이어 길이 →</text>
+  <text x="510" y="112" class="annotation">기생 인덕턴스 증가</text>
+  <text x="510" y="124" class="annotation">(Parasitic Inductance)</text>
+
+  <!-- I/O annotation -->
+  <text x="85" y="215" class="annotation">I/O: 주변부 배치</text>
+  <text x="85" y="227" class="annotation">(Peripheral I/O)</text>
+
+  <!-- ============ Divider ============ -->
+  <line x1="30" y1="248" x2="670" y2="248" stroke="#ccc" stroke-width="1" stroke-dasharray="6,3"/>
+
+  <!-- ============ FLIP CHIP (Bottom) ============ -->
+  <text x="30" y="272" class="section-title">▼ 플립칩 (Flip Chip)</text>
+
+  <!-- Heat Spreader -->
+  <rect x="150" y="282" width="400" height="14" rx="2" fill="#c0c0c0" stroke="#999" stroke-width="1"/>
+  <text x="350" y="293" text-anchor="middle" class="label-sm">히트 스프레더 (Heat Spreader)</text>
+
+  <!-- TIM -->
+  <rect x="265" y="296" width="170" height="5" rx="1" fill="#e0d0a0" stroke="#c0b080" stroke-width="0.5"/>
+
+  <!-- Die (face down / flipped) -->
+  <rect x="270" y="301" width="160" height="38" rx="2" fill="#c8ddf0" stroke="#6090c0" stroke-width="1.5"/>
+  <text x="350" y="322" text-anchor="middle" class="label" font-weight="bold">Die ↓</text>
+  <text x="350" y="333" text-anchor="middle" class="label-sm">(하향/Flip)</text>
+
+  <!-- Solder Bumps (between die and substrate) -->
+  <!-- Adjusted cy to 343 to touch Die(339) and Substrate(347) -->
+  <circle cx="285" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="305" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="325" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="345" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="365" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="385" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="405" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="415" cy="343" r="4" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+
+  <!-- Bump label -->
+  <line x1="420" y1="343" x2="465" y2="335" stroke="#555" stroke-width="0.7"/>
+  <text x="468" y="332" class="label-sm">솔더 범프</text>
+  <text x="468" y="343" class="label-sm">(Solder Bump)</text>
+
+  <!-- Underfill -->
+  <!-- Adjusted y to 339, height to 8 (fills gap between 339 and 347) -->
+  <rect x="270" y="339" width="160" height="8" rx="1" fill="#f0e8c8" stroke="#d0c8a0" stroke-width="0.8" opacity="0.6"/>
+  <line x1="265" y1="343" x2="200" y2="360" stroke="#555" stroke-width="0.7"/>
+  <text x="130" y="358" class="label-sm">언더필 (Underfill)</text>
+
+  <!-- Substrate -->
+  <!-- Moved up to 347 (was 353) to touch Bumps -->
+  <rect x="180" y="347" width="340" height="30" rx="2" fill="#a0c0a0" stroke="#709070" stroke-width="1.2"/>
+  <text x="350" y="366" text-anchor="middle" class="label" font-weight="bold">기판 (Substrate)</text>
+
+  <!-- Internal traces in substrate -->
+  <!-- Moved up 6px -->
+  <line x1="200" y1="354" x2="200" y2="370" stroke="#709070" stroke-width="0.5" stroke-dasharray="2,2"/>
+  <line x1="250" y1="354" x2="250" y2="370" stroke="#709070" stroke-width="0.5" stroke-dasharray="2,2"/>
+  <line x1="450" y1="354" x2="450" y2="370" stroke="#709070" stroke-width="0.5" stroke-dasharray="2,2"/>
+  <line x1="500" y1="354" x2="500" y2="370" stroke="#709070" stroke-width="0.5" stroke-dasharray="2,2"/>
+
+  <!-- BGA Solder Balls -->
+  <!-- Moved up 6px (cy 393 -> 387) -->
+  <circle cx="210" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="250" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="290" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="330" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="370" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="410" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="450" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="490" cy="387" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+
+  <!-- BGA label -->
+  <text x="350" y="406" text-anchor="middle" class="label-sm">솔더볼 BGA (Solder Ball)</text>
+
+  <!-- PCB -->
+  <!-- Moved up 6px (418 -> 412) -->
+  <rect x="140" y="412" width="420" height="20" rx="2" fill="#d0c890" stroke="#b0a870" stroke-width="1"/>
+  <text x="350" y="426" text-anchor="middle" class="label-sm">PCB</text>
+
+  <!-- Annotations for Flip Chip -->
+  <line x1="460" y1="310" x2="510" y2="300" stroke="#c04040" stroke-width="0.8" marker-end="url(#arrowhead)"/>
+  <text x="515" y="296" class="annotation">짧은 경로 →</text>
+  <text x="515" y="308" class="annotation">고속·저전력 가능</text>
+  <text x="515" y="320" class="annotation">(Short Path, High Speed)</text>
+
+  <!-- I/O density annotation -->
+  <!-- Moved up 6px -->
+  <text x="85" y="394" class="annotation">I/O: 면적 배치 (Area Array)</text>
+  <text x="85" y="406" class="annotation">→ 고밀도 I/O 가능</text>
+
+  <!-- Legend -->
+  <rect x="30" y="452" width="640" height="38" rx="4" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+  <rect x="45" y="460" width="14" height="10" fill="#c8ddf0" stroke="#6090c0" stroke-width="0.8"/>
+  <text x="64" y="469" class="label-sm">Die</text>
+  <rect x="100" y="460" width="14" height="10" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <text x="119" y="469" class="label-sm">와이어/범프 (Wire/Bump)</text>
+  <rect x="250" y="460" width="14" height="10" fill="#a0c0a0" stroke="#709070" stroke-width="0.8"/>
+  <text x="269" y="469" class="label-sm">기판 (Substrate)</text>
+  <rect x="380" y="460" width="14" height="10" fill="#404040" stroke="#333" stroke-width="0.8"/>
+  <text x="399" y="469" class="label-sm">EMC 몰딩</text>
+  <rect x="475" y="460" width="14" height="10" fill="#c0c0c0" stroke="#999" stroke-width="0.8"/>
+  <text x="494" y="469" class="label-sm">히트 스프레더 (Heat Spreader)</text>
+</svg>

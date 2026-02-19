@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="700" height="400" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow-end" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+      <path d="M0,0 L6,2 L0,4" fill="#333" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="400" fill="#fafafa" rx="8"/>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">ALD Conformal vs CVD Non-conformal 비교</text>
+  <line x1="350" y1="45" x2="350" y2="360" stroke="#ccc" stroke-width="1" stroke-dasharray="5,5"/>
+
+  <!-- === ALD Section (Left) === -->
+  <g transform="translate(0,0)">
+    <text x="175" y="60" text-anchor="middle" font-size="14" font-weight="bold" fill="#2a7a2a">ALD</text>
+    <text x="175" y="75" text-anchor="middle" font-size="11" fill="#4a9a4a">Atomic Layer Deposition (Conformal)</text>
+
+    <!-- Substrate (Trench) -->
+    <path d="M80,100 L120,100 L120,300 L230,300 L230,100 L270,100 L270,340 L80,340 Z" fill="#c8ddf0" stroke="#8aaac8" stroke-width="1"/>
+    
+    <!-- ALD Film (Uniform 10px thickness) -->
+    <!-- Outer profile: 10px offset from substrate -->
+    <path d="M80,90 L130,90 L130,290 L220,290 L220,90 L270,90 L270,100 L230,100 L230,300 L120,300 L120,100 L80,100 Z" fill="#7ecb7e" stroke="#4a9a4a" stroke-width="1"/>
+
+    <!-- Labels -->
+    <!-- Top Thickness -->
+    <line x1="90" y1="90" x2="90" y2="100" stroke="#333" stroke-width="1"/>
+    <text x="85" y="98" text-anchor="end" font-size="10" fill="#333">~10 nm</text>
+    <line x1="88" y1="90" x2="80" y2="90" stroke="#333" stroke-width="0.5"/>
+    <line x1="88" y1="100" x2="80" y2="100" stroke="#333" stroke-width="0.5"/>
+
+    <!-- Side Thickness -->
+    <line x1="120" y1="200" x2="130" y2="200" stroke="#333" stroke-width="1"/>
+    <text x="145" y="204" font-size="10" fill="#333" alignment-baseline="middle">~10 nm</text>
+    <line x1="120" y1="195" x2="120" y2="205" stroke="#333" stroke-width="0.5"/>
+    <line x1="130" y1="195" x2="130" y2="205" stroke="#333" stroke-width="0.5"/>
+
+    <!-- Bottom Thickness -->
+    <line x1="175" y1="290" x2="175" y2="300" stroke="#333" stroke-width="1"/>
+    <text x="175" y="285" text-anchor="middle" font-size="10" fill="#333">~10 nm</text>
+    <line x1="170" y1="290" x2="180" y2="290" stroke="#333" stroke-width="0.5"/>
+    <line x1="170" y1="300" x2="180" y2="300" stroke="#333" stroke-width="0.5"/>
+
+    <!-- Mechanism Note -->
+    <text x="175" y="370" text-anchor="middle" font-size="11" fill="#333">자기 제한 반응 (Self-limiting)</text>
+    
+    <!-- AR Label -->
+    <text x="110" y="220" font-size="10" fill="#666" transform="rotate(-90, 110, 220)">High Aspect Ratio (~10:1)</text>
+  </g>
+
+  <!-- === CVD Section (Right) === -->
+  <g transform="translate(350,0)">
+    <text x="175" y="60" text-anchor="middle" font-size="14" font-weight="bold" fill="#c07010">CVD</text>
+    <text x="175" y="75" text-anchor="middle" font-size="11" fill="#c07010">Chemical Vapor Deposition (Non-conformal)</text>
+
+    <!-- Substrate -->
+    <path d="M80,100 L120,100 L120,300 L230,300 L230,100 L270,100 L270,340 L80,340 Z" fill="#c8ddf0" stroke="#8aaac8" stroke-width="1"/>
+
+    <!-- CVD Film -->
+    <!-- Top thick: 20px (y=80). Overhang at corners. Bottom thin: 5px (y=295). -->
+    <path d="M80,80 L120,80 L135,105 L125,295 L225,295 L215,105 L230,80 L270,80 L270,100 L230,100 L230,300 L120,300 L120,100 L80,100 Z" fill="#e8a030" stroke="#c07010" stroke-width="1"/>
+
+    <!-- Void Bubble -->
+    <ellipse cx="175" cy="250" rx="15" ry="25" fill="#fff" stroke="#e05030" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="175" y="255" text-anchor="middle" font-size="10" fill="#e05030" font-weight="bold">Void</text>
+
+    <!-- Labels -->
+    <!-- Top Thickness -->
+    <line x1="80" y1="80" x2="70" y2="80" stroke="#333" stroke-width="0.5"/>
+    <line x1="80" y1="100" x2="70" y2="100" stroke="#333" stroke-width="0.5"/>
+    <text x="65" y="94" text-anchor="end" font-size="10" fill="#333">~20 nm</text>
+
+    <!-- Overhang Label -->
+    <line x1="135" y1="105" x2="150" y2="125" stroke="#333" stroke-width="1"/>
+    <text x="155" y="135" font-size="10" fill="#c07010" font-weight="bold">Overhang</text>
+
+    <!-- Bottom Thickness -->
+    <line x1="175" y1="295" x2="175" y2="300" stroke="#333" stroke-width="1"/>
+    <text x="175" y="290" text-anchor="middle" font-size="10" fill="#333">~5 nm</text>
+
+    <!-- Mechanism Note -->
+    <text x="175" y="370" text-anchor="middle" font-size="11" fill="#333">기상 반응 (상부 집중)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(250, 380)">
+    <rect x="0" y="0" width="10" height="10" fill="#c8ddf0" stroke="#8aaac8"/>
+    <text x="15" y="9" font-size="10" fill="#444">Substrate</text>
+    <rect x="70" y="0" width="10" height="10" fill="#7ecb7e" stroke="#4a9a4a"/>
+    <text x="85" y="9" font-size="10" fill="#444">ALD</text>
+    <rect x="120" y="0" width="10" height="10" fill="#e8a030" stroke="#c07010"/>
+    <text x="135" y="9" font-size="10" fill="#444">CVD</text>
+  </g>
+</svg>

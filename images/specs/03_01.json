@@ -1,0 +1,142 @@
+{
+  "chapter": "03_01",
+  "chapter_title": "수율의 이해",
+  "images": [
+    {
+      "id": "03_01_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "yield_vs_d0a_three_models.png",
+      "title": "D₀×A 대비 수율 — Poisson, Murphy, Negative Binomial 비교",
+      "description": "결함밀도×다이면적(D₀×A) 값에 따라 세 가지 수율 모델의 예측 수율이 어떻게 달라지는지 비교하는 그래프. 클러스터링 효과로 Murphy/NB 모델이 Poisson보다 높은 수율을 예측함을 보여준다.",
+      "spec": {
+        "chart_type": "line",
+        "x_label": "D₀ × A (Defect Density × Die Area)",
+        "y_label": "Yield (%)",
+        "x_range": [0, 3.0],
+        "y_range": [0, 100],
+        "curves": [
+          {
+            "label": "Poisson: Y = e^(-D₀A)",
+            "formula": "Y = exp(-x) * 100",
+            "color": "#E74C3C",
+            "linestyle": "-"
+          },
+          {
+            "label": "Murphy: Y = ((1-e^(-D₀A))/(D₀A))²",
+            "formula": "Y = ((1 - exp(-x)) / x)**2 * 100",
+            "color": "#3498DB",
+            "linestyle": "--"
+          },
+          {
+            "label": "Neg. Binomial (α=2): Y = (1+D₀A/α)^(-α)",
+            "formula": "Y = (1 + x/2)**(-2) * 100",
+            "color": "#2ECC71",
+            "linestyle": "-."
+          },
+          {
+            "label": "Neg. Binomial (α=5): Y = (1+D₀A/α)^(-α)",
+            "formula": "Y = (1 + x/5)**(-5) * 100",
+            "color": "#F39C12",
+            "linestyle": ":"
+          }
+        ],
+        "annotations": [
+          {
+            "text": "H100 (~8.1cm², D₀=0.1)\nD₀A ≈ 0.81",
+            "xy": [0.81, 44.5],
+            "arrow": true
+          },
+          {
+            "text": "모바일 AP (~1cm²)\nD₀A ≈ 0.1",
+            "xy": [0.1, 90.5],
+            "arrow": true
+          }
+        ],
+        "reference_data": [
+          {"D0A": 0.05, "poisson": 95.1, "murphy": 97.5, "nb2": 97.6, "nb5": 95.1},
+          {"D0A": 0.10, "poisson": 90.5, "murphy": 95.1, "nb2": 95.2, "nb5": 90.6},
+          {"D0A": 0.20, "poisson": 81.9, "murphy": 90.5, "nb2": 90.7, "nb5": 82.2},
+          {"D0A": 0.40, "poisson": 67.0, "murphy": 81.9, "nb2": 82.6, "nb5": 68.0},
+          {"D0A": 0.80, "poisson": 44.9, "murphy": 67.0, "nb2": 69.4, "nb5": 47.0},
+          {"D0A": 1.50, "poisson": 22.3, "murphy": 44.9, "nb2": 51.0, "nb5": 26.0},
+          {"D0A": 3.00, "poisson": 5.0, "murphy": 20.2, "nb2": 32.0, "nb5": 10.7}
+        ],
+        "grid": true,
+        "figsize": [10, 6],
+        "style": "whitegrid"
+      }
+    },
+    {
+      "id": "03_01_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "yield_rampup_scurve.png",
+      "title": "수율 램프업 S-커브",
+      "description": "새로운 공정 노드의 수율이 시간에 따라 S-커브 형태로 개선되는 과정. 초기(30-50%), 램프업(50-80%), 성숙(80-95%), 한계(95%+)의 네 단계와 AI 기여 영역을 표시한다.",
+      "spec": {
+        "chart_type": "line_with_fill",
+        "x_label": "시간 (개월)",
+        "y_label": "Die Yield (%)",
+        "x_range": [0, 24],
+        "y_range": [0, 100],
+        "data": [
+          {"month": 0, "yield": 30},
+          {"month": 1, "yield": 35},
+          {"month": 2, "yield": 40},
+          {"month": 3, "yield": 48},
+          {"month": 4, "yield": 55},
+          {"month": 5, "yield": 62},
+          {"month": 6, "yield": 68},
+          {"month": 7, "yield": 73},
+          {"month": 8, "yield": 77},
+          {"month": 9, "yield": 80},
+          {"month": 10, "yield": 83},
+          {"month": 11, "yield": 85},
+          {"month": 12, "yield": 87},
+          {"month": 14, "yield": 89},
+          {"month": 16, "yield": 91},
+          {"month": 18, "yield": 92},
+          {"month": 20, "yield": 93},
+          {"month": 22, "yield": 94},
+          {"month": 24, "yield": 94.5}
+        ],
+        "phases": [
+          {"name": "초기\n(R&D)", "start": 0, "end": 3, "color": "#FADBD8", "level": "30-50%"},
+          {"name": "램프업\n(급속개선)", "start": 3, "end": 12, "color": "#D5F5E3", "level": "50-85%"},
+          {"name": "성숙\n(점진개선)", "start": 12, "end": 20, "color": "#D6EAF8", "level": "85-93%"},
+          {"name": "한계\n(물리한계)", "start": 20, "end": 24, "color": "#F9E79F", "level": "93%+"}
+        ],
+        "highlight_region": {
+          "label": "AI 가치가 가장 큰 구간",
+          "start": 3,
+          "end": 12,
+          "color": "rgba(46, 204, 113, 0.15)"
+        },
+        "curve_color": "#2C3E50",
+        "curve_linewidth": 2.5,
+        "grid": true,
+        "figsize": [11, 6]
+      }
+    },
+    {
+      "id": "03_01_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "wafer_map_pattern_types.png",
+      "title": "웨이퍼맵 불량 패턴 5종 분류",
+      "description": "수율 엔지니어가 웨이퍼맵에서 식별하는 대표적 불량 패턴 5종을 시각화한 개념도",
+      "spec": {
+        "prompt": "A technical infographic showing 5 types of semiconductor wafer map defect patterns arranged in a row. Each pattern is shown on a circular wafer outline (300mm) with green dots for good dies and red dots for bad dies. Patterns: (1) 'Random' with scattered red dots evenly, (2) 'Edge' with red dots concentrated on the perimeter ring, (3) 'Cluster' with a dense group of red dots in one quadrant, (4) 'Ring' with red dots forming a concentric ring at specific radius, (5) 'Repeat' with red dots at the same position within each exposure field grid. Clean technical illustration style, white background, labeled in both Korean and English beneath each wafer.",
+        "style": "technical_diagram",
+        "dimensions": "1400x400",
+        "color_scheme": {
+          "pass_die": "#2ECC71",
+          "fail_die": "#E74C3C",
+          "wafer_outline": "#BDC3C7",
+          "background": "#FFFFFF"
+        }
+      }
+    }
+  ]
+}

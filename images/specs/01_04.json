@@ -1,0 +1,115 @@
+{
+  "chapter": "01_04",
+  "chapter_title": "산화와 증착",
+  "images": [
+    {
+      "id": "01_04_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "thermal_oxidation_furnace.svg",
+      "title": "열산화 퍼니스 단면도",
+      "description": "수평형 열산화 퍼니스(Furnace)의 내부 구조. 석영 튜브, 웨이퍼 보트, 가스 유입구, 가열 코일을 표현",
+      "spec": {
+        "elements": [
+          "석영 튜브 (Quartz Tube)",
+          "저항 가열 코일 (Heating Coil, 800-1200°C)",
+          "웨이퍼 보트 (Wafer Boat, 25-50장 적재)",
+          "개별 웨이퍼 (수직 배열)",
+          "가스 유입구 (Gas Inlet: O₂ or H₂O)",
+          "배기구 (Exhaust)",
+          "웨이퍼 로딩 도어 (Loading Door)"
+        ],
+        "layout": "수평 단면 (좌: 도어, 우: 배기)",
+        "colors": {
+          "quartz": "#e8e0d0",
+          "heater": "#f5a030",
+          "wafer": "#c8ddf0",
+          "gas_flow": "#a0d0a0"
+        },
+        "size": "800x350",
+        "labels": "한글+영문",
+        "annotations": [
+          "O₂ 가스 흐름 화살표",
+          "온도 프로파일 표시 (Flat Zone)",
+          "반응식: Si + O₂ → SiO₂ (건식) / Si + 2H₂O → SiO₂ + 2H₂ (습식)"
+        ]
+      }
+    },
+    {
+      "id": "01_04_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "ald_vs_cvd_conformality.svg",
+      "title": "ALD Conformal vs CVD Non-conformal 비교",
+      "description": "3D 트렌치 구조에서 ALD의 완벽한 피복성(Conformal)과 CVD의 불균일 증착(Non-conformal)을 단면으로 비교",
+      "spec": {
+        "elements": [
+          "높은 종횡비 트렌치 (Aspect Ratio ~10:1)",
+          "ALD 증착 결과: 측벽/바닥 균일한 두께 (Conformal)",
+          "CVD 증착 결과: 상부 두꺼움, 바닥 얇음 (Non-conformal)",
+          "오버행 (Overhang) 형성 - CVD 측",
+          "보이드 (Void) 형성 가능 - CVD 측"
+        ],
+        "layout": "좌우 비교 (좌: ALD, 우: CVD), 동일 트렌치 구조",
+        "colors": {
+          "substrate": "#c8ddf0",
+          "ald_film": "#7ecb7e",
+          "cvd_film": "#e8a030",
+          "void": "#ffffff"
+        },
+        "size": "700x400",
+        "labels": "한글+영문",
+        "annotations": [
+          "ALD: 자기 제한 반응 (Self-limiting) → 균일",
+          "CVD: 기상 반응 → 상부 집중",
+          "두께 비교 수치 표시 (상부 vs 바닥)"
+        ]
+      }
+    },
+    {
+      "id": "01_04_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "deal_grove_oxidation.png",
+      "title": "Deal-Grove 모델: 산화막 성장 곡선",
+      "description": "시간 vs 산화막 두께 그래프. 초기 선형 성장에서 포물선 성장으로 전환되는 Deal-Grove 모델의 핵심 특성을 시각화",
+      "spec": {
+        "data_description": "Deal-Grove 모델 x² + Ax = B(t+τ) 에서 산출. A, B는 온도/방식별 상수",
+        "curves": [
+          {
+            "label": "습식 산화 (Wet, 1000°C)",
+            "data": [
+              {"time_min": 0, "thickness_nm": 0},
+              {"time_min": 10, "thickness_nm": 50},
+              {"time_min": 30, "thickness_nm": 120},
+              {"time_min": 60, "thickness_nm": 200},
+              {"time_min": 120, "thickness_nm": 320},
+              {"time_min": 240, "thickness_nm": 480},
+              {"time_min": 480, "thickness_nm": 700}
+            ]
+          },
+          {
+            "label": "건식 산화 (Dry, 1000°C)",
+            "data": [
+              {"time_min": 0, "thickness_nm": 0},
+              {"time_min": 10, "thickness_nm": 8},
+              {"time_min": 30, "thickness_nm": 20},
+              {"time_min": 60, "thickness_nm": 35},
+              {"time_min": 120, "thickness_nm": 55},
+              {"time_min": 240, "thickness_nm": 85},
+              {"time_min": 480, "thickness_nm": 130}
+            ]
+          }
+        ],
+        "x_label": "산화 시간 (min)",
+        "y_label": "산화막 두께 (nm)",
+        "annotations": [
+          {"region": "초기", "text": "선형 영역\n(Linear: 반응률 제한)"},
+          {"region": "후기", "text": "포물선 영역\n(Parabolic: 확산 제한)"}
+        ],
+        "style": "학술, 격자선, DPI 300, 10x6 인치",
+        "note": "수치는 일반적 Deal-Grove 상수 기반 추정치. 실제 값은 웨이퍼 방향, 도핑 등에 따라 차이"
+      }
+    }
+  ]
+}

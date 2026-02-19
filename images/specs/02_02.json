@@ -1,0 +1,107 @@
+{
+  "chapter": "02_02",
+  "chapter_title": "노광 시스템",
+  "images": [
+    {
+      "id": "02_02_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "scanner_slit_scanning.svg",
+      "title": "스캐너 슬릿 스캐닝 개념도",
+      "description": "마스크와 웨이퍼가 동시에 반대 방향으로 이동하면서, 좁은 슬릿 형태의 빛으로 패턴을 훑어가는 스캐너의 동작 원리.",
+      "spec": {
+        "elements": [
+          {"type": "mask_stage", "label": "마스크\n속도 v →", "direction": "right"},
+          {"type": "slit_beam", "label": "슬릿 (좁은 노광 영역)", "width": "narrow"},
+          {"type": "projection_lens", "label": "투영 렌즈\n4:1 축소"},
+          {"type": "wafer_stage", "label": "웨이퍼\n속도 v/4 ←", "direction": "left"}
+        ],
+        "annotations": [
+          {"label": "마스크 이동 방향: →", "position": "top"},
+          {"label": "웨이퍼 이동 방향: ← (반대, 1/4 속도)", "position": "bottom"},
+          {"label": "슬릿: 렌즈 중심부만 사용 → 수차 최소화", "position": "side"},
+          {"label": "노광 필드: 26×33mm", "position": "wafer_area"}
+        ],
+        "colors": {
+          "slit_beam": "#FFD700",
+          "mask": "#444444",
+          "wafer": "#C0C0C0",
+          "lens": "#87CEEB",
+          "arrow": "#FF4444"
+        },
+        "layout": "vertical_with_motion_arrows",
+        "dimensions": "500x600"
+      }
+    },
+    {
+      "id": "02_02_img02",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "asml_twinscan_scanner.png",
+      "title": "ArF 침수 스캐너 (ASML TWINSCAN)",
+      "description": "ASML TWINSCAN NXT:2100i ArF 침수 스캐너의 외관. 반도체 팹에서 가장 비싸고 정밀한 장비.",
+      "spec": {
+        "prompt": "A photorealistic rendering of an ASML TWINSCAN NXT:2100i ArF immersion lithography scanner in a semiconductor cleanroom. The large blue-and-white equipment stands approximately 3 meters tall, featuring FOUP wafer loading ports on the left side, the main exposure chamber in the center, and the laser module on the right. The cleanroom has yellow lighting, particle-free environment, and raised floor. The ASML logo is visible. Professional industrial photography, 3/4 perspective view.",
+        "style": "photorealistic industrial",
+        "aspect_ratio": "4:3"
+      }
+    },
+    {
+      "id": "02_02_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "dual_stage_concept.png",
+      "title": "듀얼 스테이지 동작 개념도",
+      "description": "스캐너의 듀얼 스테이지 구조: 한 스테이지에서 정렬/측정을 수행하는 동안 다른 스테이지에서 노광을 동시 수행하는 병렬 파이프라인.",
+      "spec": {
+        "prompt": "A clean technical diagram showing the dual-stage scanner concept. Two independent wafer stages are shown side by side. Stage A (left, labeled 'Measure') has alignment sensors measuring wafer position and leveling data, with a wafer being scanned by sensors. Stage B (right, labeled 'Expose') is under the projection lens receiving UV light exposure through the reticle. Curved arrows indicate the stages swap positions after each cycle. A timeline at the bottom shows the parallel pipeline: while Stage A measures Wafer N+1, Stage B exposes Wafer N, then they swap. Clean infographic style with blue and orange color coding.",
+        "style": "technical infographic",
+        "aspect_ratio": "16:9"
+      }
+    },
+    {
+      "id": "02_02_img04",
+      "type": "E",
+      "method": "svg",
+      "filename": "illumination_shapes.svg",
+      "title": "조명 형태 비교",
+      "description": "스캐너 조명 형태 4종 비교: Conventional(원형), Annular(고리형), Dipole(양극), Quadrupole(사극). 각 형태의 동공면(Pupil Plane) 강도 분포.",
+      "spec": {
+        "elements": [
+          {
+            "type": "pupil_circle",
+            "name": "Conventional",
+            "description": "중앙 원형 조명, 범용",
+            "fill_pattern": "solid_circle_center"
+          },
+          {
+            "type": "pupil_circle",
+            "name": "Annular",
+            "description": "고리형, 다방향 패턴에 범용적",
+            "fill_pattern": "ring_shape"
+          },
+          {
+            "type": "pupil_circle",
+            "name": "Dipole",
+            "description": "양극, 한 방향 라인 패턴에 최적",
+            "fill_pattern": "two_poles_vertical"
+          },
+          {
+            "type": "pupil_circle",
+            "name": "Quadrupole",
+            "description": "사극, 수직+수평 패턴에 효과적",
+            "fill_pattern": "four_poles_diagonal"
+          }
+        ],
+        "colors": {
+          "illuminated_area": "#FFD700",
+          "dark_area": "#1a1a2e",
+          "circle_border": "#FFFFFF",
+          "label": "#FFFFFF"
+        },
+        "layout": "horizontal_4_panels",
+        "dimensions": "800x250"
+      }
+    }
+  ]
+}

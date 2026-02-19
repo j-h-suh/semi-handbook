@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" width="500" height="600" font-family="'Segoe UI', 'Noto Sans KR', Arial, sans-serif">
+  <defs>
+    <linearGradient id="lensGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#87CEEB" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#5BA3D9" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#FFD700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0.8"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#FF4444"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="600" fill="#0d1117" rx="12"/>
+  
+  <!-- Title -->
+  <text x="250" y="35" text-anchor="middle" fill="#E8E8E8" font-size="16" font-weight="bold">스캐너 슬릿 스캐닝 개념도</text>
+
+  <!-- ===== MASK STAGE (Top) ===== -->
+  <!-- Mask Stage Platform: Center 250, Width 300 -> x=100 to 400 -->
+  <rect x="100" y="60" width="300" height="50" rx="4" fill="#444444" stroke="#666" stroke-width="1.5"/>
+  <!-- Mask Pattern Area: Center 250, Width 220 (padding for 200px pattern) -> x=140 to 360 -->
+  <rect x="140" y="68" width="220" height="34" rx="2" fill="#333" stroke="#888" stroke-width="0.5"/>
+  
+  <!-- Mask Pattern Lines (Width 200px: 150 to 350) -->
+  <g opacity="0.6">
+    <line x1="150" y1="72" x2="150" y2="98" stroke="#aaa" stroke-width="2"/>
+    <line x1="170" y1="72" x2="170" y2="98" stroke="#aaa" stroke-width="1"/>
+    <line x1="190" y1="72" x2="190" y2="98" stroke="#aaa" stroke-width="1.5"/>
+    <line x1="210" y1="72" x2="210" y2="98" stroke="#aaa" stroke-width="1"/>
+    <line x1="230" y1="72" x2="230" y2="98" stroke="#aaa" stroke-width="2"/>
+    <line x1="250" y1="72" x2="250" y2="98" stroke="#aaa" stroke-width="1"/>
+    <line x1="270" y1="72" x2="270" y2="98" stroke="#aaa" stroke-width="1.5"/>
+    <line x1="290" y1="72" x2="290" y2="98" stroke="#aaa" stroke-width="1"/>
+    <line x1="310" y1="72" x2="310" y2="98" stroke="#aaa" stroke-width="2"/>
+    <line x1="330" y1="72" x2="330" y2="98" stroke="#aaa" stroke-width="1"/>
+    <line x1="350" y1="72" x2="350" y2="98" stroke="#aaa" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Mask Labels -->
+  <text x="250" y="80" text-anchor="middle" fill="#E0E0E0" font-size="11" font-weight="bold">마스크</text>
+  <text x="250" y="96" text-anchor="middle" fill="#CCC" font-size="10">속도 v</text>
+  
+  <!-- Mask Arrow (Right) -->
+  <!-- Stage ends at 400. Arrow starts at 400, goes right. -->
+  <line x1="400" y1="85" x2="460" y2="85" stroke="#FF4444" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="430" y="78" text-anchor="middle" fill="#FF4444" font-size="11" font-weight="bold">→ v</text>
+
+  <!-- ===== SLIT BEAM (Top) ===== -->
+  <!-- Top Width 80 (210 to 290) -->
+  <polygon points="210,110 290,110 280,220 220,220" fill="url(#beamGrad)" filter="url(#glow)" opacity="0.7"/> 
+  
+  <!-- Slit Label -->
+  <text x="250" y="135" text-anchor="middle" fill="#FFD700" font-size="10" font-weight="bold">슬릿</text>
+  <text x="250" y="148" text-anchor="middle" fill="#FFD700" font-size="9">(좁은 노광 영역)</text>
+
+  <!-- ===== PROJECTION LENS ===== -->
+  <ellipse cx="250" cy="255" rx="110" ry="35" fill="url(#lensGrad)" stroke="#6DB3E8" stroke-width="2"/>
+  <ellipse cx="250" cy="255" rx="70" ry="22" fill="#0d1117" stroke="#6DB3E8" stroke-width="1" opacity="0.5"/>
+  <text x="250" y="252" text-anchor="middle" fill="#1a1a2e" font-size="12" font-weight="bold">투영 렌즈</text>
+  <text x="250" y="268" text-anchor="middle" fill="#1a1a2e" font-size="11">4:1 축소</text>
+
+  <!-- ===== SLIT BEAM (Bottom) ===== -->
+  <!-- Wafer Plane (y=410 approx). Width 20 (Target). -->
+  <!-- Center 250. X: 240 to 260. -->
+  <polygon points="225,290 275,290 260,410 240,410" fill="url(#beamGrad)" filter="url(#glow)" opacity="0.7"/>
+
+  <!-- ===== WAFER STAGE (Bottom) ===== -->
+  <!-- Wafer Stage Platform: Center 250, Width 160 -> x=170 to 330 -->
+  <rect x="170" y="410" width="160" height="50" rx="4" fill="#C0C0C0" stroke="#999" stroke-width="1.5"/>
+  <!-- Wafer Surface: Width 70 (padding for 50px pattern) -> x=215 to 285 -->
+  <rect x="215" y="418" width="70" height="34" rx="2" fill="#A8A8A8" stroke="#888" stroke-width="0.5"/>
+  
+  <!-- Wafer Pattern Lines (Width 50px: 225 to 275) -->
+  <!-- Scaled 1/4 of Mask Pattern -->
+  <g opacity="0.5">
+    <line x1="225" y1="422" x2="225" y2="448" stroke="#666" stroke-width="0.75"/> <!-- 2 scaled -->
+    <line x1="230" y1="422" x2="230" y2="448" stroke="#666" stroke-width="0.5"/>
+    <line x1="235" y1="422" x2="235" y2="448" stroke="#666" stroke-width="0.6"/>
+    <line x1="240" y1="422" x2="240" y2="448" stroke="#666" stroke-width="0.5"/>
+    <line x1="245" y1="422" x2="245" y2="448" stroke="#666" stroke-width="0.75"/>
+    <line x1="250" y1="422" x2="250" y2="448" stroke="#666" stroke-width="0.5"/>
+    <line x1="255" y1="422" x2="255" y2="448" stroke="#666" stroke-width="0.6"/>
+    <line x1="260" y1="422" x2="260" y2="448" stroke="#666" stroke-width="0.5"/>
+    <line x1="265" y1="422" x2="265" y2="448" stroke="#666" stroke-width="0.75"/>
+    <line x1="270" y1="422" x2="270" y2="448" stroke="#666" stroke-width="0.5"/>
+    <line x1="275" y1="422" x2="275" y2="448" stroke="#666" stroke-width="0.6"/>
+  </g>
+  
+  <!-- Wafer Label -->
+  <text x="250" y="432" text-anchor="middle" fill="#333" font-size="11" font-weight="bold">웨이퍼</text>
+  <text x="250" y="448" text-anchor="middle" fill="#444" font-size="10">속도 v/4</text>
+  
+  <!-- Wafer Arrow (Left) -->
+  <!-- Stage Left Edge: 170. Arrow starts at 170, goes left to 110. -->
+  <line x1="170" y1="435" x2="110" y2="435" stroke="#FF4444" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="140" y="428" text-anchor="middle" fill="#FF4444" font-size="11" font-weight="bold">← v/4</text>
+
+  <!-- Side Annotations -->
+  <g transform="translate(15, 180)">
+    <!-- Keep same -->
+    <rect x="0" y="0" width="4" height="65" rx="2" fill="#FFD700" opacity="0.7"/>
+    <text x="12" y="15" fill="#BBB" font-size="9">슬릿: 렌즈 중심부만</text>
+    <text x="12" y="28" fill="#BBB" font-size="9">사용하여</text>
+    <text x="12" y="41" fill="#FFD700" font-size="9" font-weight="bold">수차 최소화</text>
+  </g>
+
+  <g transform="translate(350, 410)"> <!-- Moved slightly left as stage is smaller -->
+    <rect x="0" y="0" width="4" height="40" rx="2" fill="#87CEEB" opacity="0.7"/>
+    <text x="12" y="15" fill="#BBB" font-size="9">노광 필드</text>
+    <text x="12" y="30" fill="#87CEEB" font-size="10" font-weight="bold">26×33mm</text>
+  </g>
+
+  <!-- Directions Footer -->
+  <rect x="130" y="480" width="240" height="36" rx="6" fill="#1a2332" stroke="#334455" stroke-width="1"/>
+  <text x="250" y="495" text-anchor="middle" fill="#FF6666" font-size="10">↑ 마스크 이동 방향: → (오른쪽)</text>
+  <text x="250" y="509" text-anchor="middle" fill="#FF6666" font-size="10">↓ 웨이퍼 이동 방향: ← (반대, 1/4 속도)</text>
+  
+  <!-- 4:1 Indicator -->
+  <line x1="80" y1="110" x2="70" y2="110" stroke="#87CEEB" stroke-width="1"/> <!-- Align to Mask Plane -->
+  <line x1="70" y1="110" x2="70" y2="410" stroke="#87CEEB" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="80" y1="410" x2="70" y2="410" stroke="#87CEEB" stroke-width="1"/> <!-- Align to Wafer Plane -->
+  <text x="64" y="260" text-anchor="middle" fill="#87CEEB" font-size="10" transform="rotate(-90, 64, 260)">4:1 축소 투영</text>
+
+  <!-- Footer -->
+  <text x="250" y="545" text-anchor="middle" fill="#666" font-size="9">Scanner Slit-Scanning Principle</text>
+  <text x="250" y="560" text-anchor="middle" fill="#555" font-size="8">마스크와 웨이퍼가 반대 방향으로 동기 이동 — 전체 다이 영역을 순차 노광</text>
+</svg>

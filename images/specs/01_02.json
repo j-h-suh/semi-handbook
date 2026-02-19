@@ -1,0 +1,74 @@
+{
+  "chapter": "01_02",
+  "chapter_title": "웨이퍼 제조 공정 개요",
+  "images": [
+    {
+      "id": "01_02_img01",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "300mm_wafer_photo.png",
+      "title": "300mm 실리콘 웨이퍼",
+      "description": "300mm(12인치) 실리콘 웨이퍼의 실물 사진. 노치(Notch)가 보이며 표면의 무지개빛 반사를 보여줌",
+      "spec": {
+        "prompt": "A photorealistic overhead view of a polished 300mm (12-inch) silicon wafer on a dark surface. The wafer has a mirror-like finish with subtle rainbow iridescence from thin film interference. A small V-shaped notch is visible on the edge. The wafer surface is extremely smooth and reflective, showing the pristine quality required for semiconductor manufacturing. Clean, studio-lit product photography.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x1024"
+      }
+    },
+    {
+      "id": "01_02_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "ingot_to_wafer_process.svg",
+      "title": "잉곳에서 웨이퍼까지의 가공 단계",
+      "description": "슬라이싱 → 래핑 → 에칭 → CMP 4단계의 단면 변화를 시각화",
+      "spec": {
+        "elements": [
+          "잉곳 원통 (Ingot, 직경 300mm, 길이 1.5-2m)",
+          "슬라이싱 후 단면 (두께 725-775μm, 거친 표면)",
+          "래핑 후 단면 (두께 편차 < 수μm, 서브서피스 손상 존재)",
+          "에칭 후 단면 (손상층 제거, 깨끗한 단결정면)",
+          "CMP 후 단면 (표면 거칠기 < 0.2nm RMS, 거울면)"
+        ],
+        "layout": "좌→우 4단계 시퀀스, 각 단계 상단에 공정명, 하단에 단면 확대",
+        "colors": {
+          "silicon_bulk": "#c8ddf0",
+          "damaged_layer": "#f5a0a0",
+          "clean_surface": "#e0f0e0",
+          "polished": "#b0d0f0"
+        },
+        "size": "900x350",
+        "labels": "한글+영문",
+        "annotations": [
+          "다이아몬드 와이어 소 (Diamond Wire Saw)",
+          "연마재 (Abrasive)",
+          "화학 용액 (Acid/Alkali)",
+          "슬러리 + 패드 (Chemical Mechanical)"
+        ]
+      }
+    },
+    {
+      "id": "01_02_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "silicon_purity_comparison.png",
+      "title": "실리콘 정제 단계별 순도 비교",
+      "description": "MG-Si → EG-Si로의 순도 변화를 로그 스케일로 비교. 불순물 농도(ppm)가 극적으로 감소하는 과정을 시각화",
+      "spec": {
+        "data": [
+          {"stage": "해변 모래\n(Beach Sand)", "purity_nines": 2, "impurity_ppm": 10000},
+          {"stage": "야금급 Si\n(MG-Si)", "purity_nines": 2, "impurity_ppm": 10000},
+          {"stage": "트리클로로실란\n(SiHCl₃ 정제)", "purity_nines": 6, "impurity_ppm": 1},
+          {"stage": "전자급 Si\n(EG-Si, 11N)", "purity_nines": 11, "impurity_ppm": 0.00001}
+        ],
+        "chart_type": "bar",
+        "x_label": "정제 단계 (Purification Stage)",
+        "y_label": "불순물 농도 (ppm, 로그 스케일)",
+        "y_scale": "log",
+        "style": "학술, 격자선, DPI 300, 10x5 인치",
+        "highlight": "EG-Si 바에 강조 색상",
+        "note": "순도 수치는 본문 기반 (해변모래 99% → EG-Si 99.999999999%). 불순물 ppm은 순도로부터 계산한 추정치"
+      }
+    }
+  ]
+}

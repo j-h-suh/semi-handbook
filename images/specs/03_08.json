@@ -1,0 +1,185 @@
+{
+  "chapter": "03_08",
+  "chapter_title": "데이터 인프라",
+  "images": [
+    {
+      "id": "03_08_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "modern_data_architecture.svg",
+      "title": "현대 반도체 팹 데이터 아키텍처",
+      "description": "Kafka + 시계열DB + Data Lake + RDBMS + Spark의 하이브리드 데이터 아키텍처를 레이어별로 구조화한 구조도. 수집→저장→분석→서빙 레이어로 구성.",
+      "spec": {
+        "layout": "layered_architecture",
+        "layers": [
+          {
+            "name": "데이터 소스 레이어",
+            "position": "left",
+            "color": "#D6EAF8",
+            "border": "#3498DB",
+            "components": [
+              {"label": "장비 (EDA)", "icon": "server", "sub": "FDC Trace\n수십 TB/일"},
+              {"label": "계측 (SECS/GEM)", "icon": "microscope", "sub": "CD, OVL\n수십 GB/일"},
+              {"label": "MES", "icon": "database", "sub": "로트 이력\n수 GB/일"},
+              {"label": "검사", "icon": "camera", "sub": "결함 이미지\n수 TB/일"},
+              {"label": "테스트", "icon": "chip", "sub": "Bin 데이터\n수 GB/일"}
+            ]
+          },
+          {
+            "name": "수집 레이어 (Ingestion)",
+            "position": "center_left",
+            "color": "#FADBD8",
+            "border": "#E74C3C",
+            "components": [
+              {"label": "Apache Kafka", "icon": "stream", "sub": "실시간 스트리밍"},
+              {"label": "MQTT", "icon": "protocol", "sub": "장비 통신"},
+              {"label": "ETL Pipeline", "icon": "pipeline", "sub": "배치 수집"}
+            ]
+          },
+          {
+            "name": "저장 레이어 (Storage)",
+            "position": "center",
+            "color": "#D5F5E3",
+            "border": "#27AE60",
+            "components": [
+              {"label": "TimescaleDB\n/ InfluxDB", "icon": "timeseries", "sub": "FDC Trace\n(고속 쓰기/시간 조회)"},
+              {"label": "Data Lake\n(S3 / HDFS)", "icon": "lake", "sub": "원시 데이터\n장기 보관 (Parquet)"},
+              {"label": "PostgreSQL\n/ Oracle", "icon": "rdbms", "sub": "MES 메타데이터\n계측 Summary"}
+            ]
+          },
+          {
+            "name": "분석 레이어 (Analytics)",
+            "position": "center_right",
+            "color": "#F9E79F",
+            "border": "#F39C12",
+            "components": [
+              {"label": "Apache Spark\n/ Dask", "icon": "compute", "sub": "대규모 데이터 처리\nML 모델 학습"},
+              {"label": "Python\n(scikit-learn, PyTorch)", "icon": "code", "sub": "VM, FDC, APC\n모델 개발"},
+              {"label": "Feature Store", "icon": "feature", "sub": "피처 관리\n재사용"}
+            ]
+          },
+          {
+            "name": "서빙 & 시각화 레이어",
+            "position": "right",
+            "color": "#D2B4DE",
+            "border": "#8E44AD",
+            "components": [
+              {"label": "FastAPI\n/ TensorRT", "icon": "api", "sub": "VM/APC\n실시간 추론"},
+              {"label": "Grafana\n/ Custom UI", "icon": "dashboard", "sub": "SPC 관리도\n대시보드"},
+              {"label": "MLflow\n/ Model Registry", "icon": "mlops", "sub": "모델 버전 관리\n재학습 파이프라인"}
+            ]
+          }
+        ],
+        "data_flow_arrows": [
+          {"from": "데이터 소스", "to": "수집", "label": "SECS/GEM\nEDA"},
+          {"from": "수집", "to": "저장", "label": "실시간/배치"},
+          {"from": "저장", "to": "분석", "label": "SQL/API"},
+          {"from": "분석", "to": "서빙", "label": "모델 배포"}
+        ],
+        "latency_annotations": [
+          {"layer": "수집→서빙", "requirement": "실시간 경로: < 수 초 (APC FF)"},
+          {"layer": "저장→분석", "requirement": "배치 경로: 시간~일 (모델 학습)"}
+        ],
+        "dimensions": "1200x700",
+        "colors": {
+          "background": "#FFFFFF",
+          "arrow": "#7F8C8D",
+          "text": "#2C3E50"
+        }
+      }
+    },
+    {
+      "id": "03_08_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "data_matching_join.svg",
+      "title": "이기종 데이터 매칭 과정 시각화",
+      "description": "반도체 AI 프로젝트의 최대 병목인 데이터 매칭(Join) 과정을 보여주는 개념도. FDC, MES, 계측 데이터를 Wafer ID로 연결하는 과정과 5가지 어려움을 도식화.",
+      "spec": {
+        "layout": "join_diagram",
+        "tables": [
+          {
+            "name": "FDC Summary",
+            "columns": ["Wafer_ID", "Equip_ID", "Chamber", "RF_Mean", "Pressure_Avg", "..."],
+            "sample_row": ["W001", "ETCH_A", "CH1", "500.2", "20.1", "..."],
+            "color": "#D6EAF8",
+            "scale": "웨이퍼 단위",
+            "volume": "수만 행/일"
+          },
+          {
+            "name": "MES 이력",
+            "columns": ["Lot_ID", "Wafer_No", "Step", "Equip_ID", "Start_Time", "End_Time"],
+            "sample_row": ["L123456", "01", "ETCH_M1", "ETCH_A", "14:32:05", "14:35:42"],
+            "color": "#FADBD8",
+            "scale": "스텝 단위",
+            "volume": "수십만 행/일",
+            "issue": "ID 표기 불일치\nL123456 vs LOT-123456"
+          },
+          {
+            "name": "계측 데이터",
+            "columns": ["Wafer_ID", "Site_X", "Site_Y", "CD_nm", "OVL_X", "OVL_Y"],
+            "sample_row": ["W001", "-45", "0", "20.3", "0.5", "-0.2"],
+            "color": "#D5F5E3",
+            "scale": "사이트 단위 (5~50점/웨이퍼)",
+            "volume": "수천 행/일",
+            "issue": "5~10% 웨이퍼만 존재\n→ 90% 누락"
+          }
+        ],
+        "join_key": {
+          "primary": "Wafer_ID",
+          "secondary": ["Equip_ID", "Timestamp"],
+          "symbol": "⋈"
+        },
+        "challenges": [
+          {"icon": "⏱", "label": "시간 동기화", "desc": "장비간 시계 오차 수 초"},
+          {"icon": "🆔", "label": "ID 불일치", "desc": "표기법 차이"},
+          {"icon": "📉", "label": "샘플링 누락", "desc": "계측 5~10%만"},
+          {"icon": "📐", "label": "공간 스케일", "desc": "웨이퍼 vs 사이트 vs 다이"},
+          {"icon": "🔗", "label": "이력 추적", "desc": "수백 공정 단계 연결"}
+        ],
+        "result_table": {
+          "name": "통합 학습 테이블",
+          "columns": ["Wafer_ID", "센서 피처들...", "장비 이력...", "CD_실측"],
+          "note": "전체의 5~10%만 완전한 행"
+        },
+        "dimensions": "1100x650",
+        "colors": {
+          "background": "#FFFFFF",
+          "join_arrow": "#E74C3C",
+          "challenge_bg": "#FEF9E7"
+        }
+      }
+    },
+    {
+      "id": "03_08_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "fab_data_volume_by_source.png",
+      "title": "팹 데이터 볼륨 규모 비교 — 소스별 일일 생성량",
+      "description": "대형 반도체 팹에서 소스별로 생성되는 일일 데이터 규모를 로그 스케일 바 차트로 비교. FDC Trace가 압도적 1위임을 보여준다.",
+      "spec": {
+        "chart_type": "horizontal_bar",
+        "x_label": "일일 데이터 생성량",
+        "y_label": "데이터 소스",
+        "log_scale": true,
+        "data": [
+          {"source": "장비 센서\n(FDC Trace)", "volume_gb": 30000, "color": "#E74C3C", "label": "~30 TB"},
+          {"source": "결함 검사\n(이미지 포함)", "volume_gb": 3000, "color": "#F39C12", "label": "~3 TB"},
+          {"source": "계측 데이터\n(CD, OVL 등)", "volume_gb": 50, "color": "#3498DB", "label": "~50 GB"},
+          {"source": "공정 이력\n(MES)", "volume_gb": 5, "color": "#27AE60", "label": "~5 GB"},
+          {"source": "전기적 테스트\n결과", "volume_gb": 5, "color": "#9B59B6", "label": "~5 GB"}
+        ],
+        "total_annotation": {
+          "text": "합계: 일당 약 50~100 TB\n월간: PB 급",
+          "position": "top_right"
+        },
+        "ratio_annotation": {
+          "text": "FDC Trace가 전체의\n~90% 이상 차지",
+          "arrow_to": "장비 센서"
+        },
+        "grid": true,
+        "figsize": [10, 5]
+      }
+    }
+  ]
+}

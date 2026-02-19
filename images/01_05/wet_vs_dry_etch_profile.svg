@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="700" height="400">
+  <defs>
+    <!-- Corrected Marker: Standard arrow pointing +X (Right).
+         With orient="auto", it will rotate correctly along the path.
+         refX=10 puts the tip at the line end. refY=5 centers it vertically. -->
+    <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4060c0" />
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2090a0" />
+    </marker>
+
+    <style>
+      text { font-family: -apple-system, "Apple SD Gothic Neo", "Nanum Gothic", sans-serif; }
+      .title { font-size: 18px; font-weight: bold; fill: #222; }
+      .subtitle { font-size: 14px; font-weight: 600; fill: #333; }
+      .label { font-size: 12px; fill: #333; font-weight: 500; }
+      .label-sm { font-size: 11px; fill: #555; }
+      .annot { font-size: 11px; fill: #c03030; font-weight: 600; }
+      .legend { font-size: 11px; fill: #444; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="400" fill="#ffffff" />
+
+  <!-- Main Title -->
+  <text x="350" y="30" text-anchor="middle" class="title">습식 vs 건식 식각 단면 비교</text>
+  <text x="350" y="50" text-anchor="middle" class="label-sm" fill="#777">Wet Etch (Isotropic) vs Dry Etch / RIE (Anisotropic)</text>
+  
+  <!-- Divider Line -->
+  <line x1="350" y1="70" x2="350" y2="350" stroke="#ddd" stroke-width="1" stroke-dasharray="5,5"/>
+
+  <!-- ================= LEFT: WET ETCH (Isotropic) ================= -->
+  <g id="wet-etch">
+    <text x="175" y="80" text-anchor="middle" class="subtitle">습식 식각 (Wet Etch)</text>
+    <text x="175" y="95" text-anchor="middle" class="label-sm" fill="#2090a0">화학 용액 (Chemical Solution) ↔</text>
+
+    <!-- Substrate -->
+    <rect x="50" y="280" width="250" height="40" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+    <text x="175" y="305" text-anchor="middle" class="label" fill="#4a708b">Substrate</text>
+
+    <!-- Target Layer (Yellow) -->
+    <rect x="50" y="180" width="250" height="100" fill="#fff3b0" stroke="#d4c870" stroke-width="1"/>
+
+    <!-- Etched Cavity (White) - Isotropic Bowl Shape -->
+    <!-- Mask Opening: 115 to 235 (Width 120) -->
+    <!-- Undercut: ~30px -> Cavity: 85 to 265 -->
+    <!-- Using cubic bezier for smooth undercut bowl shape -->
+    <!-- Top-Left Start (85,180) -> Bottom (175, 270) -> Top-Right End (265,180) -->
+    <!-- Control points to create spherical/isotropic shape -->
+    <path d="M 85,180 C 85,250 130,270 175,270 C 220,270 265,250 265,180 Z" fill="#ffffff" stroke="#d4c870" stroke-width="1.5"/>
+
+    <!-- Resist Mask (Pink) -->
+    <!-- Left Mask: 50 ~ 115 -->
+    <rect x="50" y="160" width="65" height="20" fill="#f5c0c0" stroke="#d08080" stroke-width="1" rx="2"/>
+    <!-- Right Mask: 235 ~ 300 -->
+    <rect x="235" y="160" width="65" height="20" fill="#f5c0c0" stroke="#d08080" stroke-width="1" rx="2"/>
+
+    <!-- Undercut Annotation -->
+    <!-- Undercut region: x=85 to x=115 -->
+    <line x1="85" y1="188" x2="115" y2="188" stroke="#c03030" stroke-width="1.5"/>
+    <line x1="85" y1="184" x2="85" y2="192" stroke="#c03030" stroke-width="1"/>
+    <line x1="115" y1="184" x2="115" y2="192" stroke="#c03030" stroke-width="1"/>
+    <text x="100" y="202" text-anchor="middle" class="annot">Undercut</text>
+
+    <!-- Chemical Arrows (Wavy/Multi-directional) -->
+    <path d="M 140,110 Q 140,140 120,155" fill="none" stroke="#2090a0" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+    <path d="M 175,110 L 175,155" fill="none" stroke="#2090a0" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+    <path d="M 210,110 Q 210,140 230,155" fill="none" stroke="#2090a0" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+    <text x="175" y="240" text-anchor="middle" class="label" fill="#b07000">등방성 (Isotropic)</text>
+  </g>
+
+  <!-- ================= RIGHT: DRY ETCH (Anisotropic) ================= -->
+  <g id="dry-etch">
+    <text x="525" y="80" text-anchor="middle" class="subtitle">건식 식각 (Dry Etch)</text>
+    <text x="525" y="95" text-anchor="middle" class="label-sm" fill="#4060c0">플라즈마 이온 (Plasma Ions) ↓</text>
+
+    <!-- Substrate -->
+    <rect x="400" y="280" width="250" height="40" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+    <text x="525" y="305" text-anchor="middle" class="label" fill="#4a708b">Substrate</text>
+
+    <!-- Target Layer (Yellow) -->
+    <rect x="400" y="180" width="250" height="100" fill="#fff3b0" stroke="#d4c870" stroke-width="1"/>
+
+    <!-- Etched Cavity (White) - Vertical Trench -->
+    <!-- Mask Opening: 465 to 585 (Width 120) -->
+    <rect x="465" y="180" width="120" height="100" fill="#ffffff" stroke="none"/>
+    <line x1="465" y1="180" x2="465" y2="280" stroke="#d4c870" stroke-width="1.5"/>
+    <line x1="585" y1="180" x2="585" y2="280" stroke="#d4c870" stroke-width="1.5"/>
+
+    <!-- Resist Mask (Pink) -->
+    <!-- Left: 400~465 -->
+    <rect x="400" y="160" width="65" height="20" fill="#f5c0c0" stroke="#d08080" stroke-width="1" rx="2"/>
+    <!-- Right: 585~650 -->
+    <rect x="585" y="160" width="65" height="20" fill="#f5c0c0" stroke="#d08080" stroke-width="1" rx="2"/>
+
+    <!-- Vertical Angle Annotations -->
+    <path d="M465,270 L475,270 L475,280" fill="none" stroke="#c03030" stroke-width="1"/>
+    <text x="460" y="270" text-anchor="end" class="annot">90°</text>
+
+    <!-- Plasma Arrows (Straight Down) -->
+    <line x1="430" y1="110" x2="430" y2="155" stroke="#4060c0" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+    <line x1="495" y1="110" x2="495" y2="175" stroke="#4060c0" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+    <line x1="525" y1="110" x2="525" y2="175" stroke="#4060c0" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+    <line x1="555" y1="110" x2="555" y2="175" stroke="#4060c0" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+    <line x1="620" y1="110" x2="620" y2="155" stroke="#4060c0" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+    <text x="525" y="240" text-anchor="middle" class="label" fill="#4060c0">이방성 (Anisotropic)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(50, 360)">
+     <rect x="0" y="0" width="600" height="30" fill="#f9f9f9" stroke="#ddd" rx="4"/>
+     
+     <g transform="translate(20, 8)">
+       <rect width="15" height="15" fill="#f5c0c0" stroke="#d08080"/>
+       <text x="20" y="11" class="legend">Photoresist</text>
+     </g>
+
+     <g transform="translate(150, 8)">
+       <rect width="15" height="15" fill="#fff3b0" stroke="#d4c870"/>
+       <text x="20" y="11" class="legend">Etch Target (SiO₂)</text>
+     </g>
+
+     <g transform="translate(300, 8)">
+       <rect width="15" height="15" fill="#c8ddf0" stroke="#8aafc8"/>
+       <text x="20" y="11" class="legend">Substrate</text>
+     </g>
+
+     <g transform="translate(420, 8)">
+       <rect width="15" height="15" fill="#ffffff" stroke="#999"/>
+       <text x="20" y="11" class="legend">Etched Area</text>
+     </g>
+  </g>
+</svg>

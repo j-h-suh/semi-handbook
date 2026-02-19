@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="1000" height="300">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900');
+      text { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; }
+    </style>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1000" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f1923"/>
+      <stop offset="100%" stop-color="#1a2a3a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="300" fill="url(#bgGrad)" rx="12"/>
+  
+  <!-- Subtle grid pattern -->
+  <g opacity="0.05" stroke="#ffffff" stroke-width="0.5">
+    <line x1="0" y1="50" x2="1000" y2="50"/>
+    <line x1="0" y1="100" x2="1000" y2="100"/>
+    <line x1="0" y1="150" x2="1000" y2="150"/>
+    <line x1="0" y1="200" x2="1000" y2="200"/>
+    <line x1="0" y1="250" x2="1000" y2="250"/>
+  </g>
+
+  <!-- ===== Element 1: 물리 이해 ===== -->
+  <g transform="translate(75, 55)">
+    <!-- Card background -->
+    <rect x="0" y="0" width="140" height="170" rx="10" fill="#0d2137" stroke="#2196F3" stroke-width="1.5" opacity="0.9" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="140" height="4" rx="2" fill="#2196F3"/>
+    
+    <!-- Atom icon -->
+    <g transform="translate(70, 50)">
+      <!-- Nucleus -->
+      <circle cx="0" cy="0" r="6" fill="#2196F3" opacity="0.9"/>
+      <!-- Orbits -->
+      <ellipse cx="0" cy="0" rx="22" ry="8" fill="none" stroke="#2196F3" stroke-width="1.2" opacity="0.7"/>
+      <ellipse cx="0" cy="0" rx="22" ry="8" fill="none" stroke="#2196F3" stroke-width="1.2" opacity="0.7" transform="rotate(60)"/>
+      <ellipse cx="0" cy="0" rx="22" ry="8" fill="none" stroke="#2196F3" stroke-width="1.2" opacity="0.7" transform="rotate(-60)"/>
+      <!-- Electrons -->
+      <circle cx="22" cy="0" r="3" fill="#64B5F6"/>
+      <circle cx="-11" cy="-16" r="3" fill="#64B5F6"/>
+      <circle cx="-11" cy="16" r="3" fill="#64B5F6"/>
+    </g>
+    
+    <!-- Label -->
+    <text x="70" y="95" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">물리 이해</text>
+    
+    <!-- Description -->
+    <text x="70" y="115" text-anchor="middle" fill="#90CAF9" font-size="9">Rayleigh 방정식</text>
+    <text x="70" y="128" text-anchor="middle" fill="#90CAF9" font-size="9">공정 물리</text>
+    
+    <!-- Part ref badge -->
+    <rect x="35" y="140" width="70" height="20" rx="10" fill="#2196F3" opacity="0.2"/>
+    <text x="70" y="154" text-anchor="middle" fill="#2196F3" font-size="10" font-weight="700">Part 1-2</text>
+  </g>
+
+  <!-- Plus sign 1 -->
+  <g transform="translate(232, 130)">
+    <text x="0" y="0" text-anchor="middle" fill="#ffffff" font-size="36" font-weight="900" opacity="0.6" filter="url(#glow)">+</text>
+  </g>
+
+  <!-- ===== Element 2: 데이터 역량 ===== -->
+  <g transform="translate(260, 55)">
+    <rect x="0" y="0" width="140" height="170" rx="10" fill="#0d2517" stroke="#4CAF50" stroke-width="1.5" opacity="0.9" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="140" height="4" rx="2" fill="#4CAF50"/>
+    
+    <!-- Database/Chart icon -->
+    <g transform="translate(70, 50)">
+      <!-- Database cylinder -->
+      <ellipse cx="-12" cy="-12" rx="12" ry="5" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
+      <line x1="-24" y1="-12" x2="-24" y2="8" stroke="#4CAF50" stroke-width="1.5"/>
+      <line x1="0" y1="-12" x2="0" y2="8" stroke="#4CAF50" stroke-width="1.5"/>
+      <ellipse cx="-12" cy="8" rx="12" ry="5" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
+      <!-- Chart bars -->
+      <rect x="8" y="2" width="5" height="10" fill="#81C784" rx="1"/>
+      <rect x="16" y="-5" width="5" height="17" fill="#66BB6A" rx="1"/>
+      <rect x="24" y="-12" width="5" height="24" fill="#4CAF50" rx="1"/>
+    </g>
+    
+    <text x="70" y="95" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">데이터 역량</text>
+    <text x="70" y="115" text-anchor="middle" fill="#A5D6A7" font-size="9">시계열×공간×계층</text>
+    <text x="70" y="128" text-anchor="middle" fill="#A5D6A7" font-size="9">구조 이해</text>
+    
+    <rect x="40" y="140" width="60" height="20" rx="10" fill="#4CAF50" opacity="0.2"/>
+    <text x="70" y="154" text-anchor="middle" fill="#4CAF50" font-size="10" font-weight="700">Part 3</text>
+  </g>
+
+  <!-- Plus sign 2 -->
+  <g transform="translate(417, 130)">
+    <text x="0" y="0" text-anchor="middle" fill="#ffffff" font-size="36" font-weight="900" opacity="0.6" filter="url(#glow)">+</text>
+  </g>
+
+  <!-- ===== Element 3: ML 적용 ===== -->
+  <g transform="translate(445, 55)">
+    <rect x="0" y="0" width="140" height="170" rx="10" fill="#211a0d" stroke="#FF9800" stroke-width="1.5" opacity="0.9" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="140" height="4" rx="2" fill="#FF9800"/>
+    
+    <!-- Neural network icon -->
+    <g transform="translate(70, 48)">
+      <!-- Input layer -->
+      <circle cx="-20" cy="-15" r="4" fill="none" stroke="#FFB74D" stroke-width="1.5"/>
+      <circle cx="-20" cy="0" r="4" fill="none" stroke="#FFB74D" stroke-width="1.5"/>
+      <circle cx="-20" cy="15" r="4" fill="none" stroke="#FFB74D" stroke-width="1.5"/>
+      <!-- Hidden layer -->
+      <circle cx="0" cy="-10" r="4" fill="#FF9800" opacity="0.6"/>
+      <circle cx="0" cy="10" r="4" fill="#FF9800" opacity="0.6"/>
+      <!-- Output layer -->
+      <circle cx="20" cy="0" r="4" fill="#FF9800"/>
+      <!-- Connections -->
+      <g stroke="#FF9800" stroke-width="0.8" opacity="0.4">
+        <line x1="-16" y1="-15" x2="-4" y2="-10"/>
+        <line x1="-16" y1="-15" x2="-4" y2="10"/>
+        <line x1="-16" y1="0" x2="-4" y2="-10"/>
+        <line x1="-16" y1="0" x2="-4" y2="10"/>
+        <line x1="-16" y1="15" x2="-4" y2="-10"/>
+        <line x1="-16" y1="15" x2="-4" y2="10"/>
+        <line x1="4" y1="-10" x2="16" y2="0"/>
+        <line x1="4" y1="10" x2="16" y2="0"/>
+      </g>
+      <!-- Gear overlay -->
+      <g transform="translate(20, -18)" fill="#FFB74D" opacity="0.5">
+        <path d="M0,-6 L2,-2 L6,-2 L3,1 L4,5 L0,3 L-4,5 L-3,1 L-6,-2 L-2,-2 Z" transform="scale(0.6)"/>
+      </g>
+    </g>
+    
+    <text x="70" y="95" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">ML 적용</text>
+    <text x="70" y="115" text-anchor="middle" fill="#FFCC80" font-size="9">모델 개발, 검증</text>
+    <text x="70" y="128" text-anchor="middle" fill="#FFCC80" font-size="9">배포</text>
+    
+    <rect x="40" y="140" width="60" height="20" rx="10" fill="#FF9800" opacity="0.2"/>
+    <text x="70" y="154" text-anchor="middle" fill="#FF9800" font-size="10" font-weight="700">Part 4</text>
+  </g>
+
+  <!-- Plus sign 3 -->
+  <g transform="translate(602, 130)">
+    <text x="0" y="0" text-anchor="middle" fill="#ffffff" font-size="36" font-weight="900" opacity="0.6" filter="url(#glow)">+</text>
+  </g>
+
+  <!-- ===== Element 4: 현장 신뢰 ===== -->
+  <g transform="translate(630, 55)">
+    <rect x="0" y="0" width="140" height="170" rx="10" fill="#1a0d21" stroke="#9C27B0" stroke-width="1.5" opacity="0.9" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="140" height="4" rx="2" fill="#9C27B0"/>
+    
+    <!-- Handshake / checkmark icon -->
+    <g transform="translate(70, 48)">
+      <!-- Shield shape -->
+      <path d="M0,-22 L18,-14 L18,4 Q18,18 0,24 Q-18,18 -18,4 L-18,-14 Z" 
+            fill="none" stroke="#CE93D8" stroke-width="1.5" opacity="0.7"/>
+      <!-- Checkmark inside -->
+      <path d="M-8,2 L-3,8 L10,-6" fill="none" stroke="#9C27B0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    
+    <text x="70" y="95" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">현장 신뢰</text>
+    <text x="70" y="115" text-anchor="middle" fill="#CE93D8" font-size="9">SHAP, 물리 정합성</text>
+    <text x="70" y="128" text-anchor="middle" fill="#CE93D8" font-size="9">커뮤니케이션</text>
+    
+    <rect x="32" y="140" width="76" height="20" rx="10" fill="#9C27B0" opacity="0.2"/>
+    <text x="70" y="154" text-anchor="middle" fill="#9C27B0" font-size="10" font-weight="700">Part 4.4</text>
+  </g>
+
+  <!-- ===== Equals sign ===== -->
+  <g transform="translate(790, 130)">
+    <text x="0" y="0" text-anchor="middle" fill="#f44336" font-size="44" font-weight="900" filter="url(#glow)">=</text>
+  </g>
+
+  <!-- ===== Result: 반도체 AI 엔지니어 ===== -->
+  <g transform="translate(815, 55)">
+    <!-- Glowing border -->
+    <rect x="0" y="0" width="170" height="170" rx="12" fill="#210d0d" stroke="#f44336" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="170" height="5" rx="2" fill="#f44336"/>
+    
+    <!-- Star/diamond icon -->
+    <g transform="translate(85, 55)">
+      <!-- Outer glow -->
+      <polygon points="0,-24 6,-8 24,-8 10,4 16,20 0,12 -16,20 -10,4 -24,-8 -6,-8"
+               fill="#f44336" opacity="0.15"/>
+      <!-- Inner star -->
+      <polygon points="0,-20 5,-7 20,-7 8,3 13,17 0,10 -13,17 -8,3 -20,-7 -5,-7"
+               fill="none" stroke="#f44336" stroke-width="1.5"/>
+      <!-- Center diamond -->
+      <polygon points="0,-8 8,0 0,8 -8,0" fill="#f44336" opacity="0.6"/>
+    </g>
+    
+    <!-- Label -->
+    <text x="85" y="97" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="900">반도체</text>
+    <text x="85" y="116" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="900">AI 엔지니어</text>
+    
+    <!-- Subtitle -->
+    <rect x="22" y="128" width="126" height="22" rx="11" fill="#f44336" opacity="0.15"/>
+    <text x="85" y="143" text-anchor="middle" fill="#EF9A9A" font-size="10" font-weight="700">대체 불가능한 가치</text>
+  </g>
+
+  <!-- Title bar at top -->
+  <text x="500" y="35" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="400" opacity="0.5">The Formula for Semiconductor AI Engineer</text>
+
+  <!-- Bottom attribution -->
+  <text x="500" y="285" text-anchor="middle" fill="#ffffff" font-size="9" opacity="0.3">반도체 AI 핸드북 — 에필로그</text>
+</svg>

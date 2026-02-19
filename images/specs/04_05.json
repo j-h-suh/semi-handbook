@@ -1,0 +1,84 @@
+{
+  "chapter": "04_05",
+  "chapter_title": "MLOps",
+  "images": [
+    {
+      "id": "04_05_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "data_drift_psi_trend.png",
+      "title": "Data Drift 모니터링 — PSI 추이 차트",
+      "description": "배포 후 주요 FDC 피처의 PSI(Population Stability Index) 추이를 시계열로 표시. PSI > 0.2 시 알람 발생과 재학습 트리거를 시각화",
+      "spec": {
+        "data": {
+          "x": "날짜 (Day 1 ~ Day 60)",
+          "series": [
+            {
+              "name": "PEB_온도",
+              "values_pattern": "Day1~30: 0.03~0.08 (안정), Day31 PM 이벤트 후: 0.12~0.15, Day45 레지스트 변경 후: 0.25~0.35",
+              "color": "#e85d5d"
+            },
+            {
+              "name": "RF_Power",
+              "values_pattern": "Day1~45: 0.02~0.06 (안정), Day46~60: 0.05~0.08 (안정)",
+              "color": "#4a90d9"
+            },
+            {
+              "name": "Dose_실측",
+              "values_pattern": "Day1~30: 0.04~0.07, Day31~40: 0.08~0.12 (미세 변화), Day41~60: 0.05~0.08 (복귀)",
+              "color": "#2ecc71"
+            }
+          ]
+        },
+        "y_label": "PSI (Population Stability Index)",
+        "x_label": "배포 후 경과일",
+        "thresholds": [
+          {"y": 0.1, "label": "주의 (Minor Shift)", "color": "#f39c12", "linestyle": "--"},
+          {"y": 0.2, "label": "경고 — 재학습 트리거", "color": "#e85d5d", "linestyle": "-"}
+        ],
+        "events": [
+          {"day": 31, "label": "PM 수행", "color": "#f39c12"},
+          {"day": 45, "label": "레지스트 변경", "color": "#e85d5d"},
+          {"day": 48, "label": "재학습 트리거!", "color": "#e85d5d", "icon": "⚠️"}
+        ],
+        "style": "시계열, DPI 300, 10x5 인치, 격자선, 범례",
+        "note": "본문 'PSI > 0.2이면 유의미한 변화로 판단... PM, 부품 교체, 소재 변경, 새 제품 도입, 계절 변동' 내용 기반"
+      }
+    },
+    {
+      "id": "04_05_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "model_registry_timeline.svg",
+      "title": "Model Registry 버전 타임라인",
+      "description": "Git처럼 모델 버전을 관리하는 Model Registry의 타임라인. Production/Staging/Archived 상태와 롤백 가능성을 시각화",
+      "spec": {
+        "elements": [
+          "타임라인 축 (1월 W1 ~ 2월 W3)",
+          "버전 노드들:",
+          "  v1.0 (01-15): R²=0.82, Train=Jan W1-2, Status=Archived",
+          "  v1.1 (01-29): R²=0.85, Train=Jan W1-4, Status=Archived",
+          "  v2.0 (02-12): R²=0.88, Train=Jan W3~Feb W2, Status=Production ✅",
+          "  v2.1 (02-14): R²=0.87, Train=Feb W1-2, Status=Staging (검증 중)",
+          "롤백 화살표: v2.0 → v1.1 (필요 시 수 분 내 복귀)",
+          "배포 화살표: v2.1 → Production (검증 통과 시)"
+        ],
+        "colors": {
+          "production": "#2ecc71",
+          "staging": "#f39c12",
+          "archived": "#cccccc",
+          "rollback_arrow": "#e85d5d",
+          "timeline": "#333333"
+        },
+        "labels": "한글+영문",
+        "size": "800x300",
+        "annotations": [
+          "각 노드에 R², 학습 데이터 기간, 상태 표시",
+          "MLflow 아이콘 (선택)",
+          "롤백은 수 분 내 완료 필수"
+        ],
+        "note": "본문 Model Registry 예시 (v1.0~v2.1) 데이터를 직접 사용"
+      }
+    }
+  ]
+}

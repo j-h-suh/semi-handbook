@@ -1,0 +1,132 @@
+{
+  "chapter": "01_05",
+  "chapter_title": "식각과 세정",
+  "images": [
+    {
+      "id": "01_05_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "wet_vs_dry_etch_profile.svg",
+      "title": "습식 vs 건식 식각 단면 비교",
+      "description": "등방성 습식 식각(언더컷 발생)과 이방성 건식 식각(수직 프로파일)의 단면 비교. 동일 마스크 패턴에 대한 식각 결과 차이를 명확히 표현",
+      "spec": {
+        "elements": [
+          "포토레지스트 마스크 (동일 패턴)",
+          "식각 대상 막 (SiO₂ 또는 Si)",
+          "하부 기판",
+          "습식: 둥근 등방성 프로파일 (Isotropic) + 언더컷 (Undercut)",
+          "건식: 수직 이방성 프로파일 (Anisotropic) + 깔끔한 측벽"
+        ],
+        "layout": "좌우 비교 (좌: 습식 Wet, 우: 건식 Dry/RIE)",
+        "colors": {
+          "resist": "#f5c0c0",
+          "etch_target": "#fff3b0",
+          "substrate": "#c8ddf0",
+          "etched_area": "#ffffff"
+        },
+        "size": "700x400",
+        "labels": "한글+영문",
+        "annotations": [
+          "언더컷 거리 표시 (습식)",
+          "수직 측벽 각도 ~90° (건식)",
+          "화학 용액 vs 플라즈마 이온 방향 화살표"
+        ]
+      }
+    },
+    {
+      "id": "01_05_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "rie_chamber_cross_section.svg",
+      "title": "RIE 챔버 구조 단면도",
+      "description": "반응성 이온 식각(RIE) 챔버의 내부 구조. RF 전극, 가스 유입, 플라즈마 영역, 웨이퍼 위치를 표현",
+      "spec": {
+        "elements": [
+          "진공 챔버 (Vacuum Chamber)",
+          "상부 전극 (Upper Electrode / Showerhead) - 가스 분배",
+          "하부 전극 (Lower Electrode / Chuck) - 웨이퍼 적재",
+          "RF 전원 (RF Power Source, 13.56 MHz)",
+          "플라즈마 영역 (Plasma Glow Region)",
+          "시스 영역 (Sheath - 이온 가속 영역)",
+          "가스 유입구 (Gas Inlet: CF₄, Cl₂, HBr 등)",
+          "진공 펌프 (Vacuum Pump / Exhaust)",
+          "웨이퍼 (Wafer on Electrostatic Chuck)"
+        ],
+        "colors": {
+          "chamber": "#d0d0d0",
+          "electrode": "#a0a0a0",
+          "plasma": "#c0a0f0",
+          "sheath": "#e0d0f5",
+          "wafer": "#c8ddf0",
+          "gas_flow": "#a0d0a0"
+        },
+        "size": "600x500",
+        "labels": "한글+영문",
+        "annotations": [
+          "이온 수직 가속 방향 화살표 (↓)",
+          "라디칼 확산 방향 (무작위)",
+          "RF 전기장 표시"
+        ]
+      }
+    },
+    {
+      "id": "01_05_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "oes_endpoint_detection.png",
+      "title": "OES 기반 식각 종점 검출 그래프",
+      "description": "시간에 따른 특정 파장(예: CO 483nm) 발광 강도 변화. SiO₂ 식각 중 CO 피크가 급감하는 변곡점에서 종점을 검출",
+      "spec": {
+        "data": [
+          {"time_s": 0, "intensity": 0.2},
+          {"time_s": 5, "intensity": 0.85},
+          {"time_s": 10, "intensity": 0.90},
+          {"time_s": 20, "intensity": 0.88},
+          {"time_s": 30, "intensity": 0.87},
+          {"time_s": 40, "intensity": 0.86},
+          {"time_s": 50, "intensity": 0.85},
+          {"time_s": 55, "intensity": 0.75},
+          {"time_s": 58, "intensity": 0.45},
+          {"time_s": 60, "intensity": 0.20},
+          {"time_s": 65, "intensity": 0.15},
+          {"time_s": 70, "intensity": 0.12}
+        ],
+        "x_label": "식각 시간 (sec)",
+        "y_label": "OES 발광 강도 (CO 483nm, a.u.)",
+        "annotations": [
+          {"x": 57, "text": "종점 (Endpoint)\n← SiO₂ 소진"},
+          {"region": "0-55", "text": "SiO₂ 식각 중\n(CO 생성)"},
+          {"region": "60-70", "text": "Si 노출\n(CO 급감)"}
+        ],
+        "vertical_line": {"x": 57, "label": "EPD Trigger", "color": "red", "style": "dashed"},
+        "style": "학술, 격자선, DPI 300, 10x5 인치",
+        "note": "OES 종점 검출의 전형적 패턴을 기반으로 한 추정 데이터"
+      }
+    },
+    {
+      "id": "01_05_img04",
+      "type": "B",
+      "method": "svg",
+      "filename": "etch_profile_defects.svg",
+      "title": "식각 프로파일 이상 유형",
+      "description": "보잉(Bowing), 테이퍼(Taper), 노칭(Notching) 3가지 대표적 프로파일 이상을 정상 프로파일과 비교",
+      "spec": {
+        "elements": [
+          "이상적 프로파일 (Ideal): 완벽한 수직 (90°)",
+          "보잉 (Bowing): 측벽이 바깥으로 볼록하게 휨",
+          "테이퍼 (Taper): 측벽이 기울어짐 (< 90°)",
+          "노칭 (Notching): 바닥 모서리가 과도하게 파임"
+        ],
+        "layout": "4열 병렬 비교 (Ideal | Bowing | Taper | Notching)",
+        "colors": {
+          "material": "#c8ddf0",
+          "etched": "#ffffff",
+          "defect_highlight": "#f5a0a0",
+          "mask": "#a0a0a0"
+        },
+        "size": "800x350",
+        "labels": "한글+영문"
+      }
+    }
+  ]
+}

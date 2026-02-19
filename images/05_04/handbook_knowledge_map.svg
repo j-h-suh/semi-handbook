@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900');
+      text { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; }
+    </style>
+    <linearGradient id="bgGrad2" x1="0" y1="0" x2="1200" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a0e14"/>
+      <stop offset="50%" stop-color="#111820"/>
+      <stop offset="100%" stop-color="#0a0e14"/>
+    </linearGradient>
+    <filter id="shadow2">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1565c0" opacity="0.6"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2e7d32" opacity="0.6"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#e65100" opacity="0.6"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#78909C" opacity="0.5"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" fill="url(#bgGrad2)" rx="12"/>
+  
+  <!-- Subtle dots pattern -->
+  <g opacity="0.03" fill="#ffffff">
+    <circle cx="50" cy="50" r="1"/><circle cx="150" cy="50" r="1"/><circle cx="250" cy="50" r="1"/>
+    <circle cx="350" cy="50" r="1"/><circle cx="450" cy="50" r="1"/><circle cx="550" cy="50" r="1"/>
+    <circle cx="650" cy="50" r="1"/><circle cx="750" cy="50" r="1"/><circle cx="850" cy="50" r="1"/>
+    <circle cx="950" cy="50" r="1"/><circle cx="1050" cy="50" r="1"/><circle cx="1150" cy="50" r="1"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="42" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" letter-spacing="2">반도체 AI 핸드북 — 전체 지식 맵</text>
+  <text x="600" y="62" text-anchor="middle" fill="#78909C" font-size="12">총 47챕터 · 5 Parts · 하나의 여정</text>
+
+  <!-- ===== CROSS CONNECTIONS (drawn first, behind blocks) ===== -->
+  
+  <!-- Part 2 OPC → Part 4 DL (cuLitho) -->
+  <path d="M 460,250 Q 460,460 750,340" fill="none" stroke="#CE93D8" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.35"/>
+  <text x="570" y="430" text-anchor="middle" fill="#CE93D8" font-size="9" opacity="0.6" transform="rotate(-20, 570, 430)">cuLitho</text>
+  
+  <!-- Part 3 VM → Part 4 학습 (VM 모델) -->
+  <path d="M 700,280 Q 700,440 850,340" fill="none" stroke="#FFB74D" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.35"/>
+  <text x="740" y="410" text-anchor="middle" fill="#FFB74D" font-size="9" opacity="0.6">VM 모델</text>
+  
+  <!-- Part 3 데이터 → Part 4 피처 (피처 설계) -->
+  <path d="M 730,250 Q 780,450 900,340" fill="none" stroke="#81C784" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.35"/>
+  <text x="820" y="440" text-anchor="middle" fill="#81C784" font-size="9" opacity="0.6">피처 설계</text>
+
+  <!-- ===== Main flow arrows ===== -->
+  <!-- Part 1 → Part 2 -->
+  <line x1="270" y1="220" x2="292" y2="220" stroke="#1565c0" stroke-width="2" marker-end="url(#arrowBlue)" opacity="0.6"/>
+  <text x="281" y="212" text-anchor="middle" fill="#90CAF9" font-size="8" opacity="0.7">심화</text>
+  
+  <!-- Part 2 → Part 3 -->
+  <line x1="510" y1="220" x2="532" y2="220" stroke="#2e7d32" stroke-width="2" marker-end="url(#arrowGreen)" opacity="0.6"/>
+  <text x="521" y="212" text-anchor="middle" fill="#A5D6A7" font-size="8" opacity="0.7">확장</text>
+  
+  <!-- Part 3 → Part 4 -->
+  <line x1="750" y1="220" x2="772" y2="220" stroke="#e65100" stroke-width="2" marker-end="url(#arrowOrange)" opacity="0.6"/>
+  <text x="761" y="212" text-anchor="middle" fill="#FFCC80" font-size="8" opacity="0.7">적용</text>
+  
+  <!-- Part 4 → Part 5 -->
+  <line x1="990" y1="220" x2="1012" y2="220" stroke="#6a1b9a" stroke-width="2" marker-end="url(#arrowGray)" opacity="0.6"/>
+  <text x="1001" y="212" text-anchor="middle" fill="#CE93D8" font-size="8" opacity="0.7">미래</text>
+  
+  <!-- Part 1-4 → Part 5 (arc from above) -->
+  <path d="M 600,85 Q 1100,75 1090,125" fill="none" stroke="#78909C" stroke-width="1.5" stroke-dasharray="8,4" marker-end="url(#arrowGray)" opacity="0.3"/>
+  <text x="850" y="78" text-anchor="middle" fill="#78909C" font-size="9" opacity="0.5">미래 방향</text>
+
+  <!-- ===== PART 1 BLOCK ===== -->
+  <g transform="translate(32, 90)">
+    <!-- Main card -->
+    <rect x="0" y="0" width="238" height="280" rx="10" fill="#0a1628" stroke="#1565c0" stroke-width="1.5" filter="url(#shadow2)"/>
+    <!-- Header -->
+    <rect x="0" y="0" width="238" height="50" rx="10" fill="#1565c0" opacity="0.15"/>
+    <rect x="0" y="0" width="238" height="4" rx="2" fill="#1565c0"/>
+    <!-- Part number -->
+    <text x="20" y="30" fill="#64B5F6" font-size="11" font-weight="700">PART 1</text>
+    <text x="218" y="30" text-anchor="end" fill="#42A5F5" font-size="11" font-weight="900">10ch</text>
+    <text x="20" y="44" fill="#ffffff" font-size="12" font-weight="700" opacity="0.9">반도체 제조 기초</text>
+    
+    <!-- Topics -->
+    <g transform="translate(15, 62)">
+      <rect x="0" y="0" width="58" height="22" rx="4" fill="#1565c0" opacity="0.15"/>
+      <text x="29" y="15" text-anchor="middle" fill="#90CAF9" font-size="9">웨이퍼</text>
+      
+      <rect x="64" y="0" width="72" height="22" rx="4" fill="#1565c0" opacity="0.15"/>
+      <text x="100" y="15" text-anchor="middle" fill="#90CAF9" font-size="9">산화/증착</text>
+      
+      <rect x="142" y="0" width="58" height="22" rx="4" fill="#1565c0" opacity="0.15"/>
+      <text x="171" y="15" text-anchor="middle" fill="#90CAF9" font-size="9">식각</text>
+      
+      <rect x="0" y="28" width="72" height="22" rx="4" fill="#1565c0" opacity="0.15"/>
+      <text x="36" y="43" text-anchor="middle" fill="#90CAF9" font-size="9">이온주입</text>
+      
+      <rect x="78" y="28" width="72" height="22" rx="4" fill="#1565c0" opacity="0.15"/>
+      <text x="114" y="43" text-anchor="middle" fill="#90CAF9" font-size="9">CMP/배선</text>
+      
+      <rect x="156" y="28" width="52" height="22" rx="4" fill="#1565c0" opacity="0.15"/>
+      <text x="182" y="43" text-anchor="middle" fill="#90CAF9" font-size="9">후공정</text>
+      
+      <rect x="0" y="56" width="90" height="22" rx="4" fill="#1565c0" opacity="0.15"/>
+      <text x="45" y="71" text-anchor="middle" fill="#90CAF9" font-size="9">무어의 법칙</text>
+    </g>
+    
+    <!-- Icon: chip -->
+    <g transform="translate(119, 210)" opacity="0.12">
+      <rect x="-25" y="-25" width="50" height="50" rx="5" fill="none" stroke="#1565c0" stroke-width="3"/>
+      <line x1="-25" y1="-10" x2="-35" y2="-10" stroke="#1565c0" stroke-width="2"/>
+      <line x1="-25" y1="10" x2="-35" y2="10" stroke="#1565c0" stroke-width="2"/>
+      <line x1="25" y1="-10" x2="35" y2="-10" stroke="#1565c0" stroke-width="2"/>
+      <line x1="25" y1="10" x2="35" y2="10" stroke="#1565c0" stroke-width="2"/>
+      <line x1="-10" y1="-25" x2="-10" y2="-35" stroke="#1565c0" stroke-width="2"/>
+      <line x1="10" y1="-25" x2="10" y2="-35" stroke="#1565c0" stroke-width="2"/>
+      <line x1="-10" y1="25" x2="-10" y2="35" stroke="#1565c0" stroke-width="2"/>
+      <line x1="10" y1="25" x2="10" y2="35" stroke="#1565c0" stroke-width="2"/>
+    </g>
+    
+    <!-- Key lesson -->
+    <rect x="10" y="248" width="218" height="24" rx="5" fill="#1565c0" opacity="0.1"/>
+    <text x="119" y="264" text-anchor="middle" fill="#64B5F6" font-size="10" font-weight="700">💡 정밀한 연쇄 → AI 필요성</text>
+  </g>
+
+  <!-- ===== PART 2 BLOCK ===== -->
+  <g transform="translate(296, 90)">
+    <rect x="0" y="0" width="214" height="280" rx="10" fill="#0a1a0d" stroke="#2e7d32" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="214" height="50" rx="10" fill="#2e7d32" opacity="0.15"/>
+    <rect x="0" y="0" width="214" height="4" rx="2" fill="#2e7d32"/>
+    <text x="20" y="30" fill="#81C784" font-size="11" font-weight="700">PART 2</text>
+    <text x="194" y="30" text-anchor="end" fill="#66BB6A" font-size="11" font-weight="900">14ch</text>
+    <text x="20" y="44" fill="#ffffff" font-size="12" font-weight="700" opacity="0.9">포토리소그래피 심화</text>
+    
+    <g transform="translate(12, 62)">
+      <rect x="0" y="0" width="72" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="36" y="15" text-anchor="middle" fill="#A5D6A7" font-size="9">광원 진화</text>
+      
+      <rect x="78" y="0" width="55" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="106" y="15" text-anchor="middle" fill="#A5D6A7" font-size="9">마스크</text>
+      
+      <rect x="139" y="0" width="55" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="167" y="15" text-anchor="middle" fill="#A5D6A7" font-size="9">레지스트</text>
+      
+      <rect x="0" y="28" width="80" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="40" y="43" text-anchor="middle" fill="#A5D6A7" font-size="9">해상도/DOF</text>
+      
+      <rect x="86" y="28" width="72" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="122" y="43" text-anchor="middle" fill="#A5D6A7" font-size="9">OPC/RET</text>
+      
+      <rect x="0" y="56" width="65" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="33" y="71" text-anchor="middle" fill="#A5D6A7" font-size="9">Overlay</text>
+      
+      <rect x="71" y="56" width="40" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="91" y="71" text-anchor="middle" fill="#A5D6A7" font-size="9">CD</text>
+      
+      <rect x="117" y="56" width="50" height="22" rx="4" fill="#2e7d32" opacity="0.15"/>
+      <text x="142" y="71" text-anchor="middle" fill="#A5D6A7" font-size="9">EUV</text>
+    </g>
+    
+    <!-- Icon: lens/light -->
+    <g transform="translate(107, 210)" opacity="0.12">
+      <circle cx="0" cy="0" r="22" fill="none" stroke="#2e7d32" stroke-width="3"/>
+      <line x1="0" y1="-30" x2="0" y2="-22" stroke="#2e7d32" stroke-width="2"/>
+      <line x1="0" y1="22" x2="0" y2="30" stroke="#2e7d32" stroke-width="2"/>
+      <line x1="-30" y1="0" x2="-22" y2="0" stroke="#2e7d32" stroke-width="2"/>
+      <line x1="22" y1="0" x2="30" y2="0" stroke="#2e7d32" stroke-width="2"/>
+      <circle cx="0" cy="0" r="8" fill="#2e7d32" opacity="0.3"/>
+    </g>
+    
+    <rect x="10" y="248" width="194" height="24" rx="5" fill="#2e7d32" opacity="0.1"/>
+    <text x="107" y="264" text-anchor="middle" fill="#81C784" font-size="9.5" font-weight="700">💡 물리 법칙과의 싸움 → AI가 새 무기</text>
+  </g>
+
+  <!-- ===== PART 3 BLOCK ===== -->
+  <g transform="translate(536, 90)">
+    <rect x="0" y="0" width="214" height="280" rx="10" fill="#1a120a" stroke="#e65100" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="214" height="50" rx="10" fill="#e65100" opacity="0.15"/>
+    <rect x="0" y="0" width="214" height="4" rx="2" fill="#e65100"/>
+    <text x="20" y="30" fill="#FFB74D" font-size="11" font-weight="700">PART 3</text>
+    <text x="194" y="30" text-anchor="end" fill="#FF9800" font-size="11" font-weight="900">9ch</text>
+    <text x="20" y="44" fill="#ffffff" font-size="12" font-weight="700" opacity="0.9">수율과 공정 제어</text>
+    
+    <g transform="translate(12, 62)">
+      <rect x="0" y="0" width="50" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="25" y="15" text-anchor="middle" fill="#FFCC80" font-size="9">수율</text>
+      
+      <rect x="56" y="0" width="72" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="92" y="15" text-anchor="middle" fill="#FFCC80" font-size="9">결함 검사</text>
+      
+      <rect x="134" y="0" width="50" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="159" y="15" text-anchor="middle" fill="#FFCC80" font-size="9">SPC</text>
+      
+      <rect x="0" y="28" width="50" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="25" y="43" text-anchor="middle" fill="#FFCC80" font-size="9">FDC</text>
+      
+      <rect x="56" y="28" width="50" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="81" y="43" text-anchor="middle" fill="#FFCC80" font-size="9">APC</text>
+      
+      <rect x="112" y="28" width="45" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="135" y="43" text-anchor="middle" fill="#FFCC80" font-size="9">VM</text>
+      
+      <rect x="0" y="56" width="65" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="33" y="71" text-anchor="middle" fill="#FFCC80" font-size="9">웨이퍼맵</text>
+      
+      <rect x="71" y="56" width="86" height="22" rx="4" fill="#e65100" opacity="0.15"/>
+      <text x="114" y="71" text-anchor="middle" fill="#FFCC80" font-size="9">데이터 인프라</text>
+    </g>
+    
+    <!-- Icon: chart -->
+    <g transform="translate(107, 210)" opacity="0.12">
+      <rect x="-25" y="10" width="50" height="2" fill="#e65100"/>
+      <rect x="-22" y="-5" width="8" height="15" fill="#e65100" rx="1"/>
+      <rect x="-10" y="-15" width="8" height="25" fill="#e65100" rx="1"/>
+      <rect x="2" y="-10" width="8" height="20" fill="#e65100" rx="1"/>
+      <rect x="14" y="-22" width="8" height="32" fill="#e65100" rx="1"/>
+    </g>
+    
+    <rect x="10" y="248" width="194" height="24" rx="5" fill="#e65100" opacity="0.1"/>
+    <text x="107" y="264" text-anchor="middle" fill="#FFB74D" font-size="9.5" font-weight="700">💡 구조 있는 데이터 → 구조 존중 모델</text>
+  </g>
+
+  <!-- ===== PART 4 BLOCK ===== -->
+  <g transform="translate(776, 90)">
+    <rect x="0" y="0" width="214" height="280" rx="10" fill="#150a1a" stroke="#6a1b9a" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="214" height="50" rx="10" fill="#6a1b9a" opacity="0.15"/>
+    <rect x="0" y="0" width="214" height="4" rx="2" fill="#6a1b9a"/>
+    <text x="20" y="30" fill="#CE93D8" font-size="11" font-weight="700">PART 4</text>
+    <text x="194" y="30" text-anchor="end" fill="#AB47BC" font-size="11" font-weight="900">10ch</text>
+    <text x="20" y="44" fill="#ffffff" font-size="12" font-weight="700" opacity="0.9">AI/ML 실전</text>
+    
+    <g transform="translate(12, 62)">
+      <rect x="0" y="0" width="72" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="36" y="15" text-anchor="middle" fill="#CE93D8" font-size="9">문제 정의</text>
+      
+      <rect x="78" y="0" width="110" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="133" y="15" text-anchor="middle" fill="#CE93D8" font-size="9">피처 엔지니어링</text>
+      
+      <rect x="0" y="28" width="72" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="36" y="43" text-anchor="middle" fill="#CE93D8" font-size="9">학습/검증</text>
+      
+      <rect x="78" y="28" width="72" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="114" y="43" text-anchor="middle" fill="#CE93D8" font-size="9">해석/신뢰</text>
+      
+      <rect x="0" y="56" width="55" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="28" y="71" text-anchor="middle" fill="#CE93D8" font-size="9">MLOps</text>
+      
+      <rect x="61" y="56" width="55" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="89" y="71" text-anchor="middle" fill="#CE93D8" font-size="9">딥러닝</text>
+      
+      <rect x="122" y="56" width="65" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="155" y="71" text-anchor="middle" fill="#CE93D8" font-size="9">전이학습</text>
+      
+      <rect x="0" y="84" width="35" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="18" y="99" text-anchor="middle" fill="#CE93D8" font-size="9">RL</text>
+      
+      <rect x="41" y="84" width="45" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="64" y="99" text-anchor="middle" fill="#CE93D8" font-size="9">LLM</text>
+      
+      <rect x="92" y="84" width="55" height="22" rx="4" fill="#6a1b9a" opacity="0.15"/>
+      <text x="120" y="99" text-anchor="middle" fill="#CE93D8" font-size="9">SMILE</text>
+    </g>
+    
+    <!-- Icon: brain/network -->
+    <g transform="translate(107, 220)" opacity="0.12">
+      <circle cx="0" cy="-15" r="5" fill="#6a1b9a"/>
+      <circle cx="-18" cy="0" r="5" fill="#6a1b9a"/>
+      <circle cx="18" cy="0" r="5" fill="#6a1b9a"/>
+      <circle cx="-10" cy="15" r="5" fill="#6a1b9a"/>
+      <circle cx="10" cy="15" r="5" fill="#6a1b9a"/>
+      <line x1="0" y1="-15" x2="-18" y2="0" stroke="#6a1b9a" stroke-width="2"/>
+      <line x1="0" y1="-15" x2="18" y2="0" stroke="#6a1b9a" stroke-width="2"/>
+      <line x1="-18" y1="0" x2="-10" y2="15" stroke="#6a1b9a" stroke-width="2"/>
+      <line x1="18" y1="0" x2="10" y2="15" stroke="#6a1b9a" stroke-width="2"/>
+      <line x1="-10" y1="15" x2="10" y2="15" stroke="#6a1b9a" stroke-width="2"/>
+    </g>
+    
+    <rect x="10" y="248" width="194" height="24" rx="5" fill="#6a1b9a" opacity="0.1"/>
+    <text x="107" y="264" text-anchor="middle" fill="#CE93D8" font-size="10" font-weight="700">💡 정확도 &lt; 현장 신뢰</text>
+  </g>
+
+  <!-- ===== PART 5 BLOCK ===== -->
+  <g transform="translate(1016, 90)">
+    <rect x="0" y="0" width="158" height="280" rx="10" fill="#1a0a0a" stroke="#c62828" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="158" height="50" rx="10" fill="#c62828" opacity="0.15"/>
+    <rect x="0" y="0" width="158" height="4" rx="2" fill="#c62828"/>
+    <text x="16" y="30" fill="#EF9A9A" font-size="11" font-weight="700">PART 5</text>
+    <text x="142" y="30" text-anchor="end" fill="#EF5350" font-size="11" font-weight="900">4ch</text>
+    <text x="16" y="44" fill="#ffffff" font-size="12" font-weight="700" opacity="0.9">미래와 커리어</text>
+    
+    <g transform="translate(12, 62)">
+      <rect x="0" y="0" width="90" height="22" rx="4" fill="#c62828" opacity="0.15"/>
+      <text x="45" y="15" text-anchor="middle" fill="#EF9A9A" font-size="9">차세대 리소</text>
+      
+      <rect x="0" y="28" width="72" height="22" rx="4" fill="#c62828" opacity="0.15"/>
+      <text x="36" y="43" text-anchor="middle" fill="#EF9A9A" font-size="9">AI 미래</text>
+      
+      <rect x="0" y="56" width="60" height="22" rx="4" fill="#c62828" opacity="0.15"/>
+      <text x="30" y="71" text-anchor="middle" fill="#EF9A9A" font-size="9">커리어</text>
+      
+      <rect x="66" y="56" width="68" height="22" rx="4" fill="#c62828" opacity="0.2"/>
+      <text x="100" y="71" text-anchor="middle" fill="#EF5350" font-size="9" font-weight="700">에필로그</text>
+    </g>
+    
+    <!-- Icon: rocket -->
+    <g transform="translate(79, 210)" opacity="0.12">
+      <path d="M0,-25 Q10,-15 10,0 L5,10 L-5,10 L-10,0 Q-10,-15 0,-25Z" fill="#c62828"/>
+      <line x1="-8" y1="10" x2="-14" y2="20" stroke="#c62828" stroke-width="2"/>
+      <line x1="8" y1="10" x2="14" y2="20" stroke="#c62828" stroke-width="2"/>
+      <line x1="0" y1="10" x2="0" y2="22" stroke="#c62828" stroke-width="2"/>
+    </g>
+    
+    <rect x="8" y="248" width="142" height="24" rx="5" fill="#c62828" opacity="0.1"/>
+    <text x="79" y="261" text-anchor="middle" fill="#EF9A9A" font-size="8" font-weight="700">💡 가장 흥미로운 부분은</text>
+    <text x="79" y="272" text-anchor="middle" fill="#EF9A9A" font-size="8" font-weight="700">아직 오지 않았다</text>
+  </g>
+
+  <!-- ===== Bottom summary bar ===== -->
+  <g transform="translate(32, 400)">
+    <rect x="0" y="0" width="1142" height="55" rx="8" fill="#ffffff" opacity="0.03"/>
+    
+    <!-- Part chapter counts -->
+    <g transform="translate(0, 12)">
+      <!-- Part 1 bar -->
+      <rect x="20" y="0" width="243" height="8" rx="4" fill="#1565c0" opacity="0.4"/>
+      <text x="142" y="25" text-anchor="middle" fill="#64B5F6" font-size="9">10챕터 (21%)</text>
+      
+      <!-- Part 2 bar -->
+      <rect x="273" y="0" width="340" height="8" rx="4" fill="#2e7d32" opacity="0.4"/>
+      <text x="443" y="25" text-anchor="middle" fill="#81C784" font-size="9">14챕터 (30%)</text>
+      
+      <!-- Part 3 bar -->
+      <rect x="623" y="0" width="218" height="8" rx="4" fill="#e65100" opacity="0.4"/>
+      <text x="732" y="25" text-anchor="middle" fill="#FFB74D" font-size="9">9챕터 (19%)</text>
+      
+      <!-- Part 4 bar -->
+      <rect x="851" y="0" width="243" height="8" rx="4" fill="#6a1b9a" opacity="0.4"/>
+      <text x="973" y="25" text-anchor="middle" fill="#CE93D8" font-size="9">10챕터 (21%)</text>
+      
+      <!-- Part 5 bar -->
+      <rect x="1104" y="0" width="97" height="8" rx="4" fill="#c62828" opacity="0.4"/>
+      <text x="1120" y="25" text-anchor="middle" fill="#EF9A9A" font-size="9">4챕터 (9%)</text>
+    </g>
+  </g>
+
+  <!-- ===== Cross-connection legend ===== -->
+  <g transform="translate(32, 480)">
+    <text x="0" y="0" fill="#78909C" font-size="10" font-weight="700">교차 연결</text>
+    
+    <line x1="0" y1="15" x2="30" y2="15" stroke="#CE93D8" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="36" y="19" fill="#CE93D8" font-size="9" opacity="0.7">Part 2 OPC → Part 4 딥러닝 (cuLitho)</text>
+    
+    <line x1="300" y1="15" x2="330" y2="15" stroke="#FFB74D" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="336" y="19" fill="#FFB74D" font-size="9" opacity="0.7">Part 3 VM → Part 4 학습 (VM 모델)</text>
+    
+    <line x1="600" y1="15" x2="630" y2="15" stroke="#81C784" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="636" y="19" fill="#81C784" font-size="9" opacity="0.7">Part 3 데이터 → Part 4 피처 (피처 설계)</text>
+  </g>
+  
+  <!-- ===== Journey quote ===== -->
+  <g transform="translate(600, 540)">
+    <text x="0" y="0" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="400" opacity="0.3" font-style="italic">"물리를 이해하고, 데이터를 다루며, 모델을 만들고, 현장을 설득하는 — 그 전체가 하나의 여정입니다"</text>
+  </g>
+
+  <!-- Bottom attribution -->
+  <text x="600" y="580" text-anchor="middle" fill="#ffffff" font-size="9" opacity="0.2">반도체 AI 핸드북 — 전체 지식 맵</text>
+</svg>

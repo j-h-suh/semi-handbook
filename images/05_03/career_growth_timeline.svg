@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="900" height="420">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&amp;display=swap');
+      text { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#78909C"/>
+    </marker>
+    <marker id="arrowUp" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="-90">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ab47bc"/>
+    </marker>
+    <marker id="arrowDown" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="90">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ff7043"/>
+    </marker>
+    <linearGradient id="timelineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#81c784;stop-opacity:1"/>
+      <stop offset="45%" style="stop-color:#42a5f5;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#78909C;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#00000015"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="420" fill="#fafafa" rx="12"/>
+
+  <!-- Title -->
+  <text x="450" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#212121">반도체 AI 엔지니어 성장 경로</text>
+
+  <!-- Main timeline line -->
+  <line x1="60" y1="195" x2="600" y2="195" stroke="url(#timelineGrad)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Arrow at end -->
+  <line x1="590" y1="195" x2="615" y2="195" stroke="#78909C" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <!-- Year markers on timeline -->
+  <g font-size="10" fill="#9e9e9e" text-anchor="middle">
+    <line x1="100" y1="188" x2="100" y2="202" stroke="#bdbdbd" stroke-width="1"/>
+    <text x="100" y="215">0년</text>
+    <line x1="260" y1="188" x2="260" y2="202" stroke="#bdbdbd" stroke-width="1"/>
+    <text x="260" y="215">3년</text>
+    <line x1="440" y1="188" x2="440" y2="202" stroke="#bdbdbd" stroke-width="1"/>
+    <text x="440" y="215">7년</text>
+    <line x1="600" y1="188" x2="600" y2="202" stroke="#bdbdbd" stroke-width="1"/>
+    <text x="600" y="215">10년+</text>
+  </g>
+
+  <!-- Timeline dots -->
+  <circle cx="100" cy="195" r="8" fill="#81c784" stroke="white" stroke-width="2"/>
+  <circle cx="260" cy="195" r="8" fill="#42a5f5" stroke="white" stroke-width="2"/>
+  <circle cx="440" cy="195" r="10" fill="#FFD600" stroke="#F9A825" stroke-width="2"/>
+  <text x="440" y="199" text-anchor="middle" font-size="10" font-weight="700" fill="#5D4037">⑂</text>
+
+  <!-- ========== STAGE 1: 주니어 (Updated: x=80, w=160, ends 240) ========== -->
+  <g filter="url(#cardShadow)">
+    <rect x="80" y="55" width="160" height="120" rx="10" fill="white" stroke="#81c784" stroke-width="1.5"/>
+  </g>
+  <rect x="80" y="55" width="160" height="28" rx="10" fill="#81c784"/>
+  <rect x="80" y="73" width="160" height="10" fill="#81c784"/>
+  <text x="160" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="white">주니어 (0~3년)</text>
+  <text x="160" y="92" text-anchor="middle" font-size="10" fill="#2E7D32" font-weight="600">Focus: 깊이</text>
+  <text x="95" y="110" font-size="10" fill="#424242">• 데이터 분석</text>
+  <text x="95" y="126" font-size="10" fill="#424242">• 모델 개발</text>
+  <text x="95" y="142" font-size="10" fill="#424242">• 파이프라인 구축</text>
+  <text x="160" y="164" text-anchor="middle" font-size="8.5" fill="#66BB6A" font-style="italic">"이 스캐너 데이터를 누구보다 잘 아는 사람"</text>
+  <!-- Connector -->
+  <line x1="160" y1="175" x2="160" y2="187" stroke="#81c784" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+  <!-- ========== STAGE 2: 시니어 (Updated: x=250, w=180, starts 250) ========== -->
+  <g filter="url(#cardShadow)">
+    <rect x="250" y="55" width="180" height="120" rx="10" fill="white" stroke="#42a5f5" stroke-width="1.5"/>
+  </g>
+  <rect x="250" y="55" width="180" height="28" rx="10" fill="#42a5f5"/>
+  <rect x="250" y="73" width="180" height="10" fill="#42a5f5"/>
+  <text x="340" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="white">시니어 (3~7년)</text>
+  <text x="340" y="92" text-anchor="middle" font-size="10" fill="#1565C0" font-weight="600">Focus: 넓이 + 커뮤니케이션</text>
+  <text x="265" y="110" font-size="10" fill="#424242">• 다중 공정 AI 설계</text>
+  <text x="265" y="126" font-size="10" fill="#424242">• 멘토링</text>
+  <text x="265" y="142" font-size="10" fill="#424242">• 기술 방향 제시</text>
+  <text x="340" y="164" text-anchor="middle" font-size="8.5" fill="#42A5F5" font-style="italic">"엔지니어 신뢰 구축"</text>
+  <line x1="340" y1="175" x2="340" y2="187" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+  <!-- ========== BRANCH: 분기점 label ========== -->
+  <text x="440" y="235" text-anchor="middle" font-size="11" font-weight="700" fill="#5D4037">분기점</text>
+  <text x="440" y="248" text-anchor="middle" font-size="9" fill="#8D6E63">두 경로 모두 높이 평가됨</text>
+
+  <!-- Branch lines -->
+  <line x1="440" y1="185" x2="440" y2="105" stroke="#ab47bc" stroke-width="2" stroke-dasharray="5,3"/>
+  <polygon points="440,100 435,112 445,112" fill="#ab47bc"/>
+  <line x1="440" y1="260" x2="440" y2="290" stroke="#ff7043" stroke-width="2" stroke-dasharray="5,3"/>
+  <polygon points="440,295 435,283 445,283" fill="#ff7043"/>
+
+  <!-- ========== BRANCH A: 리더 트랙 (위) ========== -->
+  <g filter="url(#cardShadow)">
+    <rect x="500" y="48" width="210" height="100" rx="10" fill="white" stroke="#ab47bc" stroke-width="1.5"/>
+  </g>
+  <rect x="500" y="48" width="210" height="26" rx="10" fill="#ab47bc"/>
+  <rect x="500" y="64" width="210" height="10" fill="#ab47bc"/>
+  <text x="605" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="white">🎯 리더 트랙</text>
+  <text x="605" y="86" text-anchor="middle" font-size="10" fill="#7B1FA2" font-weight="600">Focus: 전략 + 임팩트</text>
+  <text x="517" y="104" font-size="10" fill="#424242">• AI 전략 수립</text>
+  <text x="517" y="120" font-size="10" fill="#424242">• 팀 빌딩</text>
+  <text x="517" y="136" font-size="10" fill="#424242">• 비즈니스 임팩트</text>
+  <!-- Connect -->
+  <line x1="440" y1="95" x2="500" y2="80" stroke="#ab47bc" stroke-width="1.5"/>
+
+  <!-- ========== BRANCH B: IC 트랙 (아래) ========== -->
+  <g filter="url(#cardShadow)">
+    <rect x="500" y="280" width="210" height="105" rx="10" fill="white" stroke="#ff7043" stroke-width="1.5"/>
+  </g>
+  <rect x="500" y="280" width="210" height="26" rx="10" fill="#ff7043"/>
+  <rect x="500" y="296" width="210" height="10" fill="#ff7043"/>
+  <text x="605" y="300" text-anchor="middle" font-size="12" font-weight="700" fill="white">🔬 IC 트랙 (기술 전문가)</text>
+  <text x="605" y="318" text-anchor="middle" font-size="10" fill="#D84315" font-weight="600">Focus: 세계적 전문성</text>
+  <text x="517" y="336" font-size="10" fill="#424242">• Distinguished Engineer</text>
+  <text x="517" y="352" font-size="10" fill="#424242">• Fellow</text>
+  <text x="517" y="368" font-size="10" fill="#424242">• 특정 도메인 세계적 전문가</text>
+  <!-- Connect -->
+  <line x1="440" y1="298" x2="500" y2="310" stroke="#ff7043" stroke-width="1.5"/>
+
+  <!-- SPIE/APC annotation -->
+  <g transform="translate(180, 230)">
+    <rect x="0" y="0" width="130" height="22" rx="4" fill="#FFF9C4" stroke="#FDD835" stroke-width="0.8"/>
+    <text x="65" y="15" text-anchor="middle" font-size="8.5" fill="#F57F17" font-weight="600">📄 SPIE / APC Conference</text>
+  </g>
+  <line x1="245" y1="252" x2="245" y2="260" stroke="#FDD835" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="245" y="270" text-anchor="middle" font-size="8" fill="#9e9e9e">시니어 초기부터 참여</text>
+
+  <!-- Border -->
+  <rect width="900" height="420" fill="none" stroke="#e0e0e0" stroke-width="1" rx="12"/>
+</svg>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7F8C8D"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#E74C3C"/>
+    </marker>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+    <style>
+      text { font-family: -apple-system, "Apple SD Gothic Neo", sans-serif; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="600" y="35" text-anchor="middle" font-size="20" font-weight="bold" fill="#2C3E50">현대 반도체 팹 데이터 아키텍처</text>
+  <text x="600" y="55" text-anchor="middle" font-size="12" fill="#7F8C8D">수집 → 저장 → 분석 → 서빙 레이어 구성</text>
+
+  <!-- ===== Layer 1: 데이터 소스 레이어 ===== -->
+  <g transform="translate(10, 65)">
+    <rect x="0" y="0" width="205" height="570" rx="8" fill="#D6EAF8" stroke="#3498DB" stroke-width="2" filter="url(#shadow)"/>
+    <text x="102" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">데이터 소스 레이어</text>
+
+    <!-- Component 1: 장비 (EDA) -->
+    <rect x="15" y="45" width="175" height="90" rx="6" fill="#FFFFFF" stroke="#3498DB" stroke-width="1.5"/>
+    <text x="102" y="65" text-anchor="middle" font-size="14" fill="#2C3E50">🖥</text>
+    <text x="102" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">장비 (EDA)</text>
+    <text x="102" y="98" text-anchor="middle" font-size="10" fill="#7F8C8D">FDC Trace</text>
+    <text x="102" y="112" text-anchor="middle" font-size="10" fill="#7F8C8D">수십 TB/일</text>
+
+    <!-- Component 2: 계측 (SECS/GEM) -->
+    <rect x="15" y="150" width="175" height="90" rx="6" fill="#FFFFFF" stroke="#3498DB" stroke-width="1.5"/>
+    <text x="102" y="170" text-anchor="middle" font-size="14" fill="#2C3E50">🔬</text>
+    <text x="102" y="187" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">계측 (SECS/GEM)</text>
+    <text x="102" y="203" text-anchor="middle" font-size="10" fill="#7F8C8D">CD, OVL</text>
+    <text x="102" y="217" text-anchor="middle" font-size="10" fill="#7F8C8D">수십 GB/일</text>
+
+    <!-- Component 3: MES -->
+    <rect x="15" y="255" width="175" height="90" rx="6" fill="#FFFFFF" stroke="#3498DB" stroke-width="1.5"/>
+    <text x="102" y="275" text-anchor="middle" font-size="14" fill="#2C3E50">🗄</text>
+    <text x="102" y="292" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">MES</text>
+    <text x="102" y="308" text-anchor="middle" font-size="10" fill="#7F8C8D">로트 이력</text>
+    <text x="102" y="322" text-anchor="middle" font-size="10" fill="#7F8C8D">수 GB/일</text>
+
+    <!-- Component 4: 검사 -->
+    <rect x="15" y="360" width="175" height="90" rx="6" fill="#FFFFFF" stroke="#3498DB" stroke-width="1.5"/>
+    <text x="102" y="380" text-anchor="middle" font-size="14" fill="#2C3E50">📷</text>
+    <text x="102" y="397" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">검사</text>
+    <text x="102" y="413" text-anchor="middle" font-size="10" fill="#7F8C8D">결함 이미지</text>
+    <text x="102" y="427" text-anchor="middle" font-size="10" fill="#7F8C8D">수 TB/일</text>
+
+    <!-- Component 5: 테스트 -->
+    <rect x="15" y="465" width="175" height="90" rx="6" fill="#FFFFFF" stroke="#3498DB" stroke-width="1.5"/>
+    <text x="102" y="485" text-anchor="middle" font-size="14" fill="#2C3E50">⚡</text>
+    <text x="102" y="502" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">테스트</text>
+    <text x="102" y="518" text-anchor="middle" font-size="10" fill="#7F8C8D">Bin 데이터</text>
+    <text x="102" y="532" text-anchor="middle" font-size="10" fill="#7F8C8D">수 GB/일</text>
+  </g>
+
+  <!-- ===== Layer 2: 수집 레이어 (Ingestion) ===== -->
+  <g transform="translate(248, 65)">
+    <rect x="0" y="0" width="185" height="570" rx="8" fill="#FADBD8" stroke="#E74C3C" stroke-width="2" filter="url(#shadow)"/>
+    <text x="92" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">수집 레이어 (Ingestion)</text>
+
+    <!-- Apache Kafka -->
+    <rect x="12" y="95" width="161" height="100" rx="6" fill="#FFFFFF" stroke="#E74C3C" stroke-width="1.5"/>
+    <text x="92" y="118" text-anchor="middle" font-size="14" fill="#2C3E50">📡</text>
+    <text x="92" y="138" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Apache Kafka</text>
+    <text x="92" y="158" text-anchor="middle" font-size="10" fill="#7F8C8D">실시간 스트리밍</text>
+
+    <!-- MQTT -->
+    <rect x="12" y="225" width="161" height="100" rx="6" fill="#FFFFFF" stroke="#E74C3C" stroke-width="1.5"/>
+    <text x="92" y="248" text-anchor="middle" font-size="14" fill="#2C3E50">📶</text>
+    <text x="92" y="268" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">MQTT</text>
+    <text x="92" y="288" text-anchor="middle" font-size="10" fill="#7F8C8D">장비 통신</text>
+
+    <!-- ETL Pipeline -->
+    <rect x="12" y="355" width="161" height="100" rx="6" fill="#FFFFFF" stroke="#E74C3C" stroke-width="1.5"/>
+    <text x="92" y="378" text-anchor="middle" font-size="14" fill="#2C3E50">⚙️</text>
+    <text x="92" y="398" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">ETL Pipeline</text>
+    <text x="92" y="418" text-anchor="middle" font-size="10" fill="#7F8C8D">배치 수집</text>
+  </g>
+
+  <!-- ===== Layer 3: 저장 레이어 (Storage) ===== -->
+  <g transform="translate(466, 65)">
+    <rect x="0" y="0" width="195" height="570" rx="8" fill="#D5F5E3" stroke="#27AE60" stroke-width="2" filter="url(#shadow)"/>
+    <text x="97" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">저장 레이어 (Storage)</text>
+
+    <!-- TimescaleDB / InfluxDB -->
+    <rect x="12" y="80" width="171" height="120" rx="6" fill="#FFFFFF" stroke="#27AE60" stroke-width="1.5"/>
+    <text x="97" y="103" text-anchor="middle" font-size="14" fill="#2C3E50">📈</text>
+    <text x="97" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">TimescaleDB</text>
+    <text x="97" y="135" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">/ InfluxDB</text>
+    <text x="97" y="155" text-anchor="middle" font-size="10" fill="#7F8C8D">FDC Trace</text>
+    <text x="97" y="169" text-anchor="middle" font-size="10" fill="#7F8C8D">(고속 쓰기/시간 조회)</text>
+
+    <!-- Data Lake -->
+    <rect x="12" y="225" width="171" height="120" rx="6" fill="#FFFFFF" stroke="#27AE60" stroke-width="1.5"/>
+    <text x="97" y="248" text-anchor="middle" font-size="14" fill="#2C3E50">🏞</text>
+    <text x="97" y="265" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">Data Lake</text>
+    <text x="97" y="280" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">(S3 / HDFS)</text>
+    <text x="97" y="300" text-anchor="middle" font-size="10" fill="#7F8C8D">원시 데이터</text>
+    <text x="97" y="314" text-anchor="middle" font-size="10" fill="#7F8C8D">장기 보관 (Parquet)</text>
+
+    <!-- PostgreSQL / Oracle -->
+    <rect x="12" y="370" width="171" height="120" rx="6" fill="#FFFFFF" stroke="#27AE60" stroke-width="1.5"/>
+    <text x="97" y="393" text-anchor="middle" font-size="14" fill="#2C3E50">🗃</text>
+    <text x="97" y="410" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">PostgreSQL</text>
+    <text x="97" y="425" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">/ Oracle</text>
+    <text x="97" y="445" text-anchor="middle" font-size="10" fill="#7F8C8D">MES 메타데이터</text>
+    <text x="97" y="459" text-anchor="middle" font-size="10" fill="#7F8C8D">계측 Summary</text>
+  </g>
+
+  <!-- ===== Layer 4: 분석 레이어 (Analytics) ===== -->
+  <g transform="translate(694, 65)">
+    <rect x="0" y="0" width="195" height="570" rx="8" fill="#F9E79F" stroke="#F39C12" stroke-width="2" filter="url(#shadow)"/>
+    <text x="97" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">분석 레이어 (Analytics)</text>
+
+    <!-- Apache Spark / Dask -->
+    <rect x="12" y="80" width="171" height="120" rx="6" fill="#FFFFFF" stroke="#F39C12" stroke-width="1.5"/>
+    <text x="97" y="103" text-anchor="middle" font-size="14" fill="#2C3E50">⚡</text>
+    <text x="97" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">Apache Spark</text>
+    <text x="97" y="135" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">/ Dask</text>
+    <text x="97" y="155" text-anchor="middle" font-size="10" fill="#7F8C8D">대규모 데이터 처리</text>
+    <text x="97" y="169" text-anchor="middle" font-size="10" fill="#7F8C8D">ML 모델 학습</text>
+
+    <!-- Python -->
+    <rect x="12" y="225" width="171" height="120" rx="6" fill="#FFFFFF" stroke="#F39C12" stroke-width="1.5"/>
+    <text x="97" y="248" text-anchor="middle" font-size="14" fill="#2C3E50">🐍</text>
+    <text x="97" y="265" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">Python</text>
+    <text x="97" y="280" text-anchor="middle" font-size="10" font-weight="bold" fill="#2C3E50">(scikit-learn, PyTorch)</text>
+    <text x="97" y="300" text-anchor="middle" font-size="10" fill="#7F8C8D">VM, FDC, APC</text>
+    <text x="97" y="314" text-anchor="middle" font-size="10" fill="#7F8C8D">모델 개발</text>
+
+    <!-- Feature Store -->
+    <rect x="12" y="370" width="171" height="120" rx="6" fill="#FFFFFF" stroke="#F39C12" stroke-width="1.5"/>
+    <text x="97" y="393" text-anchor="middle" font-size="14" fill="#2C3E50">📦</text>
+    <text x="97" y="413" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">Feature Store</text>
+    <text x="97" y="438" text-anchor="middle" font-size="10" fill="#7F8C8D">피처 관리</text>
+    <text x="97" y="452" text-anchor="middle" font-size="10" fill="#7F8C8D">재사용</text>
+  </g>
+
+  <!-- ===== Layer 5: 서빙 & 시각화 레이어 ===== -->
+  <g transform="translate(922, 65)">
+    <rect x="0" y="0" width="268" height="570" rx="8" fill="#D2B4DE" stroke="#8E44AD" stroke-width="2" filter="url(#shadow)"/>
+    <text x="134" y="25" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">서빙 &amp; 시각화 레이어</text>
+
+    <!-- FastAPI / TensorRT -->
+    <rect x="12" y="80" width="244" height="120" rx="6" fill="#FFFFFF" stroke="#8E44AD" stroke-width="1.5"/>
+    <text x="134" y="103" text-anchor="middle" font-size="14" fill="#2C3E50">🚀</text>
+    <text x="134" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">FastAPI / TensorRT</text>
+    <text x="134" y="145" text-anchor="middle" font-size="10" fill="#7F8C8D">VM/APC 실시간 추론</text>
+
+    <!-- Grafana / Custom UI -->
+    <rect x="12" y="225" width="244" height="120" rx="6" fill="#FFFFFF" stroke="#8E44AD" stroke-width="1.5"/>
+    <text x="134" y="248" text-anchor="middle" font-size="14" fill="#2C3E50">📊</text>
+    <text x="134" y="265" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">Grafana / Custom UI</text>
+    <text x="134" y="290" text-anchor="middle" font-size="10" fill="#7F8C8D">SPC 관리도 대시보드</text>
+
+    <!-- MLflow / Model Registry -->
+    <rect x="12" y="370" width="244" height="120" rx="6" fill="#FFFFFF" stroke="#8E44AD" stroke-width="1.5"/>
+    <text x="134" y="393" text-anchor="middle" font-size="14" fill="#2C3E50">🔄</text>
+    <text x="134" y="410" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">MLflow / Model Registry</text>
+    <text x="134" y="435" text-anchor="middle" font-size="10" fill="#7F8C8D">모델 버전 관리</text>
+    <text x="134" y="449" text-anchor="middle" font-size="10" fill="#7F8C8D">재학습 파이프라인</text>
+  </g>
+
+  <!-- ===== Data Flow Arrows ===== -->
+  <!-- 데이터 소스 → 수집 -->
+  <line x1="215" y1="300" x2="248" y2="300" stroke="#7F8C8D" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <text x="232" y="290" text-anchor="middle" font-size="8" fill="#7F8C8D" transform="rotate(-90, 232, 290)">SECS/GEM · EDA</text>
+
+  <!-- 수집 → 저장 -->
+  <line x1="433" y1="300" x2="466" y2="300" stroke="#7F8C8D" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <text x="450" y="290" text-anchor="middle" font-size="8" fill="#7F8C8D" transform="rotate(-90, 450, 290)">실시간/배치</text>
+
+  <!-- 저장 → 분석 -->
+  <line x1="661" y1="300" x2="694" y2="300" stroke="#7F8C8D" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <text x="678" y="290" text-anchor="middle" font-size="8" fill="#7F8C8D" transform="rotate(-90, 678, 290)">SQL/API</text>
+
+  <!-- 분석 → 서빙 -->
+  <line x1="889" y1="300" x2="922" y2="300" stroke="#7F8C8D" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <text x="906" y="290" text-anchor="middle" font-size="8" fill="#7F8C8D" transform="rotate(-90, 906, 290)">모델 배포</text>
+
+  <!-- ===== Latency Annotations ===== -->
+  <!-- 실시간 경로 -->
+  <g transform="translate(0, 650)">
+    <rect x="248" y="0" width="942" height="15" rx="3" fill="none" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <line x1="248" y1="7" x2="1190" y2="7" stroke="#E74C3C" stroke-width="1" stroke-dasharray="5,3"/>
+    <rect x="500" y="-5" width="220" height="18" rx="3" fill="#FFFFFF" stroke="#E74C3C" stroke-width="1"/>
+    <text x="610" y="8" text-anchor="middle" font-size="9" fill="#E74C3C" font-weight="bold">실시간 경로: &lt; 수 초 (APC FF)</text>
+  </g>
+
+  <!-- 배치 경로 -->
+  <g transform="translate(0, 670)">
+    <rect x="466" y="0" width="423" height="15" rx="3" fill="none" stroke="#F39C12" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <line x1="466" y1="7" x2="889" y2="7" stroke="#F39C12" stroke-width="1" stroke-dasharray="5,3"/>
+    <rect x="560" y="-5" width="230" height="18" rx="3" fill="#FFFFFF" stroke="#F39C12" stroke-width="1"/>
+    <text x="675" y="8" text-anchor="middle" font-size="9" fill="#F39C12" font-weight="bold">배치 경로: 시간~일 (모델 학습)</text>
+  </g>
+
+</svg>

@@ -1,0 +1,68 @@
+{
+  "chapter": "04_03",
+  "chapter_title": "모델 학습과 검증",
+  "images": [
+    {
+      "id": "04_03_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "random_vs_time_split_r2.png",
+      "title": "랜덤 분할 vs 시간 기반 분할 — R² 비교",
+      "description": "랜덤 분할에서 부풀려진 R²와 시간 기반 분할에서의 정직한 R²를 비교. 오프라인 성능과 실전(온라인) 성능의 갭을 시각화",
+      "spec": {
+        "data": [
+          {"split": "랜덤 분할\n(오프라인)", "r2": 0.95, "color": "#e85d5d"},
+          {"split": "시간 기반 분할\n(오프라인)", "r2": 0.85, "color": "#4a90d9"},
+          {"split": "실전 배포\n(온라인)", "r2": 0.70, "color": "#888888"}
+        ],
+        "x_label": "분할 방법 / 배포 단계",
+        "y_label": "R² (결정계수)",
+        "y_range": [0.5, 1.0],
+        "bar_labels": true,
+        "annotations": [
+          {"type": "bracket", "from": 0, "to": 2, "text": "랜덤 분할의 환상\n0.25 갭!", "color": "#e85d5d"},
+          {"type": "bracket", "from": 1, "to": 2, "text": "실전 갭\n0.15 (관리 가능)", "color": "#4a90d9"},
+          {"type": "hline", "y": 0.80, "label": "실전 최소 요구 수준", "linestyle": "--", "color": "#2ecc71"}
+        ],
+        "style": "세로 바 차트, DPI 300, 8x5 인치, 격자선",
+        "note": "본문 '랜덤 분할에서 R² = 0.95가 나와... 실전에서 R² = 0.70으로 급락... 0.25의 갭' 내용 직접 반영"
+      }
+    },
+    {
+      "id": "04_03_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "sliding_window_visualization.svg",
+      "title": "Sliding Window 재학습 시각화",
+      "description": "Expanding Window vs Sliding Window 방식의 학습 데이터 범위를 시간축 위에 시각화. 반도체에서 Sliding Window 권장 이유 포함",
+      "spec": {
+        "elements": [
+          "시간축 (1월~6월, 좌→우)",
+          "Expanding Window 3단계:",
+          "  - 1회차: Train [1~3월], Test [4월]",
+          "  - 2회차: Train [1~4월], Test [5월]",
+          "  - 3회차: Train [1~5월], Test [6월]",
+          "Sliding Window 3단계 (최근 3개월):",
+          "  - 1회차: Train [1~3월], Test [4월]",
+          "  - 2회차: Train [2~4월], Test [5월]",
+          "  - 3회차: Train [3~5월], Test [6월]"
+        ],
+        "colors": {
+          "train": "#4a90d9",
+          "test": "#e85d5d",
+          "discarded": "#dddddd",
+          "pm_event": "#f39c12"
+        },
+        "annotations": [
+          "PM 이벤트 마커 (3월 초): Sliding에서 자연스럽게 이전 데이터 탈락",
+          "Expanding: 데이터 ↑ but 오래된 데이터 오염 위험",
+          "Sliding: 최근 2~4주 권장, 비정상성 대응"
+        ],
+        "size": "800x500",
+        "labels": "한글",
+        "layout": "상하 2열 (위: Expanding, 아래: Sliding)",
+        "note": "본문 'Sliding Window를 권장... 최근 2~4주의 데이터가 적절한 윈도우' 내용 기반"
+      }
+    }
+  ]
+}

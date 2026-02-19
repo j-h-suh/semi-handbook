@@ -1,0 +1,121 @@
+{
+  "chapter": "04_06",
+  "chapter_title": "딥러닝 in 반도체",
+  "images": [
+    {
+      "id": "04_06_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "resnet18_sem_architecture.svg",
+      "title": "ResNet-18 아키텍처 — SEM 결함 분류용",
+      "description": "SEM 이미지(64×64) 입력부터 결함 유형 출력까지의 ResNet-18 네트워크 구조. 반도체 ADC에서 가장 보편적인 CNN 아키텍처",
+      "spec": {
+        "elements": [
+          "Input: SEM 이미지 (64×64×1, 그레이스케일)",
+          "Conv1: 7×7, 64 filters, stride 2",
+          "MaxPool: 3×3, stride 2",
+          "ResBlock 1: [3×3, 64] × 2 (Skip Connection)",
+          "ResBlock 2: [3×3, 128] × 2 (Skip Connection, downsample)",
+          "ResBlock 3: [3×3, 256] × 2 (Skip Connection, downsample)",
+          "ResBlock 4: [3×3, 512] × 2 (Skip Connection, downsample)",
+          "Global Average Pooling",
+          "FC: 512 → 결함 유형 수 (10~50 클래스)",
+          "Softmax Output: Bridge, Break, Particle, Residue, ..."
+        ],
+        "colors": {
+          "conv": "#4a90d9",
+          "resblock": "#2ecc71",
+          "skip_connection": "#f39c12",
+          "pooling": "#9b59b6",
+          "fc": "#e85d5d",
+          "input": "#333333",
+          "output": "#333333"
+        },
+        "layout": "좌→우 수평, ResBlock 내 Skip Connection을 곡선 화살표로 표시",
+        "size": "900x350",
+        "labels": "영문 레이어명 + 한글 설명",
+        "annotations": [
+          "Skip Connection: 기울기 소실 방지, 잔차 학습",
+          "SEM 이미지가 작아(64×64) ResNet-18이면 충분, 더 깊은 모델은 오버피팅 위험",
+          "출력: 10~50개 결함 클래스 (Bridge/Break/Particle/Residue/...)"
+        ],
+        "note": "본문 '실전에서는 ResNet-18/34가 가장 보편적... SEM 이미지가 64×64 또는 128×128 정도로 작아서 깊은 네트워크가 불필요' 기반"
+      }
+    },
+    {
+      "id": "04_06_img02",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "gan_generated_defect_samples.png",
+      "title": "GAN 생성 결함 이미지 예시",
+      "description": "Conditional GAN으로 생성된 희귀 결함 SEM 이미지 예시. 실제 결함과 생성 결함을 나란히 배치하여 품질을 비교",
+      "spec": {
+        "prompt": "A technical comparison grid showing semiconductor SEM defect images. Top row labeled 'Real' shows 4 grayscale SEM images of IC defects: a bridge defect connecting two metal lines, a line break defect, a particle contamination defect, and a residue defect. Bottom row labeled 'GAN Generated' shows 4 similar synthetic SEM images with slight variations. Each image is 128x128 pixels, grayscale, high contrast, typical semiconductor manufacturing defect inspection style. Clean white background with thin borders around each image. Technical illustration style.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x512",
+        "note": "본문 'Conditional GAN(cGAN)을 사용하면 특정 유형을 지정하여 생성... 생성 데이터의 품질 검증 필수' 내용 기반. 실제:생성 1:1~1:3 비율 권장도 캡션에 포함"
+      }
+    },
+    {
+      "id": "04_06_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "dl_vs_xgboost_performance.png",
+      "title": "딥러닝 vs XGBoost 성능 비교",
+      "description": "반도체 AI의 대표적 태스크별로 전통 ML(XGBoost)과 딥러닝(CNN/LSTM)의 성능을 그룹 바 차트로 비교",
+      "spec": {
+        "data": [
+          {
+            "task": "SEM 결함 분류\n(이미지)",
+            "xgboost": 88,
+            "deep_learning": 96,
+            "metric": "Accuracy (%)",
+            "dl_model": "CNN (ResNet-18)"
+          },
+          {
+            "task": "웨이퍼맵 패턴\n(이미지)",
+            "xgboost": 91,
+            "deep_learning": 97,
+            "metric": "Accuracy (%)",
+            "dl_model": "CNN"
+          },
+          {
+            "task": "CD 예측 (VM)\n(Summary 피처)",
+            "xgboost": 88,
+            "deep_learning": 87,
+            "metric": "R² × 100",
+            "dl_model": "NN"
+          },
+          {
+            "task": "FDC 이상 탐지\n(Trace)",
+            "xgboost": 85,
+            "deep_learning": 92,
+            "metric": "AUC × 100",
+            "dl_model": "1D-CNN/LSTM"
+          },
+          {
+            "task": "OPC 가속\n(Pixel-to-Pixel)",
+            "xgboost": null,
+            "deep_learning": 95,
+            "metric": "Correlation × 100",
+            "dl_model": "U-Net",
+            "xgboost_note": "N/A"
+          }
+        ],
+        "x_label": "태스크",
+        "y_label": "성능 (%, 높을수록 좋음)",
+        "colors": {
+          "xgboost": "#4a90d9",
+          "deep_learning": "#e85d5d"
+        },
+        "legend": ["XGBoost + 수동 피처", "딥러닝 (CNN/LSTM/U-Net)"],
+        "annotations": [
+          {"task": "CD 예측", "text": "정형 데이터에서는\nXGBoost ≥ DL", "color": "#4a90d9"},
+          {"task": "SEM 결함", "text": "이미지에서\nDL 압도적 우위", "color": "#e85d5d"}
+        ],
+        "style": "그룹 바 차트, DPI 300, 10x6 인치",
+        "note": "본문 수치 사용: CNN ADC ~96%, 웨이퍼맵 ~97%, Rule-Based ~80%, 전통 ML+수동피처 ~88%. VM은 정형 데이터에서 XGBoost가 동등/우세. cuLitho 40배 가속도 참고"
+      }
+    }
+  ]
+}

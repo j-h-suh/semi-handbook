@@ -1,0 +1,86 @@
+{
+  "chapter": "02_03",
+  "chapter_title": "광원의 진화",
+  "images": [
+    {
+      "id": "02_03_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "euv_source_mechanism.svg",
+      "title": "EUV 광원 동작 개념도 (주석 드롭릿 + CO₂ 레이저)",
+      "description": "EUV 광원 생성 과정: 주석 드롭릿 분사 → Pre-pulse로 평탄화 → Main pulse로 플라즈마 생성(~50만°C) → 13.5nm EUV 방출 → Collector Mirror로 집광. 초당 50,000회 반복.",
+      "spec": {
+        "elements": [
+          {"type": "droplet_generator", "label": "Sn 드롭릿 생성기\n직경 ~25μm", "position": "left"},
+          {"type": "sn_droplet", "label": "주석 방울", "position": "center_left"},
+          {"type": "pre_pulse_laser", "label": "Pre-pulse\nCO₂ 레이저", "position": "upper_right"},
+          {"type": "flattened_droplet", "label": "평탄화된 Sn\n(팬케이크형)", "position": "center"},
+          {"type": "main_pulse_laser", "label": "Main pulse\nCO₂ 레이저 (~25kW)", "position": "lower_right"},
+          {"type": "plasma", "label": "Sn 플라즈마\n~50만°C\n13.5nm EUV 방출", "position": "center_right"},
+          {"type": "collector_mirror", "label": "Collector Mirror\n(포물면 거울)", "position": "far_right"},
+          {"type": "euv_output", "label": "EUV 출력\n~500W → 스캐너로", "position": "output"}
+        ],
+        "annotations": [
+          {"label": "초당 50,000회 반복", "position": "bottom_center"},
+          {"label": "1단계: 드롭릿 분사", "position": "step1"},
+          {"label": "2단계: Pre-pulse 평탄화", "position": "step2"},
+          {"label": "3단계: Main pulse 플라즈마", "position": "step3"},
+          {"label": "4단계: EUV 집광", "position": "step4"}
+        ],
+        "colors": {
+          "sn_droplet": "#808080",
+          "laser_beam": "#FF0000",
+          "plasma": "#FF6600",
+          "euv_light": "#9966FF",
+          "mirror": "#C0C0C0",
+          "background": "#0a0a1a"
+        },
+        "layout": "horizontal_flow",
+        "dimensions": "900x400"
+      }
+    },
+    {
+      "id": "02_03_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "wavelength_vs_resolution.png",
+      "title": "광원 파장별 해상도 변화 그래프",
+      "description": "광원 세대별 파장과 달성 가능한 최소 해상도(Half-Pitch)의 관계. g-line부터 EUV까지의 진화를 시각화.",
+      "spec": {
+        "chart_type": "scatter_with_line",
+        "x_axis": {"label": "파장 λ (nm)", "scale": "log", "range": [10, 500]},
+        "y_axis": {"label": "최소 해상도 Half-Pitch (nm)", "scale": "log", "range": [5, 1000]},
+        "data": [
+          {"name": "g-line", "wavelength": 436, "resolution": 800, "year": "1980s", "marker": "o"},
+          {"name": "i-line", "wavelength": 365, "resolution": 350, "year": "1990s", "marker": "o"},
+          {"name": "KrF", "wavelength": 248, "resolution": 180, "year": "2000s", "marker": "s"},
+          {"name": "ArF (dry)", "wavelength": 193, "resolution": 65, "year": "2003", "marker": "s"},
+          {"name": "ArF-i (SP)", "wavelength": 193, "resolution": 38, "year": "2006", "marker": "^"},
+          {"name": "ArF-i (MP)", "wavelength": 193, "resolution": 7, "year": "2015", "marker": "^", "note": "멀티패터닝"},
+          {"name": "EUV (0.33NA)", "wavelength": 13.5, "resolution": 13, "year": "2019", "marker": "D"},
+          {"name": "High-NA EUV", "wavelength": 13.5, "resolution": 8, "year": "2026", "marker": "D", "note": "예상"}
+        ],
+        "annotations": [
+          {"text": "수은램프 시대", "region": [300, 500]},
+          {"text": "DUV 엑시머 레이저", "region": [180, 260]},
+          {"text": "EUV 극자외선", "region": [10, 20]}
+        ],
+        "colors": ["#FFD700", "#FFA500", "#FF6347", "#4169E1", "#9370DB"],
+        "figsize": [10, 7]
+      }
+    },
+    {
+      "id": "02_03_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "duv_vs_euv_optics.png",
+      "title": "DUV 굴절 광학 vs EUV 반사 광학 비교",
+      "description": "DUV는 석영 렌즈를 통해 빛을 굴절시키는 투과형 광학계, EUV는 Mo/Si 다층 거울로 빛을 반사시키는 반사형 광학계. 진공 환경 필수 여부도 대비.",
+      "spec": {
+        "prompt": "A technical comparison diagram with two panels. Left panel labeled 'DUV (193nm) - Refractive Optics': shows UV light passing through multiple transparent glass lenses (fused silica/CaF2) in air/water medium, from mask down to wafer, in a transmission-type optical system. Right panel labeled 'EUV (13.5nm) - Reflective Optics': shows EUV light bouncing off multiple curved multilayer mirrors (Mo/Si) inside a vacuum chamber, from reflective mask to wafer, in a reflection-type optical system. The vacuum chamber is clearly indicated. Key labels: 'Air/Water OK' for DUV, 'Vacuum Required' for EUV. Clean technical illustration style with blue tones for DUV and purple tones for EUV.",
+        "style": "technical comparison diagram",
+        "aspect_ratio": "16:9"
+      }
+    }
+  ]
+}

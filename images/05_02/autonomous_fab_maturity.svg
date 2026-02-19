@@ -1,0 +1,58 @@
+<svg width="1000" height="500" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#555" />
+        </marker>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+        </filter>
+    </defs>
+    
+    <rect width="100%" height="100%" fill="#f9f9f9" />
+    <text x="50" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333">자율 팹 성숙도 모델 (Level 1~5)</text>
+    
+        <g transform="translate(50, 350)">
+            <rect width="160" height="100" rx="10" ry="10" fill="#e3f2fd" stroke="#333" stroke-width="1" filter="url(#shadow)" />
+            <text x="80.0" y="25" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="16" fill="#000">Level 1</text>
+            <text x="80.0" y="45" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#333">모니터링</text>
+            <line x1="10" y1="55" x2="150" y2="55" stroke="#666" stroke-dasharray="4"/>
+            <text x="80.0" y="70" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">AI: SPC/FDC 알람</text>
+            <text x="80.0" y="85" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">H: 판단 + 조치</text>
+        </g>
+        <path d="M210,400.0 C225.0,400.0 225.0,340.0 240,340.0" stroke="#555" stroke-width="2" fill="none" marker-end="url(#arrow)" /><text x="320.0" y="275" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#ff5722">현재 위치 (2026)</text>
+        <g transform="translate(240, 290)">
+            <rect width="160" height="100" rx="10" ry="10" fill="#bbdefb" stroke="#ff5722" stroke-width="3" filter="url(#shadow)" />
+            <text x="80.0" y="25" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="16" fill="#000">Level 2</text>
+            <text x="80.0" y="45" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#333">추천</text>
+            <line x1="10" y1="55" x2="150" y2="55" stroke="#666" stroke-dasharray="4"/>
+            <text x="80.0" y="70" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">AI: 원인 + 조치안</text>
+            <text x="80.0" y="85" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">H: 검토 후 실행</text>
+        </g>
+        <path d="M400,340.0 C415.0,340.0 415.0,280.0 430,280.0" stroke="#555" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+        <g transform="translate(430, 230)">
+            <rect width="160" height="100" rx="10" ry="10" fill="#64b5f6" stroke="#ff5722" stroke-width="3" filter="url(#shadow)" />
+            <text x="80.0" y="25" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="16" fill="#000">Level 3</text>
+            <text x="80.0" y="45" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#333">반자율</text>
+            <line x1="10" y1="55" x2="150" y2="55" stroke="#666" stroke-dasharray="4"/>
+            <text x="80.0" y="70" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">AI: Safety Guard 내 보정</text>
+            <text x="80.0" y="85" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">H: 감독 + 예외처리</text>
+        </g>
+        <path d="M590,280.0 C605.0,280.0 605.0,220.0 620,220.0" stroke="#555" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+        <g transform="translate(620, 170)">
+            <rect width="160" height="100" rx="10" ry="10" fill="#1e88e5" stroke="#333" stroke-width="1" filter="url(#shadow)" />
+            <text x="80.0" y="25" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="16" fill="#000">Level 4</text>
+            <text x="80.0" y="45" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#333">고자율</text>
+            <line x1="10" y1="55" x2="150" y2="55" stroke="#666" stroke-dasharray="4"/>
+            <text x="80.0" y="70" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">AI: 자동 의사결정</text>
+            <text x="80.0" y="85" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">H: 예외 처리만</text>
+        </g>
+        <path d="M780,220.0 C795.0,220.0 795.0,160.0 810,160.0" stroke="#555" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+        <g transform="translate(810, 110)">
+            <rect width="160" height="100" rx="10" ry="10" fill="#0d47a1" stroke="#333" stroke-width="1" filter="url(#shadow)" />
+            <text x="80.0" y="25" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="16" fill="#000">Level 5</text>
+            <text x="80.0" y="45" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#333">완전 자율</text>
+            <line x1="10" y1="55" x2="150" y2="55" stroke="#666" stroke-dasharray="4"/>
+            <text x="80.0" y="70" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">AI: 전체 AI 운영</text>
+            <text x="80.0" y="85" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">H: 전략 수립</text>
+        </g>
+        </svg>

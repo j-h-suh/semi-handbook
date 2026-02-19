@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" font-family="'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#FF6600"/>
+    </marker>
+    <marker id="arrowBlack" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#333"/>
+    </marker>
+    <linearGradient id="prGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF6600" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FF6600" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="300" fill="#FAFAFA" rx="8"/>
+
+  <!-- ===== STEP 1: 디스펜스 ===== -->
+  <g transform="translate(0,0)">
+    <!-- Panel border -->
+    <rect x="5" y="5" width="290" height="290" fill="white" stroke="#E0E0E0" stroke-width="1" rx="6"/>
+    
+    <!-- Step label -->
+    <rect x="20" y="15" width="80" height="26" rx="13" fill="#FF6600"/>
+    <text x="60" y="33" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Step 1</text>
+    <text x="150" y="33" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">디스펜스</text>
+
+    <!-- Vacuum chuck -->
+    <rect x="70" y="200" width="160" height="30" rx="3" fill="#666666" stroke="#555" stroke-width="1"/>
+    <text x="150" y="220" text-anchor="middle" fill="#CCC" font-size="9">VACUUM CHUCK</text>
+    <!-- Vacuum holes -->
+    <circle cx="110" cy="200" r="2" fill="#555"/>
+    <circle cx="150" cy="200" r="2" fill="#555"/>
+    <circle cx="190" cy="200" r="2" fill="#555"/>
+
+    <!-- Wafer -->
+    <rect x="80" y="185" width="140" height="15" rx="2" fill="#C0C0C0" stroke="#A0A0A0" stroke-width="1"/>
+    <text x="150" y="196" text-anchor="middle" fill="#666" font-size="8">Si Wafer</text>
+
+    <!-- Nozzle -->
+    <rect x="140" y="80" width="20" height="60" rx="2" fill="#333333" stroke="#222" stroke-width="1"/>
+    <rect x="135" y="70" width="30" height="15" rx="3" fill="#444"/>
+    <!-- Nozzle tip -->
+    <rect x="145" y="140" width="10" height="8" fill="#333" rx="1"/>
+
+    <!-- PR droplet falling -->
+    <ellipse cx="150" cy="155" rx="8" ry="10" fill="url(#prGrad)"/>
+    <ellipse cx="150" cy="160" rx="5" ry="4" fill="#FF6600" opacity="0.5"/>
+
+    <!-- Label -->
+    <text x="150" y="255" text-anchor="middle" fill="#666" font-size="10">PR 용액 1~2mL 적하</text>
+
+    <!-- Arrow from nozzle to wafer -->
+    <line x1="150" y1="165" x2="150" y2="185" stroke="#FF6600" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrowhead)"/>
+  </g>
+
+  <!-- ===== STEP 2: 고속 회전 ===== -->
+  <g transform="translate(300,0)">
+    <rect x="5" y="5" width="290" height="290" fill="white" stroke="#E0E0E0" stroke-width="1" rx="6"/>
+
+    <!-- Step label -->
+    <rect x="20" y="15" width="80" height="26" rx="13" fill="#FF6600"/>
+    <text x="60" y="33" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Step 2</text>
+    <!-- Corrected Alignment: x changed from 195 to 150 -->
+    <text x="150" y="28" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">고속 회전</text>
+    <!-- Corrected Alignment: x changed from 195 to 150 -->
+    <text x="150" y="42" text-anchor="middle" fill="#888" font-size="10">(3,000~5,000 rpm)</text>
+
+    <!-- Vacuum chuck -->
+    <rect x="70" y="200" width="160" height="30" rx="3" fill="#666666" stroke="#555" stroke-width="1"/>
+    <text x="150" y="220" text-anchor="middle" fill="#CCC" font-size="9">VACUUM CHUCK</text>
+
+    <!-- Wafer -->
+    <rect x="80" y="185" width="140" height="15" rx="2" fill="#C0C0C0" stroke="#A0A0A0" stroke-width="1"/>
+
+    <!-- PR spreading on wafer -->
+    <rect x="85" y="178" width="130" height="7" rx="1" fill="#FF6600" opacity="0.7"/>
+    <!-- PR spreading edges -->
+    <path d="M85,182 Q75,180 68,175" stroke="#FF6600" stroke-width="2" fill="none" opacity="0.6"/>
+    <path d="M215,182 Q225,180 232,175" stroke="#FF6600" stroke-width="2" fill="none" opacity="0.6"/>
+
+    <!-- Ejected droplets -->
+    <circle cx="55" cy="168" r="3" fill="#FF6600" opacity="0.5"/>
+    <circle cx="48" cy="160" r="2" fill="#FF6600" opacity="0.4"/>
+    <circle cx="245" cy="165" r="3" fill="#FF6600" opacity="0.5"/>
+    <circle cx="252" cy="158" r="2" fill="#FF6600" opacity="0.4"/>
+    <circle cx="42" cy="172" r="1.5" fill="#FF6600" opacity="0.3"/>
+    <circle cx="258" cy="170" r="1.5" fill="#FF6600" opacity="0.3"/>
+
+    <!-- Rotation arrows (curved) -->
+    <path d="M90,230 Q60,245 90,260" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arrowBlack)"/>
+    <path d="M210,260 Q240,245 210,230" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arrowBlack)"/>
+    
+    <!-- Center rotation symbol -->
+    <path d="M140,210 A15,15 0 1,1 160,210" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arrowBlack)"/>
+
+    <!-- Label -->
+    <text x="150" y="255" text-anchor="middle" fill="#666" font-size="10">원심력으로 PR 확산 · 비산</text>
+  </g>
+
+  <!-- ===== STEP 3: 균일 박막 형성 ===== -->
+  <g transform="translate(600,0)">
+    <rect x="5" y="5" width="290" height="290" fill="white" stroke="#E0E0E0" stroke-width="1" rx="6"/>
+
+    <!-- Step label -->
+    <rect x="20" y="15" width="80" height="26" rx="13" fill="#FF6600"/>
+    <text x="60" y="33" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Step 3</text>
+    <!-- Corrected Alignment: x changed from 195 to 150 -->
+    <text x="150" y="33" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">균일 박막 형성</text>
+
+    <!-- Vacuum chuck -->
+    <rect x="70" y="200" width="160" height="30" rx="3" fill="#666666" stroke="#555" stroke-width="1"/>
+    <text x="150" y="220" text-anchor="middle" fill="#CCC" font-size="9">VACUUM CHUCK</text>
+
+    <!-- Wafer -->
+    <rect x="80" y="185" width="140" height="15" rx="2" fill="#C0C0C0" stroke="#A0A0A0" stroke-width="1"/>
+
+    <!-- Uniform PR thin film -->
+    <rect x="85" y="181" width="130" height="4" rx="0.5" fill="#FF9933" stroke="#FF8800" stroke-width="0.5"/>
+
+    <!-- Thickness dimension -->
+    <line x1="240" y1="179" x2="240" y2="187" stroke="#FF4444" stroke-width="1"/>
+    <line x1="235" y1="181" x2="245" y2="181" stroke="#FF4444" stroke-width="0.8"/>
+    <line x1="235" y1="185" x2="245" y2="185" stroke="#FF4444" stroke-width="0.8"/>
+    <text x="262" y="184" text-anchor="middle" fill="#FF4444" font-size="9" font-weight="bold">80~150nm</text>
+
+    <!-- Magnified inset -->
+    <rect x="180" y="90" width="100" height="70" rx="4" fill="white" stroke="#DDD" stroke-width="1"/>
+    <text x="230" y="105" text-anchor="middle" fill="#888" font-size="8">확대 단면</text>
+    <!-- Magnified wafer -->
+    <rect x="190" y="130" width="80" height="15" fill="#C0C0C0" stroke="#A0A0A0" stroke-width="0.5"/>
+    <text x="230" y="141" text-anchor="middle" fill="#777" font-size="7">Si Wafer</text>
+    <!-- Magnified PR film -->
+    <rect x="190" y="118" width="80" height="12" fill="#FF9933" stroke="#FF8800" stroke-width="0.5"/>
+    <text x="230" y="127" text-anchor="middle" fill="white" font-size="7" font-weight="bold">PR Film</text>
+    <!-- Magnify connection line -->
+    <line x1="180" y1="130" x2="160" y2="183" stroke="#DDD" stroke-width="1" stroke-dasharray="3,2"/>
+
+    <!-- EBR label -->
+    <text x="80" y="170" fill="#888" font-size="9">Edge Bead</text>
+    <text x="80" y="180" fill="#888" font-size="9">Removal ✓</text>
+
+    <!-- Label -->
+    <text x="150" y="255" text-anchor="middle" fill="#666" font-size="10">균일한 PR 막 완성</text>
+  </g>
+
+  <!-- Flow arrows between panels -->
+  <g>
+    <path d="M295,150 L305,150" stroke="#FF6600" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+    <path d="M595,150 L605,150" stroke="#FF6600" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  </g>
+</svg>

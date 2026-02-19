@@ -1,0 +1,111 @@
+{
+  "chapter": "04_04",
+  "chapter_title": "모델 해석과 신뢰",
+  "images": [
+    {
+      "id": "04_04_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "shap_waterfall_cd.png",
+      "title": "SHAP Waterfall Plot — CD 예측 해석",
+      "description": "개별 웨이퍼의 CD 예측에서 각 피처가 기본값(20.0nm)으로부터 최종 예측(21.3nm)까지 얼마나 기여하는지를 Waterfall 형태로 시각화",
+      "spec": {
+        "data": {
+          "base_value": 20.0,
+          "final_prediction": 21.3,
+          "contributions": [
+            {"feature": "PEB 온도 (높음)", "shap": 0.8, "direction": "positive"},
+            {"feature": "Dose (낮음)", "shap": 0.5, "direction": "positive"},
+            {"feature": "레지스트 두께 (두꺼움)", "shap": 0.3, "direction": "positive"},
+            {"feature": "장비B 사용", "shap": -0.2, "direction": "negative"},
+            {"feature": "Focus (양호)", "shap": -0.1, "direction": "negative"}
+          ]
+        },
+        "colors": {
+          "positive": "#e85d5d",
+          "negative": "#4a90d9",
+          "base": "#888888"
+        },
+        "x_label": "CD 예측값 (nm)",
+        "annotations": [
+          "기본값 (전체 평균): 20.0nm",
+          "최종 예측: 21.3nm (+1.3nm)",
+          "가장 큰 기여: PEB 온도 높음 (+0.8nm)"
+        ],
+        "style": "수평 Waterfall, DPI 300, 8x5 인치",
+        "note": "본문 '웨이퍼 A의 예측' 예시 데이터를 직접 사용: 기본값 20.0nm, PEB +0.8, Dose +0.5, 레지스트 +0.3, 장비B -0.2, Focus -0.1"
+      }
+    },
+    {
+      "id": "04_04_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "shap_beeswarm_cd.png",
+      "title": "SHAP Beeswarm Plot — 전체 피처 기여 분포",
+      "description": "전체 데이터에서 각 피처의 SHAP 값 분포를 보여주는 Beeswarm Plot. 각 점은 하나의 웨이퍼, 색상은 피처 값(빨강=높음, 파랑=낮음)",
+      "spec": {
+        "data": {
+          "features_ranked": [
+            {"name": "Focus_오차²", "importance_rank": 1, "pattern": "높을수록 양의 SHAP (CD 증가)"},
+            {"name": "Dose × Resist_두께", "importance_rank": 2, "pattern": "높을수록 음의 SHAP (CD 감소, 포지티브 PR)"},
+            {"name": "PEB_온도", "importance_rank": 3, "pattern": "높을수록 음의 SHAP (CD 감소)"},
+            {"name": "PM_이후_웨이퍼수", "importance_rank": 4, "pattern": "높을수록 양의 SHAP (장비 열화)"},
+            {"name": "이전층_CD", "importance_rank": 5, "pattern": "높을수록 양의 SHAP (누적 효과)"},
+            {"name": "Wafer_Radius", "importance_rank": 6, "pattern": "Edge에서 양의 SHAP (Center-Edge 효과)"},
+            {"name": "RF_Power_Std", "importance_rank": 7, "pattern": "높을수록 양의 SHAP (불안정)"},
+            {"name": "Dose_실측", "importance_rank": 8, "pattern": "높을수록 음의 SHAP"},
+            {"name": "Focus_실측", "importance_rank": 9, "pattern": "비선형 (2차 관계)"},
+            {"name": "Chamber_Pressure", "importance_rank": 10, "pattern": "약한 음의 상관"}
+          ],
+          "n_samples": 500,
+          "colorbar": "피처 값 (Low → High)"
+        },
+        "x_label": "SHAP value (CD에 대한 영향)",
+        "y_label": "피처 (중요도 순)",
+        "colors": {
+          "low": "#4a90d9",
+          "high": "#e85d5d"
+        },
+        "style": "Beeswarm (strip plot), DPI 300, 10x7 인치",
+        "note": "본문 '가장 중요한 피처가 위에, SHAP 분포가 넓은 피처가 영향력이 큰 피처' 설명 반영. 물리 정합성이 맞는 패턴(Dose↑→CD↓ 등)으로 구성"
+      }
+    },
+    {
+      "id": "04_04_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "physics_informed_hybrid_model.svg",
+      "title": "Physics-Informed 하이브리드 모델 구조",
+      "description": "물리 모델이 대략적 관계를 잡고 ML이 잔차만 학습하는 하이브리드 구조. SMILE 플랫폼의 핵심 아키텍처",
+      "spec": {
+        "elements": [
+          "입력 (X): 센서 데이터, 공정 파라미터",
+          "물리 모델 블록: Rayleigh 방정식, Dose-CD 관계, OVL 선형 모델",
+          "물리 예측 출력: ŷ_physics",
+          "잔차 계산: Residual = y_actual - ŷ_physics",
+          "ML 모델 블록 (XGBoost): 잔차 학습",
+          "ML 잔차 출력: ŷ_residual",
+          "합산 블록: ŷ_final = ŷ_physics + ŷ_residual",
+          "최종 출력: CD/Overlay 예측"
+        ],
+        "flow": "좌→우, 물리 모델 경로(위)와 ML 경로(아래)가 합산점에서 합류",
+        "colors": {
+          "physics_block": "#4a90d9",
+          "ml_block": "#e85d5d",
+          "input": "#f39c12",
+          "output": "#2ecc71",
+          "arrows": "#333333",
+          "sum_block": "#9b59b6"
+        },
+        "labels": "한글+수식",
+        "size": "800x350",
+        "annotations": [
+          "물리 모델: 도메인 지식 인코딩, 팹 간 공통 골격",
+          "ML 모델: 물리가 설명 못하는 비선형 잔차 학습",
+          "수식: ŷ = Physics(X) + ML_Residual(X)"
+        ],
+        "note": "본문 '하이브리드 모델 — 가장 권장되는 접근... ŷ = Physics_Model(X) + ML_Residual(X)' 구조를 시각화. SMILE 핵심 아키텍처"
+      }
+    }
+  ]
+}

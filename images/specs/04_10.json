@@ -1,0 +1,122 @@
+{
+  "chapter": "04_10",
+  "chapter_title": "종합실습 SMILE",
+  "images": [
+    {
+      "id": "04_10_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "smile_system_architecture.svg",
+      "title": "SMILE 시스템 아키텍처 종합",
+      "description": "본문의 ASCII 아키텍처를 정식 도면으로 업그레이드. 장비 레이어 → Kafka → 피처 엔진 → VM 서버 → APC 서버 → 모니터링의 전체 데이터 흐름과 학습 레이어(Spark+GPU) 포함",
+      "spec": {
+        "elements": [
+          "장비 레이어:",
+          "  스캐너 (ASML) ─ EDA/Interface A",
+          "  트랙 (TEL) ─ SECS/GEM",
+          "  계측기 (KLA) ─ 계측 DB API",
+          "  MES ─ MES API",
+          "데이터 수집 레이어:",
+          "  Apache Kafka (실시간 스트리밍)",
+          "추론 레이어 (Edge):",
+          "  피처 엔진 (실시간 변환)",
+          "  VM 서버 (XGBoost + FastAPI, RI 평가)",
+          "  APC 서버 (EWMA+VM 하이브리드, Safety Guard)",
+          "학습 레이어 (Central):",
+          "  Apache Spark (데이터 처리)",
+          "  GPU 서버 (모델 학습)",
+          "  Model Registry (MLflow)",
+          "모니터링 레이어:",
+          "  Grafana 대시보드 (RMSE 추이, PSI, 잔차)",
+          "  알림 서비스 (재학습 트리거)",
+          "피드백 루프:",
+          "  APC → 스캐너 (보정값 전달)",
+          "  모니터링 → 재학습 → 새 모델 → VM 서버"
+        ],
+        "colors": {
+          "equipment": "#333333",
+          "kafka": "#f39c12",
+          "inference": "#4a90d9",
+          "training": "#2ecc71",
+          "monitoring": "#e85d5d",
+          "feedback": "#9b59b6",
+          "protocol_labels": "#888888"
+        },
+        "layout": "좌→우 데이터 흐름, 상단에 장비, 하단에 학습 레이어, 우측에 모니터링",
+        "size": "1000x600",
+        "labels": "한글+영문 (기술 스택명은 영문)",
+        "annotations": [
+          "기술 스택: Kafka + Spark + XGBoost + FastAPI + MLflow + Grafana",
+          "Edge + Central 2계층 (4.5장)",
+          "피드백 루프가 시스템을 '살아 있게' 만든다",
+          "프로토콜 라벨: EDA, SECS/GEM, REST API"
+        ],
+        "note": "본문 ASCII 아키텍처 + '기술 스택은 Kafka + Spark + XGBoost + FastAPI + MLflow + Grafana' 직접 반영. 4.5장 Edge+Central 2계층 구조 적용"
+      }
+    },
+    {
+      "id": "04_10_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "smile_development_roadmap.svg",
+      "title": "SMILE 개발 로드맵 타임라인",
+      "description": "Phase 1(PoC) → Phase 2(배포) → Phase 3(확장) → Phase 4(고도화)의 점진적 개발 로드맵을 타임라인으로 시각화",
+      "spec": {
+        "elements": [
+          "Phase 1 (3개월): CD VM 단일 장비 PoC",
+          "  - 데이터 수집 파이프라인 구축",
+          "  - XGBoost VM 모델 개발, 오프라인 검증",
+          "  - 목표: R² > 0.8, RMSE < 0.5nm",
+          "  - 마일스톤: 오프라인 검증 통과",
+          "Phase 2 (3개월): VM 실전 배포 + APC 연동",
+          "  - 실시간 추론 서비스 배포 (Shadow Mode 시작)",
+          "  - EWMA + VM 하이브리드 APC",
+          "  - 모니터링 대시보드, 재학습 파이프라인",
+          "  - 목표: 계측 절감 30%, CD 3σ 10% 개선",
+          "  - 마일스톤: Shadow → Advisory 전환",
+          "Phase 3 (6개월): 다장비/다제품 확장",
+          "  - 전이 학습(4.7장)으로 다장비 확장",
+          "  - Overlay VM 추가",
+          "  - 멀티 팹 배포 준비",
+          "  - 목표: 3개 장비 × 2개 제품",
+          "  - 마일스톤: Semi-Auto 전환",
+          "Phase 4 (지속): 고도화",
+          "  - 딥러닝 (4.6장), 강화 학습 APC (4.8장)",
+          "  - LLM 에이전트 인터페이스 (4.9장)",
+          "  - 마일스톤: Full Auto"
+        ],
+        "colors": {
+          "phase1": "#4a90d9",
+          "phase2": "#2ecc71",
+          "phase3": "#f39c12",
+          "phase4": "#e85d5d",
+          "milestone": "#333333",
+          "timeline": "#888888"
+        },
+        "layout": "수평 타임라인, 각 Phase를 색상 블록으로 표시, 아래에 핵심 산출물/목표",
+        "size": "900x400",
+        "labels": "한글",
+        "annotations": [
+          "Shadow → Advisory → Semi-Auto → Full Auto (4.4장 로드맵)",
+          "각 Phase에서 성공 증명 후 다음 Phase",
+          "Phase 참조 챕터 번호 표시 (4.6, 4.7, 4.8, 4.9)"
+        ],
+        "note": "본문 개발 로드맵 (Phase 1~4) 데이터 직접 반영. 기간, 목표, 산출물 모두 본문에서 추출"
+      }
+    },
+    {
+      "id": "04_10_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "smile_dashboard_mockup.png",
+      "title": "SMILE 모니터링 대시보드 목업",
+      "description": "SMILE 플랫폼의 모니터링 대시보드 UI 개념도. 실시간 VM 성능, Data Drift 감시, APC 보정 현황의 3개 패널 구성",
+      "spec": {
+        "prompt": "A clean, modern monitoring dashboard UI mockup for a semiconductor manufacturing AI platform called 'SMILE'. The dashboard has a dark theme with three main panels arranged in a grid: (1) Top-left panel showing 'VM Performance' with a time-series line chart of RMSE trending around 0.42nm with a green status indicator, (2) Top-right panel showing 'Data Drift' with PSI bar charts for multiple features, all below a red threshold line at 0.2, (3) Bottom panel showing 'APC Correction Status' with a gauge showing 94% correction rate, a counter showing '2 clampings today', and CD 3σ = 1.2nm. Header shows 'SMILE Dashboard' with current date. Professional data visualization style, Grafana-like aesthetic, minimal design. 1920x1080 aspect ratio.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x576",
+        "note": "본문 모니터링 대시보드 ASCII 목업 데이터 직접 반영: RMSE=0.42nm, PSI<0.2, 보정적용률=94%, 클램핑=2회/일, CD 3σ=1.2nm"
+      }
+    }
+  ]
+}

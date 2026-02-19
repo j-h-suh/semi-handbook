@@ -1,0 +1,171 @@
+{
+  "chapter": "03_06",
+  "chapter_title": "VM",
+  "images": [
+    {
+      "id": "03_06_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "vm_predicted_vs_actual.png",
+      "title": "VM 예측값 vs 실측값 산점도 (R² 시각화)",
+      "description": "Virtual Metrology 모델의 예측 성능을 보여주는 산점도. 실측 CD와 VM 예측 CD의 상관관계를 R², MAE, RMSE와 함께 표시한다.",
+      "spec": {
+        "chart_type": "scatter_with_regression",
+        "x_label": "실측 CD (nm)",
+        "y_label": "VM 예측 CD (nm)",
+        "data_generation": {
+          "n_points": 200,
+          "actual_range": [18.5, 21.5],
+          "noise_std": 0.25,
+          "r_squared": 0.92,
+          "slope": 0.96,
+          "intercept": 0.8
+        },
+        "ideal_line": {
+          "label": "Perfect Prediction (y=x)",
+          "color": "#2C3E50",
+          "style": "dashed",
+          "linewidth": 1
+        },
+        "regression_line": {
+          "label": "Linear Fit",
+          "color": "#E74C3C",
+          "style": "solid",
+          "linewidth": 2
+        },
+        "scatter_config": {
+          "color": "#3498DB",
+          "alpha": 0.5,
+          "size": 30,
+          "edge_color": "#2980B9"
+        },
+        "metrics_box": {
+          "R²": 0.92,
+          "MAE": "0.18 nm",
+          "RMSE": "0.24 nm",
+          "model": "XGBoost (FDC Summary + Meta)",
+          "n_features": 2500,
+          "position": "top_left"
+        },
+        "confidence_band": {
+          "level": "95%",
+          "color": "rgba(231, 76, 60, 0.1)"
+        },
+        "axis_range": [18.0, 22.0],
+        "grid": true,
+        "figsize": [8, 8]
+      }
+    },
+    {
+      "id": "03_06_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "ri_distribution_threshold.png",
+      "title": "RI(Reliance Index) 분포와 임계값 설정",
+      "description": "VM 예측의 신뢰도 지표인 RI의 분포를 히스토그램으로 보여주고, 임계값 설정에 따라 실제 계측 비율이 결정되는 것을 시각화한다.",
+      "spec": {
+        "chart_type": "histogram_with_threshold",
+        "x_label": "Reliance Index (RI)",
+        "y_label": "웨이퍼 수",
+        "data_distribution": {
+          "type": "beta_like",
+          "skew": "left",
+          "peak_around": 0.85,
+          "n_samples": 10000
+        },
+        "histogram_config": {
+          "bins": 50,
+          "color": "#3498DB",
+          "alpha": 0.7,
+          "edge_color": "#2980B9"
+        },
+        "thresholds": [
+          {
+            "value": 0.7,
+            "label": "보수적 임계값 (RI≥0.7)\n→ 계측 생략 65%",
+            "color": "#27AE60",
+            "style": "dashed"
+          },
+          {
+            "value": 0.5,
+            "label": "공격적 임계값 (RI≥0.5)\n→ 계측 생략 82%",
+            "color": "#E74C3C",
+            "style": "dotted"
+          }
+        ],
+        "regions": [
+          {"range": [0, 0.5], "label": "반드시 실측", "color": "rgba(231, 76, 60, 0.15)"},
+          {"range": [0.5, 0.7], "label": "판단 필요", "color": "rgba(243, 156, 18, 0.15)"},
+          {"range": [0.7, 1.0], "label": "VM 신뢰", "color": "rgba(39, 174, 96, 0.15)"}
+        ],
+        "annotation": {
+          "text": "RI < 임계값 → 실제 계측 수행 + 학습 데이터 추가\nRI ≥ 임계값 → VM 예측값 사용, 계측 생략\n= Active Learning 원리",
+          "position": "top_right"
+        },
+        "x_range": [0, 1],
+        "grid": true,
+        "figsize": [10, 6]
+      }
+    },
+    {
+      "id": "03_06_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "vm_model_degradation.png",
+      "title": "VM 모델 열화 시계열 — R² 추이와 재학습 시점",
+      "description": "VM 모델의 예측 성능(R²)이 시간에 따라 저하되는 Concept Drift 현상과, 재학습/PM 이벤트의 영향을 보여주는 시계열 차트.",
+      "spec": {
+        "chart_type": "timeseries_with_events",
+        "x_label": "시간 (주)",
+        "y_label": "R² (예측 성능)",
+        "data": [
+          {"week": 1, "r2": 0.94},
+          {"week": 2, "r2": 0.93},
+          {"week": 3, "r2": 0.92},
+          {"week": 4, "r2": 0.91},
+          {"week": 5, "r2": 0.90},
+          {"week": 6, "r2": 0.88},
+          {"week": 7, "r2": 0.85},
+          {"week": 8, "r2": 0.82},
+          {"week": 9, "r2": 0.78},
+          {"week": 10, "r2": 0.93},
+          {"week": 11, "r2": 0.92},
+          {"week": 12, "r2": 0.91},
+          {"week": 13, "r2": 0.89},
+          {"week": 14, "r2": 0.87},
+          {"week": 15, "r2": 0.72},
+          {"week": 16, "r2": 0.92},
+          {"week": 17, "r2": 0.91},
+          {"week": 18, "r2": 0.90},
+          {"week": 19, "r2": 0.89},
+          {"week": 20, "r2": 0.88}
+        ],
+        "line_config": {
+          "color": "#3498DB",
+          "linewidth": 2,
+          "marker": "o",
+          "marker_size": 5
+        },
+        "threshold": {
+          "value": 0.80,
+          "label": "최소 허용 R² = 0.80",
+          "color": "#E74C3C",
+          "style": "dashed"
+        },
+        "events": [
+          {"week": 7, "type": "PM", "label": "장비 PM\n(소재 로트 변경)", "color": "#F39C12", "marker": "v"},
+          {"week": 10, "type": "retrain", "label": "모델 재학습 ①", "color": "#27AE60", "marker": "^"},
+          {"week": 15, "type": "PM", "label": "챔버 세정\n+ 부품 교체", "color": "#F39C12", "marker": "v"},
+          {"week": 16, "type": "retrain", "label": "모델 재학습 ②", "color": "#27AE60", "marker": "^"}
+        ],
+        "annotations": [
+          {"text": "점진적 열화\n(Concept Drift)", "xy": [5, 0.89], "arrow_to": [8, 0.82]},
+          {"text": "급격한 열화\n(PM 후 분포 변화)", "xy": [14, 0.75], "arrow_to": [15, 0.72]}
+        ],
+        "y_range": [0.65, 1.0],
+        "grid": true,
+        "figsize": [12, 6]
+      }
+    }
+  ]
+}

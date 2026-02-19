@@ -1,0 +1,115 @@
+{
+  "chapter": "02_13",
+  "chapter_title": "멀티패터닝",
+  "images": [
+    {
+      "id": "02_13_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "sadp_4step_cross_section.svg",
+      "title": "SADP 공정 4단계 단면도",
+      "description": "Self-Aligned Double Patterning의 핵심 4단계: 맨드릴 형성 → 스페이서 증착(ALD) → 맨드릴 제거 → 스페이서 전사. 피치가 1/2로 줄어드는 과정.",
+      "spec": {
+        "elements": [
+          {
+            "step": 1,
+            "label": "① 맨드릴 형성",
+            "description": "리소+식각으로 코어 패턴(피치 2P)",
+            "cross_section": {
+              "substrate": true,
+              "mandrel_lines": {"count": 3, "pitch": "2P", "width": "W", "material": "SiN/아몰퍼스 카본"},
+              "hard_mask": true
+            }
+          },
+          {
+            "step": 2,
+            "label": "② 스페이서 증착 (ALD)",
+            "description": "맨드릴 측벽에 균일 박막 증착\n스페이서 두께 = 최종 CD",
+            "cross_section": {
+              "substrate": true,
+              "mandrel_lines": {"count": 3, "pitch": "2P"},
+              "spacer": {"material": "SiO₂", "thickness": "t (=최종 CD)", "conformal": true}
+            }
+          },
+          {
+            "step": 3,
+            "label": "③ 맨드릴 제거",
+            "description": "선택적 식각으로 맨드릴만 제거\n스페이서만 남음 (피치 P)",
+            "cross_section": {
+              "substrate": true,
+              "spacer_only": {"count": 6, "pitch": "P", "note": "원래의 2배 밀도"}
+            }
+          },
+          {
+            "step": 4,
+            "label": "④ 패턴 전사",
+            "description": "스페이서를 마스크로 하부층 식각\n최종 피치 = P (원래의 1/2)",
+            "cross_section": {
+              "substrate": true,
+              "final_pattern": {"count": 6, "pitch": "P", "material": "하부층"}
+            }
+          }
+        ],
+        "pitch_comparison": {
+          "initial": "2P (리소 해상도 한계 내)",
+          "final": "P (리소 한계의 1/2)"
+        },
+        "key_insight": "2번째 패턴 위치 = 물리법칙(증착 등방성)이 결정\n→ 2번째 노광 불필요 → Overlay 오차 원천 차단",
+        "colors": {
+          "substrate": "#808080",
+          "mandrel": "#4169E1",
+          "spacer": "#FF8C00",
+          "final_pattern": "#32CD32",
+          "hard_mask": "#B8860B"
+        },
+        "layout": "vertical_4_steps",
+        "dimensions": "700x800"
+      }
+    },
+    {
+      "id": "02_13_img02",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "lele_overlay_pitch_variation.png",
+      "title": "LELE Overlay 오차 → 피치 불균일 시각화",
+      "description": "LELE 이중 패터닝에서 1차와 2차 노광 사이의 Overlay 오차가 피치 변동(한쪽 간격 넓어지고 반대쪽 좁아짐)으로 직결되는 메커니즘.",
+      "spec": {
+        "prompt": "A technical diagram showing how overlay error in LELE (Litho-Etch-Litho-Etch) double patterning causes pitch variation. Three scenarios shown vertically: Top: 'Perfect Alignment (OVL=0)' - alternating blue lines (1st litho) and red lines (2nd litho) with equal spacing P between all lines. Middle: 'Overlay Error = +2nm' - the red lines are shifted 2nm to the right, causing alternating narrow (P-2nm) and wide (P+2nm) spaces. The narrow spaces are highlighted with warning markers. Bottom: 'Consequence' - shows electrical impact with increased capacitance in narrow spaces and decreased capacitance in wide spaces, leading to timing mismatch. Labels show 'Target pitch: 36nm', 'OVL error: 2nm', 'Actual spaces: 16nm and 20nm'. Clean technical illustration.",
+        "style": "technical semiconductor diagram",
+        "aspect_ratio": "16:9"
+      }
+    },
+    {
+      "id": "02_13_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "arf_saqp_vs_euv_sp_comparison.png",
+      "title": "ArF-i SAQP vs EUV SP 공정 비교",
+      "description": "동일 36nm 피치 패턴을 ArF-i SAQP(4회 패터닝)와 EUV SP(단일 패터닝)로 구현할 때의 공정 단계 수, 마스크 수, 상대 비용 비교.",
+      "spec": {
+        "chart_type": "grouped_bar",
+        "categories": ["공정 단계 수", "마스크 수", "상대 비용 (ArF-i=100)"],
+        "data": [
+          {
+            "method": "ArF-i SAQP",
+            "values": [30, 4, 100],
+            "color": "#4169E1",
+            "note": "4회 패터닝: 리소×4 + 식각×4 + 증착×2 + 세정 등"
+          },
+          {
+            "method": "EUV Single Patterning",
+            "values": [8, 1, 85],
+            "color": "#FF6347",
+            "note": "단일 노광: 리소×1 + 식각×1 (장비 비싸지만 총비용 유리)"
+          }
+        ],
+        "annotations": [
+          {"text": "EUV 스캐너 1대 = ~4억 달러\n하지만 SAQP 공정 복잡도 제거로\n총 소유 비용(TCO) 절감", "position": "right"},
+          {"text": "목표: 36nm 피치 (Half-Pitch 18nm)", "position": "title_sub"}
+        ],
+        "y_axis": {"label": "값"},
+        "figsize": [10, 6]
+      }
+    }
+  ]
+}

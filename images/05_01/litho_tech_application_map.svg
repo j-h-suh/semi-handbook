@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f9fa" rx="10"/>
+
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#222">차세대 리소그래피 기술별 적용 영역 맵</text>
+  <text x="400" y="55" text-anchor="middle" font-size="12" fill="#666">각 기술이 최적인 반도체 응용 영역 — 공존과 보완 관계</text>
+
+  <!-- ========== Three overlapping circles ========== -->
+
+  <!-- High-NA EUV circle (top-left) -->
+  <circle cx="310" cy="240" r="170" fill="#2196F3" fill-opacity="0.13" stroke="#2196F3" stroke-width="2.5"/>
+
+  <!-- DSA circle (top-right) -->
+  <circle cx="490" cy="240" r="170" fill="#4CAF50" fill-opacity="0.13" stroke="#4CAF50" stroke-width="2.5"/>
+
+  <!-- NIL circle (bottom-center) -->
+  <circle cx="400" cy="390" r="170" fill="#FF9800" fill-opacity="0.13" stroke="#FF9800" stroke-width="2.5"/>
+
+  <!-- ========== Zone Labels & Applications ========== -->
+
+  <!-- High-NA EUV (left unique area) -->
+  <text x="220" y="175" text-anchor="middle" font-size="14" font-weight="bold" fill="#1565C0">High-NA EUV</text>
+  <text x="220" y="195" text-anchor="middle" font-size="10" fill="#1976D2" font-style="italic">자유 패턴 + 극한 해상도</text>
+  <line x1="180" y1="200" x2="260" y2="200" stroke="#2196F3" stroke-width="1" opacity="0.5"/>
+  <text x="220" y="218" text-anchor="middle" font-size="10" fill="#333">최첨단 로직 (1nm 이하)</text>
+  <text x="220" y="235" text-anchor="middle" font-size="10" fill="#333">AP / GPU / CPU</text>
+  <text x="220" y="252" text-anchor="middle" font-size="10" fill="#333">FinFET / GAA 패턴</text>
+  <!-- Resolution range -->
+  <text x="220" y="275" text-anchor="middle" font-size="9" fill="#1565C0" font-weight="bold">해상도: ~8nm</text>
+  <!-- Production timeline -->
+  <rect x="170" y="285" width="100" height="20" rx="10" fill="#2196F3" fill-opacity="0.15" stroke="#2196F3" stroke-width="1"/>
+  <text x="220" y="299" text-anchor="middle" font-size="9" fill="#1565C0" font-weight="bold">양산: 2026–27</text>
+
+  <!-- DSA (right unique area) -->
+  <text x="580" y="175" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E7D32">DSA</text>
+  <text x="580" y="195" text-anchor="middle" font-size="10" fill="#388E3C" font-style="italic">주기적 패턴 + 비용 절감</text>
+  <line x1="540" y1="200" x2="620" y2="200" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <text x="580" y="218" text-anchor="middle" font-size="10" fill="#333">Contact Hole 축소</text>
+  <text x="580" y="235" text-anchor="middle" font-size="10" fill="#333">Fin 피치 배가</text>
+  <text x="580" y="252" text-anchor="middle" font-size="10" fill="#333">주기적 구조 보조</text>
+  <!-- Resolution range -->
+  <text x="580" y="275" text-anchor="middle" font-size="9" fill="#2E7D32" font-weight="bold">해상도: ~5nm</text>
+  <!-- Production timeline -->
+  <rect x="530" y="285" width="100" height="20" rx="10" fill="#4CAF50" fill-opacity="0.15" stroke="#4CAF50" stroke-width="1"/>
+  <text x="580" y="299" text-anchor="middle" font-size="9" fill="#2E7D32" font-weight="bold">양산: 2028+</text>
+
+  <!-- NIL (bottom unique area) -->
+  <text x="400" y="440" text-anchor="middle" font-size="14" font-weight="bold" fill="#E65100">NIL</text>
+  <text x="400" y="458" text-anchor="middle" font-size="10" fill="#F57C00" font-style="italic">반복 패턴 + 비용 혁신</text>
+  <line x1="355" y1="463" x2="445" y2="463" stroke="#FF9800" stroke-width="1" opacity="0.5"/>
+  <text x="400" y="481" text-anchor="middle" font-size="10" fill="#333">NAND Flash 대량 생산</text>
+  <text x="400" y="498" text-anchor="middle" font-size="10" fill="#333">메모리 반복 패턴</text>
+  <text x="400" y="515" text-anchor="middle" font-size="10" fill="#333">비용 민감 응용</text>
+  <!-- Resolution range -->
+  <text x="400" y="535" text-anchor="middle" font-size="9" fill="#E65100" font-weight="bold">해상도: ~14nm</text>
+  <!-- Production timeline -->
+  <rect x="350" y="543" width="100" height="20" rx="10" fill="#FF9800" fill-opacity="0.15" stroke="#FF9800" stroke-width="1"/>
+  <text x="400" y="557" text-anchor="middle" font-size="9" fill="#E65100" font-weight="bold">NAND 양산 중</text>
+
+  <!-- ========== Overlap regions ========== -->
+
+  <!-- EUV + DSA overlap (top center) -->
+  <text x="400" y="192" text-anchor="middle" font-size="9" fill="#555">EUV 보조 +</text>
+  <text x="400" y="204" text-anchor="middle" font-size="9" fill="#555">DSA 패턴 정밀화</text>
+
+  <!-- EUV + NIL overlap (bottom-left) -->
+  <text x="320" y="365" text-anchor="middle" font-size="9" fill="#555">고해상도</text>
+  <text x="320" y="377" text-anchor="middle" font-size="9" fill="#555">메모리 패턴</text>
+
+  <!-- DSA + NIL overlap (bottom-right) -->
+  <text x="480" y="365" text-anchor="middle" font-size="9" fill="#555">저비용</text>
+  <text x="480" y="377" text-anchor="middle" font-size="9" fill="#555">나노 패턴</text>
+
+  <!-- Center overlap - shared region -->
+  <circle cx="400" cy="300" r="35" fill="#fff" fill-opacity="0.85" stroke="#666" stroke-width="1.5" stroke-dasharray="4,3" filter="url(#shadow2)"/>
+  <text x="400" y="294" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">공존의</text>
+  <text x="400" y="308" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">미래</text>
+
+  <!-- Bottom annotation -->
+  <rect x="200" y="578" width="400" height="18" rx="9" fill="#e8e8e8" fill-opacity="0.6"/>
+  <text x="400" y="591" text-anchor="middle" font-size="10" fill="#555">각 기술이 최적 영역에서 활용 — 경쟁이 아닌 공존</text>
+
+</svg>

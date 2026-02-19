@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 900" width="700" height="900" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <style>
+      .step-label { font-size: 13px; font-weight: bold; fill: #333333; }
+      .step-desc { font-size: 10px; fill: #555555; }
+      .dim-text { font-size: 9px; fill: #666666; }
+      .title-text { font-size: 16px; font-weight: bold; fill: #333333; text-anchor: middle; }
+      .subtitle-text { font-size: 10px; fill: #555; text-anchor: middle; }
+      .legend-text { font-size: 9px; fill: #333333; }
+      .insight-text { font-size: 9.5px; fill: #333; }
+      .arrow { stroke: #999; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#999"/>
+    </marker>
+  </defs>
+  <rect width="700" height="900" fill="#FFFFFF"/>
+
+  <text x="350" y="28" class="title-text">SADP 공정 4단계 단면도</text>
+  <text x="350" y="44" class="subtitle-text">Self-Aligned Double Patterning — 피치 2P → P 달성</text>
+
+  <rect x="8" y="58" width="684" height="157" rx="6" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="0.8"/>
+  <text x="470" y="80" class="step-label">① 맨드릴 형성</text>
+  <text x="470" y="98" class="step-desc">리소+식각으로 코어 패턴 (피치 2P)</text>
+  <text x="470" y="113" class="step-desc">재료: SiN / 아몰퍼스 카본</text>
+  <rect x="45" y="173" width="400" height="30" fill="#808080" rx="1"/>
+  <text x="245" y="191" text-anchor="middle" class="dim-text" fill="white">기판 (Substrate)</text>
+  <rect x="45" y="165" width="400" height="8" fill="#B8860B" rx="1"/>
+  <rect x="125" y="120" width="40" height="45" fill="#4169E1" rx="2"/>
+  <rect x="225" y="120" width="40" height="45" fill="#4169E1" rx="2"/>
+  <rect x="325" y="120" width="40" height="45" fill="#4169E1" rx="2"/>
+  <line x1="145" y1="112" x2="245" y2="112" class="arrow"/>
+  <text x="195" y="108" text-anchor="middle" class="dim-text">2P</text>
+  <text x="350" y="221" text-anchor="middle" fill="#999" font-size="14">▼</text>
+  <rect x="8" y="223" width="684" height="157" rx="6" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="0.8"/>
+  <text x="470" y="245" class="step-label">② 스페이서 증착 (ALD)</text>
+  <text x="470" y="263" class="step-desc">맨드릴 측벽에 균일 박막 증착</text>
+  <text x="470" y="278" class="step-desc">스페이서 두께 = 최종 CD</text>
+  <rect x="45" y="338" width="400" height="30" fill="#808080" rx="1"/>
+  <text x="245" y="356" text-anchor="middle" class="dim-text" fill="white">기판 (Substrate)</text>
+  <rect x="45" y="330" width="400" height="8" fill="#B8860B" rx="1"/>
+  <rect x="115" y="275" width="60" height="55" fill="#FF8C00" rx="3"/>
+  <rect x="125" y="285" width="40" height="45" fill="#4169E1" rx="2"/>
+  <rect x="215" y="275" width="60" height="55" fill="#FF8C00" rx="3"/>
+  <rect x="225" y="285" width="40" height="45" fill="#4169E1" rx="2"/>
+  <rect x="315" y="275" width="60" height="55" fill="#FF8C00" rx="3"/>
+  <rect x="325" y="285" width="40" height="45" fill="#4169E1" rx="2"/>
+  <rect x="175" y="320" width="40" height="10" fill="#FF8C00"/>
+  <rect x="275" y="320" width="40" height="10" fill="#FF8C00"/>
+  <line x1="365" y1="307" x2="375" y2="307" stroke="#FF8C00" stroke-width="2"/>
+  <text x="382" y="310" class="dim-text" fill="#FF8C00">t = CD</text>
+  <text x="350" y="386" text-anchor="middle" fill="#999" font-size="14">▼</text>
+  <rect x="8" y="388" width="684" height="157" rx="6" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="0.8"/>
+  <text x="470" y="410" class="step-label">③ 맨드릴 제거</text>
+  <text x="470" y="428" class="step-desc">선택적 식각으로 맨드릴만 제거</text>
+  <text x="470" y="443" class="step-desc">스페이서만 남음 (피치 P)</text>
+  <rect x="45" y="503" width="400" height="30" fill="#808080" rx="1"/>
+  <text x="245" y="521" text-anchor="middle" class="dim-text" fill="white">기판 (Substrate)</text>
+  <rect x="45" y="495" width="400" height="8" fill="#B8860B" rx="1"/>
+  <rect x="115" y="450" width="10" height="45" fill="#FF8C00" rx="1"/>
+  <rect x="165" y="450" width="10" height="45" fill="#FF8C00" rx="1"/>
+  <rect x="215" y="450" width="10" height="45" fill="#FF8C00" rx="1"/>
+  <rect x="265" y="450" width="10" height="45" fill="#FF8C00" rx="1"/>
+  <rect x="315" y="450" width="10" height="45" fill="#FF8C00" rx="1"/>
+  <rect x="365" y="450" width="10" height="45" fill="#FF8C00" rx="1"/>
+  <line x1="120" y1="442" x2="170" y2="442" class="arrow"/>
+  <text x="145" y="438" text-anchor="middle" class="dim-text">P (= 2P의 절반)</text>
+  <rect x="125" y="450" width="40" height="45" fill="none" stroke="#4169E1" stroke-width="0.8" stroke-dasharray="4,3" rx="2" opacity="0.4"/>
+  <rect x="225" y="450" width="40" height="45" fill="none" stroke="#4169E1" stroke-width="0.8" stroke-dasharray="4,3" rx="2" opacity="0.4"/>
+  <rect x="325" y="450" width="40" height="45" fill="none" stroke="#4169E1" stroke-width="0.8" stroke-dasharray="4,3" rx="2" opacity="0.4"/>
+  <text x="350" y="551" text-anchor="middle" fill="#999" font-size="14">▼</text>
+  <rect x="8" y="553" width="684" height="157" rx="6" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="0.8"/>
+  <text x="470" y="575" class="step-label">④ 패턴 전사</text>
+  <text x="470" y="593" class="step-desc">스페이서를 마스크로 하부층 식각</text>
+  <text x="470" y="608" class="step-desc">최종 피치 = P (원래의 1/2)</text>
+  <rect x="45" y="668" width="400" height="30" fill="#808080" rx="1"/>
+  <text x="245" y="686" text-anchor="middle" class="dim-text" fill="white">기판 (Substrate)</text>
+  <rect x="114" y="638" width="12" height="30" fill="#32CD32" rx="1"/>
+  <rect x="164" y="638" width="12" height="30" fill="#32CD32" rx="1"/>
+  <rect x="214" y="638" width="12" height="30" fill="#32CD32" rx="1"/>
+  <rect x="264" y="638" width="12" height="30" fill="#32CD32" rx="1"/>
+  <rect x="314" y="638" width="12" height="30" fill="#32CD32" rx="1"/>
+  <rect x="364" y="638" width="12" height="30" fill="#32CD32" rx="1"/>
+  <line x1="120" y1="630" x2="170" y2="630" class="arrow"/>
+  <text x="145" y="626" text-anchor="middle" class="dim-text">P (최종 피치)</text>
+  <rect x="8" y="726" width="334" height="70" rx="6" fill="#E8F0FE" stroke="#4169E1" stroke-width="0.8"/>
+  <text x="20" y="744" class="step-label" fill="#4169E1">피치 비교</text>
+  <text x="20" y="761" class="insight-text">초기: 2P (리소 해상도 한계 내)</text>
+  <text x="20" y="776" class="insight-text">최종: P (리소 한계의 1/2) ✓</text>
+  <rect x="358" y="726" width="334" height="70" rx="6" fill="#FFF3E0" stroke="#FF8C00" stroke-width="0.8"/>
+  <text x="370" y="744" class="step-label" fill="#FF8C00">핵심 원리</text>
+  <text x="370" y="761" class="insight-text">2번째 패턴 위치 = 물리법칙(증착 등방성)이 결정</text>
+  <text x="370" y="776" class="insight-text">→ 2번째 노광 불필요 → Overlay 오차 원천 차단</text>
+  <text x="20" y="806" class="dim-text" font-weight="bold">범례:</text>
+  <rect x="55" y="798" width="12" height="10" fill="#808080" rx="1"/>
+  <text x="71" y="806" class="legend-text">기판</text>
+  <rect x="103" y="798" width="12" height="10" fill="#B8860B" rx="1"/>
+  <text x="119" y="806" class="legend-text">하드마스크</text>
+  <rect x="178" y="798" width="12" height="10" fill="#4169E1" rx="1"/>
+  <text x="194" y="806" class="legend-text">맨드릴</text>
+  <rect x="235" y="798" width="12" height="10" fill="#FF8C00" rx="1"/>
+  <text x="251" y="806" class="legend-text">스페이서(SiO₂)</text>
+  <rect x="355" y="798" width="12" height="10" fill="#32CD32" rx="1"/>
+  <text x="371" y="806" class="legend-text">최종 패턴</text>
+</svg>

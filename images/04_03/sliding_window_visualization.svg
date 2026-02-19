@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<rect width="800" height="500" fill="#ffffff"/>
+<style>
+        text { font-family: 'Apple SD Gothic Neo', 'NanumGothic', 'AppleGothic', sans-serif; }
+        .title { font-size: 16px; font-weight: bold; fill: #222; }
+        .section-title { font-size: 13px; font-weight: bold; }
+        .row-label { font-size: 11px; fill: #555; }
+        .month-label { font-size: 11px; fill: #666; text-anchor: middle; }
+        .legend-text { font-size: 10px; fill: #555; }
+        .annotation { font-size: 9.5px; fill: #555; font-style: italic; }
+        .bar-rect { rx: 3; ry: 3; }
+    </style>
+<text x="400.0" y="30" text-anchor="middle" class="title">Expanding Window vs Sliding Window 재학습</text>
+<text x="173.33333333333334" y="70" class="month-label">1월</text>
+<text x="280.0" y="70" class="month-label">2월</text>
+<text x="386.6666666666667" y="70" class="month-label">3월</text>
+<text x="493.3333333333333" y="70" class="month-label">4월</text>
+<text x="600.0000000000001" y="70" class="month-label">5월</text>
+<text x="706.6666666666667" y="70" class="month-label">6월</text>
+<line x1="120.0" y1="75" x2="120.0" y2="275" stroke="#eee" stroke-width="1"/>
+<line x1="120.0" y1="290" x2="120.0" y2="434" stroke="#eee" stroke-width="1"/>
+<line x1="226.66666666666669" y1="75" x2="226.66666666666669" y2="275" stroke="#eee" stroke-width="1"/>
+<line x1="226.66666666666669" y1="290" x2="226.66666666666669" y2="434" stroke="#eee" stroke-width="1"/>
+<line x1="333.33333333333337" y1="75" x2="333.33333333333337" y2="275" stroke="#eee" stroke-width="1"/>
+<line x1="333.33333333333337" y1="290" x2="333.33333333333337" y2="434" stroke="#eee" stroke-width="1"/>
+<line x1="440.0" y1="75" x2="440.0" y2="275" stroke="#eee" stroke-width="1"/>
+<line x1="440.0" y1="290" x2="440.0" y2="434" stroke="#eee" stroke-width="1"/>
+<line x1="546.6666666666667" y1="75" x2="546.6666666666667" y2="275" stroke="#eee" stroke-width="1"/>
+<line x1="546.6666666666667" y1="290" x2="546.6666666666667" y2="434" stroke="#eee" stroke-width="1"/>
+<line x1="653.3333333333334" y1="75" x2="653.3333333333334" y2="275" stroke="#eee" stroke-width="1"/>
+<line x1="653.3333333333334" y1="290" x2="653.3333333333334" y2="434" stroke="#eee" stroke-width="1"/>
+<line x1="760.0" y1="75" x2="760.0" y2="275" stroke="#eee" stroke-width="1"/>
+<line x1="760.0" y1="290" x2="760.0" y2="434" stroke="#eee" stroke-width="1"/>
+<line x1="338.33333333333337" y1="75" x2="338.33333333333337" y2="275" stroke="#f39c12" stroke-width="2" stroke-dasharray="5,3"/>
+<text x="338.33333333333337" y="88" text-anchor="middle" font-size="9" fill="#f39c12" font-weight="bold">PM</text>
+<line x1="338.33333333333337" y1="290" x2="338.33333333333337" y2="434" stroke="#f39c12" stroke-width="2" stroke-dasharray="5,3"/>
+<text x="338.33333333333337" y="303" text-anchor="middle" font-size="9" fill="#f39c12" font-weight="bold">PM</text>
+<text x="15" y="95" class="section-title" fill="#4a90d9">Expanding Window</text>
+<text x="30" y="129.0" class="row-label">1회차</text>
+<rect x="120.0" y="110" width="320.0" height="30" fill="#4a90d9" class="bar-rect" opacity="0.85"/>
+<text x="280.0" y="129.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Train</text>
+<rect x="440.0" y="110" width="106.66666666666667" height="30" fill="#e85d5d" class="bar-rect" opacity="0.85"/>
+<text x="493.3333333333333" y="129.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Test</text>
+<text x="30" y="167.0" class="row-label">2회차</text>
+<rect x="120.0" y="148" width="426.6666666666667" height="30" fill="#4a90d9" class="bar-rect" opacity="0.85"/>
+<text x="333.33333333333337" y="167.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Train</text>
+<rect x="546.6666666666667" y="148" width="106.66666666666667" height="30" fill="#e85d5d" class="bar-rect" opacity="0.85"/>
+<text x="600.0000000000001" y="167.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Test</text>
+<text x="30" y="205.0" class="row-label">3회차</text>
+<rect x="120.0" y="186" width="533.3333333333334" height="30" fill="#4a90d9" class="bar-rect" opacity="0.85"/>
+<text x="386.6666666666667" y="205.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Train</text>
+<rect x="653.3333333333334" y="186" width="106.66666666666667" height="30" fill="#e85d5d" class="bar-rect" opacity="0.85"/>
+<text x="706.6666666666667" y="205.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Test</text>
+<text x="760" y="229" text-anchor="end" class="annotation">⚠ 오래된 데이터 누적 → 오염 위험</text>
+<line x1="15" y1="280" x2="785" y2="280" stroke="#ddd" stroke-width="1"/>
+<text x="15" y="310" class="section-title" fill="#e85d5d">Sliding Window (최근 3개월)</text>
+<text x="30" y="344.0" class="row-label">1회차</text>
+<rect x="120.0" y="325" width="320.0" height="30" fill="#4a90d9" class="bar-rect" opacity="0.85"/>
+<text x="280.0" y="344.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Train</text>
+<rect x="440.0" y="325" width="106.66666666666667" height="30" fill="#e85d5d" class="bar-rect" opacity="0.85"/>
+<text x="493.3333333333333" y="344.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Test</text>
+<text x="30" y="382.0" class="row-label">2회차</text>
+<rect x="120.0" y="363" width="106.66666666666667" height="30" fill="#dddddd" class="bar-rect" opacity="0.85"/>
+<line x1="120.0" y1="363" x2="226.66666666666669" y2="393" stroke="#bbb" stroke-width="1"/>
+<line x1="120.0" y1="393" x2="226.66666666666669" y2="363" stroke="#bbb" stroke-width="1"/>
+<rect x="226.66666666666669" y="363" width="320.0" height="30" fill="#4a90d9" class="bar-rect" opacity="0.85"/>
+<text x="386.6666666666667" y="382.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Train</text>
+<rect x="546.6666666666667" y="363" width="106.66666666666667" height="30" fill="#e85d5d" class="bar-rect" opacity="0.85"/>
+<text x="600.0000000000001" y="382.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Test</text>
+<text x="30" y="420.0" class="row-label">3회차</text>
+<rect x="120.0" y="401" width="213.33333333333334" height="30" fill="#dddddd" class="bar-rect" opacity="0.85"/>
+<line x1="120.0" y1="401" x2="333.33333333333337" y2="431" stroke="#bbb" stroke-width="1"/>
+<line x1="120.0" y1="431" x2="333.33333333333337" y2="401" stroke="#bbb" stroke-width="1"/>
+<rect x="333.33333333333337" y="401" width="320.0" height="30" fill="#4a90d9" class="bar-rect" opacity="0.85"/>
+<text x="493.33333333333337" y="420.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Train</text>
+<rect x="653.3333333333334" y="401" width="106.66666666666667" height="30" fill="#e85d5d" class="bar-rect" opacity="0.85"/>
+<text x="706.6666666666667" y="420.0" text-anchor="middle" font-size="9" fill="white" font-weight="bold">Test</text>
+<text x="760" y="444" text-anchor="end" class="annotation">✓ PM 이전 데이터 자연 탈락 → 비정상성 대응</text>
+<rect x="120" y="467" width="12" height="12" fill="#4a90d9" rx="2"/>
+<text x="136" y="477" class="legend-text">Train (학습)</text>
+<rect x="270" y="467" width="12" height="12" fill="#e85d5d" rx="2"/>
+<text x="286" y="477" class="legend-text">Test (검증)</text>
+<rect x="420" y="467" width="12" height="12" fill="#dddddd" rx="2"/>
+<text x="436" y="477" class="legend-text">폐기 데이터</text>
+<rect x="570" y="467" width="12" height="12" fill="#f39c12" rx="2"/>
+<text x="586" y="477" class="legend-text">PM 이벤트</text>
+</svg>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 280" width="900" height="280">
+  <defs>
+    <style>
+      text { font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif; }
+      .title { font-size: 13px; font-weight: bold; fill: #222; }
+      .desc { font-size: 10px; fill: #555; }
+      .formula { font-size: 12px; font-weight: bold; fill: #4169E1; font-style: italic; }
+      .step-label { font-size: 14px; font-weight: bold; fill: #333; }
+    </style>
+    <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#4169E1"/>
+    </marker>
+    <marker id="arrowDown" markerWidth="6" markerHeight="8" refX="3" refY="8" orient="auto">
+      <path d="M0,0 L6,0 L3,8 Z" fill="#FF8C00"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="280" fill="#FAFAFA" rx="6"/>
+
+  <!-- Panel separators -->
+  <line x1="300" y1="10" x2="300" y2="270" stroke="#DDD" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="600" y1="10" x2="600" y2="270" stroke="#DDD" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- ========== PANEL 1: 디스펜스 ========== -->
+  <text x="150" y="28" text-anchor="middle" class="step-label">① 디스펜스</text>
+
+  <!-- Wafer -->
+  <rect x="50" y="170" width="200" height="20" rx="2" fill="#C0C0C0" stroke="#999" stroke-width="1"/>
+  
+  <!-- Nozzle -->
+  <rect x="140" y="55" width="20" height="45" rx="2" fill="#333"/>
+  <rect x="135" y="45" width="30" height="14" rx="3" fill="#555"/>
+  <text x="180" y="62" class="desc">노즐</text>
+
+  <!-- PR drops falling -->
+  <ellipse cx="150" cy="108" rx="4" ry="6" fill="#FF8C00" opacity="0.9"/>
+  <ellipse cx="147" cy="122" rx="3" ry="5" fill="#FF8C00" opacity="0.7"/>
+  <ellipse cx="153" cy="136" rx="3.5" ry="5.5" fill="#FF8C00" opacity="0.8"/>
+
+  <!-- PR puddle on wafer -->
+  <ellipse cx="150" cy="170" rx="35" ry="8" fill="#FF8C00" opacity="0.85"/>
+
+  <!-- Description (Corrected alignment to match other panels) -->
+  <text x="150" y="210" text-anchor="middle" class="desc">PR 용액 1~2 mL 적하</text>
+  <text x="150" y="225" text-anchor="middle" class="desc">웨이퍼 정지 상태</text>
+
+  <!-- ========== PANEL 2: 고속 회전 ========== -->
+  <text x="450" y="28" text-anchor="middle" class="step-label">② 고속 회전</text>
+
+  <!-- Wafer (spinning) -->
+  <rect x="350" y="170" width="200" height="20" rx="2" fill="#C0C0C0" stroke="#999" stroke-width="1"/>
+
+  <!-- Spinning arrows (curved) -->
+  <path d="M370,178 Q340,160 360,145" stroke="#4169E1" stroke-width="1.5" fill="none" marker-end="url(#arrowR)"/>
+  <path d="M530,178 Q560,160 540,145" stroke="#4169E1" stroke-width="1.5" fill="none" marker-end="url(#arrowR)"/>
+
+  <!-- PR spreading thin layer -->
+  <rect x="365" y="163" width="170" height="7" rx="1" fill="#FF8C00" opacity="0.7"/>
+
+  <!-- Spreading arrows outward -->
+  <line x1="450" y1="167" x2="380" y2="155" stroke="#4169E1" stroke-width="1.5" marker-end="url(#arrowR)"/>
+  <line x1="450" y1="167" x2="520" y2="155" stroke="#4169E1" stroke-width="1.5" marker-end="url(#arrowR)"/>
+
+  <!-- Edge bead -->
+  <ellipse cx="352" cy="167" rx="6" ry="5" fill="#FF8C00" opacity="0.9"/>
+  <ellipse cx="548" cy="167" rx="6" ry="5" fill="#FF8C00" opacity="0.9"/>
+
+  <!-- Flying droplets -->
+  <circle cx="335" cy="150" r="2.5" fill="#FF8C00" opacity="0.6"/>
+  <circle cx="325" cy="140" r="2" fill="#FF8C00" opacity="0.4"/>
+  <circle cx="565" cy="150" r="2.5" fill="#FF8C00" opacity="0.6"/>
+  <circle cx="575" cy="140" r="2" fill="#FF8C00" opacity="0.4"/>
+
+  <!-- Rotation symbol -->
+  <path d="M430,120 A25,25 0 1,1 470,120" stroke="#4169E1" stroke-width="2" fill="none" marker-end="url(#arrowR)"/>
+  <text x="450" y="115" text-anchor="middle" class="desc" fill="#4169E1">3,000~5,000 rpm</text>
+
+  <!-- Description -->
+  <text x="450" y="210" text-anchor="middle" class="desc">원심력으로 PR 확산</text>
+  <text x="450" y="225" text-anchor="middle" class="desc">여분 용액 비산 (Edge Bead)</text>
+
+  <!-- ========== PANEL 3: 균일 박막 + EBR ========== -->
+  <text x="750" y="28" text-anchor="middle" class="step-label">③ 균일 박막 + EBR</text>
+
+  <!-- Wafer -->
+  <rect x="650" y="170" width="200" height="20" rx="2" fill="#C0C0C0" stroke="#999" stroke-width="1"/>
+
+  <!-- Uniform thin film -->
+  <rect x="660" y="165" width="180" height="5" rx="1" fill="#FF8C00" opacity="0.85"/>
+
+  <!-- Thickness dimension lines -->
+  <line x1="845" y1="165" x2="855" y2="165" stroke="#333" stroke-width="0.8"/>
+  <line x1="845" y1="170" x2="855" y2="170" stroke="#333" stroke-width="0.8"/>
+  <line x1="852" y1="165" x2="852" y2="170" stroke="#333" stroke-width="0.8"/>
+  <text x="862" y="170" class="desc" font-size="8">t</text>
+
+  <!-- EBR solvent nozzle -->
+  <rect x="660" y="130" width="12" height="30" rx="2" fill="#4169E1" opacity="0.7" transform="rotate(-15, 666, 145)"/>
+  <text x="640" y="128" class="desc" fill="#4169E1">EBR</text>
+
+  <!-- EBR spray -->
+  <line x1="666" y1="158" x2="662" y2="167" stroke="#4169E1" stroke-width="1" opacity="0.5"/>
+  <line x1="669" y1="158" x2="665" y2="167" stroke="#4169E1" stroke-width="1" opacity="0.5"/>
+
+  <!-- Checkmark for uniformity -->
+  <text x="750" y="155" text-anchor="middle" fill="#2E8B57" font-size="16">✓</text>
+  <text x="750" y="145" text-anchor="middle" class="desc" fill="#2E8B57">균일도 ±1 nm</text>
+
+  <!-- Thickness values -->
+  <text x="750" y="210" text-anchor="middle" class="desc">ArF: 80~150 nm</text>
+  <text x="750" y="225" text-anchor="middle" class="desc">EUV: 30~50 nm</text>
+
+  <!-- ========== Formula bar ========== -->
+  <rect x="300" y="252" width="300" height="22" rx="10" fill="#EEF2FF" stroke="#4169E1" stroke-width="1"/>
+  <text x="450" y="267" text-anchor="middle" class="formula">두께 ∝ 1/√rpm</text>
+
+  <!-- Flow arrows between panels -->
+  <line x1="260" y1="140" x2="290" y2="140" stroke="#999" stroke-width="2" marker-end="url(#arrowR)"/>
+  <line x1="560" y1="140" x2="590" y2="140" stroke="#999" stroke-width="2" marker-end="url(#arrowR)"/>
+</svg>

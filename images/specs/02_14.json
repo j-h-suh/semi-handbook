@@ -1,0 +1,63 @@
+{
+  "chapter": "02_14",
+  "chapter_title": "EUV 리소그래피 심화",
+  "images": [
+    {
+      "id": "02_14_img01",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "euv_stochastic_defects_sem.png",
+      "title": "EUV 확률적 결함 SEM 이미지 (Micro-Bridge / Line Break)",
+      "description": "EUV 공정에서 발생하는 대표적 확률적 결함의 SEM 이미지. Micro-Bridge(인접 라인 사이 비정상 연결), Line Break(라인 중간 끊김), Missing Contact(홀 미오픈)의 3종.",
+      "spec": {
+        "prompt": "A set of three CD-SEM images showing typical EUV stochastic defects in semiconductor manufacturing. Left image 'Micro-Bridge': shows parallel line-space patterns where a thin bridge of resist connects two adjacent lines that should be separated, appearing as a bright spot bridging the dark space. Center image 'Line Break': shows a line pattern with a gap/break in the middle where the resist line is discontinuous, appearing as a dark interruption in a bright line. Right image 'Missing Contact': shows an array of contact hole patterns where one hole failed to open completely, appearing as a filled/partially-filled circle among open circles. All images have typical SEM grainy appearance with bright edge contrast, approximately 100,000x magnification. Labels and arrows indicate each defect type. The random/unpredictable locations of these defects should be evident.",
+        "style": "SEM microscope images with labels",
+        "aspect_ratio": "3:1"
+      }
+    },
+    {
+      "id": "02_14_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "euv_scanner_installation_trend.png",
+      "title": "EUV 스캐너 설치 추이 그래프",
+      "description": "연도별 전 세계 EUV 스캐너 누적 설치 대수. TSMC/삼성/인텔 등 주요 고객별 구분. 2019년 양산 시작부터 2025년까지.",
+      "spec": {
+        "chart_type": "stacked_area_or_bar",
+        "x_axis": {"label": "연도", "range": [2017, 2025]},
+        "y_axis": {"label": "누적 EUV 스캐너 설치 대수", "range": [0, 250]},
+        "data": [
+          {"year": 2017, "tsmc": 2, "samsung": 1, "intel": 0, "others": 0},
+          {"year": 2018, "tsmc": 8, "samsung": 3, "intel": 1, "others": 0},
+          {"year": 2019, "tsmc": 20, "samsung": 8, "intel": 3, "others": 1},
+          {"year": 2020, "tsmc": 35, "samsung": 15, "intel": 6, "others": 2},
+          {"year": 2021, "tsmc": 55, "samsung": 22, "intel": 10, "others": 5},
+          {"year": 2022, "tsmc": 75, "samsung": 28, "intel": 15, "others": 8},
+          {"year": 2023, "tsmc": 90, "samsung": 32, "intel": 18, "others": 12},
+          {"year": 2024, "tsmc": 100, "samsung": 35, "intel": 22, "others": 15},
+          {"year": 2025, "tsmc": 110, "samsung": 38, "intel": 25, "others": 18}
+        ],
+        "colors": {"tsmc": "#FF4444", "samsung": "#4169E1", "intel": "#32CD32", "others": "#FFD700"},
+        "annotations": [
+          {"text": "TSMC N7+ 양산 시작", "year": 2019, "arrow": true},
+          {"text": "1대당 ~4억 달러\n총 투자 ~800억 달러", "position": "upper_left"},
+          {"text": "High-NA EUV\n(EXE:5000)\n~3.5~5억 달러/대", "year": 2024, "position": "note"}
+        ],
+        "figsize": [10, 7]
+      }
+    },
+    {
+      "id": "02_14_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "anamorphic_4x_8x_reduction.png",
+      "title": "High-NA EUV: Anamorphic 4:1 × 8:1 축소 개념도",
+      "description": "High-NA EUV에서 수평(4:1)과 수직(8:1) 축소비가 다른 아나모픽 광학계 개념. 결과적으로 노광 필드가 26×33mm에서 26×16.5mm로 절반 축소. 큰 칩은 Stitching 필요.",
+      "spec": {
+        "prompt": "A technical diagram explaining the anamorphic optics in High-NA EUV lithography. The diagram shows two panels side by side. Left panel 'Current EUV (NA=0.33)': mask pattern being reduced 4:1 in both X and Y directions through symmetric optics, resulting in a full 26×33mm exposure field on the wafer. Right panel 'High-NA EUV (NA=0.55)': mask pattern being reduced 4:1 in X direction but 8:1 in Y direction through anamorphic (asymmetric) optics, resulting in a half-height 26×16.5mm exposure field. Below, a wafer diagram shows how a large chip die that previously fit in one exposure now requires two exposures stitched together (labeled 'Stitching'), with the stitch boundary highlighted and labeled 'Stitch Overlay: new challenge'. Key numbers: NA improvement 0.33→0.55, Resolution improvement ~1.7×, DOF reduction ~3×. Clean technical illustration.",
+        "style": "technical comparison diagram",
+        "aspect_ratio": "16:9"
+      }
+    }
+  ]
+}

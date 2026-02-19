@@ -1,0 +1,141 @@
+{
+  "chapter": "01_09",
+  "chapter_title": "공정노드와 무어의법칙",
+  "images": [
+    {
+      "id": "01_09_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "planar_finfet_gaa_comparison.svg",
+      "title": "Planar → FinFET → GAA 트랜지스터 단면 비교",
+      "description": "세 가지 트랜지스터 구조에서 게이트(녹색)가 채널(파란색)을 감싸는 면적이 1면 → 3면 → 4면으로 진화하는 것을 단면으로 비교",
+      "spec": {
+        "elements": [
+          "Planar MOSFET: 게이트가 채널 윗면 1면만 제어. ~22nm까지 사용",
+          "FinFET: 채널이 수직 Fin 형태. 게이트가 양측면+윗면 3면 감싸기. 22nm~3nm",
+          "GAA/Nanosheet: 수평 나노시트 채널(2-3장). 게이트가 4면 완전 감싸기. 2nm~",
+          "소스 (Source)",
+          "드레인 (Drain)",
+          "게이트 (Gate, 녹색)",
+          "채널 (Channel, 파란색)",
+          "기판 (Substrate)"
+        ],
+        "layout": "3열 병렬 비교, 각 구조의 3D 투시도 + 정면 단면도",
+        "colors": {
+          "gate": "#5dbe5d",
+          "channel": "#4a90d9",
+          "source_drain": "#e85d5d",
+          "substrate": "#e0e0e0",
+          "oxide": "#fff3b0"
+        },
+        "size": "900x450",
+        "labels": "한글+영문",
+        "annotations": [
+          "1면 제어 → 누설 ↑ (Planar)",
+          "3면 제어 → 누설 ↓↓ (FinFET)",
+          "4면 제어 → 누설 ↓↓↓ (GAA)",
+          "게이트 감싸기 면적 증가 화살표"
+        ]
+      }
+    },
+    {
+      "id": "01_09_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "moores_law_graph.png",
+      "title": "무어의 법칙 그래프 (연도 vs 트랜지스터 수)",
+      "description": "1971~2024년 주요 칩의 트랜지스터 수를 로그 스케일로 표시. '2년마다 2배' 추세선과 함께 무어의 법칙 둔화 경향 표현",
+      "spec": {
+        "data": [
+          {"year": 1971, "chip": "Intel 4004", "count": 2300, "node": "10μm"},
+          {"year": 1978, "chip": "Intel 8086", "count": 29000, "node": "3μm"},
+          {"year": 1989, "chip": "Intel 486", "count": 1200000, "node": "1μm"},
+          {"year": 1999, "chip": "Pentium III", "count": 9500000, "node": "250nm"},
+          {"year": 2005, "chip": "Pentium D", "count": 230000000, "node": "90nm"},
+          {"year": 2010, "chip": "Core i7-2600", "count": 1160000000, "node": "32nm"},
+          {"year": 2015, "chip": "Apple A9", "count": 2000000000, "node": "14/16nm"},
+          {"year": 2020, "chip": "Apple M1", "count": 16000000000, "node": "5nm"},
+          {"year": 2024, "chip": "Apple M4 Max", "count": 28000000000, "node": "3nm"}
+        ],
+        "x_label": "연도 (Year)",
+        "y_label": "트랜지스터 수 (Transistor Count)",
+        "y_scale": "log",
+        "trend_line": "무어의 법칙 (2년마다 2배) 이론 직선",
+        "annotations": [
+          {"year": 2006, "text": "데나드 스케일링\n종말"},
+          {"year": 2012, "text": "FinFET\n도입"},
+          {"year": 2024, "text": "둔화\n(1.4~1.7x/세대)"}
+        ],
+        "marker_labels": true,
+        "style": "학술, 격자선, DPI 300, 12x7 인치",
+        "note": "본문 테이블에서 직접 추출. 보간 데이터(8086, PIII, Pentium D, Core i7 등)는 합리적 추정치"
+      }
+    },
+    {
+      "id": "01_09_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "clock_frequency_stagnation.png",
+      "title": "클럭 주파수 정체 그래프",
+      "description": "연도별 CPU 최대 클럭 주파수 추이. 2005년 이후 3-5GHz에서 정체 — 데나드 스케일링 종말의 결과를 시각화",
+      "spec": {
+        "data": [
+          {"year": 1975, "freq_mhz": 2},
+          {"year": 1980, "freq_mhz": 8},
+          {"year": 1985, "freq_mhz": 16},
+          {"year": 1990, "freq_mhz": 33},
+          {"year": 1993, "freq_mhz": 66},
+          {"year": 1997, "freq_mhz": 233},
+          {"year": 2000, "freq_mhz": 1000},
+          {"year": 2002, "freq_mhz": 2000},
+          {"year": 2004, "freq_mhz": 3400},
+          {"year": 2006, "freq_mhz": 3800},
+          {"year": 2010, "freq_mhz": 3600},
+          {"year": 2015, "freq_mhz": 4200},
+          {"year": 2020, "freq_mhz": 5000},
+          {"year": 2024, "freq_mhz": 5500}
+        ],
+        "x_label": "연도 (Year)",
+        "y_label": "최대 클럭 주파수 (MHz, 로그 스케일)",
+        "y_scale": "log",
+        "annotations": [
+          {"year": 2005, "text": "데나드 스케일링 종말\n(Dennard Scaling End)\n→ 클럭 정체 시작", "style": "vertical_band"},
+          {"text": "멀티코어 시대\n(Multi-core Era)", "position": "right_half"}
+        ],
+        "regions": [
+          {"range": [1975, 2005], "label": "스케일링 황금기\n(주파수 지수 상승)", "color": "#d0f0d0"},
+          {"range": [2005, 2024], "label": "주파수 정체\n(3-5GHz 벽)", "color": "#f0d0d0"}
+        ],
+        "style": "학술, 격자선, DPI 300, 10x6 인치",
+        "note": "인텔/AMD 데스크탑 CPU 최대 부스트 클럭 기준 합리적 추정치"
+      }
+    },
+    {
+      "id": "01_09_img04",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "transistor_density_by_node.png",
+      "title": "노드별 트랜지스터 밀도 비교",
+      "description": "TSMC 기준 N7, N5, N3, N2(예상)의 트랜지스터 밀도(MTr/mm²)를 바 차트로 비교. 세대간 밀도 향상 배율 표시",
+      "spec": {
+        "data": [
+          {"node": "N7", "density_mtr": 91, "year": 2018},
+          {"node": "N5", "density_mtr": 173, "year": 2020},
+          {"node": "N3", "density_mtr": 292, "year": 2022},
+          {"node": "N2\n(예상)", "density_mtr": 400, "year": 2025}
+        ],
+        "chart_type": "bar",
+        "x_label": "공정 노드 (TSMC)",
+        "y_label": "트랜지스터 밀도 (MTr/mm²)",
+        "bar_labels": true,
+        "improvement_arrows": [
+          {"from": "N7", "to": "N5", "ratio": "1.9x"},
+          {"from": "N5", "to": "N3", "ratio": "1.7x"},
+          {"from": "N3", "to": "N2", "ratio": "~1.4x"}
+        ],
+        "style": "학술, 격자선, DPI 300, 8x6 인치",
+        "note": "본문에서 직접 추출한 데이터 (N7=91, N5=173, N3=292, N2=400+ MTr/mm²)"
+      }
+    }
+  ]
+}

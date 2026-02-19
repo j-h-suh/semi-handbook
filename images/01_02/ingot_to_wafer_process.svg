@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 350" width="900" height="350" font-family="'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <linearGradient id="polishedGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a0c8e8"/>
+      <stop offset="100%" stop-color="#c8e0f4"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="350" fill="#fafcff" rx="8"/>
+
+  <!-- Title -->
+  <text x="450" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a3a5c">잉곳에서 웨이퍼까지의 가공 단계 (Ingot to Wafer Process)</text>
+
+  <!-- ===== Stage 0: Ingot ===== -->
+  <g transform="translate(30, 50)">
+    <!-- Ingot cylinder -->
+    <ellipse cx="40" cy="40" rx="35" ry="12" fill="#b8cce0" stroke="#7a9bb5" stroke-width="1"/>
+    <rect x="5" y="40" width="70" height="160" fill="#c8ddf0" stroke="#7a9bb5" stroke-width="1"/>
+    <ellipse cx="40" cy="200" rx="35" ry="12" fill="#a8bcd0" stroke="#7a9bb5" stroke-width="1"/>
+    <!-- dimension lines -->
+    <line x1="-8" y1="40" x2="-8" y2="200" stroke="#888" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <text x="-12" y="125" text-anchor="middle" font-size="8" fill="#666" transform="rotate(-90,-12,125)">1.5–2m</text>
+    <line x1="5" y1="215" x2="75" y2="215" stroke="#888" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <text x="40" y="228" text-anchor="middle" font-size="8" fill="#666">⌀300mm</text>
+    <!-- label -->
+    <text x="40" y="250" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a3a5c">잉곳</text>
+    <text x="40" y="264" text-anchor="middle" font-size="9" fill="#555">Ingot</text>
+  </g>
+
+  <!-- Arrow 0→1 -->
+  <line x1="118" y1="160" x2="160" y2="160" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- ===== Stage 1: Slicing ===== -->
+  <g transform="translate(160, 45)" filter="url(#shadow)">
+    <rect x="0" y="0" width="145" height="230" rx="6" fill="white" stroke="#d0d8e0" stroke-width="1"/>
+    <!-- Title bar -->
+    <rect x="0" y="0" width="145" height="32" rx="6" fill="#3a7abf"/>
+    <rect x="0" y="16" width="145" height="16" fill="#3a7abf"/>
+    <text x="72" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="white">① 슬라이싱</text>
+    <text x="72" y="27" text-anchor="middle" font-size="8.5" fill="#d0e4ff">Slicing</text>
+
+    <!-- Cross-section diagram -->
+    <rect x="20" y="50" width="105" height="60" rx="2" fill="#c8ddf0" stroke="#7a9bb5" stroke-width="1"/>
+    <!-- Rough surface (top) -->
+    <polyline points="20,50 30,47 40,52 50,46 60,53 70,48 80,51 90,46 100,52 110,47 120,51 125,49" fill="none" stroke="#f5a0a0" stroke-width="2.5"/>
+    <!-- Rough surface (bottom) -->
+    <polyline points="20,110 30,113 40,108 50,114 60,107 70,112 80,109 90,115 100,108 110,113 120,109 125,112" fill="none" stroke="#f5a0a0" stroke-width="2.5"/>
+    <!-- Damaged layer zones -->
+    <rect x="20" y="45" width="105" height="10" rx="1" fill="#f5a0a0" opacity="0.3"/>
+    <rect x="20" y="105" width="105" height="10" rx="1" fill="#f5a0a0" opacity="0.3"/>
+
+    <!-- Labels -->
+    <text x="72" y="140" text-anchor="middle" font-size="8.5" fill="#c04040">← 거친 표면 →</text>
+    <text x="72" y="155" text-anchor="middle" font-size="8" fill="#666">725–775μm</text>
+
+    <!-- Annotation -->
+    <rect x="8" y="175" width="130" height="36" rx="4" fill="#f0f5fa" stroke="#c0d0e0" stroke-width="0.7"/>
+    <text x="72" y="190" text-anchor="middle" font-size="8" fill="#444">다이아몬드 와이어 소</text>
+    <text x="72" y="203" text-anchor="middle" font-size="7.5" fill="#777">Diamond Wire Saw</text>
+  </g>
+
+  <!-- Arrow 1→2 -->
+  <line x1="310" y1="160" x2="335" y2="160" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- ===== Stage 2: Lapping ===== -->
+  <g transform="translate(335, 45)" filter="url(#shadow)">
+    <rect x="0" y="0" width="145" height="230" rx="6" fill="white" stroke="#d0d8e0" stroke-width="1"/>
+    <rect x="0" y="0" width="145" height="32" rx="6" fill="#4a8a4a"/>
+    <rect x="0" y="16" width="145" height="16" fill="#4a8a4a"/>
+    <text x="72" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="white">② 래핑</text>
+    <text x="72" y="27" text-anchor="middle" font-size="8.5" fill="#c0e0c0">Lapping</text>
+
+    <!-- Cross-section -->
+    <rect x="20" y="50" width="105" height="60" rx="2" fill="#c8ddf0" stroke="#7a9bb5" stroke-width="1"/>
+    <!-- Slightly rough surface -->
+    <polyline points="20,50 30,49 40,51 50,49 60,51 70,49 80,51 90,49 100,51 110,50 120,49 125,50" fill="none" stroke="#f5a0a0" stroke-width="1.8"/>
+    <polyline points="20,110 30,111 40,109 50,111 60,109 70,111 80,109 90,111 100,109 110,110 120,111 125,110" fill="none" stroke="#f5a0a0" stroke-width="1.8"/>
+    <!-- Subsurface damage -->
+    <rect x="20" y="46" width="105" height="8" rx="1" fill="#f5a0a0" opacity="0.3"/>
+    <rect x="20" y="106" width="105" height="8" rx="1" fill="#f5a0a0" opacity="0.3"/>
+
+    <text x="72" y="140" text-anchor="middle" font-size="8.5" fill="#c08040">서브서피스 손상 존재</text>
+    <text x="72" y="155" text-anchor="middle" font-size="8" fill="#666">두께 편차 &lt; 수μm</text>
+
+    <rect x="8" y="175" width="130" height="36" rx="4" fill="#f0f5fa" stroke="#c0d0e0" stroke-width="0.7"/>
+    <text x="72" y="190" text-anchor="middle" font-size="8" fill="#444">연마재</text>
+    <text x="72" y="203" text-anchor="middle" font-size="7.5" fill="#777">Abrasive</text>
+  </g>
+
+  <!-- Arrow 2→3 -->
+  <line x1="485" y1="160" x2="510" y2="160" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- ===== Stage 3: Etching ===== -->
+  <g transform="translate(510, 45)" filter="url(#shadow)">
+    <rect x="0" y="0" width="145" height="230" rx="6" fill="white" stroke="#d0d8e0" stroke-width="1"/>
+    <rect x="0" y="0" width="145" height="32" rx="6" fill="#bf7a3a"/>
+    <rect x="0" y="16" width="145" height="16" fill="#bf7a3a"/>
+    <text x="72" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="white">③ 에칭</text>
+    <text x="72" y="27" text-anchor="middle" font-size="8.5" fill="#ffe0c0">Etching</text>
+
+    <!-- Cross-section - clean -->
+    <rect x="20" y="50" width="105" height="60" rx="2" fill="#c8ddf0" stroke="#7a9bb5" stroke-width="1"/>
+    <!-- Clean surfaces -->
+    <line x1="20" y1="50" x2="125" y2="50" stroke="#80b080" stroke-width="2"/>
+    <line x1="20" y1="110" x2="125" y2="110" stroke="#80b080" stroke-width="2"/>
+    <!-- Clean layer indicator -->
+    <rect x="20" y="47" width="105" height="6" rx="1" fill="#e0f0e0" opacity="0.5"/>
+    <rect x="20" y="107" width="105" height="6" rx="1" fill="#e0f0e0" opacity="0.5"/>
+
+    <text x="72" y="140" text-anchor="middle" font-size="8.5" fill="#408040">손상층 제거됨</text>
+    <text x="72" y="155" text-anchor="middle" font-size="8" fill="#666">깨끗한 단결정면</text>
+
+    <rect x="8" y="175" width="130" height="36" rx="4" fill="#f0f5fa" stroke="#c0d0e0" stroke-width="0.7"/>
+    <text x="72" y="190" text-anchor="middle" font-size="8" fill="#444">화학 용액</text>
+    <text x="72" y="203" text-anchor="middle" font-size="7.5" fill="#777">Acid / Alkali</text>
+  </g>
+
+  <!-- Arrow 3→4 -->
+  <line x1="660" y1="160" x2="685" y2="160" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- ===== Stage 4: CMP ===== -->
+  <g transform="translate(685, 45)" filter="url(#shadow)">
+    <rect x="0" y="0" width="145" height="230" rx="6" fill="white" stroke="#d0d8e0" stroke-width="1"/>
+    <rect x="0" y="0" width="145" height="32" rx="6" fill="#5a5abf"/>
+    <rect x="0" y="16" width="145" height="16" fill="#5a5abf"/>
+    <text x="72" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="white">④ CMP</text>
+    <text x="72" y="27" text-anchor="middle" font-size="8.5" fill="#c0c0ff">Polishing</text>
+
+    <!-- Cross-section - mirror polish -->
+    <rect x="20" y="50" width="105" height="60" rx="2" fill="url(#polishedGrad)" stroke="#7a9bb5" stroke-width="1"/>
+    <!-- Mirror-smooth surfaces -->
+    <line x1="20" y1="50" x2="125" y2="50" stroke="#4080c0" stroke-width="2.5"/>
+    <line x1="20" y1="110" x2="125" y2="110" stroke="#4080c0" stroke-width="2.5"/>
+    <!-- Shine effect -->
+    <line x1="30" y1="52" x2="50" y2="52" stroke="white" stroke-width="1" opacity="0.6"/>
+    <line x1="70" y1="52" x2="85" y2="52" stroke="white" stroke-width="0.8" opacity="0.4"/>
+
+    <text x="72" y="140" text-anchor="middle" font-size="8.5" fill="#3060a0" font-weight="bold">거울면 완성</text>
+    <text x="72" y="155" text-anchor="middle" font-size="8" fill="#666">&lt; 0.2nm RMS</text>
+
+    <rect x="8" y="175" width="130" height="36" rx="4" fill="#f0f5fa" stroke="#c0d0e0" stroke-width="0.7"/>
+    <text x="72" y="190" text-anchor="middle" font-size="8" fill="#444">슬러리 + 패드</text>
+    <text x="72" y="203" text-anchor="middle" font-size="7.5" fill="#777">Chemical Mechanical</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(160, 310)">
+    <rect x="0" y="0" width="12" height="12" fill="#f5a0a0" opacity="0.3" stroke="#c08080" stroke-width="0.5" rx="2"/>
+    <text x="16" y="10" font-size="8" fill="#666">손상층 (Damaged Layer)</text>
+    <rect x="140" y="0" width="12" height="12" fill="#e0f0e0" stroke="#80b080" stroke-width="0.5" rx="2"/>
+    <text x="156" y="10" font-size="8" fill="#666">세정면 (Clean Surface)</text>
+    <rect x="280" y="0" width="12" height="12" fill="url(#polishedGrad)" stroke="#4080c0" stroke-width="0.5" rx="2"/>
+    <text x="296" y="10" font-size="8" fill="#666">경면 (Mirror Polish)</text>
+    <rect x="420" y="0" width="12" height="12" fill="#c8ddf0" stroke="#7a9bb5" stroke-width="0.5" rx="2"/>
+    <text x="436" y="10" font-size="8" fill="#666">실리콘 벌크 (Si Bulk)</text>
+  </g>
+</svg>

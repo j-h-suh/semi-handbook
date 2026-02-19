@@ -1,0 +1,164 @@
+{
+  "chapter": "05_03",
+  "chapter_title": "커리어 패스",
+  "images": [
+    {
+      "id": "05_03_img01",
+      "type": "E",
+      "method": "svg",
+      "filename": "cross_competency_venn.svg",
+      "title": "CS/AI × 반도체 교차 역량 개념도",
+      "description": "AI 전문가 풀과 반도체 엔지니어 풀의 교집합이 '대체 불가능한 가치'임을 보여주는 벤다이어그램. 교집합의 희소성 강조",
+      "spec": {
+        "layout": "2-circle Venn Diagram",
+        "circles": [
+          {
+            "label": "AI/ML 전문가",
+            "description": "매년 수만 명 배출",
+            "skills": ["Python/TF/PyTorch", "XGBoost/CNN/LSTM", "MLOps, SHAP"],
+            "color": "#2196F3",
+            "opacity": 0.3
+          },
+          {
+            "label": "반도체 엔지니어",
+            "description": "전 세계 수십만 명",
+            "skills": ["공정 물리/화학", "장비 운영", "SPC/FDC"],
+            "color": "#FF9800",
+            "opacity": 0.3
+          }
+        ],
+        "intersection": {
+          "label": "반도체 AI 엔지니어",
+          "description": "극도로 희소 → 대체 불가능한 가치",
+          "example": "Focus² 피처 설계 = 물리 + ML",
+          "color": "#4CAF50",
+          "highlight": true
+        },
+        "annotations": [
+          "순수 AI: Focus²를 설계할 수 없다",
+          "순수 반도체: XGBoost에 넣을 수 없다",
+          "교차점: 도메인 피처가 Feature Importance 상위"
+        ],
+        "size": "700x500"
+      }
+    },
+    {
+      "id": "05_03_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "job_role_radar_chart.png",
+      "title": "반도체 AI 직무별 역량 레이더 차트",
+      "description": "5가지 직무(ML Engineer, Data Engineer, Computational Litho, Process Integration AI, Platform Engineer)의 필요 역량을 6축 레이더 차트로 비교",
+      "spec": {
+        "chart_type": "radar",
+        "axes": ["ML/DL", "데이터 엔지니어링", "반도체 공정 지식", "소프트웨어 개발", "물리/광학", "커뮤니케이션"],
+        "data": [
+          {
+            "role": "ML/AI Engineer",
+            "scores": [5, 3, 3, 3, 2, 3]
+          },
+          {
+            "role": "Data Engineer",
+            "scores": [2, 5, 2, 4, 1, 2]
+          },
+          {
+            "role": "Computational Litho",
+            "scores": [4, 2, 4, 3, 5, 2]
+          },
+          {
+            "role": "Process Integration AI",
+            "scores": [4, 3, 5, 2, 3, 5]
+          },
+          {
+            "role": "Platform Engineer",
+            "scores": [3, 4, 3, 5, 1, 4]
+          }
+        ],
+        "x_label": null,
+        "y_label": null,
+        "scale": "1-5 (5=핵심 역량)",
+        "colors": ["#2196F3", "#4CAF50", "#FF9800", "#9C27B0", "#F44336"],
+        "style": "학술, 반투명 영역, DPI 300, 8x8 인치",
+        "legend_position": "lower right",
+        "note": "본문 직무 설명에서 추출한 역량 수준. 정성적 평가 기반"
+      }
+    },
+    {
+      "id": "05_03_img03",
+      "type": "E",
+      "method": "svg",
+      "filename": "career_growth_timeline.svg",
+      "title": "반도체 AI 엔지니어 성장 경로 타임라인",
+      "description": "주니어(0~3년)→시니어(3~7년)→리더(7년+) 또는 IC Track 분기를 포함한 커리어 성장 경로",
+      "spec": {
+        "layout": "수평 타임라인 + 분기점",
+        "stages": [
+          {
+            "stage": "주니어 (0~3년)",
+            "focus": "깊이",
+            "tasks": ["데이터 분석", "모델 개발", "파이프라인 구축"],
+            "goal": "이 스캐너 데이터를 누구보다 잘 아는 사람",
+            "color": "#81c784"
+          },
+          {
+            "stage": "시니어 (3~7년)",
+            "focus": "넓이 + 커뮤니케이션",
+            "tasks": ["여러 공정/장비 AI 시스템 설계", "멘토링", "기술 방향 제시"],
+            "goal": "엔지니어 신뢰 구축",
+            "color": "#42a5f5"
+          },
+          {
+            "stage": "분기점 (7년+)",
+            "branches": [
+              {
+                "path": "리더 트랙",
+                "focus": "전략 + 임팩트",
+                "tasks": ["AI 전략 수립", "팀 빌딩", "비즈니스 임팩트"],
+                "color": "#ab47bc"
+              },
+              {
+                "path": "IC 트랙 (기술 전문가)",
+                "focus": "세계적 전문성",
+                "tasks": ["Distinguished Engineer", "Fellow", "특정 도메인 세계적 전문가"],
+                "color": "#ff7043"
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          "SPIE / APC Conference 참여 시기 표시",
+          "분기점에서 두 경로 모두 높이 평가됨 강조"
+        ],
+        "size": "900x400"
+      }
+    },
+    {
+      "id": "05_03_img04",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "semiconductor_ai_market_growth.png",
+      "title": "반도체 AI 시장 규모 성장 전망",
+      "description": "반도체 전체 시장($600B)에서 AI 기여 가치의 성장을 추정한 그래프. 1% 효율 개선 = $6B 가치 창출 논리 기반",
+      "spec": {
+        "chart_type": "bar_with_line",
+        "data": [
+          {"year": 2023, "total_market_B": 520, "ai_contribution_pct": 0.3, "ai_value_B": 1.6},
+          {"year": 2024, "total_market_B": 560, "ai_contribution_pct": 0.5, "ai_value_B": 2.8},
+          {"year": 2025, "total_market_B": 600, "ai_contribution_pct": 0.8, "ai_value_B": 4.8},
+          {"year": 2026, "total_market_B": 650, "ai_contribution_pct": 1.0, "ai_value_B": 6.5},
+          {"year": 2027, "total_market_B": 700, "ai_contribution_pct": 1.5, "ai_value_B": 10.5},
+          {"year": 2028, "total_market_B": 750, "ai_contribution_pct": 2.0, "ai_value_B": 15.0},
+          {"year": 2030, "total_market_B": 850, "ai_contribution_pct": 3.0, "ai_value_B": 25.5}
+        ],
+        "bar_series": "AI 기여 가치 ($B)",
+        "line_series": "반도체 전체 시장 ($B)",
+        "x_label": "연도",
+        "y_label_left": "AI 기여 가치 ($B)",
+        "y_label_right": "전체 시장 ($B)",
+        "colors": {"bar": "#4CAF50", "line": "#2196F3"},
+        "style": "학술, 이중축, 격자선, DPI 300, 10x6 인치",
+        "note": "본문 '전 세계 반도체 시장 약 $600B(2025), AI 1% 개선 = $6B' 기반 추정. 성장률은 WSTS 전망 참고"
+      }
+    }
+  ]
+}

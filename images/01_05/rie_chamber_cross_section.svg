@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500">
+  <defs>
+    <!-- Right-pointing markers for orient="auto" -->
+    <!-- Green Arrow (Gas) -->
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8" fill="#409040" stroke="none"/>
+    </marker>
+    <!-- Red Arrow (Ion) -->
+    <marker id="arrowRed" markerWidth="7" markerHeight="7" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7" fill="#c04040" stroke="none"/>
+    </marker>
+    <!-- Purple Arrow (Radical) -->
+    <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8" fill="#9070c0" stroke="none"/>
+    </marker>
+    <!-- Brown Arrow (RF) -->
+    <marker id="arrowBrown" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8" fill="#b06000" stroke="none"/>
+    </marker>
+
+    <!-- Gradients -->
+    <linearGradient id="plasmaGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4b0f5" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#c0a0f0" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#d4b0f5" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="sheathGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c0a0f0" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#e0d0f5" stop-opacity="0.5"/>
+    </linearGradient>
+
+    <!-- Styles -->
+    <style>
+      text { font-family: -apple-system, "Apple SD Gothic Neo", "Nanum Gothic", sans-serif; }
+      .title { font-size: 16px; font-weight: bold; fill: #222; }
+      .label { font-size: 10px; fill: #333; }
+      .label-b { font-size: 10px; fill: #333; font-weight: 600; }
+      .label-sm { font-size: 8.5px; fill: #666; }
+      .annot { font-size: 9px; fill: #c04040; font-weight: 600; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="500" fill="#fafafa" rx="6"/>
+
+  <!-- Title -->
+  <text x="300" y="26" text-anchor="middle" class="title">RIE 챔버 구조 단면도</text>
+  <text x="300" y="42" text-anchor="middle" class="label-sm" fill="#777">Reactive Ion Etching Chamber Cross-Section</text>
+
+  <!-- Chamber -->
+  <rect x="100" y="60" width="400" height="370" rx="10" fill="#d0d0d0" stroke="#a0a0a0" stroke-width="2.5"/>
+  <rect x="120" y="80" width="360" height="330" rx="6" fill="white" stroke="#c0c0c0" stroke-width="1"/>
+
+  <!-- Upper Electrode -->
+  <rect x="140" y="85" width="320" height="30" rx="3" fill="#a0a0a0" stroke="#808080" stroke-width="1.5"/>
+  <!-- Holes -->
+  <circle cx="180" cy="110" r="2" fill="#666"/>
+  <circle cx="220" cy="110" r="2" fill="#666"/>
+  <circle cx="260" cy="110" r="2" fill="#666"/>
+  <circle cx="300" cy="110" r="2" fill="#666"/>
+  <circle cx="340" cy="110" r="2" fill="#666"/>
+  <circle cx="380" cy="110" r="2" fill="#666"/>
+  <circle cx="420" cy="110" r="2" fill="#666"/>
+  
+  <text x="300" y="103" text-anchor="middle" class="label-b" fill="white">상부 전극 / 샤워헤드</text>
+  <text x="300" y="93" text-anchor="middle" class="label-sm" fill="#ddd">(Upper Electrode / Showerhead)</text>
+
+  <!-- Gas Flow Arrows (Down) -->
+  <line x1="180" y1="115" x2="180" y2="138" stroke="#409040" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+  <line x1="260" y1="115" x2="260" y2="138" stroke="#409040" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+  <line x1="340" y1="115" x2="340" y2="138" stroke="#409040" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+  <line x1="420" y1="115" x2="420" y2="138" stroke="#409040" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+
+  <!-- Gas Inlet -->
+  <rect x="275" y="50" width="50" height="38" rx="3" fill="#a0d0a0" stroke="#60a060" stroke-width="1.5"/>
+  <text x="300" y="68" text-anchor="middle" class="label-sm" fill="#2a6a2a">가스 유입</text>
+  <text x="300" y="78" text-anchor="middle" class="label-sm" fill="#2a6a2a">(Gas In)</text>
+  <text x="520" y="72" text-anchor="end" class="label-sm" fill="#409040">CF₄, Cl₂, HBr ...</text>
+
+  <!-- Plasma -->
+  <rect x="140" y="150" width="320" height="130" rx="8" fill="url(#plasmaGrad)" stroke="#b090d8" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="300" y="210" text-anchor="middle" class="label-b" fill="#6030a0">플라즈마 영역</text>
+  <text x="300" y="224" text-anchor="middle" class="label-sm" fill="#7050a0">(Plasma Glow Region)</text>
+
+  <!-- Radical Diffusion -->
+  <line x1="180" y1="180" x2="200" y2="170" stroke="#9070c0" stroke-width="0.8" marker-end="url(#arrowPurple)"/>
+  <line x1="250" y1="190" x2="230" y2="200" stroke="#9070c0" stroke-width="0.8" marker-end="url(#arrowPurple)"/>
+  <line x1="350" y1="175" x2="370" y2="185" stroke="#9070c0" stroke-width="0.8" marker-end="url(#arrowPurple)"/>
+  <line x1="400" y1="200" x2="380" y2="195" stroke="#9070c0" stroke-width="0.8" marker-end="url(#arrowPurple)"/>
+  
+  <text x="200" y="260" class="label-sm" fill="#8060b0">라디칼 확산 (무작위)</text>
+  <text x="200" y="270" class="label-sm" fill="#8060b0">(Radical Diffusion)</text>
+
+  <!-- Sheath -->
+  <rect x="140" y="280" width="320" height="35" rx="3" fill="url(#sheathGrad)" stroke="#b090d8" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="460" y="300" text-anchor="end" class="label-b" fill="#8060b0">시스 영역</text>
+  <text x="460" y="311" text-anchor="end" class="label-sm" fill="#8060b0">(Sheath)</text>
+
+  <!-- Ion Acceleration -->
+  <line x1="200" y1="282" x2="200" y2="312" stroke="#c04040" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <line x1="260" y1="282" x2="260" y2="312" stroke="#c04040" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <line x1="320" y1="282" x2="320" y2="312" stroke="#c04040" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <line x1="380" y1="282" x2="380" y2="312" stroke="#c04040" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <text x="165" y="300" text-anchor="end" class="annot">이온 가속 ↓</text>
+  <text x="165" y="310" text-anchor="end" class="label-sm" fill="#c04040">(Ion Accel.)</text>
+
+  <!-- Wafer -->
+  <rect x="190" y="318" width="220" height="14" rx="2" fill="#c8ddf0" stroke="#80a8c8" stroke-width="1.5"/>
+  <text x="300" y="329" text-anchor="middle" class="label-sm" fill="#335577">웨이퍼 (Wafer)</text>
+
+  <!-- Lower Electrode / Chuck -->
+  <rect x="160" y="332" width="280" height="35" rx="3" fill="#a0a0a0" stroke="#808080" stroke-width="1.5"/>
+  <text x="300" y="352" text-anchor="middle" class="label-b" fill="white">하부 전극 / 정전척</text>
+  <text x="300" y="364" text-anchor="middle" class="label-sm" fill="#ddd">(Lower Electrode / ESC)</text>
+
+  <!-- RF Power -->
+  <line x1="300" y1="367" x2="300" y2="410" stroke="#b06000" stroke-width="2"/>
+  <path d="M270,418 Q280,405 290,418 Q300,431 310,418 Q320,405 330,418" fill="none" stroke="#b06000" stroke-width="2"/>
+  <rect x="260" y="425" width="80" height="22" rx="4" fill="#fff0d0" stroke="#b06000" stroke-width="1.2"/>
+  <text x="300" y="439" text-anchor="middle" class="label-b" fill="#b06000">RF 전원</text>
+  <text x="300" y="455" text-anchor="middle" class="label-sm" fill="#b06000">(13.56 MHz)</text>
+
+  <!-- RF E-field -->
+  <line x1="135" y1="340" x2="135" y2="115" stroke="#b06000" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrowBrown)"/>
+  <text x="128" y="230" text-anchor="end" class="label-sm" fill="#b06000" transform="rotate(-90,128,230)">RF 전기장 (E-field)</text>
+
+  <!-- Vacuum Pump -->
+  <rect x="100" y="400" width="70" height="30" rx="4" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <text x="135" y="416" text-anchor="middle" class="label-sm">진공 펌프</text>
+  <text x="135" y="426" text-anchor="middle" class="label-sm">(Pump)</text>
+  <!-- Exhaust -->
+  <line x1="135" y1="398" x2="135" y2="380" stroke="#999" stroke-width="1.5"/>
+  <text x="82" y="395" text-anchor="middle" class="label-sm" fill="#999">배기↓</text>
+  
+  <text x="510" y="440" text-anchor="middle" class="label-b">진공 챔버</text>
+  <text x="510" y="452" text-anchor="middle" class="label-sm">(Vacuum Chamber)</text>
+</svg>

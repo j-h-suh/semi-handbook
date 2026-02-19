@@ -1,0 +1,155 @@
+{
+  "chapter": "02_05",
+  "chapter_title": "포토레지스트",
+  "images": [
+    {
+      "id": "02_05_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "spin_coating_3step.svg",
+      "title": "스핀 코팅 과정 단면도",
+      "description": "디스펜스 → 고속 회전 → 균일막 형성의 3단계. 두께 ∝ 1/√rpm 관계 표시.",
+      "spec": {
+        "elements": [
+          {
+            "step": 1,
+            "label": "① 디스펜스",
+            "description": "노즐에서 PR 용액 1~2mL 적하\n웨이퍼 정지 상태",
+            "components": ["wafer", "nozzle", "pr_puddle"]
+          },
+          {
+            "step": 2,
+            "label": "② 고속 회전",
+            "description": "3,000~5,000 rpm\n원심력으로 PR 확산\n여분 용액 비산",
+            "components": ["wafer_spinning", "spreading_arrows", "edge_bead"]
+          },
+          {
+            "step": 3,
+            "label": "③ 균일 박막 + EBR",
+            "description": "ArF: 80~150nm\nEUV: 30~50nm\n균일도 ±1nm 목표",
+            "components": ["wafer", "uniform_film", "ebr_solvent"]
+          }
+        ],
+        "formula": "두께 ∝ 1/√rpm",
+        "colors": {
+          "wafer": "#C0C0C0",
+          "pr": "#FF8C00",
+          "nozzle": "#333",
+          "arrows": "#4169E1"
+        },
+        "layout": "horizontal_3_panels",
+        "dimensions": "900x280"
+      }
+    },
+    {
+      "id": "02_05_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "rls_trilemma.svg",
+      "title": "RLS 트릴레마 삼각형",
+      "description": "EUV 레지스트의 근본적 딜레마: Resolution(해상도), LER/LWR(거칠기), Sensitivity(감도) 세 가지를 동시에 만족할 수 없는 물리적 한계. 광자 통계(Shot Noise)가 근본 원인.",
+      "spec": {
+        "elements": [
+          {"vertex": "R", "label": "Resolution\n(해상도)", "position": "top", "description": "미세한 패턴 구현"},
+          {"vertex": "L", "label": "LER/LWR\n(거칠기)", "position": "bottom_left", "description": "패턴 에지 매끄러움"},
+          {"vertex": "S", "label": "Sensitivity\n(감도)", "position": "bottom_right", "description": "적은 Dose → 높은 처리량"}
+        ],
+        "center_label": "RLS\nTrade-off\n\n광자 통계가\n근본 원인",
+        "edge_labels": [
+          {"from": "R", "to": "L", "label": "해상도↑ → LER↑"},
+          {"from": "L", "to": "S", "label": "LER↓ → Dose↑ (감도↓)"},
+          {"from": "S", "to": "R", "label": "감도↑ → 해상도↓"}
+        ],
+        "colors": {
+          "triangle": "#FF6347",
+          "vertices": ["#4169E1", "#32CD32", "#FF8C00"],
+          "center": "#9370DB",
+          "background": "#FAFAFA"
+        },
+        "layout": "equilateral_triangle",
+        "dimensions": "500x450"
+      }
+    },
+    {
+      "id": "02_05_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "peb_temp_vs_cd.png",
+      "title": "PEB 온도 vs CD 변화 그래프",
+      "description": "PEB 온도와 CD(선폭)의 거의 선형 관계. 1°C 변화 → ~1-2nm CD 변화. CAR에서 PEB가 CD를 지배하는 이유를 시각화.",
+      "spec": {
+        "chart_type": "line_with_band",
+        "x_axis": {"label": "PEB 온도 (°C)", "range": [108, 112]},
+        "y_axis": {"label": "CD (nm)", "range": [18, 24]},
+        "data": [
+          {"temp": 108.0, "cd": 23.0},
+          {"temp": 108.5, "cd": 22.5},
+          {"temp": 109.0, "cd": 22.0},
+          {"temp": 109.5, "cd": 21.2},
+          {"temp": 110.0, "cd": 20.5},
+          {"temp": 110.5, "cd": 19.8},
+          {"temp": 111.0, "cd": 19.0},
+          {"temp": 111.5, "cd": 18.5},
+          {"temp": 112.0, "cd": 18.0}
+        ],
+        "annotations": [
+          {"text": "목표 CD: 20nm", "y_value": 20.0, "style": "hline_dashed"},
+          {"text": "±0.1°C 제어 필요", "position": "center", "arrow_to": [110.0, 20.5]},
+          {"text": "~1-2nm/°C", "position": "slope_label"}
+        ],
+        "spec_limits": {"upper": 21.0, "lower": 19.0, "label": "CD 규격"},
+        "colors": {"line": "#FF4444", "band": "#FFE0E0", "spec": "#4169E1"},
+        "figsize": [8, 6]
+      }
+    },
+    {
+      "id": "02_05_img04",
+      "type": "B",
+      "method": "svg",
+      "filename": "pr_profile_defects.svg",
+      "title": "현상 후 프로파일 이상 비교",
+      "description": "이상적 수직 프로파일과 대비되는 3가지 프로파일 이상: T-topping(상단 돌출), Footing(하단 확장), Rounding(상단 둥글어짐).",
+      "spec": {
+        "elements": [
+          {
+            "type": "profile",
+            "name": "이상적",
+            "description": "90° 수직 측벽",
+            "shape": "rectangle",
+            "status": "good"
+          },
+          {
+            "type": "profile",
+            "name": "T-topping",
+            "description": "대기 중 아민이\n표면 산 중화",
+            "shape": "t_shape_top_wider",
+            "status": "defect"
+          },
+          {
+            "type": "profile",
+            "name": "Footing",
+            "description": "기판 아민이\n바닥 산 중화",
+            "shape": "bottom_wider",
+            "status": "defect"
+          },
+          {
+            "type": "profile",
+            "name": "Rounding",
+            "description": "상단 모서리\n둥글어짐",
+            "shape": "top_rounded",
+            "status": "defect"
+          }
+        ],
+        "substrate_label": "기판",
+        "colors": {
+          "resist_good": "#FF9933",
+          "resist_defect": "#FF6347",
+          "substrate": "#808080",
+          "background": "#FFFFFF"
+        },
+        "layout": "horizontal_4_panels",
+        "dimensions": "800x300"
+      }
+    }
+  ]
+}

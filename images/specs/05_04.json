@@ -1,0 +1,119 @@
+{
+  "chapter": "05_04",
+  "chapter_title": "에필로그",
+  "images": [
+    {
+      "id": "05_04_img01",
+      "type": "E",
+      "method": "svg",
+      "filename": "semiconductor_ai_formula.svg",
+      "title": "반도체 AI 엔지니어의 공식",
+      "description": "물리 이해 + 데이터 역량 + ML 적용 + 현장 신뢰 = 반도체 AI 엔지니어. 에필로그의 핵심 메시지를 시각적 공식으로 표현",
+      "spec": {
+        "layout": "수평 공식 형태 (A + B + C + D = E)",
+        "elements": [
+          {
+            "symbol": "물리 이해",
+            "icon": "원자/파동 아이콘",
+            "description": "Rayleigh 방정식, 공정 물리",
+            "part_ref": "Part 1-2",
+            "color": "#2196F3"
+          },
+          {
+            "symbol": "데이터 역량",
+            "icon": "데이터베이스/차트 아이콘",
+            "description": "시계열×공간×계층 구조 이해",
+            "part_ref": "Part 3",
+            "color": "#4CAF50"
+          },
+          {
+            "symbol": "ML 적용",
+            "icon": "신경망/기어 아이콘",
+            "description": "모델 개발, 검증, 배포",
+            "part_ref": "Part 4",
+            "color": "#FF9800"
+          },
+          {
+            "symbol": "현장 신뢰",
+            "icon": "악수/체크마크 아이콘",
+            "description": "SHAP, 물리 정합성, 커뮤니케이션",
+            "part_ref": "Part 4.4",
+            "color": "#9C27B0"
+          }
+        ],
+        "result": {
+          "label": "반도체 AI 엔지니어",
+          "highlight": true,
+          "color": "#f44336",
+          "description": "대체 불가능한 가치"
+        },
+        "style": "모던 인포그래픽, + 기호와 = 기호 강조",
+        "size": "1000x300"
+      }
+    },
+    {
+      "id": "05_04_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "handbook_knowledge_map.svg",
+      "title": "핸드북 47챕터 전체 지식 맵",
+      "description": "Part 1~5의 47개 챕터를 구조화한 지식 맵. 각 Part의 핵심 교훈과 챕터 간 연결 관계를 시각화",
+      "spec": {
+        "elements": [
+          {
+            "part": "Part 1: 반도체 제조 기초",
+            "chapters": 10,
+            "key_lesson": "정밀한 연쇄 → AI 필요성",
+            "topics": ["웨이퍼", "산화/증착", "식각", "이온주입", "CMP/배선", "후공정", "무어의 법칙"],
+            "color": "#1565c0"
+          },
+          {
+            "part": "Part 2: 포토리소그래피 심화",
+            "chapters": 14,
+            "key_lesson": "물리 법칙과의 싸움 → AI가 새 무기",
+            "topics": ["광원 진화", "마스크", "레지스트", "해상도/DOF", "OPC/RET", "Overlay", "CD", "EUV"],
+            "color": "#2e7d32"
+          },
+          {
+            "part": "Part 3: 수율과 공정 제어",
+            "chapters": 9,
+            "key_lesson": "구조 있는 데이터 → 구조 존중 모델",
+            "topics": ["수율", "결함 검사", "SPC", "FDC", "APC", "VM", "웨이퍼맵", "데이터 인프라"],
+            "color": "#e65100"
+          },
+          {
+            "part": "Part 4: AI/ML 실전",
+            "chapters": 10,
+            "key_lesson": "정확도 < 현장 신뢰",
+            "topics": ["문제 정의", "피처 엔지니어링", "학습/검증", "해석/신뢰", "MLOps", "딥러닝", "전이학습", "RL", "LLM", "SMILE"],
+            "color": "#6a1b9a"
+          },
+          {
+            "part": "Part 5: 미래와 커리어",
+            "chapters": 4,
+            "key_lesson": "가장 흥미로운 부분은 아직 오지 않았다",
+            "topics": ["차세대 리소", "AI 미래", "커리어", "에필로그"],
+            "color": "#c62828"
+          }
+        ],
+        "connections": [
+          {"from": "Part 1", "to": "Part 2", "label": "리소그래피 심화"},
+          {"from": "Part 2", "to": "Part 3", "label": "수율/제어로 확장"},
+          {"from": "Part 3", "to": "Part 4", "label": "AI/ML 실전 적용"},
+          {"from": "Part 1-4", "to": "Part 5", "label": "미래 방향"},
+          {"from": "Part 2 OPC", "to": "Part 4 DL", "label": "cuLitho"},
+          {"from": "Part 3 VM", "to": "Part 4 학습", "label": "VM 모델"},
+          {"from": "Part 3 데이터", "to": "Part 4 피처", "label": "피처 설계"}
+        ],
+        "layout": "5-block 수평 흐름 + 교차 연결선",
+        "colors_palette": "각 Part별 고유색 (위 참조)",
+        "size": "1200x600",
+        "labels": "한글",
+        "annotations": [
+          "총 47챕터 표시",
+          "각 Part 하단에 핵심 교훈 한 줄"
+        ]
+      }
+    }
+  ]
+}

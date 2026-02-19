@@ -1,0 +1,79 @@
+{
+  "chapter": "02_12",
+  "chapter_title": "CD 측정",
+  "images": [
+    {
+      "id": "02_12_img01",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "cd_sem_edge_profile.png",
+      "title": "CD-SEM 이미지와 에지 밝기 프로파일",
+      "description": "CD-SEM으로 촬영한 라인 패턴의 Top-Down 이미지와, 가로 방향 Line Scan에서 추출한 이차전자 밝기 프로파일. 에지 위치에서 밝기가 피크를 형성하며, 두 피크 사이 거리가 CD.",
+      "spec": {
+        "prompt": "A combined CD-SEM image and intensity profile diagram for semiconductor metrology education. Top half: A top-down SEM image of parallel line-space patterns with bright edge contrast (characteristic of secondary electron imaging). The lines are approximately 20nm wide with clear edge brightening. A horizontal dashed line indicates where the line scan profile is taken. Bottom half: A graph showing the secondary electron intensity (brightness) profile along the scan line. The profile shows two prominent peaks at the left and right edges of a line pattern, with lower intensity in between (top of the line) and at the sides (space between lines). Arrows indicate 'Left Edge' and 'Right Edge' positions, with the measured CD shown as the distance between the two peaks (or threshold crossings). Labels: 'CD = 20nm', 'Edge detection: threshold at 50% peak height'. Clean technical figure style.",
+        "style": "SEM image with measurement profile",
+        "aspect_ratio": "3:4"
+      }
+    },
+    {
+      "id": "02_12_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "ocd_spectrum_matching.png",
+      "title": "OCD 스펙트럼 매칭 예시",
+      "description": "OCD(Scatterometry) 측정에서 실측 스펙트럼과 RCWA 시뮬레이션 스펙트럼의 매칭 과정. 최적 매칭 시 형상 파라미터(CD, Height, SWA) 추출.",
+      "spec": {
+        "chart_type": "dual_line_with_residual",
+        "x_axis": {"label": "파장 (nm)", "range": [200, 800]},
+        "y_axis": {"label": "Ψ (엘립소메트릭 각도, °)", "range": [10, 70]},
+        "data_measured": {
+          "label": "실측 스펙트럼",
+          "style": "solid_circles",
+          "color": "#4169E1",
+          "sample_points": [
+            {"wl": 200, "psi": 25}, {"wl": 250, "psi": 35}, {"wl": 300, "psi": 45},
+            {"wl": 350, "psi": 55}, {"wl": 400, "psi": 48}, {"wl": 450, "psi": 38},
+            {"wl": 500, "psi": 30}, {"wl": 550, "psi": 35}, {"wl": 600, "psi": 42},
+            {"wl": 650, "psi": 38}, {"wl": 700, "psi": 28}, {"wl": 750, "psi": 22},
+            {"wl": 800, "psi": 18}
+          ]
+        },
+        "data_simulated": {
+          "label": "RCWA 시뮬레이션 (최적 매칭)",
+          "style": "solid_line",
+          "color": "#FF6347",
+          "note": "RCWA로 계산한 이론 스펙트럼"
+        },
+        "extracted_params": {
+          "CD": "20.3 nm",
+          "Height": "55.2 nm",
+          "SWA": "87.5°",
+          "GOF": "0.998"
+        },
+        "residual_subplot": {
+          "y_axis": "잔차 (°)",
+          "range": [-2, 2],
+          "label": "측정 - 시뮬레이션"
+        },
+        "annotations": [
+          {"text": "GOF (Goodness of Fit) = 0.998", "position": "inset"},
+          {"text": "추출된 3D 프로파일:\nCD=20.3nm, H=55.2nm, SWA=87.5°", "position": "box"}
+        ],
+        "figsize": [10, 8]
+      }
+    },
+    {
+      "id": "02_12_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "cd_saxs_concept.png",
+      "title": "CD-SAXS 측정 개념도",
+      "description": "X선 소각 산란(CD-SAXS)의 원리: X선 빔이 주기적 패턴을 투과하며, 산란 패턴을 2D 검출기로 수집. 매몰 구조(GAA 나노시트 등)의 3D 형상까지 비파괴 측정 가능.",
+      "spec": {
+        "prompt": "A technical diagram illustrating the CD-SAXS (Small-Angle X-ray Scattering) measurement principle for semiconductor metrology. From left to right: an X-ray source generating a collimated X-ray beam, the beam passing through/interacting with periodic nanostructure patterns on a wafer (shown in cross-section with buried features like GAA nanosheet channels), and the scattered X-rays forming a diffraction pattern on a 2D detector on the right side. The diffraction pattern shows discrete spots arranged in a grid pattern, with spot intensities encoding the 3D structure information. Key labels: 'X-ray beam (λ ~ 0.1nm)', 'Periodic nanostructure', 'Scattered X-rays', '2D diffraction pattern', 'Buried structure accessible (non-destructive)'. A small inset shows the advantage: cross-section of a GAA nanosheet structure with internal channels that can be measured without cutting the sample. Clean technical illustration.",
+        "style": "physics diagram",
+        "aspect_ratio": "16:9"
+      }
+    }
+  ]
+}

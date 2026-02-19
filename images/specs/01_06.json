@@ -1,0 +1,110 @@
+{
+  "chapter": "01_06",
+  "chapter_title": "이온주입과 확산",
+  "images": [
+    {
+      "id": "01_06_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "channeling_effect.svg",
+      "title": "채널링 현상 단면도",
+      "description": "실리콘 결정격자 내에서 채널링(빈 통로를 타고 깊이 침투)과 비채널링(격자 원자 충돌로 얕게 정지)의 차이를 시각화",
+      "spec": {
+        "elements": [
+          "실리콘 결정격자 원자 배열 (규칙적 격자점)",
+          "채널링 이온 경로: 격자 사이 빈 통로를 따라 깊이 침투 (빨간 화살표)",
+          "비채널링 이온 경로: 격자 원자와 충돌하며 짧게 정지 (파란 화살표)",
+          "틸트 주입(7°) 표시: 비스듬히 입사하여 채널링 억제",
+          "결정 통로 (Channel) 강조 표시"
+        ],
+        "layout": "단면 격자도, 좌측에서 이온 입사, 두 경로 비교",
+        "colors": {
+          "lattice_atom": "#4a90d9",
+          "channeling_path": "#e85d5d",
+          "non_channeling_path": "#5da0e8",
+          "channel_space": "#f0f5ff"
+        },
+        "size": "700x450",
+        "labels": "한글+영문",
+        "annotations": [
+          "채널링: 예상보다 깊이 침투",
+          "비채널링: 설계대로 정지",
+          "틸트 각도 7° 표시"
+        ]
+      }
+    },
+    {
+      "id": "01_06_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "doping_profile_energy.png",
+      "title": "이온 주입 에너지별 도핑 프로파일",
+      "description": "다양한 주입 에너지(10keV, 50keV, 200keV)에서의 깊이 vs 불순물 농도 가우시안 분포. 에너지가 높을수록 피크가 더 깊은 위치에 형성됨",
+      "spec": {
+        "data_description": "가우시안 프로파일: N(x) = N_peak × exp(-(x-Rp)²/2ΔRp²)",
+        "curves": [
+          {
+            "label": "B+ @ 10 keV",
+            "Rp_nm": 35,
+            "delta_Rp_nm": 15,
+            "peak_conc": 1e20
+          },
+          {
+            "label": "B+ @ 50 keV",
+            "Rp_nm": 150,
+            "delta_Rp_nm": 50,
+            "peak_conc": 5e19
+          },
+          {
+            "label": "B+ @ 200 keV",
+            "Rp_nm": 500,
+            "delta_Rp_nm": 120,
+            "peak_conc": 2e19
+          }
+        ],
+        "x_label": "실리콘 내 깊이 (nm)",
+        "y_label": "불순물 농도 (atoms/cm³, 로그 스케일)",
+        "y_scale": "log",
+        "x_range": [0, 800],
+        "annotations": [
+          {"text": "Rp (투영 비정 거리)", "arrow_to": "각 피크 위치"},
+          {"text": "에너지 ↑ → 깊이 ↑", "position": "우상단"}
+        ],
+        "style": "학술, 격자선, DPI 300, 10x6 인치",
+        "note": "Rp, ΔRp 값은 붕소(B)의 실리콘 내 표준 SRIM 테이블 기반 추정치"
+      }
+    },
+    {
+      "id": "01_06_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "anneal_lattice_recovery.svg",
+      "title": "어닐링 전후 격자 구조 비교",
+      "description": "이온 주입 후 비정질화된 격자가 어닐링(RTA/레이저)에 의해 재결정화되고 불순물이 치환 자리에 안착하는 과정",
+      "spec": {
+        "elements": [
+          "주입 직후: 비정질(Amorphous) 영역 - 격자 원자 무질서, 불순물 간격자(Interstitial) 위치",
+          "어닐링 후: 재결정화(Recrystallized) - 규칙적 격자 복구, 불순물 치환 자리(Substitutional) 안착",
+          "격자 원자 (Si, 파란 원)",
+          "불순물 원자 (B/P/As, 빨간 원)",
+          "격자 결함/빈자리 (Vacancy, 빈 원)"
+        ],
+        "layout": "좌우 비교 (좌: Before Anneal, 우: After Anneal)",
+        "colors": {
+          "si_atom": "#4a90d9",
+          "dopant_interstitial": "#e85d5d",
+          "dopant_substitutional": "#5de85d",
+          "vacancy": "#ffffff",
+          "background": "#f5f5ff"
+        },
+        "size": "700x350",
+        "labels": "한글+영문",
+        "annotations": [
+          "열에너지 전달 화살표 (→)",
+          "비정질 → 재결정화",
+          "비활성 → 전기적 활성화"
+        ]
+      }
+    }
+  ]
+}

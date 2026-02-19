@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 450" width="700" height="450">
+  <defs>
+    <style>
+      .label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; fill: #333; text-anchor: middle; }
+      .label-bold { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; fill: #333; text-anchor: middle; font-weight: bold; }
+      .label-small { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 9px; fill: #555; text-anchor: middle; }
+      .title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 18px; fill: #222; text-anchor: middle; font-weight: bold; }
+      .dim-line { stroke: #666; stroke-width: 0.8; stroke-dasharray: 3,2; }
+      .arrow-line { stroke: #444; stroke-width: 1.2; marker-end: url(#arrowhead); }
+      .arrow-red { stroke: #d32f2f; stroke-width: 1.5; marker-end: url(#arrowhead-red); }
+      .arrow-blue { stroke: #1976d2; stroke-width: 1.5; marker-end: url(#arrowhead-blue); }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#444"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#d32f2f"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1976d2"/>
+    </marker>
+    <!-- Hatching for channel region -->
+    <pattern id="channelHatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#7ecbf5" stroke-width="1" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="450" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="350" y="30" class="title">MOSFET 단면 구조도</text>
+
+  <!-- Main Drawing Group (Centered: Translated 50, 25) -->
+  <g transform="translate(50, 25)">
+
+    <!-- ==================== P-type Substrate ==================== -->
+    <rect x="60" y="220" width="480" height="130" fill="#c8ddf0" stroke="#7ba3cc" stroke-width="1.5" rx="2"/>
+    <!-- Substrate label -->
+    <text x="300" y="310" class="label-bold" fill="#4a6fa5">P-type 기판</text>
+    <text x="300" y="326" class="label-small" fill="#4a6fa5">(P-type Si Substrate)</text>
+
+    <!-- Substrate body connection dots -->
+    <circle cx="520" cy="300" r="3" fill="#4a6fa5"/>
+    <circle cx="520" cy="320" r="3" fill="#4a6fa5"/>
+    <circle cx="520" cy="340" r="3" fill="#4a6fa5"/>
+
+    <!-- ==================== N+ Source Region ==================== -->
+    <rect x="100" y="200" width="120" height="60" fill="#e85d5d" stroke="#c43c3c" stroke-width="1.5" rx="2"/>
+    <text x="160" y="228" class="label-bold" fill="#fff">N+ 소스</text>
+    <text x="160" y="244" class="label-small" fill="#ffe0e0">(N+ Source)</text>
+
+    <!-- ==================== N+ Drain Region ==================== -->
+    <rect x="380" y="200" width="120" height="60" fill="#e85d5d" stroke="#c43c3c" stroke-width="1.5" rx="2"/>
+    <text x="440" y="228" class="label-bold" fill="#fff">N+ 드레인</text>
+    <text x="440" y="244" class="label-small" fill="#ffe0e0">(N+ Drain)</text>
+
+    <!-- ==================== Channel Region ==================== -->
+    <!-- Spec Color: #7ecbf5 -->
+    <rect x="220" y="200" width="160" height="20" fill="#7ecbf5" stroke="#4a90d9" stroke-width="1" opacity="0.6"/>
+    
+    <!-- Channel label with arrow (Fixed: points to 220) -->
+    <line x1="300" y1="260" x2="300" y2="220" class="arrow-line"/>
+    <text x="300" y="275" class="label-bold" fill="#2c6faa">반전층 (채널)</text>
+    <text x="300" y="290" class="label-small" fill="#2c6faa">(Inversion Layer)</text>
+
+    <!-- ==================== Gate Oxide (SiO₂) ==================== -->
+    <rect x="200" y="170" width="200" height="30" fill="#fff3b0" stroke="#d4a800" stroke-width="1.5" rx="1"/>
+    <text x="300" y="190" class="label-bold" fill="#8b7000">게이트 산화막</text>
+    
+    <!-- ==================== Gate Electrode ==================== -->
+    <rect x="210" y="110" width="180" height="60" fill="#a0a0a0" stroke="#707070" stroke-width="1.5" rx="3"/>
+    <!-- Metal grain texture -->
+    <line x1="230" y1="125" x2="260" y2="125" stroke="#b8b8b8" stroke-width="0.8"/>
+    <line x1="280" y1="135" x2="320" y2="135" stroke="#b8b8b8" stroke-width="0.8"/>
+    <text x="300" y="137" class="label-bold" fill="#fff">게이트 전극</text>
+    <text x="300" y="153" class="label-small" fill="#e0e0e0">(Metal/Poly-Si)</text>
+
+    <!-- ==================== Metal Contacts ==================== -->
+    <!-- Spec Color: #666666 -->
+    <!-- Source contact -->
+    <rect x="140" y="170" width="40" height="30" fill="#666666" stroke="#444" stroke-width="1" rx="1"/>
+    <rect x="152" y="80" width="16" height="90" fill="#666666" stroke="#444" stroke-width="1"/>
+    <circle cx="160" cy="70" r="14" fill="#666666" stroke="#444" stroke-width="1.5"/>
+    <text x="160" y="75" class="label-bold" fill="#fff" font-size="12">S</text>
+
+    <!-- Drain contact -->
+    <rect x="420" y="170" width="40" height="30" fill="#666666" stroke="#444" stroke-width="1" rx="1"/>
+    <rect x="432" y="80" width="16" height="90" fill="#666666" stroke="#444" stroke-width="1"/>
+    <circle cx="440" cy="70" r="14" fill="#666666" stroke="#444" stroke-width="1.5"/>
+    <text x="440" y="75" class="label-bold" fill="#fff" font-size="12">D</text>
+
+    <!-- Gate contact -->
+    <rect x="292" y="80" width="16" height="30" fill="#666666" stroke="#444" stroke-width="1"/>
+    <circle cx="300" cy="70" r="14" fill="#666666" stroke="#444" stroke-width="1.5"/>
+    <text x="300" y="75" class="label-bold" fill="#fff" font-size="12">G</text>
+
+    <!-- ==================== Depletion region indication ==================== -->
+    <path d="M 220 220 Q 260 240, 300 240 Q 340 240, 380 220" fill="none" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="375" y="250" font-size="10" fill="#4a90d9" text-anchor="start">Depletion Region</text>
+
+    <!-- ==================== Arrows (NEW) ==================== -->
+    
+    <!-- Vg Arrow -->
+    <line x1="300" y1="30" x2="300" y2="52" class="arrow-red"/>
+    <text x="300" y="25" class="label-bold" fill="#d32f2f">Vg</text>
+
+    <!-- Id Arrow (Drain to Source) -->
+    <!-- Positioned inside channel -->
+    <line x1="380" y1="210" x2="260" y2="210" class="arrow-blue"/> 
+    <text x="320" y="205" class="label-bold" fill="#1976d2" font-size="11">Id</text>
+
+  </g>
+
+  <!-- ==================== Legend Box ==================== -->
+  <g transform="translate(110, 400)">
+    <rect x="0" y="0" width="480" height="30" fill="none" stroke="#ddd" stroke-width="0.5" rx="3"/>
+    
+    <rect x="15" y="8" width="14" height="14" fill="#c8ddf0" stroke="#7ba3cc" stroke-width="0.8" rx="1"/>
+    <text x="36" y="20" font-size="10" fill="#555" text-anchor="start">P-Sub</text>
+
+    <rect x="95" y="8" width="14" height="14" fill="#e85d5d" stroke="#c43c3c" stroke-width="0.8" rx="1"/>
+    <text x="116" y="20" font-size="10" fill="#555" text-anchor="start">N+</text>
+
+    <rect x="175" y="8" width="14" height="14" fill="#fff3b0" stroke="#d4a800" stroke-width="0.8" rx="1"/>
+    <text x="196" y="20" font-size="10" fill="#555" text-anchor="start">Oxide</text>
+
+    <rect x="245" y="8" width="14" height="14" fill="#a0a0a0" stroke="#707070" stroke-width="0.8" rx="1"/>
+    <text x="266" y="20" font-size="10" fill="#555" text-anchor="start">Gate</text>
+
+    <rect x="335" y="8" width="14" height="14" fill="#7ecbf5" stroke="#4a90d9" stroke-width="0.8" rx="1"/>
+    <text x="356" y="20" font-size="10" fill="#555" text-anchor="start">Channel</text>
+    
+    <rect x="415" y="8" width="14" height="14" fill="#666666" stroke="#444" stroke-width="0.8" rx="1"/>
+    <text x="436" y="20" font-size="10" fill="#555" text-anchor="start">Contact</text>
+  </g>
+
+</svg>

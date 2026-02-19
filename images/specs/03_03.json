@@ -1,0 +1,189 @@
+{
+  "chapter": "03_03",
+  "chapter_title": "SPC",
+  "images": [
+    {
+      "id": "03_03_img01",
+      "type": "E",
+      "method": "svg",
+      "filename": "control_vs_spec_limits.svg",
+      "title": "관리 한계(Control Limit) vs 규격 한계(Spec Limit) 개념도",
+      "description": "SPC에서 가장 중요한 개념인 관리 한계(μ±3σ, 공정 데이터 기반)와 규격 한계(USL/LSL, 설계 요구)의 차이와 관계를 정규분포 위에 시각화한 개념도",
+      "spec": {
+        "layout": "single_panel",
+        "elements": [
+          {"type": "normal_distribution_curve", "center": "μ", "color": "#3498DB", "fill_alpha": 0.3},
+          {"type": "vertical_line", "position": "μ", "label": "CL (μ)", "color": "#2C3E50", "style": "solid", "linewidth": 2},
+          {"type": "vertical_line", "position": "μ+3σ", "label": "UCL (μ+3σ)", "color": "#E74C3C", "style": "dashed", "linewidth": 1.5},
+          {"type": "vertical_line", "position": "μ-3σ", "label": "LCL (μ-3σ)", "color": "#E74C3C", "style": "dashed", "linewidth": 1.5},
+          {"type": "vertical_line", "position": "USL", "label": "USL (규격 상한)", "color": "#8E44AD", "style": "solid", "linewidth": 2},
+          {"type": "vertical_line", "position": "LSL", "label": "LSL (규격 하한)", "color": "#8E44AD", "style": "solid", "linewidth": 2},
+          {"type": "bracket", "from": "LCL", "to": "UCL", "label": "관리 한계\n(공정 데이터에서 산출)\n99.73% 데이터 포함", "position": "below", "color": "#E74C3C"},
+          {"type": "bracket", "from": "LSL", "to": "USL", "label": "규격 한계\n(설계/고객이 정함)\n양품 판정 기준", "position": "above", "color": "#8E44AD"},
+          {"type": "margin_arrow", "from": "UCL", "to": "USL", "label": "마진\n(여유)", "color": "#27AE60"}
+        ],
+        "key_message": "이상적 상태: 관리 한계가 규격 한계 안에 충분한 여유를 가지고 들어온다",
+        "dimensions": "900x500",
+        "colors": {
+          "distribution": "#3498DB",
+          "control_limits": "#E74C3C",
+          "spec_limits": "#8E44AD",
+          "margin": "#27AE60",
+          "background": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "id": "03_03_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "weco_rules_patterns.svg",
+      "title": "WECO Rules — SPC 이상 패턴 4종 시각화",
+      "description": "Western Electric Rules의 4가지 핵심 패턴을 각각 관리도 형태로 시각화. Rule 1(3σ 이탈), Rule 2(2σ 경고), Rule 3(1σ 추세), Rule 4(평균 이동)를 보여준다.",
+      "spec": {
+        "layout": "2x2_grid",
+        "panels": [
+          {
+            "title": "Rule 1: 3σ 이탈",
+            "description": "1개 점이 UCL/LCL 벗어남",
+            "data_points": [0.2, -0.5, 0.3, 0.8, -0.4, 0.1, 3.5, 0.2, -0.3],
+            "highlight_index": 6,
+            "highlight_color": "#E74C3C",
+            "severity": "Critical",
+            "sigma_lines": [3, -3]
+          },
+          {
+            "title": "Rule 2: 2σ 경고",
+            "description": "연속 3개 중 2개가 같은 쪽 2σ~3σ",
+            "data_points": [0.1, 0.3, -0.2, 2.3, 0.5, 2.6, 2.4, 0.3, -0.1],
+            "highlight_indices": [3, 5, 6],
+            "highlight_color": "#F39C12",
+            "severity": "Warning",
+            "sigma_lines": [2, 3, -2, -3]
+          },
+          {
+            "title": "Rule 3: 1σ 추세",
+            "description": "연속 5개 중 4개가 같은 쪽 1σ밖",
+            "data_points": [0.1, 1.2, 0.8, 1.5, 1.3, 1.8, 1.1, 0.3, -0.2],
+            "highlight_indices": [1, 3, 4, 5, 6],
+            "highlight_color": "#E67E22",
+            "severity": "Warning",
+            "sigma_lines": [1, -1]
+          },
+          {
+            "title": "Rule 4: 평균 이동 (Shift)",
+            "description": "연속 8개가 CL 같은 쪽",
+            "data_points": [0.3, 0.5, 0.8, 0.2, 0.6, 0.4, 0.9, 0.7, 1.1, 0.5],
+            "highlight_indices": [0, 1, 2, 3, 4, 5, 6, 7],
+            "highlight_color": "#9B59B6",
+            "severity": "Shift",
+            "sigma_lines": [0]
+          }
+        ],
+        "common": {
+          "ucl_label": "UCL",
+          "lcl_label": "LCL",
+          "cl_label": "CL",
+          "x_label": "시간/로트 순서",
+          "y_unit": "σ"
+        },
+        "dimensions": "1000x700",
+        "colors": {
+          "normal_point": "#3498DB",
+          "cl_line": "#2C3E50",
+          "ucl_lcl": "#E74C3C",
+          "background": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "id": "03_03_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "cp_vs_cpk_visualization.png",
+      "title": "Cp vs Cpk 차이 시각화 — 공정 능력 지수 비교",
+      "description": "두 공정의 정규분포를 비교하여 Cp(잠재 능력)와 Cpk(실제 능력)의 차이를 보여주는 그래프. 공정 A는 중심이 맞아 Cp≈Cpk, 공정 B는 평균이 치우쳐 Cpk<Cp인 상황을 시각화한다.",
+      "spec": {
+        "chart_type": "dual_normal_distribution",
+        "x_label": "측정값 (CD, nm)",
+        "y_label": "확률 밀도",
+        "spec_limits": {
+          "LSL": 18.0,
+          "USL": 22.0,
+          "target": 20.0
+        },
+        "distributions": [
+          {
+            "label": "공정 A: Cp=1.33, Cpk=1.33",
+            "mean": 20.0,
+            "sigma": 0.5,
+            "color": "#3498DB",
+            "fill_alpha": 0.3,
+            "note": "평균 = 목표 → Cpk = Cp"
+          },
+          {
+            "label": "공정 B: Cp=1.33, Cpk=1.00",
+            "mean": 20.5,
+            "sigma": 0.5,
+            "color": "#E74C3C",
+            "fill_alpha": 0.3,
+            "note": "평균 치우침 0.5nm → Cpk < Cp"
+          }
+        ],
+        "annotations": [
+          {"text": "USL - LSL = 4nm\n6σ = 3nm\nCp = 4/3 = 1.33", "position": "top_right"},
+          {"text": "공정 B: 규격 한계에\n위험하게 접근", "xy": [21.8, 0.15], "arrow_to": [22.0, 0.05]}
+        ],
+        "vertical_lines": [
+          {"x": 18.0, "label": "LSL", "color": "#8E44AD", "style": "solid"},
+          {"x": 22.0, "label": "USL", "color": "#8E44AD", "style": "solid"},
+          {"x": 20.0, "label": "Target", "color": "#2C3E50", "style": "dotted"}
+        ],
+        "formulas": {
+          "Cp": "(USL - LSL) / 6σ",
+          "Cpk": "min((USL-μ)/3σ, (μ-LSL)/3σ)"
+        },
+        "grid": true,
+        "figsize": [10, 6]
+      }
+    },
+    {
+      "id": "03_03_img04",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "multivariate_spc_t2_chart.png",
+      "title": "다변량 SPC — PCA 기반 T² 관리도",
+      "description": "단변량 SPC에서 잡지 못하는 이상을 다변량 SPC(Hotelling's T²)가 탐지하는 예시. 개별 변수는 관리 한계 내이지만 변수 조합이 비정상인 케이스를 보여준다.",
+      "spec": {
+        "chart_type": "control_chart",
+        "x_label": "웨이퍼 번호",
+        "y_label": "Hotelling's T² 통계량",
+        "data": [
+          2.1, 3.5, 1.8, 4.2, 2.9, 3.1, 2.4, 5.0, 3.3, 2.7,
+          4.1, 3.8, 2.2, 3.6, 4.5, 2.8, 3.0, 12.5, 15.3, 8.7,
+          3.2, 2.5, 4.0, 3.7, 2.6, 3.4, 2.0, 3.9, 4.3, 2.3
+        ],
+        "control_limit": {
+          "UCL": 9.49,
+          "label": "T² UCL (α=0.05, p=3)",
+          "color": "#E74C3C",
+          "style": "dashed"
+        },
+        "highlight_ooc": {
+          "indices": [17, 18, 19],
+          "color": "#E74C3C",
+          "label": "OOC — 다변량 이상 탐지"
+        },
+        "inset_scatter": {
+          "title": "변수 A vs 변수 B",
+          "normal_data": {"x": [49, 50, 51, 50.5, 49.5], "y": [9.8, 10, 10.2, 10.1, 9.9]},
+          "anomaly_data": {"x": [52], "y": [10.5]},
+          "annotation": "개별 변수는 관리 한계 내\n→ 단변량 SPC는 정상 판정\n→ T²만이 탐지",
+          "ellipse": {"center": [50, 10], "width": 3, "height": 0.6, "color": "#3498DB"}
+        },
+        "grid": true,
+        "figsize": [11, 6]
+      }
+    }
+  ]
+}

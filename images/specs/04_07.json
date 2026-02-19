@@ -1,0 +1,99 @@
+{
+  "chapter": "04_07",
+  "chapter_title": "전이학습과 도메인적응",
+  "images": [
+    {
+      "id": "04_07_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "domain_gap_vs_transfer_performance.png",
+      "title": "도메인 차이 vs 전이 성능",
+      "description": "전이 시나리오별 도메인 차이 크기와 전이 모델의 성능(R²)을 산점도+추세선으로 시각화. PM 전후 → 장비 간 → 제품 간 → 팹 간으로 갈수록 성능 하락",
+      "spec": {
+        "data": [
+          {"scenario": "PM 전후", "domain_gap": 0.05, "r2_no_transfer": 0.60, "r2_with_transfer": 0.85, "difficulty": "★☆☆", "needed_data": "수십"},
+          {"scenario": "장비 간\n(오프셋)", "domain_gap": 0.12, "r2_no_transfer": 0.45, "r2_with_transfer": 0.82, "difficulty": "★★☆", "needed_data": "수십~수백"},
+          {"scenario": "장비 간\n(Fine-Tune)", "domain_gap": 0.12, "r2_no_transfer": 0.45, "r2_with_transfer": 0.86, "difficulty": "★★☆", "needed_data": "수백"},
+          {"scenario": "제품 간", "domain_gap": 0.25, "r2_no_transfer": 0.30, "r2_with_transfer": 0.78, "difficulty": "★★★", "needed_data": "수백"},
+          {"scenario": "팹 간", "domain_gap": 0.45, "r2_no_transfer": 0.15, "r2_with_transfer": 0.70, "difficulty": "★★★★", "needed_data": "수백~수천"}
+        ],
+        "x_label": "도메인 차이 (PSI 기반)",
+        "y_label": "R² (결정계수)",
+        "series": [
+          {"name": "전이 없이 직접 적용", "color": "#cccccc", "marker": "x"},
+          {"name": "전이 학습 적용", "color": "#e85d5d", "marker": "●"}
+        ],
+        "annotations": [
+          {"scenario": "PM 전후", "text": "오프셋 보정만으로 충분"},
+          {"scenario": "팹 간", "text": "물리 모델 + Federated Learning"}
+        ],
+        "style": "산점도+연결선, DPI 300, 9x6 인치, 범례",
+        "note": "본문 전이 시나리오 테이블(PM ★☆☆~팹 간 ★★★★) 기반. R² 값은 전형적 반도체 VM 성능 수준"
+      }
+    },
+    {
+      "id": "04_07_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "federated_learning_architecture.svg",
+      "title": "Federated Learning 아키텍처 — 팹 간 지식 공유",
+      "description": "원시 데이터는 각 팹을 떠나지 않고 모델 가중치만 공유하는 Federated Learning 구조. 데이터 프라이버시와 규모의 경제를 동시에 달성",
+      "spec": {
+        "elements": [
+          "Fab A (대만): 로컬 데이터 + 로컬 학습 → 가중치 W_A 전송",
+          "Fab B (미국): 로컬 데이터 + 로컬 학습 → 가중치 W_B 전송",
+          "Fab C (한국): 로컬 데이터 + 로컬 학습 → 가중치 W_C 전송",
+          "중앙 서버 (Aggregator): 가중치 평균화 W_avg = (W_A + W_B + W_C) / 3",
+          "통합 모델 배포: W_avg → 각 팹",
+          "데이터 차단선: 원시 데이터는 팹 경계를 넘지 않음 (🔒)"
+        ],
+        "colors": {
+          "fab_a": "#e85d5d",
+          "fab_b": "#4a90d9",
+          "fab_c": "#2ecc71",
+          "central": "#9b59b6",
+          "data_boundary": "#f39c12",
+          "weights_arrow": "#333333",
+          "data_blocked": "#e85d5d"
+        },
+        "layout": "중앙에 Aggregator, 3개 팹이 삼각형 배치, 양방향 가중치 화살표",
+        "size": "700x500",
+        "labels": "한글+영문",
+        "annotations": [
+          "가중치만 전송 (수 MB) ← → 원시 데이터 차단 (수 TB)",
+          "각 팹 내부에 데이터+GPU 아이콘",
+          "🔒 Data Privacy Boundary 점선"
+        ],
+        "note": "본문 'Federated Learning(연합 학습)... 원시 데이터는 각 팹을 절대 떠나지 않고, 모델 파라미터(가중치)만 공유' 구조 직접 반영"
+      }
+    },
+    {
+      "id": "04_07_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "few_shot_data_vs_performance.png",
+      "title": "Few-Shot — 데이터 양 vs 모델 성능",
+      "description": "학습 방법별(처음부터 학습, Fine-Tuning, Few-Shot/MAML, Zero-Shot)로 필요 데이터 양과 달성 가능한 R²를 시각화",
+      "spec": {
+        "data": [
+          {"method": "Zero-Shot\n(물리 모델만)", "min_data": 0, "r2": 0.45, "color": "#cccccc"},
+          {"method": "Few-Shot\n(MAML)", "min_data": 50, "r2": 0.72, "color": "#f39c12"},
+          {"method": "Fine-Tuning", "min_data": 300, "r2": 0.82, "color": "#4a90d9"},
+          {"method": "처음부터 학습", "min_data": 3000, "r2": 0.88, "color": "#2ecc71"}
+        ],
+        "x_label": "필요 데이터 (웨이퍼 수, 로그 스케일)",
+        "y_label": "R² (달성 가능 성능)",
+        "x_scale": "log",
+        "plot_type": "scatter + 연결 곡선",
+        "annotations": [
+          {"at": "Zero-Shot", "text": "데이터 0\n→ 물리 모델만으로 시작"},
+          {"at": "Few-Shot", "text": "50장으로 R²=0.72\n→ 신제품 파일럿"},
+          {"at": "처음부터 학습", "text": "3000장 이상\n→ 양산 안정 후"},
+          {"region": "curve", "text": "데이터 증가에 따른\n수확 체감 법칙"}
+        ],
+        "style": "산점도+곡선, DPI 300, 8x5 인치, 격자선",
+        "note": "본문 테이블 직접 반영: 처음부터=수천(★★★★), Fine-Tuning=수백(★★★), Few-Shot=수십(★★~★★★), Zero-Shot=0(★~★★)"
+      }
+    }
+  ]
+}

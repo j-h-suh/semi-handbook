@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowDown" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9b59b6"/>
+    </marker>
+    <marker id="arrowReturn" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#888"/>
+    </marker>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fafbfc"/>
+      <stop offset="100%" stop-color="#f0f2f5"/>
+    </linearGradient>
+    <linearGradient id="agentGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGrad)" rx="8"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">AI 에이전트 아키텍처 — Tool-Using Agent</text>
+
+  <!-- ════════ ENGINEER INPUT (top) ════════ -->
+  <rect x="240" y="50" width="320" height="52" rx="10" fill="#fff" stroke="#bbb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="260" y="72" font-size="12" font-weight="bold" fill="#333">👤 엔지니어 입력 (Engineer Input)</text>
+  <text x="260" y="90" font-size="11" fill="#555" font-style="italic">"오늘 수율이 떨어진 원인을 분석해줘"</text>
+
+  <!-- Arrow: input → agent -->
+  <line x1="400" y1="102" x2="400" y2="140" stroke="#666" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- ════════ LLM AGENT (center hub) ════════ -->
+  <rect x="260" y="145" width="280" height="120" rx="16" fill="url(#agentGrad)" filter="url(#shadow)"/>
+  <text x="400" y="172" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">🧠 LLM 에이전트</text>
+  <text x="400" y="192" text-anchor="middle" font-size="11" fill="#e8daef">LLM Agent (Central Hub)</text>
+  <line x1="290" y1="202" x2="510" y2="202" stroke="#c9a8e8" stroke-width="0.7"/>
+  <text x="310" y="220" font-size="11" fill="#f0e6ff">① 질문 이해 (Intent Parsing)</text>
+  <text x="310" y="237" font-size="11" fill="#f0e6ff">② 실행 계획 수립 (Task Planning)</text>
+  <text x="310" y="254" font-size="11" fill="#f0e6ff">③ 도구 호출 순서 결정</text>
+
+  <!-- ════════ 5 TOOLS (radial around agent) ════════ -->
+
+  <!-- Tool 1: SQL Query (left-top) -->
+  <rect x="20" y="130" width="200" height="60" rx="10" fill="#fff" stroke="#4a90d9" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="130" width="200" height="22" rx="10" fill="#4a90d9"/>
+  <rect x="20" y="142" width="200" height="10" fill="#4a90d9"/>
+  <text x="120" y="147" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">🗄️ SQL Query Tool</text>
+  <text x="120" y="167" text-anchor="middle" font-size="10" fill="#555">YMS 수율 DB 조회</text>
+  <text x="120" y="181" text-anchor="middle" font-size="9" fill="#999">§3.2</text>
+
+  <!-- Tool 2: 웨이퍼맵 분류기 (left-bottom) -->
+  <rect x="20" y="230" width="200" height="60" rx="10" fill="#fff" stroke="#2ecc71" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="230" width="200" height="22" rx="10" fill="#2ecc71"/>
+  <rect x="20" y="242" width="200" height="10" fill="#2ecc71"/>
+  <text x="120" y="247" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">🔬 웨이퍼맵 분류기 Tool</text>
+  <text x="120" y="267" text-anchor="middle" font-size="10" fill="#555">CNN 불량 패턴 분석</text>
+  <text x="120" y="281" text-anchor="middle" font-size="9" fill="#999">§3.6</text>
+
+  <!-- Tool 3: FDC 이상 탐지 (right-top) -->
+  <rect x="580" y="130" width="200" height="60" rx="10" fill="#fff" stroke="#e85d5d" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="580" y="130" width="200" height="22" rx="10" fill="#e85d5d"/>
+  <rect x="580" y="142" width="200" height="10" fill="#e85d5d"/>
+  <text x="680" y="147" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">⚡ FDC 이상 탐지 Tool</text>
+  <text x="680" y="167" text-anchor="middle" font-size="10" fill="#555">Autoencoder 이상 확인</text>
+  <text x="680" y="181" text-anchor="middle" font-size="9" fill="#999">§3.4</text>
+
+  <!-- Tool 4: RAG 검색 (right-bottom) -->
+  <rect x="580" y="230" width="200" height="60" rx="10" fill="#fff" stroke="#f39c12" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="580" y="230" width="200" height="22" rx="10" fill="#f39c12"/>
+  <rect x="580" y="242" width="200" height="10" fill="#f39c12"/>
+  <text x="680" y="247" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">📚 RAG 검색 Tool</text>
+  <text x="680" y="267" text-anchor="middle" font-size="10" fill="#555">과거 유사 사례 검색</text>
+  <text x="680" y="281" text-anchor="middle" font-size="9" fill="#999">§3.7</text>
+
+  <!-- Tool 5: VM 예측 (bottom-center) -->
+  <rect x="300" y="310" width="200" height="60" rx="10" fill="#fff" stroke="#3498db" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="300" y="310" width="200" height="22" rx="10" fill="#3498db"/>
+  <rect x="300" y="322" width="200" height="10" fill="#3498db"/>
+  <text x="400" y="327" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">📊 VM 예측 Tool</text>
+  <text x="400" y="347" text-anchor="middle" font-size="10" fill="#555">CD/OVL 예측 확인</text>
+  <text x="400" y="361" text-anchor="middle" font-size="9" fill="#999">§4.9</text>
+
+  <!-- ════════ Connection lines: Agent ↔ Tools ════════ -->
+  <!-- Agent → SQL -->
+  <line x1="260" y1="175" x2="220" y2="165" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+  <!-- Agent → 웨이퍼맵 -->
+  <line x1="260" y1="230" x2="220" y2="245" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+  <!-- Agent → FDC -->
+  <line x1="540" y1="175" x2="580" y2="165" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+  <!-- Agent → RAG -->
+  <line x1="540" y1="230" x2="580" y2="245" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+  <!-- Agent → VM -->
+  <line x1="400" y1="265" x2="400" y2="305" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+
+  <!-- Return arrows (subtle) -->
+  <line x1="220" y1="155" x2="260" y2="165" stroke="#aaa" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="220" y1="255" x2="260" y2="240" stroke="#aaa" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="580" y1="155" x2="540" y2="165" stroke="#aaa" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="580" y1="255" x2="540" y2="240" stroke="#aaa" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="400" y1="315" x2="400" y2="275" stroke="#aaa" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- ════════ OUTPUT (bottom) ════════ -->
+  <!-- Arrow: tools gather → output -->
+  <line x1="400" y1="375" x2="400" y2="408" stroke="#666" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <rect x="170" y="415" width="460" height="65" rx="12" fill="#fff" stroke="#333" stroke-width="2" filter="url(#shadow)"/>
+  <text x="400" y="440" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">📝 종합 답변 생성 (Synthesized Report)</text>
+  <text x="400" y="460" text-anchor="middle" font-size="11" fill="#555">결과 통합 + 자연어 보고서 자동 작성</text>
+  <text x="400" y="475" text-anchor="middle" font-size="10" fill="#888">5개 도구 결과를 LLM이 종합하여 엔지니어에게 전달</text>
+
+  <!-- ════════ ANNOTATIONS (bottom area) ════════ -->
+  <rect x="40" y="500" width="720" height="85" rx="10" fill="#fffbf0" stroke="#f0e0b0" stroke-width="1"/>
+  <text x="60" y="520" font-size="11" font-weight="bold" fill="#b8860b">💡 Key Insights</text>
+  <text x="60" y="538" font-size="10" fill="#666">• Part 3~4의 모든 ML 모델(VM, FDC, 웨이퍼맵, RAG)이 도구(Tool)로 통합</text>
+  <text x="60" y="553" font-size="10" fill="#666">• 에이전트가 '어떤 도구를 어떤 순서로 호출할지' 스스로 결정 — 자율적 추론(Reasoning)</text>
+  <text x="60" y="568" font-size="10" fill="#666">• SMILE 플랫폼에 내장 시 경쟁 우위 확보 가능</text>
+  <text x="60" y="583" font-size="10" fill="#999">각 도구 참조: SQL(§3.2) · FDC(§3.4) · 웨이퍼맵(§3.6) · RAG(§3.7) · VM(§4.9)</text>
+</svg>

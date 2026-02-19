@@ -1,0 +1,101 @@
+{
+  "chapter": "02_01",
+  "chapter_title": "포토리소그래피란",
+  "images": [
+    {
+      "id": "02_01_img01",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "track_scanner_inline_system.png",
+      "title": "Track + Scanner 인라인 시스템",
+      "description": "TEL Track과 ASML Scanner가 인라인으로 연결된 포토리소그래피 시스템의 전체 외관. 좌측 Track(코터/디벨로퍼), 우측 Scanner가 직결되어 웨이퍼가 자동 이송되는 모습.",
+      "spec": {
+        "prompt": "A photorealistic rendering of a semiconductor photolithography inline system in a cleanroom environment. On the left side, a TEL CLEAN TRACK coater-developer module with FOUP loading ports and multiple process chambers stacked vertically. On the right side, an ASML TWINSCAN immersion scanner connected via an enclosed wafer transfer bridge. The cleanroom has yellow lighting, raised floor with perforated panels, and ultra-clean atmosphere. Professional industrial photography style, 3/4 perspective view.",
+        "style": "photorealistic industrial",
+        "aspect_ratio": "16:9"
+      }
+    },
+    {
+      "id": "02_01_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "spin_coating_cross_section.svg",
+      "title": "스핀 코팅 원리 단면도",
+      "description": "스핀 코팅에 의한 PR 도포 과정을 3단계로 보여주는 단면도. 디스펜스 → 고속 회전 → 균일 막 형성.",
+      "spec": {
+        "elements": [
+          {
+            "step": 1,
+            "label": "디스펜스",
+            "description": "웨이퍼 중앙에 노즐에서 PR 용액 1~2mL 적하",
+            "components": ["wafer_cross_section", "vacuum_chuck", "nozzle", "pr_droplet"]
+          },
+          {
+            "step": 2,
+            "label": "고속 회전 (3,000~5,000 rpm)",
+            "description": "원심력에 의해 PR이 바깥으로 퍼짐, 여분 용액 비산",
+            "components": ["wafer_cross_section", "rotation_arrows", "spreading_pr", "ejected_droplets"]
+          },
+          {
+            "step": 3,
+            "label": "균일 박막 형성",
+            "description": "80~150nm 두께의 균일한 PR 막 완성 + Edge Bead Removal",
+            "components": ["wafer_cross_section", "uniform_thin_film", "thickness_label_80-150nm"]
+          }
+        ],
+        "colors": {
+          "wafer": "#C0C0C0",
+          "pr_liquid": "#FF6600",
+          "pr_film": "#FF9933",
+          "chuck": "#666666",
+          "nozzle": "#333333"
+        },
+        "layout": "horizontal_3_panels",
+        "dimensions": "900x300"
+      }
+    },
+    {
+      "id": "02_01_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "reduction_projection_optics.svg",
+      "title": "노광 축소 투영 광학계 개념도",
+      "description": "마스크 → 투영 렌즈 → 웨이퍼로 이어지는 4:1 축소 투영 원리. 마스크의 40nm 패턴이 웨이퍼에서 10nm로 축소되는 광 경로 표시.",
+      "spec": {
+        "elements": [
+          {"type": "light_source", "label": "광원 (DUV/EUV)", "position": "top"},
+          {"type": "condenser_lens", "label": "조명 광학계", "position": "upper"},
+          {"type": "mask", "label": "마스크 (Reticle)\n패턴 크기: 40nm", "position": "upper_middle"},
+          {"type": "projection_lens", "label": "투영 렌즈\n4:1 축소", "position": "middle"},
+          {"type": "wafer", "label": "웨이퍼\n패턴 크기: 10nm", "position": "bottom"}
+        ],
+        "annotations": [
+          {"type": "dimension_arrow", "from": "mask_pattern", "to": "wafer_pattern", "label": "4:1 축소"},
+          {"type": "light_rays", "description": "마스크에서 렌즈를 거쳐 웨이퍼로 수렴하는 광선"}
+        ],
+        "colors": {
+          "light_beam": "#FFD700",
+          "lens": "#87CEEB",
+          "mask": "#333333",
+          "wafer": "#C0C0C0",
+          "pattern": "#FF4444"
+        },
+        "layout": "vertical",
+        "dimensions": "400x700"
+      }
+    },
+    {
+      "id": "02_01_img04",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "photo_printing_vs_lithography.png",
+      "title": "사진 인화 vs 포토리소그래피 시각 비교",
+      "description": "아날로그 사진 인화 과정과 반도체 포토리소그래피의 1:1 대응을 시각적으로 보여주는 개념도. 좌: 확대기+필름+인화지, 우: 스캐너+마스크+웨이퍼.",
+      "spec": {
+        "prompt": "A side-by-side educational comparison diagram. Left side shows analog photo printing: an enlarger with film negative projecting light through a lens onto photographic paper in a darkroom with red safelight. Right side shows semiconductor photolithography: a scanner/stepper with reticle (mask) projecting UV light through projection optics onto a silicon wafer coated with photoresist. Matching arrows connect corresponding elements: film↔mask, enlarger↔scanner, photo paper↔wafer, developer solution↔developer solution. Clean infographic style with labeled components, white background.",
+        "style": "educational infographic",
+        "aspect_ratio": "16:9"
+      }
+    }
+  ]
+}

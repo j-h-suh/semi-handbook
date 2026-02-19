@@ -1,0 +1,85 @@
+{
+  "chapter": "01_03",
+  "chapter_title": "팹 공정 흐름",
+  "images": [
+    {
+      "id": "01_03_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "chip_cross_section_feol_beol.svg",
+      "title": "칩 단면 구조도 (FEOL + BEOL)",
+      "description": "실리콘 웨이퍼 위에 트랜지스터층(FEOL)과 금속 배선층(BEOL M1~M4+)이 쌓인 실제 칩의 단면 구조",
+      "spec": {
+        "elements": [
+          "실리콘 기판 (Si Substrate)",
+          "STI (Shallow Trench Isolation)",
+          "트랜지스터 (NMOS/PMOS in FEOL)",
+          "Contact Layer",
+          "M1 - 로컬 배선 (가장 가늘고 촘촘)",
+          "Via 1",
+          "M2",
+          "Via 2",
+          "M3",
+          "M4 - 글로벌 배선 (두껍고 넓음)",
+          "Passivation / Bond Pad"
+        ],
+        "layout": "수직 단면, 아래에서 위로 층이 쌓이는 구조",
+        "colors": {
+          "silicon": "#c8ddf0",
+          "oxide": "#fff3b0",
+          "metal": "#e8a030",
+          "via": "#d08020",
+          "transistor": "#e85d5d",
+          "ild": "#e0e0e0"
+        },
+        "size": "600x700",
+        "labels": "한글+영문",
+        "annotations": [
+          "FEOL 영역 브라켓",
+          "BEOL 영역 브라켓",
+          "배선이 위로 갈수록 두꺼워지는 것을 시각적으로 표현"
+        ]
+      }
+    },
+    {
+      "id": "01_03_img02",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "cleanroom_interior.png",
+      "title": "반도체 클린룸 내부",
+      "description": "반도체 팹 내부 클린룸 환경. 노란 조명, 방진복 착용 엔지니어, 웨이퍼 카세트가 보이는 장면",
+      "spec": {
+        "prompt": "A photorealistic interior of a semiconductor fabrication cleanroom (fab). Yellow-filtered lighting illuminates rows of advanced manufacturing equipment. Engineers in full cleanroom bunny suits (white coveralls, hoods, face masks, gloves) are working. FOUP (Front Opening Unified Pod) wafer carriers are visible on automated transport systems. The environment is immaculately clean with raised floor tiles and HEPA-filtered ceiling panels. Wide-angle professional photography, futuristic industrial aesthetic.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x1024"
+      }
+    },
+    {
+      "id": "01_03_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "process_data_volume.png",
+      "title": "공정별 일일 데이터 생성량 비교",
+      "description": "8대 공정별로 장비 센서 데이터와 계측 데이터의 일일 생성량을 바 차트로 비교",
+      "spec": {
+        "data": [
+          {"process": "산화\nOxidation", "sensor_gb": 50, "metrology_gb": 5},
+          {"process": "증착\nDeposition", "sensor_gb": 120, "metrology_gb": 15},
+          {"process": "포토리소\nLitho", "sensor_gb": 200, "metrology_gb": 80},
+          {"process": "식각\nEtching", "sensor_gb": 150, "metrology_gb": 20},
+          {"process": "이온주입\nImplant", "sensor_gb": 80, "metrology_gb": 10},
+          {"process": "어닐링\nAnneal", "sensor_gb": 40, "metrology_gb": 5},
+          {"process": "CMP", "sensor_gb": 100, "metrology_gb": 15},
+          {"process": "세정\nClean", "sensor_gb": 60, "metrology_gb": 5}
+        ],
+        "chart_type": "stacked_bar",
+        "x_label": "공정 (Process)",
+        "y_label": "일일 데이터량 (GB/day)",
+        "legend": ["장비 센서 (Equipment Sensor)", "계측 (Metrology)"],
+        "highlight": "포토리소 바 강조",
+        "style": "학술, 격자선, DPI 300, 12x6 인치",
+        "note": "데이터량은 일반적 300mm 팹 기준 합리적 추정치. 실제 값은 팹/장비에 따라 차이"
+      }
+    }
+  ]
+}

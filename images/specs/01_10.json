@@ -1,0 +1,73 @@
+{
+  "chapter": "01_10",
+  "chapter_title": "반도체 산업 구조",
+  "images": [
+    {
+      "id": "01_10_img01",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "foundry_market_share.png",
+      "title": "파운드리 시장 점유율 파이차트",
+      "description": "글로벌 파운드리 시장 점유율. TSMC의 압도적 시장 지배력을 시각화 (2025년 기준)",
+      "spec": {
+        "data": [
+          {"company": "TSMC", "share_pct": 67},
+          {"company": "Samsung\nFoundry", "share_pct": 11},
+          {"company": "SMIC", "share_pct": 6},
+          {"company": "UMC", "share_pct": 5},
+          {"company": "GlobalFoundries", "share_pct": 5},
+          {"company": "기타\n(Others)", "share_pct": 6}
+        ],
+        "chart_type": "pie",
+        "explode": {"TSMC": 0.05},
+        "colors": ["#e85d5d", "#4a90d9", "#f5c050", "#7ecb7e", "#c090d0", "#c0c0c0"],
+        "highlight": "TSMC 조각 강조 (붉은색, 약간 분리)",
+        "annotation": "최첨단 공정(3nm 이하) 점유율: TSMC 90%+",
+        "style": "학술, DPI 300, 8x8 인치",
+        "note": "본문 기반: TSMC 67-70%. 기타 비율은 2024-2025년 업계 추정치"
+      }
+    },
+    {
+      "id": "01_10_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "fab_construction_cost.png",
+      "title": "팹 건설 비용 추이 그래프",
+      "description": "공정 노드별 팹 건설 비용의 기하급수적 증가. 1990년대 ~10억 달러에서 2020년대 ~200억 달러까지의 추이",
+      "spec": {
+        "data": [
+          {"decade": "1990s", "node": "350nm", "cost_billion": 1},
+          {"decade": "2000s", "node": "90nm", "cost_billion": 3},
+          {"decade": "2010s (초)", "node": "28nm", "cost_billion": 5},
+          {"decade": "2010s (중)", "node": "14nm", "cost_billion": 10},
+          {"decade": "2010s (후)", "node": "7nm", "cost_billion": 15},
+          {"decade": "2020s", "node": "3nm", "cost_billion": 20}
+        ],
+        "chart_type": "bar_with_trend",
+        "x_label": "공정 노드 (시기)",
+        "y_label": "팹 건설 비용 (십억 달러, $B)",
+        "y_scale": "linear",
+        "trend_line": "지수 추세선",
+        "annotations": [
+          {"node": "3nm", "text": "TSMC Arizona\n$40B 투자\n(2개 팹)"},
+          {"text": "온프레미스 → 클라우드 전환\n(IDM → Fabless+Foundry)", "position": "center"}
+        ],
+        "style": "학술, 격자선, DPI 300, 10x6 인치",
+        "note": "본문 테이블에서 직접 추출 (350nm ~$1B, 90nm ~$3B, 14nm ~$10B, 3nm ~$20B)"
+      }
+    },
+    {
+      "id": "01_10_img03",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "asml_euv_scanner.png",
+      "title": "ASML EUV 노광기",
+      "description": "ASML의 EUV(극자외선) 노광기 외관. 세계에서 가장 비싸고 복잡한 단일 제조 장비 중 하나(대당 ~$2억, High-NA ~$4억)",
+      "spec": {
+        "prompt": "A photorealistic image of an ASML EUV (Extreme Ultraviolet) lithography scanner in a semiconductor cleanroom. The machine is massive, approximately the size of a bus, with clean white and blue industrial design. It features multiple large modules connected together, with cable management systems and precision optical components visible. The cleanroom has yellow lighting and raised floor. The image conveys the extreme scale and engineering complexity of this $200M+ machine that is essential for manufacturing the world's most advanced semiconductor chips. Professional industrial photography, wide-angle view.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x1024"
+      }
+    }
+  ]
+}

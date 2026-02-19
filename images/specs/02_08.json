@@ -1,0 +1,114 @@
+{
+  "chapter": "02_08",
+  "chapter_title": "Overlay란",
+  "images": [
+    {
+      "id": "02_08_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "overlay_open_short_cross_section.svg",
+      "title": "Overlay 오차에 의한 단선/단락 단면도",
+      "description": "Via-Metal 정렬 오차가 수율에 미치는 영향. 정상 정렬 → 약간의 오차(저항 증가) → 심한 오차(단선) → 반대 방향 오차(단락)의 4가지 케이스.",
+      "spec": {
+        "elements": [
+          {
+            "case": "정상",
+            "label": "① 완벽 정렬",
+            "via_position": "center",
+            "result": "정상 접촉\n낮은 저항",
+            "status": "good"
+          },
+          {
+            "case": "minor_shift",
+            "label": "② 미세 오차 (~1nm)",
+            "via_position": "slightly_offset",
+            "result": "접촉 면적 감소\n저항 증가",
+            "status": "warning"
+          },
+          {
+            "case": "open",
+            "label": "③ 심한 오차 → 단선",
+            "via_position": "far_offset",
+            "result": "Via-Metal 미접촉\nOpen Failure",
+            "status": "fail"
+          },
+          {
+            "case": "short",
+            "label": "④ 인접 배선 단락",
+            "via_position": "touching_neighbor",
+            "result": "인접 배선 접촉\nShort Failure",
+            "status": "fail"
+          }
+        ],
+        "structure": {
+          "layers": ["Metal N+1 (상부 배선)", "Via", "Metal N (하부 배선)"],
+          "dielectric": "층간 절연막"
+        },
+        "colors": {
+          "metal": "#FFD700",
+          "via": "#FF8C00",
+          "dielectric": "#4169E1",
+          "good": "#32CD32",
+          "warning": "#FFA500",
+          "fail": "#FF0000"
+        },
+        "layout": "horizontal_4_panels",
+        "dimensions": "1000x350"
+      }
+    },
+    {
+      "id": "02_08_img02",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "wafer_distortion_patterns.png",
+      "title": "웨이퍼 변형 패턴 (Bowl/Saddle/Higher-order)",
+      "description": "웨이퍼 변형의 대표적 유형: Bowl(접시형), Saddle(안장형), Higher-order(고차 변형). 화살표 벡터맵으로 변형 방향과 크기를 시각화.",
+      "spec": {
+        "prompt": "A technical diagram showing three types of semiconductor wafer distortion patterns viewed from above, displayed as vector arrow maps on circular wafer shapes. Left: 'Bowl' shape showing arrows pointing radially outward from center (uniform expansion). Center: 'Saddle' shape showing arrows pointing outward along one axis and inward along the perpendicular axis (anisotropic distortion). Right: 'Higher-order' showing complex, irregular arrow patterns with localized variations, especially strong at wafer edges. Each wafer is a light gray circle with a small flat/notch at bottom. Arrow colors indicate magnitude (blue=small, red=large). Clean technical illustration with labels below each pattern.",
+        "style": "technical vector field visualization",
+        "aspect_ratio": "3:1"
+      }
+    },
+    {
+      "id": "02_08_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "mark_asymmetry_distortion.svg",
+      "title": "마크 비대칭에 의한 측정 왜곡",
+      "description": "이상적 대칭 마크 vs CMP/식각에 의해 비대칭이 된 마크. 비대칭 마크에서 '중심'이 잘못 판단되어 가짜 Overlay가 보고되는 메커니즘.",
+      "spec": {
+        "elements": [
+          {
+            "panel": "대칭 마크 (이상적)",
+            "mark_shape": "symmetric_grating",
+            "center_detection": "정확한 중심",
+            "measured_ovl": "0nm (정확)",
+            "actual_ovl": "0nm"
+          },
+          {
+            "panel": "비대칭 마크 (CMP 후)",
+            "mark_shape": "asymmetric_grating_one_side_eroded",
+            "center_detection": "잘못된 중심 (왼쪽으로 편향)",
+            "measured_ovl": "+2nm (가짜 오차!)",
+            "actual_ovl": "0nm"
+          }
+        ],
+        "mechanism_labels": [
+          "CMP 연마에 의해 한쪽 측벽이 더 깎임",
+          "광학 센서가 비대칭 프로파일의 '중심'을 오인",
+          "실제 정렬은 정확하나 가짜 Overlay 보고",
+          "이 값으로 보정 → 오히려 Overlay 악화!"
+        ],
+        "colors": {
+          "good_mark": "#4169E1",
+          "bad_mark": "#FF6347",
+          "true_center": "#32CD32",
+          "false_center": "#FF0000",
+          "substrate": "#C0C0C0"
+        },
+        "layout": "horizontal_2_panels_with_explanation",
+        "dimensions": "800x400"
+      }
+    }
+  ]
+}

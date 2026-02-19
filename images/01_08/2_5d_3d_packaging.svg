@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <style>
+      text { font-family: Arial, 'AppleGothic', sans-serif; }
+      .title { font-size: 15px; font-weight: bold; fill: #333; }
+      .subtitle { font-size: 11px; fill: #777; }
+      .label { font-size: 10px; fill: #333; }
+      .label-sm { font-size: 8.5px; fill: #555; }
+      .label-bold { font-size: 10px; fill: #333; font-weight: bold; }
+      .annotation { font-size: 9px; fill: #c04040; font-style: italic; }
+      .section-title { font-size: 13px; font-weight: bold; fill: #2060a0; }
+    </style>
+    <marker id="arrow" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#c04040"/>
+    </marker>
+    <marker id="arrowB" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#555"/>
+    </marker>
+    <!-- TSV pattern -->
+    <pattern id="tsv-pattern" width="12" height="12" patternUnits="userSpaceOnUse">
+      <circle cx="6" cy="6" r="2" fill="#e8a030" opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#fafafa" rx="6"/>
+
+  <!-- Main Title -->
+  <text x="400" y="26" text-anchor="middle" class="title">2.5D / 3D 패키징 구조 단면도</text>
+  <text x="400" y="42" text-anchor="middle" class="subtitle">2.5D/3D Packaging Cross-Section (CoWoS &amp; HBM)</text>
+
+  <!-- ============ 2.5D SECTION (Top) ============ -->
+  <text x="30" y="68" class="section-title">▲ 2.5D 구조 — CoWoS (Chip on Wafer on Substrate)</text>
+
+  <!-- Organic Substrate (bottom of 2.5D) -->
+  <rect x="100" y="250" width="600" height="35" rx="3" fill="#a0c0a0" stroke="#709070" stroke-width="1.5"/>
+  <text x="400" y="272" text-anchor="middle" class="label-bold">유기 기판 (Organic Substrate)</text>
+
+  <!-- C4 Bumps (interposer to substrate) -->
+  <circle cx="170" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="220" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="270" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="350" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="400" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="450" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="530" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="580" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <circle cx="630" cy="247" r="4.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+
+  <!-- C4 label -->
+  <line x1="660" y1="247" x2="710" y2="240" stroke="#555" stroke-width="0.7"/>
+  <text x="713" y="237" class="label-sm">C4 범프</text>
+  <text x="713" y="248" class="label-sm">(C4 Bump)</text>
+
+  <!-- Silicon Interposer -->
+  <rect x="120" y="200" width="560" height="42" rx="2" fill="#d0c8e0" stroke="#a098c0" stroke-width="1.5"/>
+  <!-- TSV dots in interposer -->
+  <rect x="120" y="200" width="560" height="42" rx="2" fill="url(#tsv-pattern)" opacity="0.5"/>
+  <text x="400" y="225" text-anchor="middle" class="label-bold">실리콘 인터포저 (Silicon Interposer)</text>
+  <text x="400" y="236" text-anchor="middle" class="label-sm">TSV (Through-Silicon Via) 관통</text>
+
+  <!-- Micro bumps row -->
+  <!-- Under GPU -->
+  <circle cx="195" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="215" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="235" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="255" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="275" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="295" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="315" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="335" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="355" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <!-- Under HBM stacks -->
+  <circle cx="480" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="500" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="520" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="540" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="560" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="580" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="600" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="620" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="640" cy="197" r="2.5" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+
+  <!-- μBump label -->
+  <line x1="640" y1="194" x2="710" y2="180" stroke="#555" stroke-width="0.7"/>
+  <text x="713" y="177" class="label-sm">마이크로범프</text>
+  <text x="713" y="188" class="label-sm">(μBump)</text>
+
+  <!-- GPU/CPU Chiplet (left) -->
+  <rect x="170" y="130" width="210" height="64" rx="3" fill="#c8ddf0" stroke="#6090c0" stroke-width="1.8"/>
+  <text x="275" y="158" text-anchor="middle" class="label-bold" font-size="12">GPU / CPU 칩렛</text>
+  <text x="275" y="172" text-anchor="middle" class="label-sm">(Chiplet)</text>
+
+  <!-- HBM Memory Stack (right) -->
+  <!-- Stack of DRAM dies -->
+  <rect x="470" y="164.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="470" y="152.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="470" y="140.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="470" y="128.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="470" y="116.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="470" y="104.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="470" y="92.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="470" y="80.5" width="170" height="10" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <!-- Base logic die -->
+  <rect x="470" y="176.5" width="170" height="18" rx="1" fill="#b8d0f0" stroke="#6090c0" stroke-width="1"/>
+  <text x="555" y="187" text-anchor="middle" class="label-sm" fill="#406090">베이스 로직 (Base Logic)</text>
+
+  <!-- TSV lines through HBM stack -->
+  <line x1="490" y1="78" x2="490" y2="192" stroke="#e8a030" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="520" y1="78" x2="520" y2="192" stroke="#e8a030" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="555" y1="78" x2="555" y2="192" stroke="#e8a030" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="590" y1="78" x2="590" y2="192" stroke="#e8a030" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="620" y1="78" x2="620" y2="192" stroke="#e8a030" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+  <!-- HBM label -->
+  <text x="555" y="74" text-anchor="middle" class="label-bold" font-size="11">HBM 메모리 스택</text>
+  <text x="555" y="86" text-anchor="middle" class="label-sm" fill="#888">(DRAM × 8~12단)</text>
+
+  <!-- TSV label on HBM -->
+  <line x1="650" y1="130" x2="710" y2="120" stroke="#e8a030" stroke-width="0.8"/>
+  <text x="713" y="117" class="label-sm" fill="#c08020">TSV</text>
+  <text x="713" y="128" class="label-sm" fill="#c08020">(다이 관통 비아)</text>
+
+  <!-- High-bandwidth path annotation -->
+  <path d="M380,160 Q420,145 465,160" fill="none" stroke="#c04040" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <text x="415" y="142" text-anchor="middle" class="annotation">고대역폭 통신</text>
+  <text x="415" y="153" text-anchor="middle" class="annotation">(High-BW Link)</text>
+
+  <!-- BGA balls under substrate -->
+  <circle cx="170" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="230" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="290" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="350" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="410" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="470" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="530" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="590" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <circle cx="650" cy="295" r="5" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <text x="400" y="314" text-anchor="middle" class="label-sm">BGA 솔더볼 (Solder Ball)</text>
+
+  <!-- CoWoS annotation -->
+  <rect x="30" y="248" width="60" height="38" rx="3" fill="#fff3d0" stroke="#e0c060" stroke-width="1"/>
+  <text x="60" y="263" text-anchor="middle" class="label-sm" font-weight="bold" fill="#a08020">CoWoS</text>
+  <text x="60" y="275" text-anchor="middle" class="label-sm" fill="#a08020" font-size="7">Chip on Wafer</text>
+  <text x="60" y="284" text-anchor="middle" class="label-sm" fill="#a08020" font-size="7">on Substrate</text>
+
+  <!-- ============ Divider ============ -->
+  <line x1="30" y1="330" x2="770" y2="330" stroke="#ccc" stroke-width="1" stroke-dasharray="6,3"/>
+
+  <!-- ============ 3D HBM DETAIL (Bottom) ============ -->
+  <text x="30" y="355" class="section-title">▼ 3D 구조 — HBM 메모리 스택 확대</text>
+  <text x="310" y="355" class="subtitle">(HBM3E: 12단 DRAM 적층)</text>
+
+  <!-- HBM 3D detailed stack -->
+  <!-- Base Logic Die -->
+  <rect x="200" y="530" width="300" height="24" rx="2" fill="#b8d0f0" stroke="#6090c0" stroke-width="1.5"/>
+  <text x="350" y="546" text-anchor="middle" class="label-bold">베이스 로직 다이 (Base Logic Die)</text>
+
+  <!-- μBumps under base -->
+  <circle cx="240" cy="560" r="3" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="280" cy="560" r="3" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="320" cy="560" r="3" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="360" cy="560" r="3" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="400" cy="560" r="3" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <circle cx="440" cy="560" r="3" fill="#e8c020" stroke="#c0a000" stroke-width="0.5"/>
+  <text x="350" y="578" text-anchor="middle" class="label-sm">→ 인터포저 연결</text>
+
+  <!-- DRAM dies stacked (12 layers) -->
+  <rect x="220" y="515" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="501" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="487" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="473" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="459" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="445" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="431" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="417" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="403" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="389" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="375" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <rect x="220" y="361" width="260" height="12" rx="1" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+
+  <!-- DRAM labels -->
+  <text x="350" y="370" text-anchor="middle" class="label-sm" fill="#806070">DRAM #12</text>
+  <text x="350" y="384" text-anchor="middle" class="label-sm" fill="#806070">DRAM #11</text>
+  <text x="350" y="524" text-anchor="middle" class="label-sm" fill="#806070">DRAM #1</text>
+
+  <!-- Ellipsis -->
+  <text x="350" y="458" text-anchor="middle" class="label" fill="#999">⋮</text>
+
+  <!-- TSV lines through entire stack -->
+  <line x1="260" y1="361" x2="260" y2="554" stroke="#e8a030" stroke-width="2" stroke-dasharray="3,2"/>
+  <line x1="310" y1="361" x2="310" y2="554" stroke="#e8a030" stroke-width="2" stroke-dasharray="3,2"/>
+  <line x1="390" y1="361" x2="390" y2="554" stroke="#e8a030" stroke-width="2" stroke-dasharray="3,2"/>
+  <line x1="440" y1="361" x2="440" y2="554" stroke="#e8a030" stroke-width="2" stroke-dasharray="3,2"/>
+
+  <!-- TSV label -->
+  <line x1="500" y1="460" x2="560" y2="460" stroke="#e8a030" stroke-width="0.8"/>
+  <text x="565" y="453" class="label-sm" fill="#c08020" font-weight="bold">TSV</text>
+  <text x="565" y="464" class="label-sm" fill="#c08020">(Through-Silicon Via)</text>
+  <text x="565" y="475" class="label-sm" fill="#c08020">다이 관통 수직 배선</text>
+
+  <!-- Die thickness annotation -->
+  <line x1="195" y1="361" x2="195" y2="527" stroke="#555" stroke-width="0.8"/>
+  <line x1="190" y1="361" x2="200" y2="361" stroke="#555" stroke-width="0.8"/>
+  <line x1="190" y1="527" x2="200" y2="527" stroke="#555" stroke-width="0.8"/>
+  <text x="155" y="440" text-anchor="middle" class="label-sm" fill="#555" transform="rotate(-90,155,440)">12단 DRAM 적층</text>
+
+  <!-- HBM3E annotation -->
+  <rect x="580" y="365" width="180" height="55" rx="4" fill="#fff8e8" stroke="#e0c060" stroke-width="1"/>
+  <text x="670" y="382" text-anchor="middle" class="annotation" font-weight="bold">HBM3E 사양:</text>
+  <text x="670" y="396" text-anchor="middle" class="label-sm">• 12단 DRAM 적층</text>
+  <text x="670" y="408" text-anchor="middle" class="label-sm">• 대역폭: 1.2 TB/s</text>
+  <text x="670" y="420" text-anchor="middle" class="label-sm">• 용량: 36 GB / 스택</text>
+
+  <!-- Legend -->
+  <rect x="30" y="560" width="740" height="30" rx="4" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+  <rect x="45" y="568" width="12" height="10" fill="#d0c8e0" stroke="#a098c0" stroke-width="0.8"/>
+  <text x="62" y="577" class="label-sm">인터포저 (Interposer)</text>
+  <rect x="175" y="568" width="12" height="10" fill="#c8ddf0" stroke="#6090c0" stroke-width="0.8"/>
+  <text x="192" y="577" class="label-sm">GPU/CPU 칩렛</text>
+  <rect x="290" y="568" width="12" height="10" fill="#e0c8d0" stroke="#c0a0b0" stroke-width="0.8"/>
+  <text x="307" y="577" class="label-sm">HBM DRAM</text>
+  <rect x="390" y="568" width="12" height="10" fill="#e8a030" stroke="#c08020" stroke-width="0.8"/>
+  <text x="407" y="577" class="label-sm">TSV</text>
+  <rect x="445" y="568" width="12" height="10" fill="#a0c0a0" stroke="#709070" stroke-width="0.8"/>
+  <text x="462" y="577" class="label-sm">기판 (Substrate)</text>
+  <rect x="560" y="568" width="12" height="10" fill="#e8c020" stroke="#c0a000" stroke-width="0.8"/>
+  <text x="577" y="577" class="label-sm">범프 (μBump / C4)</text>
+</svg>

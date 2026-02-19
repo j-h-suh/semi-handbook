@@ -1,0 +1,77 @@
+{
+  "chapter": "02_11",
+  "chapter_title": "CD 선폭 제어",
+  "images": [
+    {
+      "id": "02_11_img01",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "ler_lwr_sem_image.png",
+      "title": "LER/LWR 시각화 (SEM 이미지 예시)",
+      "description": "CD-SEM으로 촬영한 라인 패턴의 에지 거칠기(LER)와 선폭 거칠기(LWR). 이상적 매끄러운 에지 vs 실제 울퉁불퉁한 에지 대비.",
+      "spec": {
+        "prompt": "A high-magnification CD-SEM (Scanning Electron Microscope) image showing line-space patterns on a semiconductor wafer. The image shows several parallel lines (bright edges) with visible Line Edge Roughness (LER) - the edges are not perfectly smooth but show nanometer-scale undulations and irregularities. The roughness is clearly visible along both edges of each line. Overlay annotations show: LER measurement on one edge (3σ ≈ 2nm), LWR measurement across the full line width (3σ ≈ 3nm), and CD measurement arrows. A comparison inset shows the ideal smooth edge vs actual rough edge. Grainy SEM image appearance with bright edge contrast typical of secondary electron imaging. Top-down view, approximately 50,000x magnification.",
+        "style": "SEM microscope image with annotations",
+        "aspect_ratio": "4:3"
+      }
+    },
+    {
+      "id": "02_11_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "global_cdu_wafer_heatmap.png",
+      "title": "Global CDU 웨이퍼 맵 (Center-Edge 패턴)",
+      "description": "300mm 웨이퍼 전체의 CD 분포를 히트맵으로 시각화. 센터-엣지 프로파일이 특징적: 중심부는 목표에 가깝고, 가장자리에서 CD가 1~3nm 증가하는 전형적 패턴.",
+      "spec": {
+        "chart_type": "wafer_heatmap",
+        "wafer_diameter": 300,
+        "target_cd": 20.0,
+        "data_pattern": "center_edge",
+        "cd_range": {"center": 20.0, "edge": 22.5, "unit": "nm"},
+        "measurement_points": "simulated_200_fields",
+        "colorbar": {"label": "CD (nm)", "cmap": "RdYlBu_r", "vmin": 19.0, "vmax": 23.0},
+        "annotations": [
+          {"text": "Center: ~20.0nm (목표)", "position": "center"},
+          {"text": "Edge: ~22.5nm (+2.5nm)", "position": "edge_right"},
+          {"text": "원인: 레지스트 두께 불균일\n+ PEB 온도 편차\n+ 식각 로딩", "position": "legend"}
+        ],
+        "exclusion_zone": {"edge_mm": 3, "label": "Edge Exclusion"},
+        "figsize": [8, 8]
+      }
+    },
+    {
+      "id": "02_11_img03",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "meef_vs_k1.png",
+      "title": "MEEF vs k₁ 관계 그래프",
+      "description": "k₁이 낮아질수록(해상도 한계에 가까울수록) MEEF가 급격히 증가하는 관계. MEEF>1이면 마스크 CD 오차가 웨이퍼에서 증폭됨.",
+      "spec": {
+        "chart_type": "line",
+        "x_axis": {"label": "k₁ (공정 계수)", "range": [0.25, 0.8]},
+        "y_axis": {"label": "MEEF (Mask Error Enhancement Factor)", "range": [0.5, 5.0]},
+        "data": [
+          {"k1": 0.80, "meef": 0.9},
+          {"k1": 0.70, "meef": 1.0},
+          {"k1": 0.60, "meef": 1.1},
+          {"k1": 0.50, "meef": 1.3},
+          {"k1": 0.45, "meef": 1.6},
+          {"k1": 0.40, "meef": 2.0},
+          {"k1": 0.35, "meef": 2.5},
+          {"k1": 0.32, "meef": 3.0},
+          {"k1": 0.30, "meef": 3.5},
+          {"k1": 0.28, "meef": 4.2}
+        ],
+        "annotations": [
+          {"text": "MEEF = 1 (이상적: 오차 증폭 없음)", "y_value": 1.0, "style": "hline_dashed"},
+          {"text": "EUV 미세 패턴:\nMEEF 2~4\n마스크 1nm → 웨이퍼 2~4nm", "position": "upper_left"},
+          {"text": "성숙 공정:\nMEEF ≈ 1", "position": "lower_right"},
+          {"text": "k₁ → 0.25 한계에서\nMEEF 급증", "position": "curve_annotation"}
+        ],
+        "danger_zone": {"k1_below": 0.35, "label": "위험 영역\n(MEEF > 2)"},
+        "colors": {"line": "#FF4444", "danger": "#FFE0E0"},
+        "figsize": [9, 6]
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "chapter": "01_01",
+  "chapter_title": "반도체란 무엇인가",
+  "images": [
+    {
+      "id": "01_01_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "mosfet_cross_section.svg",
+      "title": "MOSFET 단면 구조도",
+      "description": "N-channel Enhancement MOSFET의 단면도. 게이트 전압에 의해 채널이 형성되어 소스-드레인 간 전류가 흐르는 원리를 시각화",
+      "spec": {
+        "elements": [
+          "P-type Si 기판 (Substrate)",
+          "N+ Source 영역",
+          "N+ Drain 영역",
+          "Channel (반전층, Inversion Layer)",
+          "Gate Oxide (SiO₂, 1-2nm)",
+          "Gate (Metal/Poly-Si)",
+          "소스 전극 (Source Contact)",
+          "드레인 전극 (Drain Contact)"
+        ],
+        "colors": {
+          "substrate": "#c8ddf0",
+          "n_plus": "#e85d5d",
+          "gate_metal": "#a0a0a0",
+          "gate_oxide": "#fff3b0",
+          "channel": "#7ecbf5",
+          "contact": "#666666"
+        },
+        "size": "700x450",
+        "labels": "한글+영문",
+        "annotations": [
+          "Gate 전압 인가 화살표 (Vg)",
+          "전류 흐름 방향 화살표 (Id)",
+          "채널 영역 점선 표시"
+        ]
+      }
+    },
+    {
+      "id": "01_01_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "transistor_growth.png",
+      "title": "트랜지스터 집적도의 성장",
+      "description": "1971년 Intel 4004부터 2024년 Apple M4 Max까지 연도별 트랜지스터 수를 로그 스케일로 표시. 무어의 법칙 추세선 포함",
+      "spec": {
+        "data": [
+          {"year": 1971, "chip": "Intel 4004", "count": 2300},
+          {"year": 1978, "chip": "Intel 8086", "count": 29000},
+          {"year": 1989, "chip": "Intel 486", "count": 1200000},
+          {"year": 1999, "chip": "Intel Pentium III", "count": 9500000},
+          {"year": 2006, "chip": "Intel Core 2 Duo", "count": 291000000},
+          {"year": 2012, "chip": "Intel Core i7-3770", "count": 1400000000},
+          {"year": 2020, "chip": "Apple M1", "count": 16000000000},
+          {"year": 2024, "chip": "Apple M4 Max", "count": 28000000000}
+        ],
+        "x_label": "연도 (Year)",
+        "y_label": "트랜지스터 수 (Transistor Count, 로그 스케일)",
+        "y_scale": "log",
+        "trend_line": "무어의 법칙 (약 2년마다 2배)",
+        "style": "학술, 격자선, DPI 300, 10x6 인치",
+        "marker_labels": true,
+        "note": "본문 테이블에서 직접 추출한 데이터 + 합리적 보간 (8086, PIII, Core i7 추정치 포함)"
+      }
+    },
+    {
+      "id": "01_01_img03",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "silicon_wafer_chip.png",
+      "title": "실리콘 웨이퍼와 칩",
+      "description": "클린룸에서 300mm 웨이퍼를 들고 있는 장면으로, 반도체 제조의 출발점을 직관적으로 보여줌",
+      "spec": {
+        "prompt": "A photorealistic image of a 300mm silicon wafer held by a gloved hand in a semiconductor cleanroom. The wafer surface shows a grid of identical chip dies with iridescent reflections from the circuit patterns. The background shows a softly blurred cleanroom environment with yellow lighting. Professional product photography style, high detail, studio lighting.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x1024"
+      }
+    }
+  ]
+}

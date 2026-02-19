@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" width="800" height="350">
+  <defs>
+    <style>
+      text { font-family: -apple-system, "Apple SD Gothic Neo", "Nanum Gothic", sans-serif; }
+      .title { font-size: 15px; font-weight: bold; fill: #222; }
+      .col-title { font-size: 12px; font-weight: 700; fill: #333; }
+      .col-sub { font-size: 9.5px; fill: #666; }
+      .label { font-size: 9px; fill: #555; }
+      .label-b { font-size: 9px; fill: #555; font-weight: 600; }
+      .annot { font-size: 8.5px; fill: #c03030; font-weight: 600; }
+      .good { fill: #208040; }
+      .bad { fill: #c03030; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="350" fill="#fafafa" rx="6"/>
+
+  <!-- Title -->
+  <text x="400" y="26" text-anchor="middle" class="title">식각 프로파일 이상 유형 (Etch Profile Defects)</text>
+
+  <!-- Column dividers -->
+  <line x1="200" y1="40" x2="200" y2="310" stroke="#ddd" stroke-width="1"/>
+  <line x1="400" y1="40" x2="400" y2="310" stroke="#ddd" stroke-width="1"/>
+  <line x1="600" y1="40" x2="600" y2="310" stroke="#ddd" stroke-width="1"/>
+
+  <!-- ===== Column 1: Ideal ===== -->
+  <text x="100" y="58" text-anchor="middle" class="col-title good">이상적 (Ideal)</text>
+  <text x="100" y="72" text-anchor="middle" class="col-sub">완벽한 수직 (90°)</text>
+
+  <!-- Mask -->
+  <rect x="30" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+  <rect x="130" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+
+  <!-- Material with vertical trench -->
+  <rect x="30" y="111" width="40" height="140" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <rect x="130" y="111" width="40" height="140" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <!-- Trench (etched) - perfect vertical -->
+  <rect x="70" y="111" width="60" height="140" fill="white" stroke="#8aafc8" stroke-width="1"/>
+
+  <!-- 90° markers -->
+  <rect x="70" y="241" width="8" height="8" fill="none" stroke="#208040" stroke-width="1"/>
+  <rect x="122" y="241" width="8" height="8" fill="none" stroke="#208040" stroke-width="1"/>
+  <text x="100" y="275" text-anchor="middle" class="label good" style="font-weight:600">✓ 수직 측벽</text>
+  <text x="100" y="287" text-anchor="middle" class="label" style="fill:#208040">(Vertical sidewall)</text>
+
+  <!-- ===== Column 2: Bowing ===== -->
+  <text x="300" y="58" text-anchor="middle" class="col-title bad">보잉 (Bowing)</text>
+  <text x="300" y="72" text-anchor="middle" class="col-sub">측벽이 바깥으로 볼록하게 휨</text>
+
+  <!-- Mask -->
+  <rect x="230" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+  <rect x="330" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+
+  <!-- Material blocks -->
+  <rect x="230" y="111" width="40" height="140" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <rect x="330" y="111" width="40" height="140" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <!-- Trench base (white) -->
+  <rect x="270" y="111" width="60" height="140" fill="white" stroke="#8aafc8" stroke-width="0.5"/>
+
+  <!-- Bowing curves (bulging outward) -->
+  <path d="M270,111 Q253,180 270,251" fill="white" stroke="#c03030" stroke-width="1.5"/>
+  <path d="M330,111 Q347,180 330,251" fill="white" stroke="#c03030" stroke-width="1.5"/>
+  <!-- Fill bowed area -->
+  <path d="M270,111 L270,251 Q253,180 270,111 Z" fill="white" stroke="none"/>
+  <path d="M330,111 L330,251 Q347,180 330,111 Z" fill="white" stroke="none"/>
+  <!-- Cover material over bow -->
+  <path d="M230,111 L270,111 Q253,180 270,251 L230,251 Z" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <path d="M330,111 Q347,180 330,251 L370,251 L370,111 Z" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+
+  <!-- Highlight defect -->
+  <path d="M270,111 Q253,180 270,251" fill="none" stroke="#f5a0a0" stroke-width="3" opacity="0.6"/>
+  <path d="M330,111 Q347,180 330,251" fill="none" stroke="#f5a0a0" stroke-width="3" opacity="0.6"/>
+
+  <!-- Annotation arrows -->
+  <text x="300" y="190" text-anchor="middle" class="annot">← 볼록 →</text>
+  <text x="300" y="275" text-anchor="middle" class="label bad" style="font-weight:600">✗ 중앙부 과식각</text>
+  <text x="300" y="287" text-anchor="middle" class="label" style="fill:#c03030">(Mid-wall bulge)</text>
+
+  <!-- ===== Column 3: Taper ===== -->
+  <text x="500" y="58" text-anchor="middle" class="col-title bad">테이퍼 (Taper)</text>
+  <text x="500" y="72" text-anchor="middle" class="col-sub">측벽이 기울어짐 (&lt; 90°)</text>
+
+  <!-- Mask -->
+  <rect x="430" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+  <rect x="530" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+
+  <!-- Material with tapered trench -->
+  <!-- Left material (Taper corrected: widens at bottom to create narrow trench) -->
+  <path d="M430,111 L470,111 L485,251 L430,251 Z" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <!-- Right material -->
+  <path d="M530,111 L570,111 L570,251 L515,251 Z" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <!-- Tapered trench (Narrower at bottom) -->
+  <path d="M470,111 L530,111 L515,251 L485,251 Z" fill="white" stroke="#8aafc8" stroke-width="1"/>
+
+  <!-- Taper angle highlight -->
+  <path d="M470,111 L485,251" fill="none" stroke="#f5a0a0" stroke-width="3" opacity="0.6"/>
+  <path d="M530,111 L515,251" fill="none" stroke="#f5a0a0" stroke-width="3" opacity="0.6"/>
+
+  <!-- Angle annotation -->
+  <path d="M470,111 L470,145" fill="none" stroke="#c03030" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="462" y="135" text-anchor="end" class="annot">&lt;90°</text>
+
+  <text x="500" y="275" text-anchor="middle" class="label bad" style="font-weight:600">✗ 경사진 측벽</text>
+  <text x="500" y="287" text-anchor="middle" class="label" style="fill:#c03030">(Sloped sidewall)</text>
+
+  <!-- ===== Column 4: Notching ===== -->
+  <text x="700" y="58" text-anchor="middle" class="col-title bad">노칭 (Notching)</text>
+  <text x="700" y="72" text-anchor="middle" class="col-sub">바닥 모서리가 과도하게 파임</text>
+
+  <!-- Mask -->
+  <rect x="630" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+  <rect x="730" y="95" width="40" height="16" fill="#a0a0a0" stroke="#808080" stroke-width="1" rx="1"/>
+
+  <!-- Material with notch -->
+  <rect x="630" y="111" width="40" height="140" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <rect x="730" y="111" width="40" height="140" fill="#c8ddf0" stroke="#8aafc8" stroke-width="1"/>
+  <!-- Trench vertical -->
+  <rect x="670" y="111" width="60" height="140" fill="white" stroke="#8aafc8" stroke-width="1"/>
+
+  <!-- Notch at bottom corners -->
+  <path d="M670,251 Q660,251 658,243 Q655,230 665,228 L670,228 Z" fill="white" stroke="#c03030" stroke-width="1.2"/>
+  <path d="M730,251 Q740,251 742,243 Q745,230 735,228 L730,228 Z" fill="white" stroke="#c03030" stroke-width="1.2"/>
+
+  <!-- Highlight notch -->
+  <path d="M670,251 Q660,251 658,243 Q655,230 665,228 L670,228 Z" fill="#f5a0a0" opacity="0.4" stroke="none"/>
+  <path d="M730,251 Q740,251 742,243 Q745,230 735,228 L730,228 Z" fill="#f5a0a0" opacity="0.4" stroke="none"/>
+
+  <!-- Notch annotation -->
+  <text x="656" y="222" text-anchor="end" class="annot">노치↗</text>
+  <text x="748" y="222" text-anchor="start" class="annot">↖노치</text>
+
+  <text x="700" y="275" text-anchor="middle" class="label bad" style="font-weight:600">✗ 하부 과식각</text>
+  <text x="700" y="287" text-anchor="middle" class="label" style="fill:#c03030">(Bottom notch)</text>
+
+  <!-- ===== Legend ===== -->
+  <rect x="100" y="305" width="600" height="35" fill="#f0f0f0" rx="4" stroke="#ddd" stroke-width="0.8"/>
+  <rect x="120" y="316" width="12" height="10" fill="#a0a0a0" stroke="#808080" stroke-width="0.8"/>
+  <text x="137" y="325" class="label">마스크 (Mask)</text>
+  <rect x="240" y="316" width="12" height="10" fill="#c8ddf0" stroke="#8aafc8" stroke-width="0.8"/>
+  <text x="257" y="325" class="label">식각 대상 물질 (Material)</text>
+  <rect x="420" y="316" width="12" height="10" fill="white" stroke="#999" stroke-width="0.8"/>
+  <text x="437" y="325" class="label">식각 영역 (Etched)</text>
+  <rect x="560" y="316" width="12" height="10" fill="#f5a0a0" stroke="#c03030" stroke-width="0.8"/>
+  <text x="577" y="325" class="label">이상 부위 (Defect)</text>
+</svg>

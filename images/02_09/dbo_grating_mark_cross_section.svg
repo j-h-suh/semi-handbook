@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="900" height="400" font-family="'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif">
+  <defs>
+    <marker id="arrowDown" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M1,1 L4,7 L7,1" fill="none" stroke="#333" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="4" refY="0" orient="auto">
+      <path d="M0,0 L4,7 L8,0" fill="#32CD32" stroke="none"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="4" refY="0" orient="auto">
+      <path d="M0,0 L4,7 L8,0" fill="#FF6347" stroke="none"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="400" fill="#FAFAFA" rx="8"/>
+
+  <!-- Title -->
+  <text x="450" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">DBO 격자 마크 단면도 — 대칭 vs 비대칭</text>
+
+  <!-- ===== Panel 1: OVL = 0 ===== -->
+  <g transform="translate(20, 40)">
+    <rect width="420" height="200" rx="6" fill="#F0F4FF" stroke="#B0C4DE" stroke-width="1"/>
+    <text x="210" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">OVL = 0 (완벽 정렬)</text>
+
+    <!-- Substrate -->
+    <rect x="40" y="100" width="340" height="50" fill="#C0C0C0" stroke="#999" stroke-width="0.8"/>
+    <text x="210" y="132" text-anchor="middle" font-size="10" fill="#555">기판 (Substrate)</text>
+
+    <!-- Reference layer grating (bottom) -->
+    <g>
+      <rect x="60" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="100" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="140" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="180" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="220" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="260" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="300" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="340" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+    </g>
+
+    <!-- Current layer grating (top) — aligned -->
+    <g>
+      <rect x="60" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="100" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="140" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="180" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="220" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="260" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="300" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="340" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+    </g>
+
+    <!-- Pitch label -->
+    <line x1="60" y1="57" x2="100" y2="57" stroke="#666" stroke-width="0.8"/>
+    <text x="80" y="53" text-anchor="middle" font-size="9" fill="#666">P</text>
+
+    <!-- Layer labels -->
+    <text x="390" y="75" text-anchor="end" font-size="9" fill="#4169E1">현재 층</text>
+    <text x="390" y="97" text-anchor="end" font-size="9" fill="#FF8C00">이전 층</text>
+
+    <!-- Diffraction beams: +1 and -1 (symmetric) -->
+    <!-- +1차 -->
+    <line x1="210" y1="60" x2="310" y2="38" stroke="#32CD32" stroke-width="2.5" opacity="0.8"/>
+    <polygon points="310,38 300,42 303,35" fill="#32CD32"/>
+    <text x="320" y="40" font-size="10" fill="#32CD32" font-weight="bold">+1차</text>
+
+    <!-- -1차 -->
+    <line x1="210" y1="60" x2="110" y2="38" stroke="#FF6347" stroke-width="2.5" opacity="0.8"/>
+    <polygon points="110,38 117,35 120,42" fill="#FF6347"/>
+    <text x="65" y="40" font-size="10" fill="#FF6347" font-weight="bold">−1차</text>
+
+    <!-- Intensity bars -->
+    <rect x="90" y="155" width="25" height="35" fill="#32CD32" opacity="0.7" rx="2"/>
+    <text x="102" y="198" text-anchor="middle" font-size="9" fill="#333">I₊₁</text>
+    <rect x="130" y="155" width="25" height="35" fill="#FF6347" opacity="0.7" rx="2"/>
+    <text x="142" y="198" text-anchor="middle" font-size="9" fill="#333">I₋₁</text>
+
+    <text x="200" y="178" font-size="11" fill="#333" font-weight="bold">I₊₁ = I₋₁</text>
+    <text x="200" y="195" font-size="10" fill="#555">대칭 → Overlay = 0</text>
+  </g>
+
+  <!-- ===== Panel 2: OVL ≠ 0 ===== -->
+  <g transform="translate(460, 40)">
+    <rect width="420" height="200" rx="6" fill="#FFF5F0" stroke="#E8B0A0" stroke-width="1"/>
+    <text x="210" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">OVL ≠ 0 (정렬 오차)</text>
+
+    <!-- Substrate -->
+    <rect x="40" y="100" width="340" height="50" fill="#C0C0C0" stroke="#999" stroke-width="0.8"/>
+    <text x="210" y="132" text-anchor="middle" font-size="10" fill="#555">기판 (Substrate)</text>
+
+    <!-- Reference layer grating (bottom) — same position -->
+    <g>
+      <rect x="60" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="100" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="140" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="180" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="220" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="260" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="300" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+      <rect x="340" y="85" width="20" height="18" fill="#FF8C00" rx="1"/>
+    </g>
+
+    <!-- Current layer grating (top) — shifted by Δx -->
+    <g>
+      <rect x="72" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="112" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="152" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="192" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="232" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="272" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="312" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+      <rect x="352" y="65" width="20" height="18" fill="#4169E1" rx="1"/>
+    </g>
+
+    <!-- Δx offset label -->
+    <line x1="60" y1="57" x2="72" y2="57" stroke="#E00" stroke-width="1" stroke-dasharray="2,1"/>
+    <text x="66" y="53" text-anchor="middle" font-size="8" fill="#E00">Δx</text>
+
+    <!-- Layer labels -->
+    <text x="398" y="75" text-anchor="end" font-size="9" fill="#4169E1">현재 층 (Δx 이동)</text>
+    <text x="390" y="97" text-anchor="end" font-size="9" fill="#FF8C00">이전 층</text>
+
+    <!-- Diffraction beams: +1 stronger, -1 weaker -->
+    <!-- +1차 (stronger → thicker) -->
+    <line x1="210" y1="60" x2="310" y2="38" stroke="#32CD32" stroke-width="4" opacity="0.8"/>
+    <polygon points="310,38 298,44 302,33" fill="#32CD32"/>
+    <text x="320" y="40" font-size="10" fill="#32CD32" font-weight="bold">+1차 ▲</text>
+
+    <!-- -1차 (weaker → thinner) -->
+    <line x1="210" y1="60" x2="110" y2="38" stroke="#FF6347" stroke-width="1.5" opacity="0.6"/>
+    <polygon points="110,38 116,36 118,41" fill="#FF6347"/>
+    <text x="60" y="40" font-size="10" fill="#FF6347" font-weight="bold">−1차 ▼</text>
+
+    <!-- Intensity bars (unequal) -->
+    <rect x="90" y="145" width="25" height="45" fill="#32CD32" opacity="0.7" rx="2"/>
+    <text x="102" y="198" text-anchor="middle" font-size="9" fill="#333">I₊₁</text>
+    <rect x="130" y="165" width="25" height="25" fill="#FF6347" opacity="0.7" rx="2"/>
+    <text x="142" y="198" text-anchor="middle" font-size="9" fill="#333">I₋₁</text>
+
+    <text x="200" y="175" font-size="11" fill="#E00" font-weight="bold">I₊₁ ≠ I₋₁</text>
+    <text x="200" y="195" font-size="10" fill="#555">비대칭 → Overlay ∝ (I₊₁ − I₋₁)</text>
+  </g>
+
+  <!-- ===== Bottom Section: Bias Marks & Formula ===== -->
+  <g transform="translate(0, 255)">
+    <rect x="20" y="0" width="860" height="130" rx="6" fill="#F8F8F0" stroke="#D0D0B0" stroke-width="1"/>
+
+    <text x="450" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">바이어스 마크를 이용한 Overlay 계산</text>
+
+    <!-- Mark A -->
+    <g transform="translate(80, 35)">
+      <rect width="160" height="50" rx="4" fill="#E8F0FF" stroke="#4169E1" stroke-width="1"/>
+      <text x="80" y="20" text-anchor="middle" font-size="11" font-weight="bold" fill="#4169E1">마크 A</text>
+      <text x="80" y="38" text-anchor="middle" font-size="10" fill="#555">바이어스 +d</text>
+    </g>
+
+    <!-- Mark B -->
+    <g transform="translate(290, 35)">
+      <rect width="160" height="50" rx="4" fill="#FFF0E8" stroke="#FF8C00" stroke-width="1"/>
+      <text x="80" y="20" text-anchor="middle" font-size="11" font-weight="bold" fill="#FF8C00">마크 B</text>
+      <text x="80" y="38" text-anchor="middle" font-size="10" fill="#555">바이어스 −d</text>
+    </g>
+
+    <!-- Arrow -->
+    <text x="475" y="65" font-size="18" fill="#333">→</text>
+
+    <!-- Formula box -->
+    <g transform="translate(500, 35)">
+      <rect width="350" height="50" rx="4" fill="#FFFFF0" stroke="#999" stroke-width="1"/>
+      <text x="175" y="20" text-anchor="middle" font-size="10" fill="#666">Overlay 산출 공식:</text>
+      <text x="175" y="40" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">OVL = (d/2) × (ΔI_A − ΔI_B) / (ΔI_A + ΔI_B)</text>
+    </g>
+
+    <!-- Explanation -->
+    <text x="450" y="108" text-anchor="middle" font-size="10" fill="#777">ΔI = I₊₁ − I₋₁  (각 마크에서의 ±1차 회절 강도 차이)</text>
+  </g>
+</svg>

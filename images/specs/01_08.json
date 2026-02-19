@@ -1,0 +1,123 @@
+{
+  "chapter": "01_08",
+  "chapter_title": "후공정 개요",
+  "images": [
+    {
+      "id": "01_08_img01",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "wafer_map_patterns.png",
+      "title": "웨이퍼 맵 불량 패턴 4종 예시",
+      "description": "대표적 웨이퍼 맵 불량 패턴 4가지 — 링(Ring), 스크래치(Scratch), 에지(Edge), 랜덤(Random) — 를 2×2 그리드로 비교. 각 패턴이 어떤 공정 이상을 시사하는지 표현",
+      "spec": {
+        "prompt": "A technical illustration showing four semiconductor wafer maps in a 2x2 grid layout on a clean white background. Each circular wafer map shows different defect patterns with red dots on gray background: (top-left) RING pattern - defects forming concentric circles suggesting CMP non-uniformity, (top-right) SCRATCH pattern - defects along a diagonal line suggesting handling damage, (bottom-left) EDGE pattern - defects concentrated at wafer edge suggesting coating/etch edge effects, (bottom-right) RANDOM pattern - defects scattered randomly suggesting particle contamination. Each map is labeled clearly. Clean technical diagram style with consistent wafer size.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x1024"
+      }
+    },
+    {
+      "id": "01_08_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "wire_bond_vs_flipchip.svg",
+      "title": "와이어 본딩 vs 플립칩 단면 비교",
+      "description": "전통적 와이어 본딩 방식(위)과 현대 플립칩 방식(아래)의 패키지 단면 비교",
+      "spec": {
+        "elements": [
+          "와이어 본딩: Die(상향) → Au/Cu 와이어 → 리드프레임 → 몰딩 수지",
+          "플립칩: Die(하향/Flip) → 솔더 범프 → 기판(Substrate) → 솔더볼(BGA)",
+          "언더필 (Underfill) - 플립칩 측",
+          "히트 스프레더 (Heat Spreader)",
+          "EMC 몰딩 (Epoxy Molding Compound)"
+        ],
+        "layout": "상하 비교 (상: Wire Bonding, 하: Flip Chip)",
+        "colors": {
+          "die": "#c8ddf0",
+          "wire": "#e8c020",
+          "bump": "#e8a030",
+          "substrate": "#a0c0a0",
+          "molding": "#404040",
+          "heatspreader": "#c0c0c0"
+        },
+        "size": "700x500",
+        "labels": "한글+영문",
+        "annotations": [
+          "와이어 길이 → 기생 인덕턴스 (Wire Bonding)",
+          "짧은 경로 → 고속 가능 (Flip Chip)",
+          "I/O 밀도 차이 표시"
+        ]
+      }
+    },
+    {
+      "id": "01_08_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "2_5d_3d_packaging.svg",
+      "title": "2.5D/3D 패키징 구조 단면도",
+      "description": "2.5D 패키징(실리콘 인터포저 + CoWoS)과 3D 패키징(TSV 적층, HBM)의 단면 구조",
+      "spec": {
+        "elements": [
+          "2.5D 구조:",
+          "  - 유기 기판 (Organic Substrate)",
+          "  - 실리콘 인터포저 (Silicon Interposer, 미세 배선)",
+          "  - TSV (Through-Silicon Via, 인터포저 관통)",
+          "  - GPU/CPU 칩렛 (좌측)",
+          "  - HBM 메모리 스택 (우측)",
+          "  - 마이크로범프 (μBump, 칩↔인터포저)",
+          "  - C4 범프 (인터포저↔기판)",
+          "3D 구조 (HBM 확대):",
+          "  - DRAM 다이 4-12장 적층",
+          "  - TSV (다이 관통)",
+          "  - 베이스 로직 다이 (하단)"
+        ],
+        "layout": "상: 2.5D 전체 단면, 하: HBM 3D 스택 확대",
+        "colors": {
+          "interposer": "#d0c8e0",
+          "gpu_die": "#c8ddf0",
+          "hbm_die": "#e0c8d0",
+          "tsv": "#e8a030",
+          "substrate": "#a0c0a0",
+          "bump": "#e8c020"
+        },
+        "size": "800x600",
+        "labels": "한글+영문",
+        "annotations": [
+          "CoWoS (Chip on Wafer on Substrate) 표시",
+          "HBM3E: 12단 적층",
+          "칩렛 간 고대역폭 통신 경로"
+        ]
+      }
+    },
+    {
+      "id": "01_08_img04",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "binning_distribution.png",
+      "title": "빈닝 수율 분포 그래프",
+      "description": "최종 테스트에서 측정된 최대 동작 주파수(Fmax)의 히스토그램과 빈(Bin) 경계선. 동일 웨이퍼에서 다양한 성능 등급이 나오는 것을 시각화",
+      "spec": {
+        "data_description": "정규분포 기반 시뮬레이션 (μ=4.5GHz, σ=0.4GHz, N=1000)",
+        "distribution": {
+          "mean_ghz": 4.5,
+          "std_ghz": 0.4,
+          "n_samples": 1000
+        },
+        "bins_config": [
+          {"name": "Fail", "range": [0, 3.5], "color": "#e85d5d"},
+          {"name": "Bin 3 (i5)", "range": [3.5, 4.0], "color": "#f5c050"},
+          {"name": "Bin 2 (i7)", "range": [4.0, 4.5], "color": "#7ecb7e"},
+          {"name": "Bin 1 (i9)", "range": [4.5, 6.0], "color": "#4a90d9"}
+        ],
+        "x_label": "최대 동작 주파수 Fmax (GHz)",
+        "y_label": "다이 수 (Count)",
+        "vertical_lines": [
+          {"x": 3.5, "label": "Fail/Pass 경계"},
+          {"x": 4.0, "label": "i5/i7 경계"},
+          {"x": 4.5, "label": "i7/i9 경계"}
+        ],
+        "style": "학술, DPI 300, 10x6 인치",
+        "note": "본문 빈닝 테이블(i9=5.0GHz/105W, i7=4.5GHz/65W, i5=4.0GHz/45W) 기반. 분포는 일반적 공정 변동 모델"
+      }
+    }
+  ]
+}

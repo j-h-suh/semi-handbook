@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" width="800" height="320">
+  <defs>
+    <style>
+      text { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; }
+      .title { font-size: 14px; font-weight: bold; fill: #333; }
+      .version { font-size: 12px; font-weight: bold; }
+      .detail { font-size: 9px; fill: #666; }
+      .status { font-size: 9px; font-weight: bold; }
+      .arrow-label { font-size: 8px; fill: #888; }
+      .timeline-label { font-size: 10px; fill: #999; }
+    </style>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#e85d5d"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2ecc71"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="25" text-anchor="middle" class="title">Model Registry 버전 타임라인</text>
+
+  <!-- Timeline axis -->
+  <line x1="60" y1="160" x2="740" y2="160" stroke="#333" stroke-width="2.5"/>
+  <!-- Arrow at end -->
+  <polygon points="740,155 750,160 740,165" fill="#333"/>
+
+  <!-- Timeline labels -->
+  <text x="100" y="185" text-anchor="middle" class="timeline-label">1월 W1</text>
+  <text x="230" y="185" text-anchor="middle" class="timeline-label">1월 W3</text>
+  <text x="370" y="185" text-anchor="middle" class="timeline-label">2월 W1</text>
+  <text x="510" y="185" text-anchor="middle" class="timeline-label">2월 W2</text>
+  <text x="640" y="185" text-anchor="middle" class="timeline-label">2월 W3</text>
+
+  <!-- Tick marks -->
+  <line x1="100" y1="155" x2="100" y2="165" stroke="#333" stroke-width="1.5"/>
+  <line x1="230" y1="155" x2="230" y2="165" stroke="#333" stroke-width="1.5"/>
+  <line x1="370" y1="155" x2="370" y2="165" stroke="#333" stroke-width="1.5"/>
+  <line x1="510" y1="155" x2="510" y2="165" stroke="#333" stroke-width="1.5"/>
+  <line x1="640" y1="155" x2="640" y2="165" stroke="#333" stroke-width="1.5"/>
+
+  <!-- v1.0 Node (Archived) -->
+  <line x1="200" y1="160" x2="200" y2="85" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <rect x="140" y="45" width="120" height="55" rx="8" fill="#f5f5f5" stroke="#cccccc" stroke-width="1.5"/>
+  <text x="200" y="62" text-anchor="middle" class="version" fill="#999">v1.0</text>
+  <text x="200" y="75" text-anchor="middle" class="detail">R² = 0.82 | Jan W1-2</text>
+  <text x="200" y="90" text-anchor="middle" class="status" fill="#999">Archived</text>
+
+  <!-- v1.1 Node (Archived) -->
+  <line x1="340" y1="160" x2="340" y2="210" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <rect x="280" y="210" width="120" height="55" rx="8" fill="#f5f5f5" stroke="#cccccc" stroke-width="1.5"/>
+  <text x="340" y="227" text-anchor="middle" class="version" fill="#999">v1.1</text>
+  <text x="340" y="240" text-anchor="middle" class="detail">R² = 0.85 | Jan W1-4</text>
+  <text x="340" y="255" text-anchor="middle" class="status" fill="#999">Archived</text>
+
+  <!-- v2.0 Node (Production) -->
+  <line x1="520" y1="160" x2="520" y2="85" stroke="#2ecc71" stroke-width="1.5"/>
+  <rect x="460" y="45" width="120" height="55" rx="8" fill="#eafaf1" stroke="#2ecc71" stroke-width="2"/>
+  <text x="520" y="62" text-anchor="middle" class="version" fill="#2ecc71">v2.0 ✅</text>
+  <text x="520" y="75" text-anchor="middle" class="detail">R² = 0.88 | Jan W3~Feb W2</text>
+  <text x="520" y="90" text-anchor="middle" class="status" fill="#2ecc71">Production</text>
+
+  <!-- v2.1 Node (Staging) -->
+  <line x1="630" y1="160" x2="630" y2="210" stroke="#f39c12" stroke-width="1.5"/>
+  <rect x="570" y="210" width="120" height="55" rx="8" fill="#fef9e7" stroke="#f39c12" stroke-width="2"/>
+  <text x="630" y="227" text-anchor="middle" class="version" fill="#f39c12">v2.1</text>
+  <text x="630" y="240" text-anchor="middle" class="detail">R² = 0.87 | Feb W1-2</text>
+  <text x="630" y="255" text-anchor="middle" class="status" fill="#f39c12">Staging (검증 중)</text>
+
+  <!-- Rollback arrow: v2.0 → v1.1 -->
+  <path d="M 480 100 C 430 120, 380 180, 340 210" fill="none" stroke="#e85d5d" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowRed)"/>
+  <text x="395" y="148" text-anchor="middle" class="arrow-label" fill="#e85d5d" transform="rotate(-20, 395, 148)">롤백 (수 분 내 복귀)</text>
+
+  <!-- Deploy arrow: v2.1 → Production -->
+  <path d="M 630 210 C 620 195, 560 110, 540 100" fill="none" stroke="#2ecc71" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowGreen)"/>
+  <text x="600" y="150" text-anchor="middle" class="arrow-label" fill="#2ecc71" transform="rotate(65, 600, 150)">검증 통과 시 배포</text>
+
+  <!-- Legend -->
+  <rect x="60" y="285" width="12" height="12" rx="2" fill="#eafaf1" stroke="#2ecc71" stroke-width="1"/>
+  <text x="78" y="295" class="detail">Production</text>
+  <rect x="160" y="285" width="12" height="12" rx="2" fill="#fef9e7" stroke="#f39c12" stroke-width="1"/>
+  <text x="178" y="295" class="detail">Staging</text>
+  <rect x="250" y="285" width="12" height="12" rx="2" fill="#f5f5f5" stroke="#ccc" stroke-width="1"/>
+  <text x="268" y="295" class="detail">Archived</text>
+  <line x1="340" y1="291" x2="370" y2="291" stroke="#e85d5d" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="378" y="295" class="detail">롤백 경로</text>
+</svg>

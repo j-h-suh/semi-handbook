@@ -1,0 +1,75 @@
+{
+  "chapter": "02_07",
+  "chapter_title": "OPC와 RET",
+  "images": [
+    {
+      "id": "02_07_img01",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "opc_before_after.png",
+      "title": "OPC 보정 전/후 마스크 패턴 비교",
+      "description": "왼쪽: 설계 의도(직사각형), 중앙: OPC 보정 적용된 마스크 패턴(세리프/해머헤드 추가), 오른쪽: 웨이퍼에 실제 전사된 패턴(설계 의도에 가까움). OPC의 효과를 직관적으로 보여줌.",
+      "spec": {
+        "prompt": "A three-panel technical comparison showing OPC (Optical Proximity Correction) effect in semiconductor lithography. Left panel labeled 'Design Intent': clean rectangular line-space patterns with sharp 90-degree corners. Center panel labeled 'OPC-corrected Mask': the same patterns but with added serif features at corners (small square protrusions), hammerhead features at line ends (extended T-shaped tips), and bias adjustments on isolated vs dense lines. The mask pattern looks distorted with non-intuitive shapes. Right panel labeled 'Wafer Result': the actually printed pattern on the wafer, which closely matches the original design intent thanks to OPC corrections. Arrows show the transformation flow. Clean technical illustration on white background with dark blue patterns.",
+        "style": "technical semiconductor diagram",
+        "aspect_ratio": "16:9"
+      }
+    },
+    {
+      "id": "02_07_img02",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "ilt_mask_pattern.png",
+      "title": "ILT 생성 마스크 패턴",
+      "description": "ILT(Inverse Lithography Technology)로 생성된 비정형 마스크 패턴의 실물 이미지. 인간이 절대 그리지 않을 곡면/비정형 형태이지만 광학적으로 최적화된 결과물.",
+      "spec": {
+        "prompt": "A microscope image of an ILT (Inverse Lithography Technology) generated mask pattern used in advanced semiconductor manufacturing. The pattern shows highly irregular, curvilinear shapes with organic-looking contours, wavy edges, and non-intuitive freeform geometries that look nothing like traditional Manhattan-style rectangular IC layouts. The pattern includes small assist features (SRAFs) scattered around main features. Dark chrome pattern on bright quartz background. The image should convey that this pattern was computationally optimized by algorithms, not designed by humans. SEM or optical microscope appearance.",
+        "style": "microscope image",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "id": "02_07_img03",
+      "type": "E",
+      "method": "svg",
+      "filename": "illumination_shapes_comparison.svg",
+      "title": "조명 형태 비교 (Annular/Dipole/Quadrupole/Freeform)",
+      "description": "Off-Axis 조명의 4종류 동공면 강도 분포와 각각에 적합한 패턴 유형. Freeform은 SMO로 최적화된 임의 형태.",
+      "spec": {
+        "elements": [
+          {
+            "name": "Annular",
+            "pupil": "ring_shape",
+            "suitable_for": "다방향 패턴\n(범용)",
+            "k1_improvement": "~0.4"
+          },
+          {
+            "name": "Dipole (Y)",
+            "pupil": "two_poles_vertical",
+            "suitable_for": "수평 라인 패턴\n(1방향 최적)",
+            "k1_improvement": "~0.3"
+          },
+          {
+            "name": "Quadrupole",
+            "pupil": "four_poles_45deg",
+            "suitable_for": "수직+수평 패턴\n(2방향 최적)",
+            "k1_improvement": "~0.35"
+          },
+          {
+            "name": "Freeform (SMO)",
+            "pupil": "irregular_blob",
+            "suitable_for": "SMO 최적화\n(특정 설계에 맞춤)",
+            "k1_improvement": "~0.28"
+          }
+        ],
+        "colors": {
+          "illuminated": "#FFD700",
+          "dark": "#1a1a2e",
+          "border": "#CCCCCC"
+        },
+        "layout": "horizontal_4_panels_with_labels",
+        "dimensions": "900x350"
+      }
+    }
+  ]
+}

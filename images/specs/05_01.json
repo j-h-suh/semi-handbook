@@ -1,0 +1,149 @@
+{
+  "chapter": "05_01",
+  "chapter_title": "차세대 리소그래피",
+  "images": [
+    {
+      "id": "05_01_img01",
+      "type": "E",
+      "method": "svg",
+      "filename": "anamorphic_optics_concept.svg",
+      "title": "Anamorphic 광학계 비등방 축소 개념도",
+      "description": "기존 EUV의 등방 4:1 축소와 High-NA EUV의 비등방 4:1×8:1 축소를 좌우 비교. 마스크→렌즈→웨이퍼 경로에서 X/Y 축소 배율 차이와 노광 필드 크기 변화를 시각화",
+      "spec": {
+        "layout": "좌우 비교 (side-by-side)",
+        "left_panel": {
+          "title": "기존 EUV (NA=0.33)",
+          "elements": [
+            "마스크: 104mm × 132mm 영역",
+            "렌즈 (반사광학계): 4:1 등방 축소 화살표",
+            "웨이퍼: 26mm × 33mm 노광 필드"
+          ],
+          "labels": ["X: 4:1", "Y: 4:1"]
+        },
+        "right_panel": {
+          "title": "High-NA EUV (NA=0.55)",
+          "elements": [
+            "마스크: 104mm × 132mm 영역 (Y방향 2배 사용)",
+            "렌즈 (Anamorphic 반사광학계): X 4:1, Y 8:1 비등방 축소",
+            "웨이퍼: 26mm × 16.5mm 노광 필드 (절반)"
+          ],
+          "labels": ["X: 4:1", "Y: 8:1"]
+        },
+        "colors": {
+          "mask": "#5b9bd5",
+          "lens": "#a0a0a0",
+          "wafer": "#ed7d31",
+          "field_highlight": "#ffd966",
+          "arrow": "#333333"
+        },
+        "annotations": [
+          "노광 필드 축소 (33mm → 16.5mm) 강조",
+          "스캔 방향(Y) 표시 화살표",
+          "스티칭 필요 표시 (큰 칩의 경우)"
+        ],
+        "size": "900x500"
+      }
+    },
+    {
+      "id": "05_01_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "nextgen_litho_comparison.png",
+      "title": "차세대 리소그래피 기술 비교 차트",
+      "description": "EUV, High-NA EUV, DSA, NIL 네 기술의 해상도·스루풋·비용·패턴 자유도를 정규화하여 그룹 바 차트로 비교",
+      "spec": {
+        "chart_type": "grouped_bar",
+        "data": [
+          {
+            "technology": "EUV (NA=0.33)",
+            "resolution_nm": 13,
+            "throughput_wph": 200,
+            "relative_cost": 4,
+            "pattern_freedom": 5,
+            "status": "양산 중"
+          },
+          {
+            "technology": "High-NA EUV (NA=0.55)",
+            "resolution_nm": 8,
+            "throughput_wph": 185,
+            "relative_cost": 5,
+            "pattern_freedom": 5,
+            "status": "2026-27"
+          },
+          {
+            "technology": "DSA",
+            "resolution_nm": 5,
+            "throughput_wph": 250,
+            "relative_cost": 2,
+            "pattern_freedom": 2,
+            "status": "2028+"
+          },
+          {
+            "technology": "NIL",
+            "resolution_nm": 14,
+            "throughput_wph": 80,
+            "relative_cost": 1,
+            "pattern_freedom": 4,
+            "status": "NAND 양산 중"
+          }
+        ],
+        "metrics": ["해상도 (nm, 낮을수록 좋음)", "스루풋 (WPH)", "상대 비용 (1-5)", "패턴 자유도 (1-5)"],
+        "x_label": "기술 (Technology)",
+        "y_label": "정규화 점수",
+        "note": "본문 기술 비교 테이블에서 직접 추출. 상대 비용/패턴 자유도는 1-5 정규화",
+        "style": "학술, 격자선, DPI 300, 12x6 인치",
+        "colors": ["#2196F3", "#FF9800", "#4CAF50", "#9C27B0"]
+      }
+    },
+    {
+      "id": "05_01_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "nil_imprint_principle.png",
+      "title": "NIL (나노임프린트) 공정 원리 단면도",
+      "description": "나노 패턴이 새겨진 몰드를 액상 레지스트에 눌러 패턴을 전사하는 과정을 4단계로 시각화",
+      "spec": {
+        "prompt": "A clean technical illustration showing the Nanoimprint Lithography (NIL) process in 4 sequential cross-section steps: (1) A quartz mold template with nanoscale patterns approaches a wafer coated with liquid resist, (2) The mold is pressed into the resist transferring the pattern, (3) UV light cures the resist while mold is in contact, (4) Mold is separated revealing the nanoscale pattern in the cured resist. Each step labeled with arrows showing the sequence. Clean white background, engineering diagram style with blue mold, yellow resist, gray wafer substrate. Include dimensional annotations showing sub-14nm features.",
+        "model": "gemini-3-pro-image",
+        "size": "1024x768"
+      }
+    },
+    {
+      "id": "05_01_img04",
+      "type": "E",
+      "method": "svg",
+      "filename": "litho_tech_application_map.svg",
+      "title": "차세대 리소그래피 기술별 적용 영역 맵",
+      "description": "High-NA EUV, DSA, NIL 각 기술이 적합한 반도체 제품/응용 영역을 벤다이어그램 스타일로 시각화. 공존 관계 강조",
+      "spec": {
+        "layout": "3-zone 영역 맵 (벤다이어그램 또는 매트릭스)",
+        "zones": [
+          {
+            "technology": "High-NA EUV",
+            "applications": ["최첨단 로직 (1nm 이하)", "AP/GPU/CPU", "FinFET/GAA 패턴"],
+            "color": "#2196F3",
+            "keyword": "자유 패턴 + 극한 해상도"
+          },
+          {
+            "technology": "DSA",
+            "applications": ["Contact Hole 축소", "Fin 피치 배가", "주기적 구조 보조"],
+            "color": "#4CAF50",
+            "keyword": "주기적 패턴 + 비용 절감"
+          },
+          {
+            "technology": "NIL",
+            "applications": ["NAND Flash 대량 생산", "메모리 반복 패턴", "비용 민감 응용"],
+            "color": "#FF9800",
+            "keyword": "반복 패턴 + 비용 혁신"
+          }
+        ],
+        "center_overlap": "공존의 미래: 각 기술이 최적 영역에서 활용",
+        "annotations": [
+          "양산 시점 표기 (각 존 하단)",
+          "해상도 범위 표기"
+        ],
+        "size": "800x600"
+      }
+    }
+  ]
+}

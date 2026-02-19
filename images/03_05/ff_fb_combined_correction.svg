@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <marker id="arrowhead-dash" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#999"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#27AE60"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#E74C3C"/>
+    </marker>
+    <marker id="arrowhead-orange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#F39C12"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+    <style>
+      text { font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="600" fill="#FFFFFF"/>
+  
+  <!-- Title -->
+  <text x="500" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#2C3E50">Feed-Forward + Feedback 결합 보정 개념도</text>
+  
+  <!-- ===== FEED-FORWARD PATH (top) ===== -->
+  <!-- Label -->
+  <rect x="15" y="55" width="140" height="24" rx="4" fill="#27AE60" opacity="0.15"/>
+  <text x="85" y="72" text-anchor="middle" font-size="12" font-weight="bold" fill="#27AE60">Feed-Forward 경로</text>
+  
+  <!-- wafer_in -->
+  <rect x="40" y="100" width="130" height="55" rx="12" fill="#D6EAF8" stroke="#3498DB" stroke-width="2" filter="url(#shadow)"/>
+  <text x="105" y="122" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">웨이퍼 N</text>
+  <text x="105" y="140" text-anchor="middle" font-size="10" fill="#555">(공정 투입 전)</text>
+  
+  <!-- ff_measure -->
+  <rect x="220" y="85" width="150" height="85" rx="12" fill="#D5F5E3" stroke="#27AE60" stroke-width="2" filter="url(#shadow)"/>
+  <text x="295" y="107" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">사전 측정</text>
+  <text x="295" y="124" text-anchor="middle" font-size="10" fill="#555">• 정렬 마크</text>
+  <text x="295" y="139" text-anchor="middle" font-size="10" fill="#555">• 레지스트 두께</text>
+  <text x="295" y="154" text-anchor="middle" font-size="10" fill="#555">• 웨이퍼 변형</text>
+  
+  <!-- ff_calc -->
+  <!-- Process shape (rectangle with side bars) -->
+  <rect x="420" y="92" width="160" height="70" fill="#D5F5E3" stroke="#27AE60" stroke-width="2" filter="url(#shadow)"/>
+  <line x1="432" y1="92" x2="432" y2="162" stroke="#27AE60" stroke-width="1.5"/>
+  <line x1="568" y1="92" x2="568" y2="162" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="500" y="117" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Feed-Forward</text>
+  <text x="500" y="134" text-anchor="middle" font-size="10" fill="#555">보정값 계산</text>
+  <text x="500" y="151" text-anchor="middle" font-size="10" fill="#555">(웨이퍼 고유 상태)</text>
+  
+  <!-- ===== FEEDBACK PATH (middle) ===== -->
+  <!-- Label -->
+  <rect x="15" y="195" width="130" height="24" rx="4" fill="#E74C3C" opacity="0.15"/>
+  <text x="80" y="212" text-anchor="middle" font-size="12" font-weight="bold" fill="#E74C3C">Feedback 경로</text>
+  
+  <!-- fb_data (database shape) -->
+  <ellipse cx="150" cy="260" rx="75" ry="14" fill="#FADBD8" stroke="#E74C3C" stroke-width="2"/>
+  <rect x="75" y="260" width="150" height="50" fill="#FADBD8" stroke="none"/>
+  <line x1="75" y1="260" x2="75" y2="310" stroke="#E74C3C" stroke-width="2"/>
+  <line x1="225" y1="260" x2="225" y2="310" stroke="#E74C3C" stroke-width="2"/>
+  <ellipse cx="150" cy="310" rx="75" ry="14" fill="#FADBD8" stroke="#E74C3C" stroke-width="2"/>
+  <text x="150" y="280" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">이전 로트</text>
+  <text x="150" y="296" text-anchor="middle" font-size="10" fill="#555">CD/OVL 계측 결과</text>
+  
+  <!-- fb_calc -->
+  <rect x="310" y="255" width="160" height="70" fill="#FADBD8" stroke="#E74C3C" stroke-width="2" filter="url(#shadow)"/>
+  <line x1="322" y1="255" x2="322" y2="325" stroke="#E74C3C" stroke-width="1.5"/>
+  <line x1="458" y1="255" x2="458" y2="325" stroke="#E74C3C" stroke-width="1.5"/>
+  <text x="390" y="280" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Feedback</text>
+  <text x="390" y="297" text-anchor="middle" font-size="10" fill="#555">EWMA 예측</text>
+  <text x="390" y="314" text-anchor="middle" font-size="10" fill="#555">(장기 Drift 추적)</text>
+
+  <!-- ===== OFFSET (bottom-left) ===== -->
+  <!-- Label -->
+  <rect x="15" y="350" width="130" height="24" rx="4" fill="#F39C12" opacity="0.15"/>
+  <text x="80" y="367" text-anchor="middle" font-size="12" font-weight="bold" fill="#F39C12">고정 오프셋</text>
+  
+  <rect x="100" y="395" width="150" height="50" rx="12" fill="#F9E79F" stroke="#F39C12" stroke-width="2" filter="url(#shadow)"/>
+  <text x="175" y="416" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">고정 오프셋</text>
+  <text x="175" y="434" text-anchor="middle" font-size="10" fill="#555">(장비/챔버 고유)</text>
+  
+  <!-- ===== SUM CIRCLE ===== -->
+  <circle cx="620" cy="290" r="35" fill="#2C3E50" stroke="#1A252F" stroke-width="2" filter="url(#shadow)"/>
+  <text x="620" y="298" text-anchor="middle" font-size="28" font-weight="bold" fill="#FFFFFF">Σ</text>
+  
+  <!-- ===== RECIPE ===== -->
+  <rect x="700" y="255" width="140" height="70" rx="12" fill="#D2B4DE" stroke="#8E44AD" stroke-width="2" filter="url(#shadow)"/>
+  <text x="770" y="278" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">최종 보정값</text>
+  <text x="770" y="295" text-anchor="middle" font-size="10" fill="#555">ΔDose, ΔFocus</text>
+  <text x="770" y="312" text-anchor="middle" font-size="10" fill="#555">ΔOverlay Offset</text>
+  
+  <!-- ===== TOOL ===== -->
+  <rect x="880" y="255" width="100" height="70" rx="12" fill="#D6EAF8" stroke="#3498DB" stroke-width="2" filter="url(#shadow)"/>
+  <text x="930" y="282" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">스캐너/장비</text>
+  <text x="930" y="300" text-anchor="middle" font-size="10" fill="#555">보정 적용 후</text>
+  <text x="930" y="316" text-anchor="middle" font-size="10" fill="#555">공정</text>
+  
+  <!-- ===== ARROWS ===== -->
+  <!-- wafer_in → ff_measure (Corrected x2=220) -->
+  <line x1="170" y1="127" x2="220" y2="127" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- ff_measure → ff_calc (Corrected x2=420) -->
+  <line x1="370" y1="127" x2="420" y2="127" stroke="#27AE60" stroke-width="2" marker-end="url(#arrowhead-green)"/>
+  
+  <!-- ff_calc → sum (curve down to sum) -->
+  <path d="M 580 127 Q 600 127 610 200 Q 612 250 616 255" fill="none" stroke="#27AE60" stroke-width="2" marker-end="url(#arrowhead-green)"/>
+  <text x="595" y="195" font-size="10" font-weight="bold" fill="#27AE60">FF 성분</text>
+  
+  <!-- fb_data → fb_calc (Corrected x2=310) -->
+  <line x1="225" y1="290" x2="310" y2="290" stroke="#E74C3C" stroke-width="2" marker-end="url(#arrowhead-red)"/>
+  
+  <!-- fb_calc → sum (Corrected x2=585 for exact touch) -->
+  <line x1="470" y1="290" x2="585" y2="290" stroke="#E74C3C" stroke-width="2" marker-end="url(#arrowhead-red)"/>
+  <text x="525" y="282" font-size="10" font-weight="bold" fill="#E74C3C">FB 성분</text>
+  
+  <!-- offset → sum (Corrected path end to 606 322) -->
+  <path d="M 250 420 Q 500 420 600 335 L 606 322" fill="none" stroke="#F39C12" stroke-width="2" marker-end="url(#arrowhead-orange)"/>
+  <text x="460" y="395" font-size="10" font-weight="bold" fill="#F39C12">고정 성분</text>
+  
+  <!-- sum → recipe (Corrected x2=700) -->
+  <line x1="655" y1="290" x2="700" y2="290" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- recipe → tool (Corrected x2=880) -->
+  <line x1="840" y1="290" x2="880" y2="290" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- tool → fb_data (feedback loop, dashed) (Corrected end to 130 324) -->
+  <path d="M 930 325 L 930 480 Q 930 500 910 500 L 150 500 Q 130 500 130 480 L 130 324" 
+        fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowhead-dash)"/>
+  <rect x="420" y="488" width="180" height="22" rx="4" fill="white" stroke="none"/>
+  <text x="510" y="504" text-anchor="middle" font-size="10" fill="#999" font-style="italic">계측 결과 → 모델 업데이트</text>
+  
+  <!-- ===== FORMULA BOX ===== -->
+  <rect x="180" y="545" width="640" height="40" rx="8" fill="#F8F9FA" stroke="#BDC3C7" stroke-width="1.5"/>
+  <text x="500" y="571" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">
+    보정값 = FF(현재 웨이퍼) + FB(이전 추세) + Offset(장비 고유)
+  </text>
+</svg>

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="350" viewBox="0 0 900 350">
+  <defs>
+    <style>
+      .title-text { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1a1a2e; text-anchor: middle; }
+      .sub-text { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; fill: #444444; text-anchor: middle; }
+      .k1-text { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; fill: #1a1a2e; text-anchor: middle; font-weight: bold; }
+      .label-text { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; fill: #666666; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="350" fill="#FAFAFA" rx="8"/>
+
+  <!-- Panel 1: Annular -->
+  <g transform="translate(112.5, 0)">
+    <!-- Panel border -->
+    <rect x="-90" y="10" width="180" height="330" rx="6" fill="white" stroke="#CCCCCC" stroke-width="1"/>
+    <!-- Title -->
+    <text class="title-text" x="0" y="35">Annular</text>
+    <!-- Pupil circle background -->
+    <circle cx="0" cy="120" r="65" fill="#1a1a2e"/>
+    <!-- Ring illumination -->
+    <circle cx="0" cy="120" r="60" fill="#FFD700" opacity="0.9"/>
+    <!-- Inner dark circle (donut hole) -->
+    <circle cx="0" cy="120" r="35" fill="#1a1a2e"/>
+    <!-- Outer border -->
+    <circle cx="0" cy="120" r="65" fill="none" stroke="#CCCCCC" stroke-width="1.5"/>
+    <!-- Labels below -->
+    <text class="sub-text" x="0" y="210">다방향 패턴</text>
+    <text class="sub-text" x="0" y="225">(범용)</text>
+    <text class="label-text" x="0" y="252">k₁ ≈</text>
+    <text class="k1-text" x="0" y="268">~0.4</text>
+  </g>
+
+  <!-- Panel 2: Dipole (Y) -->
+  <g transform="translate(337.5, 0)">
+    <rect x="-90" y="10" width="180" height="330" rx="6" fill="white" stroke="#CCCCCC" stroke-width="1"/>
+    <text class="title-text" x="0" y="35">Dipole (Y)</text>
+    <!-- Pupil circle background -->
+    <circle cx="0" cy="120" r="65" fill="#1a1a2e"/>
+    <!-- Top pole -->
+    <ellipse cx="0" cy="80" rx="22" ry="25" fill="#FFD700" opacity="0.9"/>
+    <!-- Bottom pole -->
+    <ellipse cx="0" cy="160" rx="22" ry="25" fill="#FFD700" opacity="0.9"/>
+    <!-- Outer border -->
+    <circle cx="0" cy="120" r="65" fill="none" stroke="#CCCCCC" stroke-width="1.5"/>
+    <!-- Labels -->
+    <text class="sub-text" x="0" y="210">수평 라인 패턴</text>
+    <text class="sub-text" x="0" y="225">(1방향 최적)</text>
+    <text class="label-text" x="0" y="252">k₁ ≈</text>
+    <text class="k1-text" x="0" y="268">~0.3</text>
+  </g>
+
+  <!-- Panel 3: Quadrupole -->
+  <g transform="translate(562.5, 0)">
+    <rect x="-90" y="10" width="180" height="330" rx="6" fill="white" stroke="#CCCCCC" stroke-width="1"/>
+    <text class="title-text" x="0" y="35">Quadrupole</text>
+    <!-- Pupil circle background -->
+    <circle cx="0" cy="120" r="65" fill="#1a1a2e"/>
+    <!-- 4 poles at 45-degree positions -->
+    <!-- Top-right (45°) -->
+    <circle cx="33" cy="87" r="18" fill="#FFD700" opacity="0.9"/>
+    <!-- Bottom-right (315° / -45°) -->
+    <circle cx="33" cy="153" r="18" fill="#FFD700" opacity="0.9"/>
+    <!-- Bottom-left (225°) -->
+    <circle cx="-33" cy="153" r="18" fill="#FFD700" opacity="0.9"/>
+    <!-- Top-left (135°) -->
+    <circle cx="-33" cy="87" r="18" fill="#FFD700" opacity="0.9"/>
+    <!-- Outer border -->
+    <circle cx="0" cy="120" r="65" fill="none" stroke="#CCCCCC" stroke-width="1.5"/>
+    <!-- Labels -->
+    <text class="sub-text" x="0" y="210">수직+수평 패턴</text>
+    <text class="sub-text" x="0" y="225">(2방향 최적)</text>
+    <text class="label-text" x="0" y="252">k₁ ≈</text>
+    <text class="k1-text" x="0" y="268">~0.35</text>
+  </g>
+
+  <!-- Panel 4: Freeform (SMO) -->
+  <g transform="translate(787.5, 0)">
+    <rect x="-90" y="10" width="180" height="330" rx="6" fill="white" stroke="#CCCCCC" stroke-width="1"/>
+    <text class="title-text" x="0" y="35">Freeform (SMO)</text>
+    <!-- Pupil circle background -->
+    <circle cx="0" cy="120" r="65" fill="#1a1a2e"/>
+    <!-- Irregular blob shape using path - organic freeform -->
+    <path d="M -15,70 C -5,65 15,68 25,75 C 38,84 45,95 40,108 C 42,115 48,125 42,138 C 36,150 25,158 12,162 C 0,165 -15,160 -25,152 C -38,142 -45,128 -42,115 C -48,105 -45,90 -35,80 C -28,73 -22,72 -15,70 Z" fill="#FFD700" opacity="0.9"/>
+    <!-- Small scattered assist features -->
+    <circle cx="35" cy="72" r="5" fill="#FFD700" opacity="0.7"/>
+    <circle cx="-42" cy="100" r="4" fill="#FFD700" opacity="0.7"/>
+    <circle cx="48" cy="140" r="4.5" fill="#FFD700" opacity="0.7"/>
+    <circle cx="-38" cy="155" r="3.5" fill="#FFD700" opacity="0.7"/>
+    <ellipse cx="15" cy="170" rx="6" ry="3" fill="#FFD700" opacity="0.7"/>
+    <ellipse cx="-20" cy="68" rx="4" ry="6" fill="#FFD700" opacity="0.7"/>
+    <!-- Outer border -->
+    <circle cx="0" cy="120" r="65" fill="none" stroke="#CCCCCC" stroke-width="1.5"/>
+    <!-- Labels -->
+    <text class="sub-text" x="0" y="210">SMO 최적화</text>
+    <text class="sub-text" x="0" y="225">(특정 설계에 맞춤)</text>
+    <text class="label-text" x="0" y="252">k₁ ≈</text>
+    <text class="k1-text" x="0" y="268">~0.28</text>
+  </g>
+</svg>

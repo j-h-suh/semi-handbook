@@ -1,0 +1,70 @@
+{
+  "chapter": "02_10",
+  "chapter_title": "Overlay 에러 모델",
+  "images": [
+    {
+      "id": "02_10_img01",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "linear_6par_vector_map.png",
+      "title": "선형 6성분 시각화 (Translation/Rotation/Magnification)",
+      "description": "웨이퍼 위의 Overlay 벡터맵으로 6가지 선형 성분의 효과를 각각 시각화. Translation(균일 이동), Rotation(회전), Magnification(배율)이 웨이퍼 각 위치에서 어떤 방향/크기의 Overlay를 만드는지.",
+      "spec": {
+        "prompt": "A 2x3 grid of circular wafer diagrams showing the six linear overlay error components as vector arrow maps. Top row, left to right: (1) 'Translation X (Tx)' - all arrows pointing uniformly to the right; (2) 'Translation Y (Ty)' - all arrows pointing uniformly upward; (3) 'Rotation (R)' - arrows forming a circular/tangential pattern around the wafer center, clockwise or counterclockwise. Bottom row: (4) 'Magnification X (Mx)' - arrows pointing outward along X axis, larger at edges; (5) 'Magnification Y (My)' - arrows pointing outward along Y axis, larger at edges; (6) 'Combined (all 6 terms)' - a complex pattern combining all effects. Each wafer is shown as a gray circle with a notch. Arrow length proportional to overlay magnitude. Blue arrows for small, red for large. Clean technical illustration with white background.",
+        "style": "technical vector field visualization",
+        "aspect_ratio": "3:2"
+      }
+    },
+    {
+      "id": "02_10_img02",
+      "type": "C",
+      "method": "matplotlib",
+      "filename": "model_residual_comparison.png",
+      "title": "선형 vs 고차 vs AI 모델 잔차 비교",
+      "description": "Overlay 보정 모델의 정밀도 비교. 6par(선형) → HOWA(고차 다항식) → AI(ML 모델) 순으로 잔차(Residual)가 줄어드는 것을 웨이퍼 맵과 통계량으로 비교.",
+      "spec": {
+        "chart_type": "bar_chart_with_wafer_maps",
+        "comparison": [
+          {
+            "model": "6par (선형)",
+            "residual_3sigma": 2.8,
+            "parameters": 6,
+            "description": "Translation + Rotation + Magnification"
+          },
+          {
+            "model": "10par",
+            "residual_3sigma": 2.2,
+            "parameters": 10,
+            "description": "6par + 비대칭 배율 등"
+          },
+          {
+            "model": "HOWA (고차 다항식)",
+            "residual_3sigma": 1.6,
+            "parameters": "20~30",
+            "description": "최대 5차 다항식"
+          },
+          {
+            "model": "CPE (필드별)",
+            "residual_3sigma": 1.2,
+            "parameters": "N_fields × 2",
+            "description": "각 필드 독립 보정"
+          },
+          {
+            "model": "AI/ML (SMILE)",
+            "residual_3sigma": 0.9,
+            "parameters": "비파라메트릭",
+            "description": "비선형 + 다층 피처"
+          }
+        ],
+        "x_axis": {"label": "모델 종류"},
+        "y_axis": {"label": "잔차 3σ (nm)", "range": [0, 3.5]},
+        "target_line": {"value": 1.5, "label": "3nm 공정 요구"},
+        "colors": ["#4169E1", "#6495ED", "#32CD32", "#FFD700", "#FF6347"],
+        "annotations": [
+          {"text": "AI가 줄이는\n0.3~0.5nm →\n수율 수 % 차이", "position": "right"}
+        ],
+        "figsize": [10, 6]
+      }
+    }
+  ]
+}

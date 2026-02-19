@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 800" width="500" height="800">
+<defs>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap");
+    text { font-family: "Noto Sans KR", "AppleGothic", "Malgun Gothic", sans-serif; fill: #333333; }
+    .title {{ font-size: 14px; font-weight: 700; text-anchor: middle; }}
+    .label {{ font-size: 8px; text-anchor: end; }}
+    .label-en {{ font-size: 7px; fill: #666666; text-anchor: end; }}
+    .bracket-label {{ font-size: 9px; font-weight: 700; text-anchor: start; }}
+    .annotation {{ font-size: 7px; fill: #888888; }}
+  </style>
+  <pattern id="ild-pattern" patternUnits="userSpaceOnUse" width="6" height="6">
+    <rect width="6" height="6" fill="#e8e8e0"/>
+    <circle cx="3" cy="3" r="0.5" fill="#d8d8d0" opacity="0.5"/>
+  </pattern>
+</defs>
+<rect width="500" height="800" fill="#ffffff"/>
+<text x="250.0" y="28" class="title">BEOL 배선 계층 구조 (M1~M15)</text>
+<text x="250.0" y="42" style="font-size:9px; text-anchor:middle; fill:#888;">Back-End-Of-Line Metal Stack Cross-Section</text>
+<rect x="120" y="719.7206703910615" width="280" height="50.27932960893855" fill="#c8ddf0" stroke="#a0b8d0" stroke-width="0.5" rx="2"/>
+<rect x="135.0" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="139.0" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<rect x="169.28571428571428" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="173.28571428571428" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<rect x="203.57142857142856" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="207.57142857142856" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<rect x="237.85714285714286" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="241.85714285714286" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<rect x="272.1428571428571" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="276.1428571428571" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<rect x="306.42857142857144" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="310.42857142857144" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<rect x="340.7142857142857" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="344.7142857142857" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<rect x="375.0" y="740.8379888268157" width="10" height="8.04469273743017" fill="#a0c8e8" stroke="#6090b0" stroke-width="0.3"/>
+<rect x="379.0" y="734.804469273743" width="3" height="20.111731843575424" fill="#e05050" stroke="#a03030" stroke-width="0.3"/>
+<text x="115" y="744.8603351955308" class="label" dominant-baseline="middle">트랜지스터</text>
+<text x="115" y="753.8603351955308" class="label-en" dominant-baseline="middle">FEOL / Transistors</text>
+<rect x="211.33333333333331" y="713.6871508379888" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="304.66666666666663" y="713.6871508379888" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="698.6033519553073" width="280" height="15.083798882681565" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="145.51111111111112" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="176.62222222222223" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="207.73333333333332" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="238.84444444444446" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="269.9555555555555" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="301.0666666666666" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="332.17777777777775" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="363.2888888888889" y="699.6033519553073" width="11.200000000000001" height="13.083798882681565" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="706.1452513966481" class="label" dominant-baseline="middle">컨택</text>
+<text x="115" y="715.1452513966481" class="label-en" dominant-baseline="middle">Contact</text>
+<rect x="188.0" y="692.5698324022346" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="692.5698324022346" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="692.5698324022346" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="670.4469273743017" width="280" height="22.122905027932962" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="150.9" y="671.4469273743017" width="18.2" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="190.9" y="671.4469273743017" width="18.2" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="230.9" y="671.4469273743017" width="18.2" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="270.9" y="671.4469273743017" width="18.2" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="310.9" y="671.4469273743017" width="18.2" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="350.9" y="671.4469273743017" width="18.2" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="681.5083798882682" class="label" dominant-baseline="middle">M1</text>
+<rect x="188.0" y="664.413407821229" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="664.413407821229" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="664.413407821229" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="642.2905027932961" width="280" height="22.122905027932962" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="156.86666666666665" y="643.2905027932961" width="19.599999999999998" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="203.5333333333333" y="643.2905027932961" width="19.599999999999998" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="250.2" y="643.2905027932961" width="19.599999999999998" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="296.8666666666666" y="643.2905027932961" width="19.599999999999998" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="343.5333333333333" y="643.2905027932961" width="19.599999999999998" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="653.3519553072626" class="label" dominant-baseline="middle">M2</text>
+<rect x="188.0" y="636.2569832402235" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="636.2569832402235" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="636.2569832402235" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="614.1340782122905" width="280" height="22.122905027932962" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="165.5" y="615.1340782122905" width="21.0" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="221.5" y="615.1340782122905" width="21.0" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="277.5" y="615.1340782122905" width="21.0" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="333.5" y="615.1340782122905" width="21.0" height="20.122905027932962" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="625.1955307262571" class="label" dominant-baseline="middle">M3</text>
+<rect x="188.0" y="608.1005586592179" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="608.1005586592179" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="608.1005586592179" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="581.9553072625698" width="280" height="26.145251396648046" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="164.8" y="582.9553072625698" width="22.400000000000002" height="24.145251396648046" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="220.8" y="582.9553072625698" width="22.400000000000002" height="24.145251396648046" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="276.8" y="582.9553072625698" width="22.400000000000002" height="24.145251396648046" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="332.8" y="582.9553072625698" width="22.400000000000002" height="24.145251396648046" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="595.0279329608938" class="label" dominant-baseline="middle">M4</text>
+<rect x="188.0" y="575.9217877094972" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="575.9217877094972" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="575.9217877094972" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="546.7597765363128" width="280" height="29.16201117318436" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="162.0" y="547.7597765363128" width="28.0" height="27.16201117318436" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="218.0" y="547.7597765363128" width="28.0" height="27.16201117318436" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="274.0" y="547.7597765363128" width="28.0" height="27.16201117318436" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="330.0" y="547.7597765363128" width="28.0" height="27.16201117318436" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="561.3407821229049" class="label" dominant-baseline="middle">M5</text>
+<rect x="188.0" y="540.7262569832401" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="540.7262569832401" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="540.7262569832401" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="508.5474860335194" width="280" height="32.17877094972067" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="159.2" y="509.5474860335194" width="33.6" height="30.178770949720672" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="215.2" y="509.5474860335194" width="33.6" height="30.178770949720672" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="271.2" y="509.5474860335194" width="33.6" height="30.178770949720672" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="327.2" y="509.5474860335194" width="33.6" height="30.178770949720672" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="524.6368715083797" class="label" dominant-baseline="middle">M6</text>
+<rect x="188.0" y="502.5139664804468" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="502.5139664804468" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="502.5139664804468" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="467.3184357541898" width="280" height="35.19553072625698" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="156.4" y="468.3184357541898" width="39.2" height="33.19553072625698" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="212.4" y="468.3184357541898" width="39.2" height="33.19553072625698" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="268.4" y="468.3184357541898" width="39.2" height="33.19553072625698" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="324.4" y="468.3184357541898" width="39.2" height="33.19553072625698" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="484.9162011173183" class="label" dominant-baseline="middle">M7</text>
+<rect x="188.0" y="461.2849162011172" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="461.2849162011172" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="461.2849162011172" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="423.0726256983239" width="280" height="38.212290502793294" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="153.6" y="424.0726256983239" width="44.800000000000004" height="36.212290502793294" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="209.6" y="424.0726256983239" width="44.800000000000004" height="36.212290502793294" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="265.6" y="424.0726256983239" width="44.800000000000004" height="36.212290502793294" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="321.6" y="424.0726256983239" width="44.800000000000004" height="36.212290502793294" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="442.17877094972056" class="label" dominant-baseline="middle">M8</text>
+<rect x="188.0" y="417.0391061452513" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="417.0391061452513" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="417.0391061452513" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="375.8100558659217" width="280" height="41.22905027932961" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="150.8" y="376.8100558659217" width="50.4" height="39.22905027932961" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="206.8" y="376.8100558659217" width="50.4" height="39.22905027932961" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="262.8" y="376.8100558659217" width="50.4" height="39.22905027932961" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="318.8" y="376.8100558659217" width="50.4" height="39.22905027932961" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="396.4245810055865" class="label" dominant-baseline="middle">M9</text>
+<rect x="188.0" y="369.7765363128491" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="369.7765363128491" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="369.7765363128491" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="337.5977653631284" width="280" height="32.17877094972067" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="169.0" y="338.5977653631284" width="42.0" height="30.178770949720672" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="239.0" y="338.5977653631284" width="42.0" height="30.178770949720672" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="309.0" y="338.5977653631284" width="42.0" height="30.178770949720672" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="353.6871508379887" class="label" dominant-baseline="middle">M10</text>
+<rect x="188.0" y="331.5642458100558" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="258.0" y="331.5642458100558" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="328.0" y="331.5642458100558" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="295.36312849162005" width="280" height="36.201117318435756" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="188.13333333333333" y="296.36312849162005" width="50.4" height="34.201117318435756" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="281.46666666666664" y="296.36312849162005" width="50.4" height="34.201117318435756" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="313.4636871508379" class="label" dominant-baseline="middle">M11</text>
+<rect x="211.33333333333331" y="289.32960893854744" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="304.66666666666663" y="289.32960893854744" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="249.10614525139658" width="280" height="40.22346368715084" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="183.9333333333333" y="250.10614525139658" width="58.8" height="38.22346368715084" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="277.26666666666665" y="250.10614525139658" width="58.8" height="38.22346368715084" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="269.217877094972" class="label" dominant-baseline="middle">M12</text>
+<rect x="211.33333333333331" y="243.07262569832395" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="304.66666666666663" y="243.07262569832395" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="198.82681564245803" width="280" height="44.245810055865924" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="179.73333333333332" y="199.82681564245803" width="67.2" height="42.245810055865924" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="273.0666666666666" y="199.82681564245803" width="67.2" height="42.245810055865924" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="220.949720670391" class="label" dominant-baseline="middle">M13</text>
+<rect x="211.33333333333331" y="192.7932960893854" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="304.66666666666663" y="192.7932960893854" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="144.52513966480439" width="280" height="48.26815642458101" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="175.5333333333333" y="145.52513966480439" width="75.60000000000001" height="46.26815642458101" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="268.8666666666666" y="145.52513966480439" width="75.60000000000001" height="46.26815642458101" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="168.65921787709487" class="label" dominant-baseline="middle">M14</text>
+<rect x="211.33333333333331" y="138.49162011173175" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="304.66666666666663" y="138.49162011173175" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="86.20111731843565" width="280" height="52.29050279329609" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.3"/>
+<rect x="171.33333333333331" y="87.20111731843565" width="84.0" height="50.29050279329609" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<rect x="264.66666666666663" y="87.20111731843565" width="84.0" height="50.29050279329609" fill="#e8a030" stroke="#c08020" stroke-width="0.3" rx="0.5"/>
+<text x="115" y="112.3463687150837" class="label" dominant-baseline="middle">M15</text>
+<rect x="211.33333333333331" y="80.16759776536303" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="304.66666666666663" y="80.16759776536303" width="4" height="8.033519553072626" fill="#d08020" stroke="#b07018" stroke-width="0.3" rx="0.5"/>
+<rect x="120" y="49.9999999999999" width="280" height="30.16759776536313" fill="url(#ild-pattern)" stroke="#c0c0b0" stroke-width="0.5"/>
+<rect x="176.0" y="51.9999999999999" width="168.0" height="26.16759776536313" fill="#c0c0c0" stroke="#909090" stroke-width="0.5" rx="2"/>
+<text x="115" y="65.08379888268146" class="label" dominant-baseline="middle">본드 패드</text>
+<text x="115" y="74.08379888268146" class="label-en" dominant-baseline="middle">Bond Pad</text>
+<path d="M408,614.1340782122905 L416,614.1340782122905 L416,692.5698324022346 L408,692.5698324022346" fill="none" stroke="#4080c0" stroke-width="1.5"/>
+<line x1="416" y1="653.3519553072626" x2="422" y2="653.3519553072626" stroke="#4080c0" stroke-width="1.5"/>
+<text x="424" y="648.3519553072626" style="font-size:7px; fill:#4080c0; font-weight:600;" dominant-baseline="middle">로컬 배선</text>
+<text x="424" y="658.3519553072626" style="font-size:7px; fill:#4080c0; font-weight:600;" dominant-baseline="middle">Local (M1-M3)</text>
+<path d="M408,375.8100558659217 L416,375.8100558659217 L416,608.1005586592179 L408,608.1005586592179" fill="none" stroke="#40a060" stroke-width="1.5"/>
+<line x1="416" y1="491.9553072625698" x2="422" y2="491.9553072625698" stroke="#40a060" stroke-width="1.5"/>
+<text x="424" y="481.9553072625698" style="font-size:7px; fill:#40a060; font-weight:600;" dominant-baseline="middle">중간 배선</text>
+<text x="424" y="491.9553072625698" style="font-size:7px; fill:#40a060; font-weight:600;" dominant-baseline="middle">Intermediate</text>
+<text x="424" y="501.9553072625698" style="font-size:7px; fill:#40a060; font-weight:600;" dominant-baseline="middle">(M4-M9)</text>
+<path d="M408,86.20111731843565 L416,86.20111731843565 L416,369.7765363128491 L408,369.7765363128491" fill="none" stroke="#c06040" stroke-width="1.5"/>
+<line x1="416" y1="227.98882681564237" x2="422" y2="227.98882681564237" stroke="#c06040" stroke-width="1.5"/>
+<text x="424" y="217.98882681564237" style="font-size:7px; fill:#c06040; font-weight:600;" dominant-baseline="middle">글로벌 배선</text>
+<text x="424" y="227.98882681564237" style="font-size:7px; fill:#c06040; font-weight:600;" dominant-baseline="middle">Global</text>
+<text x="424" y="237.98882681564237" style="font-size:7px; fill:#c06040; font-weight:600;" dominant-baseline="middle">(M10-M15)</text>
+<text x="250.0" y="792" style="font-size:7px; fill:#aaa; text-anchor:middle;">배선 폭: 로컬 ~20nm → 글로벌 수 μm  |  ILD: Low-k 유전체</text>
+</svg>

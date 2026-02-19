@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" width="1000" height="500">
+  <defs>
+    <marker id="arrowYellow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#F1C40F"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#F39C12"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#E74C3C"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2ECC71"/>
+    </marker>
+    <linearGradient id="lensGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5DADE2"/>
+      <stop offset="100%" stop-color="#2E86C1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="500" fill="#FFFFFF"/>
+  
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#2C3E50">Bright Field vs Dark Field 검사 원리 비교</text>
+
+  <!-- Divider -->
+  <line x1="500" y1="40" x2="500" y2="490" stroke="#BDC3C7" stroke-width="1" stroke-dasharray="6,4"/>
+
+  <!-- ==================== BRIGHT FIELD (LEFT) ==================== -->
+  <text x="250" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2C3E50">Bright Field (BF)</text>
+
+  <!-- Light Source (top center) -->
+  <circle cx="250" cy="90" r="16" fill="#F1C40F" filter="url(#glow)"/>
+  <text x="250" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7D6608" font-weight="bold">☀</text>
+  <text x="250" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#7D6608">광원</text>
+
+  <!-- Incoming light: light source → beam splitter -->
+  <line x1="250" y1="108" x2="250" y2="175" stroke="#F1C40F" stroke-width="2.5" marker-end="url(#arrowYellow)"/>
+
+  <!-- Beam Splitter (angled rectangle) -->
+  <g transform="translate(250,195) rotate(45)">
+    <rect x="-25" y="-3" width="50" height="6" fill="#AEB6BF" stroke="#7F8C8D" stroke-width="1" opacity="0.7"/>
+  </g>
+  <text x="310" y="195" font-family="Arial, sans-serif" font-size="10" fill="#566573">빔 스플리터</text>
+
+  <!-- Light continues down: beam splitter → objective lens -->
+  <line x1="250" y1="215" x2="250" y2="255" stroke="#F1C40F" stroke-width="2.5" marker-end="url(#arrowYellow)"/>
+
+  <!-- Objective Lens -->
+  <ellipse cx="250" cy="270" rx="45" ry="10" fill="url(#lensGrad)" stroke="#2E86C1" stroke-width="1.5"/>
+  <text x="250" y="274" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#FFFFFF" font-weight="bold">대물렌즈</text>
+
+  <!-- Light continues down: lens → wafer -->
+  <line x1="250" y1="282" x2="250" y2="355" stroke="#F1C40F" stroke-width="2.5" marker-end="url(#arrowYellow)"/>
+  <!-- Second beam to defect area -->
+  <line x1="250" y1="282" x2="330" y2="355" stroke="#F1C40F" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowYellow)"/>
+
+  <!-- Wafer Surface -->
+  <rect x="130" y="360" width="240" height="12" fill="#D5DBDB" stroke="#95A5A6" stroke-width="1.5" rx="2"/>
+  <text x="250" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#566573">웨이퍼 표면</text>
+
+  <!-- Defect on surface -->
+  <circle cx="330" cy="358" r="7" fill="#E74C3C" stroke="#C0392B" stroke-width="1"/>
+  <text x="355" y="355" font-family="Arial, sans-serif" font-size="9" fill="#E74C3C" font-weight="bold">결함</text>
+
+  <!-- Normal reflection: wafer → lens → beam splitter → detector (specular) -->
+  <line x1="245" y1="358" x2="245" y2="282" stroke="#F39C12" stroke-width="2" marker-end="url(#arrowOrange)"/>
+  <line x1="245" y1="268" x2="245" y2="213" stroke="#F39C12" stroke-width="2" marker-end="url(#arrowOrange)"/>
+  <!-- Beam splitter reflects to detector (right) -->
+  <line x1="268" y1="185" x2="380" y2="120" stroke="#F39C12" stroke-width="2" marker-end="url(#arrowOrange)"/>
+
+  <!-- Scattered light from defect (lost - not reaching detector) -->
+  <line x1="330" y1="352" x2="360" y2="310" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrowRed)"/>
+  <line x1="330" y1="352" x2="300" y2="310" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrowRed)"/>
+  <text x="365" y="305" font-family="Arial, sans-serif" font-size="8" fill="#E74C3C">산란 (손실)</text>
+
+  <!-- Detector -->
+  <rect x="380" y="100" width="60" height="30" rx="4" fill="#2ECC71" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="410" y="118" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#FFFFFF" font-weight="bold">검출기</text>
+
+  <!-- Result description -->
+  <rect x="140" y="405" width="220" height="40" rx="6" fill="#F8F9FA" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="250" y="421" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2C3E50" font-weight="bold">정상면: 밝음 ○ / 결함: 어두운 점 ●</text>
+  <text x="250" y="437" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#7F8C8D">✦ 패턴 결함 탐지에 적합</text>
+
+  <!-- Visual brightness indicators -->
+  <rect x="165" y="450" width="40" height="14" rx="3" fill="#FDFEFE" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="185" y="461" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2C3E50">정상</text>
+  <rect x="215" y="450" width="40" height="14" rx="3" fill="#2C3E50"/>
+  <text x="235" y="461" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#FFFFFF">결함</text>
+
+  <!-- ==================== DARK FIELD (RIGHT) ==================== -->
+  <text x="750" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2C3E50">Dark Field (DF)</text>
+
+  <!-- Light Source (top left, oblique) -->
+  <circle cx="580" cy="90" r="16" fill="#F1C40F" filter="url(#glow)"/>
+  <text x="580" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7D6608" font-weight="bold">☀</text>
+  <text x="580" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7D6608">광원</text>
+  <text x="580" y="122" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#7D6608">(비스듬히 입사)</text>
+
+  <!-- Oblique incoming light → wafer surface -->
+  <line x1="595" y1="108" x2="720" y2="355" stroke="#F1C40F" stroke-width="2.5" marker-end="url(#arrowYellow)"/>
+  <!-- Second oblique beam to particle -->
+  <line x1="595" y1="108" x2="750" y2="355" stroke="#F1C40F" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowYellow)"/>
+
+  <!-- Objective Lens -->
+  <ellipse cx="750" cy="230" rx="45" ry="10" fill="url(#lensGrad)" stroke="#2E86C1" stroke-width="1.5"/>
+  <text x="750" y="234" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#FFFFFF" font-weight="bold">대물렌즈</text>
+
+  <!-- Wafer Surface -->
+  <rect x="630" y="360" width="240" height="12" fill="#D5DBDB" stroke="#95A5A6" stroke-width="1.5" rx="2"/>
+  <text x="750" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#566573">웨이퍼 표면</text>
+
+  <!-- Particle (defect) on surface -->
+  <circle cx="750" cy="356" r="8" fill="#E74C3C" stroke="#C0392B" stroke-width="1"/>
+  <text x="770" y="348" font-family="Arial, sans-serif" font-size="9" fill="#E74C3C" font-weight="bold">파티클</text>
+
+  <!-- Specular reflection from normal surface → goes away from detector -->
+  <line x1="720" y1="358" x2="870" y2="200" stroke="#F39C12" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowOrange)"/>
+  <text x="870" y="195" font-family="Arial, sans-serif" font-size="8" fill="#F39C12">정반사</text>
+  <text x="870" y="207" font-family="Arial, sans-serif" font-size="8" fill="#F39C12">(검출기 밖)</text>
+
+  <!-- Scattered light from particle → goes up through lens → detector -->
+  <line x1="750" y1="348" x2="750" y2="242" stroke="#E74C3C" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <line x1="745" y1="348" x2="730" y2="242" stroke="#E74C3C" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <line x1="755" y1="348" x2="770" y2="242" stroke="#E74C3C" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <text x="790" y="300" font-family="Arial, sans-serif" font-size="8" fill="#E74C3C">산란광</text>
+
+  <!-- Light through lens to detector -->
+  <line x1="750" y1="220" x2="750" y2="145" stroke="#2ECC71" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- Detector (top center) -->
+  <rect x="720" y="110" width="60" height="30" rx="4" fill="#2ECC71" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="750" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#FFFFFF" font-weight="bold">검출기</text>
+  <text x="750" y="136" text-anchor="middle" font-family="Arial, sans-serif" font-size="7" fill="#FFFFFF">(산란광만 수집)</text>
+
+  <!-- Result description -->
+  <rect x="640" y="405" width="220" height="40" rx="6" fill="#F8F9FA" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="750" y="421" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2C3E50" font-weight="bold">정상면: 어두움 ● / 파티클: 밝은 점 ○</text>
+  <text x="750" y="437" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#7F8C8D">✦ 파티클 탐지에 적합</text>
+
+  <!-- Visual brightness indicators -->
+  <rect x="665" y="450" width="40" height="14" rx="3" fill="#2C3E50"/>
+  <text x="685" y="461" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#FFFFFF">정상</text>
+  <rect x="715" y="450" width="40" height="14" rx="3" fill="#FDFEFE" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="735" y="461" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2C3E50">파티클</text>
+
+  <!-- Bottom legend -->
+  <rect x="300" y="472" width="400" height="22" rx="4" fill="#F8F9FA" stroke="#D5DBDB" stroke-width="1"/>
+  <line x1="320" y1="483" x2="340" y2="483" stroke="#F1C40F" stroke-width="2.5"/>
+  <text x="345" y="487" font-family="Arial, sans-serif" font-size="8" fill="#566573">입사광</text>
+  <line x1="400" y1="483" x2="420" y2="483" stroke="#F39C12" stroke-width="2"/>
+  <text x="425" y="487" font-family="Arial, sans-serif" font-size="8" fill="#566573">정반사</text>
+  <line x1="480" y1="483" x2="500" y2="483" stroke="#E74C3C" stroke-width="2"/>
+  <text x="505" y="487" font-family="Arial, sans-serif" font-size="8" fill="#566573">산란광</text>
+  <line x1="560" y1="483" x2="580" y2="483" stroke="#2ECC71" stroke-width="2"/>
+  <text x="585" y="487" font-family="Arial, sans-serif" font-size="8" fill="#566573">검출 신호</text>
+</svg>

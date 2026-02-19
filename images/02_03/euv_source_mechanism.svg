@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="900" height="400">
+  <defs>
+    <!-- Glow filters -->
+    <filter id="plasma-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="euv-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="laser-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Radial gradient for plasma -->
+    <radialGradient id="plasma-grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFF00"/>
+      <stop offset="40%" stop-color="#FF6600"/>
+      <stop offset="100%" stop-color="#FF3300" stop-opacity="0.3"/>
+    </radialGradient>
+    <!-- Mirror gradient -->
+    <linearGradient id="mirror-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E0E0E0"/>
+      <stop offset="50%" stop-color="#A0A0A0"/>
+      <stop offset="100%" stop-color="#C0C0C0"/>
+    </linearGradient>
+    <!-- Arrow marker -->
+    <marker id="arrow-white" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#FFFFFF" opacity="0.6"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#FF0000"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#9966FF"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="400" fill="#0a0a1a"/>
+
+  <!-- Title -->
+  <text x="450" y="30" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="bold" font-family="Arial, sans-serif">EUV 광원 동작 개념도 (LPP: Laser-Produced Plasma)</text>
+
+  <!-- Step labels at top -->
+  <text x="120" y="58" text-anchor="middle" fill="#66AAFF" font-size="10" font-family="Arial, sans-serif">1단계: 드롭릿 분사</text>
+  <text x="310" y="58" text-anchor="middle" fill="#66AAFF" font-size="10" font-family="Arial, sans-serif">2단계: Pre-pulse 평탄화</text>
+  <text x="500" y="58" text-anchor="middle" fill="#66AAFF" font-size="10" font-family="Arial, sans-serif">3단계: Main pulse 플라즈마</text>
+  <text x="720" y="58" text-anchor="middle" fill="#66AAFF" font-size="10" font-family="Arial, sans-serif">4단계: EUV 집광</text>
+
+  <!-- Dashed vertical separators -->
+  <line x1="215" y1="50" x2="215" y2="340" stroke="#333355" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="405" y1="50" x2="405" y2="340" stroke="#333355" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="610" y1="50" x2="610" y2="340" stroke="#333355" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- ========== STAGE 1: Droplet Generator ========== -->
+  <!-- Generator body -->
+  <rect x="40" y="130" width="60" height="100" rx="5" fill="#3a3a4a" stroke="#808080" stroke-width="1.5"/>
+  <text x="70" y="170" text-anchor="middle" fill="#CCCCCC" font-size="9" font-family="Arial, sans-serif">Sn 드롭릿</text>
+  <text x="70" y="183" text-anchor="middle" fill="#CCCCCC" font-size="9" font-family="Arial, sans-serif">생성기</text>
+  <text x="70" y="200" text-anchor="middle" fill="#999999" font-size="8" font-family="Arial, sans-serif">직경 ~25μm</text>
+  <!-- Nozzle -->
+  <rect x="95" y="165" width="20" height="10" rx="2" fill="#555566" stroke="#808080" stroke-width="1"/>
+
+  <!-- Droplets flying out -->
+  <circle cx="130" cy="180" r="5" fill="#808080" stroke="#999999" stroke-width="0.5"/>
+  <circle cx="148" cy="180" r="5" fill="#808080" stroke="#999999" stroke-width="0.5"/>
+  <circle cx="166" cy="180" r="5" fill="#808080" stroke="#999999" stroke-width="0.5"/>
+  <text x="148" y="205" text-anchor="middle" fill="#AAAAAA" font-size="8" font-family="Arial, sans-serif">주석 방울</text>
+
+  <!-- Flow arrow stage 1 -->
+  <line x1="175" y1="180" x2="210" y2="180" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.5" marker-end="url(#arrow-white)"/>
+
+  <!-- ========== STAGE 2: Pre-pulse ========== -->
+  <!-- Droplet arriving -->
+  <circle cx="250" cy="180" r="7" fill="#808080" stroke="#999999" stroke-width="0.5"/>
+
+  <!-- Pre-pulse laser beam (from upper right label box) -->
+  <line x1="330" y1="110" x2="255.3" y2="175.4" stroke="#FF0000" stroke-width="2.5" filter="url(#laser-glow)" marker-end="url(#arrow-red)"/>
+  <!-- Laser label -->
+  <rect x="330" y="75" width="100" height="35" rx="4" fill="#1a0a0a" stroke="#FF0000" stroke-width="1" opacity="0.8"/>
+  <text x="380" y="90" text-anchor="middle" fill="#FF6666" font-size="9" font-family="Arial, sans-serif">Pre-pulse</text>
+  <text x="380" y="103" text-anchor="middle" fill="#FF6666" font-size="9" font-family="Arial, sans-serif">CO₂ 레이저</text>
+
+  <!-- Flattened droplet (pancake) -->
+  <ellipse cx="330" cy="200" rx="20" ry="7" fill="#909090" stroke="#AAAAAA" stroke-width="1"/>
+  <text x="330" y="225" text-anchor="middle" fill="#CCCCCC" font-size="8" font-family="Arial, sans-serif">평탄화된 Sn</text>
+  <text x="330" y="236" text-anchor="middle" fill="#999999" font-size="8" font-family="Arial, sans-serif">(팬케이크형)</text>
+
+  <!-- Arrow from droplet to pancake -->
+  <path d="M260,180 Q285,200 310,200" stroke="#FFFFFF" stroke-width="1" fill="none" stroke-opacity="0.4" marker-end="url(#arrow-white)"/>
+
+  <!-- Flow arrow stage 2→3 -->
+  <line x1="355" y1="200" x2="400" y2="200" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.5" marker-end="url(#arrow-white)"/>
+
+  <!-- ========== STAGE 3: Main pulse + Plasma ========== -->
+  <!-- Main pulse laser beam (from lower right label box) -->
+  <line x1="520" y1="275" x2="485.2" y2="215.8" stroke="#FF0000" stroke-width="3.5" filter="url(#laser-glow)" marker-end="url(#arrow-red)"/>
+  <!-- Laser label -->
+  <rect x="520" y="275" width="120" height="45" rx="4" fill="#1a0a0a" stroke="#FF0000" stroke-width="1" opacity="0.8"/>
+  <text x="580" y="292" text-anchor="middle" fill="#FF6666" font-size="9" font-family="Arial, sans-serif">Main pulse</text>
+  <text x="580" y="305" text-anchor="middle" fill="#FF6666" font-size="9" font-family="Arial, sans-serif">CO₂ 레이저 (~25kW)</text>
+
+  <!-- Plasma ball -->
+  <circle cx="470" cy="190" r="30" fill="url(#plasma-grad)" filter="url(#plasma-glow)" opacity="0.9"/>
+  <circle cx="470" cy="190" r="18" fill="#FFFF66" opacity="0.5"/>
+  <!-- Plasma label -->
+  <text x="470" y="145" text-anchor="middle" fill="#FFCC00" font-size="9" font-weight="bold" font-family="Arial, sans-serif">Sn 플라즈마</text>
+  <text x="470" y="157" text-anchor="middle" fill="#FFAA00" font-size="8" font-family="Arial, sans-serif">~50만°C</text>
+
+  <!-- EUV emission rays (going right) -->
+  <line x1="500" y1="185" x2="600" y2="165" stroke="#9966FF" stroke-width="1.5" filter="url(#euv-glow)" opacity="0.7"/>
+  <line x1="500" y1="190" x2="600" y2="185" stroke="#9966FF" stroke-width="1.5" filter="url(#euv-glow)" opacity="0.7"/>
+  <line x1="500" y1="195" x2="600" y2="205" stroke="#9966FF" stroke-width="1.5" filter="url(#euv-glow)" opacity="0.7"/>
+  <line x1="500" y1="200" x2="600" y2="225" stroke="#9966FF" stroke-width="1.5" filter="url(#euv-glow)" opacity="0.7"/>
+  <text x="545" y="250" text-anchor="middle" fill="#9966FF" font-size="8" font-family="Arial, sans-serif">13.5nm EUV 방출</text>
+
+  <!-- ========== STAGE 4: Collector Mirror ========== -->
+  <!-- Collector mirror (parabolic arc) -->
+  <path d="M700,100 Q660,190 700,280" stroke="url(#mirror-grad)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- Mirror surface lines -->
+  <path d="M702,110 Q665,190 702,270" stroke="#E0E0E0" stroke-width="1" fill="none" opacity="0.3"/>
+  <!-- Mirror label -->
+  <text x="740" y="175" text-anchor="start" fill="#CCCCCC" font-size="9" font-family="Arial, sans-serif">Collector</text>
+  <text x="740" y="188" text-anchor="start" fill="#CCCCCC" font-size="9" font-family="Arial, sans-serif">Mirror</text>
+  <text x="740" y="201" text-anchor="start" fill="#999999" font-size="8" font-family="Arial, sans-serif">(타원면 거울)</text>
+
+  <!-- Reflected EUV rays converging to output -->
+  <line x1="695" y1="140" x2="830" y2="190" stroke="#9966FF" stroke-width="1.5" filter="url(#euv-glow)" opacity="0.6" marker-end="url(#arrow-purple)"/>
+  <line x1="695" y1="175" x2="830" y2="190" stroke="#9966FF" stroke-width="2" filter="url(#euv-glow)" opacity="0.8" marker-end="url(#arrow-purple)"/>
+  <line x1="695" y1="210" x2="830" y2="190" stroke="#9966FF" stroke-width="1.5" filter="url(#euv-glow)" opacity="0.6" marker-end="url(#arrow-purple)"/>
+  <line x1="695" y1="245" x2="830" y2="192" stroke="#9966FF" stroke-width="1" filter="url(#euv-glow)" opacity="0.4"/>
+
+  <!-- EUV output point -->
+  <circle cx="840" cy="190" r="8" fill="#9966FF" opacity="0.5" filter="url(#euv-glow)"/>
+  <circle cx="840" cy="190" r="3" fill="#CC99FF"/>
+  <!-- Output arrow -->
+  <line x1="850" y1="190" x2="890" y2="190" stroke="#9966FF" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <!-- Output label -->
+  <text x="845" y="160" text-anchor="middle" fill="#CC99FF" font-size="9" font-weight="bold" font-family="Arial, sans-serif">EUV 출력</text>
+  <text x="845" y="173" text-anchor="middle" fill="#9966FF" font-size="8" font-family="Arial, sans-serif">~500W</text>
+  <text x="845" y="220" text-anchor="middle" fill="#9966FF" font-size="8" font-family="Arial, sans-serif">→ 스캐너로</text>
+
+  <!-- ========== Bottom annotation ========== -->
+  <rect x="300" y="350" width="300" height="30" rx="15" fill="#1a1a2e" stroke="#66AAFF" stroke-width="1" opacity="0.8"/>
+  <text x="450" y="370" text-anchor="middle" fill="#66AAFF" font-size="12" font-weight="bold" font-family="Arial, sans-serif">⚡ 초당 50,000회 반복</text>
+
+  <!-- Horizontal flow arrow at bottom -->
+  <line x1="60" y1="335" x2="850" y2="335" stroke="#444466" stroke-width="1" stroke-dasharray="6,3" marker-end="url(#arrow-white)"/>
+  <text x="450" y="330" text-anchor="middle" fill="#666688" font-size="8" font-family="Arial, sans-serif">프로세스 흐름 →</text>
+</svg>

@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" font-family="'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <defs>
+    <marker id="arrowRight" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <marker id="arrowFeedback" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9b59b6"/>
+    </marker>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fafbfc"/>
+      <stop offset="100%" stop-color="#f0f2f5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="600" fill="url(#bgGrad)" rx="8"/>
+
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">SMILE 시스템 아키텍처 종합</text>
+  <text x="500" y="48" text-anchor="middle" font-size="10" fill="#888">Edge + Central 2계층 구조 │ 기술 스택: Kafka + Spark + XGBoost + FastAPI + MLflow + Grafana</text>
+
+  <!-- ═══════════ 장비 레이어 (Equipment) ═══════════ -->
+  <rect x="20" y="65" width="200" height="230" rx="6" fill="#333" opacity="0.06" stroke="#333" stroke-width="1"/>
+  <text x="120" y="82" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">장비 레이어</text>
+
+  <!-- Scanner -->
+  <rect x="32" y="92" width="176" height="40" rx="5" fill="#fff" stroke="#333" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="120" y="110" text-anchor="middle" font-size="11" fill="#333">스캐너 (ASML)</text>
+  <text x="120" y="125" text-anchor="middle" font-size="8.5" fill="#888">EDA / Interface A</text>
+
+  <!-- Track -->
+  <rect x="32" y="140" width="176" height="40" rx="5" fill="#fff" stroke="#333" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="120" y="158" text-anchor="middle" font-size="11" fill="#333">트랙 (TEL)</text>
+  <text x="120" y="173" text-anchor="middle" font-size="8.5" fill="#888">SECS/GEM</text>
+
+  <!-- Metrology -->
+  <rect x="32" y="188" width="176" height="40" rx="5" fill="#fff" stroke="#333" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="120" y="206" text-anchor="middle" font-size="11" fill="#333">계측기 (KLA)</text>
+  <text x="120" y="221" text-anchor="middle" font-size="8.5" fill="#888">계측 DB API</text>
+
+  <!-- MES -->
+  <rect x="32" y="236" width="176" height="40" rx="5" fill="#fff" stroke="#333" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="120" y="254" text-anchor="middle" font-size="11" fill="#333">MES</text>
+  <text x="120" y="269" text-anchor="middle" font-size="8.5" fill="#888">MES API (REST)</text>
+
+  <!-- ═══════════ Kafka (데이터 수집) ═══════════ -->
+  <rect x="255" y="105" width="100" height="200" rx="6" fill="#f39c12" opacity="0.12" stroke="#f39c12" stroke-width="1.2"/>
+  <text x="305" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#c17d00">데이터 수집</text>
+  <rect x="267" y="145" width="76" height="120" rx="20" fill="#fff" stroke="#f39c12" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="305" y="195" text-anchor="middle" font-size="11" font-weight="bold" fill="#c17d00">Apache</text>
+  <text x="305" y="212" text-anchor="middle" font-size="13" font-weight="bold" fill="#f39c12">Kafka</text>
+  <text x="305" y="230" text-anchor="middle" font-size="8" fill="#888">실시간 스트리밍</text>
+
+  <!-- Arrows: Equipment → Kafka -->
+  <line x1="208" y1="112" x2="255" y2="165" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+  <line x1="208" y1="160" x2="255" y2="185" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+  <line x1="208" y1="208" x2="255" y2="205" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+  <line x1="208" y1="256" x2="255" y2="225" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+
+  <!-- ═══════════ 추론 레이어 (Edge) ═══════════ -->
+  <rect x="390" y="65" width="260" height="295" rx="6" fill="#4a90d9" opacity="0.07" stroke="#4a90d9" stroke-width="1.2"/>
+  <text x="520" y="82" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a90d9">추론 레이어 (Edge)</text>
+
+  <!-- Feature Engine -->
+  <rect x="402" y="92" width="236" height="55" rx="5" fill="#fff" stroke="#4a90d9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="520" y="113" text-anchor="middle" font-size="12" font-weight="bold" fill="#2c6faa">피처 엔진</text>
+  <text x="520" y="130" text-anchor="middle" font-size="9" fill="#888">실시간 변환 · 파생 피처 생성</text>
+
+  <!-- VM Server -->
+  <rect x="402" y="158" width="236" height="65" rx="5" fill="#fff" stroke="#4a90d9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="520" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#2c6faa">VM 서버</text>
+  <text x="520" y="197" text-anchor="middle" font-size="9.5" fill="#555">XGBoost + FastAPI</text>
+  <text x="520" y="213" text-anchor="middle" font-size="8.5" fill="#888">RI 평가 (Reliability Index)</text>
+
+  <!-- APC Server -->
+  <rect x="402" y="234" width="236" height="65" rx="5" fill="#fff" stroke="#4a90d9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="520" y="256" text-anchor="middle" font-size="12" font-weight="bold" fill="#2c6faa">APC 서버</text>
+  <text x="520" y="273" text-anchor="middle" font-size="9.5" fill="#555">EWMA + VM 하이브리드</text>
+  <text x="520" y="289" text-anchor="middle" font-size="8.5" fill="#888">Safety Guard · 클램핑</text>
+
+  <!-- Arrows: Kafka → Feature → VM → APC -->
+  <line x1="355" y1="205" x2="400" y2="120" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+  <line x1="520" y1="147" x2="520" y2="156" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+  <line x1="520" y1="223" x2="520" y2="232" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+
+  <!-- ═══════════ 학습 레이어 (Central) ═══════════ -->
+  <rect x="255" y="380" width="395" height="130" rx="6" fill="#2ecc71" opacity="0.08" stroke="#2ecc71" stroke-width="1.2"/>
+  <text x="452" y="398" text-anchor="middle" font-size="11" font-weight="bold" fill="#239b56">학습 레이어 (Central)</text>
+
+  <!-- Spark -->
+  <rect x="267" y="410" width="115" height="50" rx="5" fill="#fff" stroke="#2ecc71" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="324" y="432" text-anchor="middle" font-size="11" font-weight="bold" fill="#239b56">Apache Spark</text>
+  <text x="324" y="449" text-anchor="middle" font-size="8.5" fill="#888">데이터 처리</text>
+
+  <!-- GPU Server -->
+  <rect x="395" y="410" width="115" height="50" rx="5" fill="#fff" stroke="#2ecc71" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="452" y="432" text-anchor="middle" font-size="11" font-weight="bold" fill="#239b56">GPU 서버</text>
+  <text x="452" y="449" text-anchor="middle" font-size="8.5" fill="#888">모델 학습</text>
+
+  <!-- MLflow -->
+  <rect x="523" y="410" width="115" height="50" rx="5" fill="#fff" stroke="#2ecc71" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="580" y="432" text-anchor="middle" font-size="11" font-weight="bold" fill="#239b56">Model Registry</text>
+  <text x="580" y="449" text-anchor="middle" font-size="8.5" fill="#888">MLflow</text>
+
+  <!-- Arrows inside training -->
+  <line x1="382" y1="435" x2="393" y2="435" stroke="#555" stroke-width="1" marker-end="url(#arrowRight)"/>
+  <line x1="510" y1="435" x2="521" y2="435" stroke="#555" stroke-width="1" marker-end="url(#arrowRight)"/>
+
+  <!-- Arrow: Kafka → Spark -->
+  <line x1="305" y1="305" x2="305" y2="408" stroke="#555" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrowRight)"/>
+  <text x="298" y="355" text-anchor="end" font-size="8" fill="#888" transform="rotate(-90,298,355)">배치 데이터</text>
+
+  <!-- Arrow: MLflow → VM Server (새 모델 배포) -->
+  <line x1="610" y1="410" x2="610" y2="195" stroke="#2ecc71" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowRight)"/>
+  <text x="618" y="330" font-size="8" fill="#239b56">모델 배포</text>
+
+  <!-- ═══════════ 모니터링 레이어 ═══════════ -->
+  <rect x="690" y="65" width="290" height="230" rx="6" fill="#e85d5d" opacity="0.07" stroke="#e85d5d" stroke-width="1.2"/>
+  <text x="835" y="82" text-anchor="middle" font-size="11" font-weight="bold" fill="#c0392b">모니터링 레이어</text>
+
+  <!-- Grafana -->
+  <rect x="702" y="92" width="266" height="75" rx="5" fill="#fff" stroke="#e85d5d" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="835" y="115" text-anchor="middle" font-size="12" font-weight="bold" fill="#c0392b">Grafana 대시보드</text>
+  <text x="835" y="134" text-anchor="middle" font-size="9.5" fill="#555">RMSE 추이 · PSI · 잔차 분포</text>
+  <text x="835" y="151" text-anchor="middle" font-size="8.5" fill="#888">실시간 VM 성능 모니터링</text>
+
+  <!-- Alert Service -->
+  <rect x="702" y="180" width="266" height="55" rx="5" fill="#fff" stroke="#e85d5d" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="835" y="203" text-anchor="middle" font-size="12" font-weight="bold" fill="#c0392b">알림 서비스</text>
+  <text x="835" y="222" text-anchor="middle" font-size="9.5" fill="#555">Drift 감지 → 재학습 트리거</text>
+
+  <!-- Arrows: Edge → Monitoring -->
+  <line x1="638" y1="190" x2="700" y2="130" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+  <line x1="638" y1="260" x2="700" y2="207" stroke="#555" stroke-width="1.2" marker-end="url(#arrowRight)"/>
+  <text x="670" y="152" font-size="8" fill="#888">메트릭</text>
+
+  <!-- ═══════════ 피드백 루프 ═══════════ -->
+  <!-- APC → Scanner (보정값) -->
+  <path d="M 402,275 C 300,340 150,340 80,295" fill="none" stroke="#9b59b6" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arrowFeedback)"/>
+  <text x="230" y="335" text-anchor="middle" font-size="9" font-weight="bold" fill="#9b59b6">보정값 전달</text>
+  <text x="230" y="348" text-anchor="middle" font-size="7.5" fill="#9b59b6">(피드백 루프)</text>
+
+  <!-- Monitoring → Training (재학습) -->
+  <path d="M 835,235 C 835,360 700,490 650,460" fill="none" stroke="#9b59b6" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrowFeedback)"/>
+  <text x="780" y="380" text-anchor="middle" font-size="8" fill="#9b59b6">재학습 트리거</text>
+
+  <!-- ═══════════ 범례 ═══════════ -->
+  <rect x="690" y="380" width="290" height="130" rx="6" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="400" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">범례</text>
+
+  <rect x="705" y="412" width="14" height="14" rx="2" fill="#333" opacity="0.3"/>
+  <text x="725" y="424" font-size="9" fill="#555">장비 레이어</text>
+
+  <rect x="705" y="432" width="14" height="14" rx="2" fill="#f39c12" opacity="0.4"/>
+  <text x="725" y="444" font-size="9" fill="#555">데이터 수집 (Kafka)</text>
+
+  <rect x="705" y="452" width="14" height="14" rx="2" fill="#4a90d9" opacity="0.3"/>
+  <text x="725" y="464" font-size="9" fill="#555">추론 (Edge)</text>
+
+  <rect x="835" y="412" width="14" height="14" rx="2" fill="#2ecc71" opacity="0.3"/>
+  <text x="855" y="424" font-size="9" fill="#555">학습 (Central)</text>
+
+  <rect x="835" y="432" width="14" height="14" rx="2" fill="#e85d5d" opacity="0.3"/>
+  <text x="855" y="444" font-size="9" fill="#555">모니터링</text>
+
+  <line x1="835" y1="459" x2="865" y2="459" stroke="#9b59b6" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="872" y="464" font-size="9" fill="#555">피드백 루프</text>
+
+  <!-- Bottom annotation -->
+  <text x="500" y="535" text-anchor="middle" font-size="9" fill="#888">4.5장 Edge + Central 2계층 구조 │ 피드백 루프가 시스템을 '살아 있게' 만든다</text>
+  <text x="500" y="552" text-anchor="middle" font-size="8.5" fill="#aaa">프로토콜: EDA (스캐너) · SECS/GEM (트랙) · REST API (계측/MES) │ ch.04_10</text>
+
+  <!-- Watermark -->
+  <text x="980" y="590" text-anchor="end" font-size="7" fill="#ccc">SMILE System Architecture │ Semi-Handbook</text>
+</svg>

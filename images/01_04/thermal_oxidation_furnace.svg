@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" width="800" height="350" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrowRight" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4a8c4a"/>
+    </marker>
+    <marker id="arrowLeft" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" fill="#888"/>
+    </marker>
+    <linearGradient id="heatGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5a030" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#f5a030" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#f5a030" stop-opacity="0.7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="350" fill="#fafafa" rx="6"/>
+
+  <!-- Title -->
+  <text x="400" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">열산화 퍼니스 단면도 (Thermal Oxidation Furnace Cross-Section)</text>
+
+  <!-- Outer quartz tube -->
+  <rect x="100" y="60" width="600" height="170" rx="12" fill="#e8e0d0" stroke="#b0a890" stroke-width="2.5"/>
+  <!-- Quartz tube label -->
+  <text x="105" y="54" font-size="10" fill="#665" font-weight="bold">석영 튜브 (Quartz Tube)</text>
+
+  <!-- Heating coils - top -->
+  <g stroke="#f5a030" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M130,68 C145,58 155,78 170,68 C185,58 195,78 210,68 C225,58 235,78 250,68 C265,58 275,78 290,68 C305,58 315,78 330,68 C345,58 355,78 370,68 C385,58 395,78 410,68 C425,58 435,78 450,68 C465,58 475,78 490,68 C505,58 515,78 530,68 C545,58 555,78 570,68 C585,58 595,78 610,68 C625,58 635,78 650,68 C665,58 675,78 680,68"/>
+  </g>
+  <!-- Heating coils - bottom -->
+  <g stroke="#f5a030" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M130,222 C145,212 155,232 170,222 C185,212 195,232 210,222 C225,212 235,232 250,222 C265,212 275,232 290,222 C305,212 315,232 330,222 C345,212 355,232 370,222 C385,212 395,232 410,222 C425,212 435,232 450,222 C465,212 475,232 490,222 C505,212 515,232 530,222 C545,212 555,232 570,222 C585,212 595,232 610,222 C625,212 635,232 650,222 C665,212 675,232 680,222"/>
+  </g>
+
+  <!-- Heater label -->
+  <line x1="690" y1="68" x2="730" y2="48" stroke="#c07818" stroke-width="1"/>
+  <text x="732" y="45" font-size="9" fill="#c07818">저항 가열 코일</text>
+  <text x="732" y="55" font-size="8" fill="#c07818">(Heating Coil)</text>
+  <text x="732" y="65" font-size="8" fill="#c07818">800–1200°C</text>
+
+  <!-- Inner chamber (process space) -->
+  <rect x="130" y="85" width="540" height="120" rx="6" fill="#f8f6f2" stroke="#ccc" stroke-width="1" stroke-dasharray="4,2"/>
+
+  <!-- Loading door (left) -->
+  <rect x="90" y="75" width="20" height="140" rx="3" fill="#8899aa" stroke="#556677" stroke-width="2"/>
+  <text x="78" y="260" font-size="10" fill="#556677" font-weight="bold" text-anchor="middle">로딩 도어</text>
+  <text x="78" y="272" font-size="8" fill="#556677" text-anchor="middle">(Loading Door)</text>
+
+  <!-- Wafer boat structure -->
+  <rect x="250" y="100" width="300" height="90" rx="2" fill="none" stroke="#9ab" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <!-- Boat rails top -->
+  <line x1="250" y1="105" x2="550" y2="105" stroke="#9ab" stroke-width="2"/>
+  <!-- Boat rails bottom -->
+  <line x1="250" y1="185" x2="550" y2="185" stroke="#9ab" stroke-width="2"/>
+
+  <!-- Individual wafers (vertical arrangement) -->
+  <g fill="#c8ddf0" stroke="#8aaac8" stroke-width="1.2">
+    <rect x="265" y="108" width="3" height="74" rx="1"/>
+    <rect x="280" y="108" width="3" height="74" rx="1"/>
+    <rect x="295" y="108" width="3" height="74" rx="1"/>
+    <rect x="310" y="108" width="3" height="74" rx="1"/>
+    <rect x="325" y="108" width="3" height="74" rx="1"/>
+    <rect x="340" y="108" width="3" height="74" rx="1"/>
+    <rect x="355" y="108" width="3" height="74" rx="1"/>
+    <rect x="370" y="108" width="3" height="74" rx="1"/>
+    <rect x="385" y="108" width="3" height="74" rx="1"/>
+    <rect x="400" y="108" width="3" height="74" rx="1"/>
+    <rect x="415" y="108" width="3" height="74" rx="1"/>
+    <rect x="430" y="108" width="3" height="74" rx="1"/>
+    <rect x="445" y="108" width="3" height="74" rx="1"/>
+    <rect x="460" y="108" width="3" height="74" rx="1"/>
+    <rect x="475" y="108" width="3" height="74" rx="1"/>
+    <rect x="490" y="108" width="3" height="74" rx="1"/>
+    <rect x="505" y="108" width="3" height="74" rx="1"/>
+    <rect x="520" y="108" width="3" height="74" rx="1"/>
+    <rect x="535" y="108" width="3" height="74" rx="1"/>
+  </g>
+
+  <!-- Wafer boat label (MOVED to avoid overlap) -->
+  <line x1="280" y1="190" x2="280" y2="255" stroke="#668" stroke-width="1"/>
+  <text x="280" y="265" text-anchor="middle" font-size="10" fill="#446" font-weight="bold">웨이퍼 보트 (Wafer Boat)</text>
+  <text x="280" y="277" text-anchor="middle" font-size="8" fill="#668">25–50장 수직 적재</text>
+
+  <!-- Wafer label -->
+  <line x1="538" y1="145" x2="580" y2="145" stroke="#668" stroke-width="1"/>
+  <line x1="580" y1="145" x2="580" y2="250" stroke="#668" stroke-width="1"/>
+  <text x="580" y="262" text-anchor="middle" font-size="10" fill="#668">개별 웨이퍼</text>
+  <text x="580" y="274" text-anchor="middle" font-size="8" fill="#668">(Wafers)</text>
+
+  <!-- Gas inlet (left side) -->
+  <rect x="30" y="125" width="65" height="40" rx="4" fill="#a0d0a0" stroke="#5a9a5a" stroke-width="1.5"/>
+  <text x="62" y="141" text-anchor="middle" font-size="10" fill="#2a6a2a" font-weight="bold">가스 유입구</text>
+  <text x="62" y="153" text-anchor="middle" font-size="8" fill="#2a6a2a">(Gas Inlet)</text>
+  <text x="62" y="163" text-anchor="middle" font-size="7" fill="#2a6a2a">O₂ or H₂O</text>
+
+  <!-- Gas flow arrows -->
+  <line x1="95" y1="145" x2="130" y2="145" stroke="#4a8c4a" stroke-width="2" marker-end="url(#arrowRight)"/>
+  <line x1="160" y1="145" x2="240" y2="145" stroke="#4a8c4a" stroke-width="1.5" marker-end="url(#arrowRight)" stroke-dasharray="6,3"/>
+  <line x1="555" y1="145" x2="650" y2="145" stroke="#4a8c4a" stroke-width="1.5" marker-end="url(#arrowRight)" stroke-dasharray="6,3"/>
+
+  <!-- Exhaust (right side) -->
+  <rect x="705" y="125" width="65" height="40" rx="4" fill="#d0c8c0" stroke="#998" stroke-width="1.5"/>
+  <text x="737" y="141" text-anchor="middle" font-size="10" fill="#554" font-weight="bold">배기구</text>
+  <text x="737" y="153" text-anchor="middle" font-size="8" fill="#554">(Exhaust)</text>
+
+  <!-- Arrow to exhaust -->
+  <line x1="670" y1="145" x2="705" y2="145" stroke="#4a8c4a" stroke-width="2" marker-end="url(#arrowRight)"/>
+
+  <!-- Temperature flat zone indicator -->
+  <line x1="200" y1="240" x2="600" y2="240" stroke="#e05030" stroke-width="2"/>
+  <line x1="200" y1="235" x2="200" y2="245" stroke="#e05030" stroke-width="2"/>
+  <line x1="600" y1="235" x2="600" y2="245" stroke="#e05030" stroke-width="2"/>
+  <text x="400" y="252" text-anchor="middle" font-size="9" fill="#e05030" font-weight="bold">Flat Zone (균일 온도 영역)</text>
+
+  <!-- Temperature profile curve (simplified) -->
+  <polyline points="130,310 180,305 220,295 260,290 300,288 400,287 500,288 540,290 580,295 620,305 660,310"
+    fill="none" stroke="#e05030" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="400" y="300" text-anchor="middle" font-size="8" fill="#e05030">온도 프로파일 (Temperature Profile)</text>
+  <text x="140" y="322" font-size="7" fill="#e05030">Low</text>
+  <text x="390" y="282" font-size="7" fill="#e05030">~1000°C</text>
+  <text x="650" y="322" font-size="7" fill="#e05030">Low</text>
+
+  <!-- Reaction equations at bottom -->
+  <rect x="120" y="328" width="560" height="18" rx="3" fill="#f0f0e8" stroke="#ccc" stroke-width="0.5"/>
+  <text x="400" y="341" text-anchor="middle" font-size="9" fill="#444">
+    건식(Dry): Si + O₂ → SiO₂   |   습식(Wet): Si + 2H₂O → SiO₂ + 2H₂
+  </text>
+
+  <!-- O2 gas flow label -->
+  <text x="190" y="138" font-size="8" fill="#4a8c4a">O₂ →</text>
+</svg>

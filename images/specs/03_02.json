@@ -1,0 +1,88 @@
+{
+  "chapter": "03_02",
+  "chapter_title": "결함 검사와 분류",
+  "images": [
+    {
+      "id": "03_02_img01",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "defect_sem_types.png",
+      "title": "결함 유형별 SEM 이미지 — 브릿지, 파티클, 미오픈",
+      "description": "반도체 웨이퍼에서 발견되는 대표적 결함 3종의 SEM(주사전자현미경) 이미지",
+      "spec": {
+        "prompt": "Three side-by-side scanning electron microscope (SEM) images of semiconductor wafer defects at high magnification (50,000x). Left: 'Bridge' defect showing two adjacent metal lines connected by an unwanted material bridge causing a short circuit. Center: 'Particle' defect showing a spherical foreign particle (approximately 50nm diameter) sitting on top of a patterned circuit line. Right: 'Missing Hole' (unopened via) defect showing a contact hole that failed to fully etch through the dielectric layer. Each image should look like an authentic grayscale SEM micrograph with the characteristic bright-edge effect, scale bar (100nm), and defect type label at the bottom.",
+        "style": "photorealistic_sem",
+        "dimensions": "1200x400"
+      }
+    },
+    {
+      "id": "03_02_img02",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "voltage_contrast_principle.png",
+      "title": "Voltage Contrast 원리 — 정상 연결 vs 단선(Open)",
+      "description": "e-beam 검사의 핵심 기능인 Voltage Contrast의 동작 원리. 접지 연결된 패턴(밝음)과 단선된 패턴(어두움)의 밝기 차이를 통해 비파괴로 전기적 연결 상태를 확인하는 개념을 보여준다.",
+      "spec": {
+        "prompt": "A technical cross-section diagram comparing Voltage Contrast in e-beam inspection. Left side shows 'Normal (Connected)': an e-beam hits a metal via pattern that is electrically connected to ground, electrons flow away freely, secondary electrons emit normally making the pattern appear BRIGHT. Right side shows 'Open (Disconnected)': the same e-beam hits a via that is electrically disconnected (broken contact), negative charge accumulates on the floating pattern, suppressing secondary electron emission, making the pattern appear DARK. Include arrows showing electron flow direction, charge symbols (+/-), and a brightness comparison bar at the bottom. Clean technical illustration with labels in English, blue e-beam rays, white background.",
+        "style": "technical_diagram",
+        "dimensions": "1000x600",
+        "color_scheme": {
+          "ebeam": "#3498DB",
+          "metal": "#95A5A6",
+          "substrate": "#F5E6CC",
+          "connected_brightness": "#FFFFFF",
+          "disconnected_darkness": "#2C3E50"
+        }
+      }
+    },
+    {
+      "id": "03_02_img03",
+      "type": "B",
+      "method": "svg",
+      "filename": "bf_vs_df_inspection.svg",
+      "title": "Bright Field vs Dark Field 검사 원리 비교",
+      "description": "광학 결함 검사의 두 가지 조명 모드(BF, DF)의 광학적 원리와 결함 탐지 차이를 나타내는 구조도",
+      "spec": {
+        "layout": "side_by_side",
+        "panels": [
+          {
+            "title": "Bright Field (BF)",
+            "elements": [
+              {"type": "light_source", "position": "top_center", "label": "광원", "color": "#F1C40F"},
+              {"type": "beam_splitter", "position": "middle", "label": "빔 스플리터"},
+              {"type": "objective_lens", "position": "below_splitter", "label": "대물렌즈", "color": "#3498DB"},
+              {"type": "wafer_surface", "position": "bottom", "label": "웨이퍼 표면", "color": "#BDC3C7"},
+              {"type": "defect_on_surface", "position": "bottom_right", "label": "결함", "color": "#E74C3C"},
+              {"type": "detector", "position": "top_right", "label": "검출기", "color": "#2ECC71"},
+              {"type": "arrows", "desc": "수직 입사광 → 정반사 → 검출기. 결함 부위에서 산란으로 정반사 손실 → 어두운 점으로 보임"}
+            ],
+            "result_desc": "정상면: 밝음 / 결함: 어두운 점",
+            "best_for": "패턴 결함 탐지"
+          },
+          {
+            "title": "Dark Field (DF)",
+            "elements": [
+              {"type": "light_source", "position": "top_left", "label": "광원 (비스듬히 입사)", "color": "#F1C40F"},
+              {"type": "objective_lens", "position": "middle", "label": "대물렌즈", "color": "#3498DB"},
+              {"type": "wafer_surface", "position": "bottom", "label": "웨이퍼 표면", "color": "#BDC3C7"},
+              {"type": "defect_on_surface", "position": "bottom_center", "label": "파티클", "color": "#E74C3C"},
+              {"type": "detector", "position": "top_center", "label": "검출기 (산란광만 수집)", "color": "#2ECC71"},
+              {"type": "arrows", "desc": "비스듬한 입사 → 정상면에서 정반사(검출기 밖) → 어두움. 파티클에서 산란 → 밝은 점"}
+            ],
+            "result_desc": "정상면: 어두움 / 파티클: 밝은 점",
+            "best_for": "파티클 탐지"
+          }
+        ],
+        "dimensions": "1000x500",
+        "colors": {
+          "incoming_light": "#F1C40F",
+          "specular_reflection": "#F39C12",
+          "scattered_light": "#E74C3C",
+          "lens": "#3498DB",
+          "wafer": "#D5DBDB",
+          "background": "#FFFFFF"
+        }
+      }
+    }
+  ]
+}

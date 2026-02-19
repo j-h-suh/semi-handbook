@@ -1,0 +1,91 @@
+{
+  "chapter": "04_09",
+  "chapter_title": "LLM과 생성AI",
+  "images": [
+    {
+      "id": "04_09_img01",
+      "type": "B",
+      "method": "svg",
+      "filename": "tool_using_agent_architecture.svg",
+      "title": "AI 에이전트 아키텍처 — Tool-Using Agent",
+      "description": "LLM이 자연어 질문을 받아 여러 ML 도구(VM, FDC, 웨이퍼맵 분류기, RAG)를 자율적으로 호출하여 종합 분석하는 에이전트 구조",
+      "spec": {
+        "elements": [
+          "엔지니어 입력: 자연어 질문 ('오늘 수율이 떨어진 원인을 분석해줘')",
+          "LLM 에이전트 (중앙 허브):",
+          "  - 질문 이해 (Intent Parsing)",
+          "  - 실행 계획 수립 (Task Planning)",
+          "  - 도구 호출 순서 결정",
+          "도구 (Tools):",
+          "  1. SQL Query Tool → YMS 수율 DB 조회",
+          "  2. 웨이퍼맵 분류기 Tool → CNN 불량 패턴 분석",
+          "  3. FDC 이상 탐지 Tool → Autoencoder 이상 확인",
+          "  4. RAG 검색 Tool → 과거 유사 사례 검색",
+          "  5. VM 예측 Tool → CD/OVL 예측 확인",
+          "종합 답변 생성: 결과 통합 + 자연어 보고서"
+        ],
+        "colors": {
+          "engineer": "#333333",
+          "llm_agent": "#9b59b6",
+          "sql_tool": "#4a90d9",
+          "wm_tool": "#2ecc71",
+          "fdc_tool": "#e85d5d",
+          "rag_tool": "#f39c12",
+          "vm_tool": "#3498db",
+          "output": "#333333"
+        },
+        "layout": "중앙에 LLM 에이전트, 주변에 5개 도구를 방사형 배치, 위에서 질문 입력, 아래로 답변 출력",
+        "size": "800x600",
+        "labels": "한글+영문",
+        "annotations": [
+          "Part 3~4의 모든 ML 모델이 도구(Tool)로 사용",
+          "에이전트가 '어떤 도구를 어떤 순서로 호출할지 스스로 결정'",
+          "SMILE 플랫폼에 내장 시 경쟁 우위",
+          "각 도구에 해당 챕터 참조 (3.2, 3.4, 3.6, 3.7, 4.9)"
+        ],
+        "note": "본문 에이전트 예시(5단계: SQL→웨이퍼맵→FDC→RAG→보고서) 직접 반영. 'SMILE 플랫폼에 에이전트 인터페이스를 내장하면 경쟁 우위' 언급도 포함"
+      }
+    },
+    {
+      "id": "04_09_img02",
+      "type": "E",
+      "method": "svg",
+      "filename": "onpremise_vs_cloud_llm.svg",
+      "title": "On-Premise vs Cloud LLM 비교",
+      "description": "팹 환경에서 Cloud LLM(GPT-4/Claude)과 On-Premise LLM(Llama/Mistral)의 적용 가능 영역, 보안 경계, 트레이드오프를 비교 도식",
+      "spec": {
+        "elements": [
+          "왼쪽 영역: Cloud LLM (GPT-4, Claude)",
+          "  - 높은 성능 ★★★★★",
+          "  - 팹 데이터 전송 불가 🔒❌",
+          "  - 적용: 일반 지식 Q&A, 코드 생성, 교육",
+          "  - 비용: API 종량제",
+          "오른쪽 영역: On-Premise LLM (Llama, Mistral)",
+          "  - 성능 ★★★~★★★★",
+          "  - 팹 데이터 활용 가능 ✅",
+          "  - 적용: RAG Q&A, 보고서 생성, FDC 분석, Text-to-SQL",
+          "  - 비용: GPU 인프라 투자 필요",
+          "중앙 경계선: 팹 보안 경계 (방화벽/Air Gap)",
+          "아래: 공통 한계 (할루시네이션, 정량적 부정확, 실시간 부적합, 인간 검토 필수)"
+        ],
+        "colors": {
+          "cloud": "#4a90d9",
+          "onpremise": "#2ecc71",
+          "security_boundary": "#e85d5d",
+          "limitation": "#f39c12",
+          "blocked": "#e85d5d"
+        },
+        "layout": "좌우 대칭 비교 도식, 중앙에 보안 경계선",
+        "size": "800x500",
+        "labels": "한글+영문",
+        "annotations": [
+          "팹 데이터 = 영업 비밀 + 고객 NDA",
+          "On-Premise: Fine-Tuning으로 도메인 특화 가능",
+          "Cloud: 반도체 교과서 수준 일반 지식에만 활용",
+          "4.5장 On-Premise 배포 원칙 동일 적용"
+        ],
+        "note": "본문 '클라우드 LLM — 팹 데이터를 외부 서버에 전송할 수 없다... On-Premise LLM — 팹 내부에서 운영하여 데이터 유출이 없다' 비교 직접 반영"
+      }
+    }
+  ]
+}

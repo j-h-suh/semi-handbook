@@ -1,0 +1,106 @@
+{
+  "chapter": "02_09",
+  "chapter_title": "Overlay 측정 방법",
+  "images": [
+    {
+      "id": "02_09_img01",
+      "type": "D",
+      "method": "antigravity",
+      "filename": "box_in_box_microscope.png",
+      "title": "Box-in-Box 마크 현미경 이미지",
+      "description": "IBO(Image-Based Overlay) 측정에 사용되는 Box-in-Box 마크의 광학 현미경 이미지. 외곽 박스(이전 층)와 내부 박스(현재 층)가 보이며, L/R/T/B 간격 차이로 Overlay를 계산.",
+      "spec": {
+        "prompt": "A realistic optical microscope image of a semiconductor overlay measurement mark called 'Box-in-Box'. The image shows a larger outer square frame (from the previous layer, appearing in darker contrast) with a smaller inner square frame (from the current layer, appearing in lighter or different contrast) positioned inside. The inner box is slightly off-center, indicating an overlay error. The image has the characteristic appearance of a bright-field optical microscope with slightly grainy texture. Labels show L (left gap), R (right gap), T (top gap), B (bottom gap) measurements. The formula 'OVL_x = (L-R)/2' is annotated. Magnification approximately 200x, grayscale microscope appearance.",
+        "style": "microscope image with annotations",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "id": "02_09_img02",
+      "type": "B",
+      "method": "svg",
+      "filename": "dbo_grating_mark_cross_section.svg",
+      "title": "DBO 격자 마크 단면도 (대칭 vs 비대칭)",
+      "description": "DBO 측정의 격자 마크 구조. 이전 층과 현재 층의 격자가 겹쳐 합성 격자를 형성. 대칭(OVL=0)일 때 +1차/-1차 회절 강도 동일, 비대칭(OVL≠0)일 때 강도 차이 발생.",
+      "spec": {
+        "elements": [
+          {
+            "panel": "OVL = 0 (완벽 정렬)",
+            "layers": [
+              {"name": "현재 층 격자", "pitch": "P", "offset": 0},
+              {"name": "이전 층 격자", "pitch": "P", "offset": 0}
+            ],
+            "diffraction": {"+1": "I₊₁", "-1": "I₋₁", "relation": "I₊₁ = I₋₁"},
+            "result": "대칭 → Overlay = 0"
+          },
+          {
+            "panel": "OVL ≠ 0 (정렬 오차)",
+            "layers": [
+              {"name": "현재 층 격자", "pitch": "P", "offset": "Δx"},
+              {"name": "이전 층 격자", "pitch": "P", "offset": 0}
+            ],
+            "diffraction": {"+1": "I₊₁", "-1": "I₋₁", "relation": "I₊₁ ≠ I₋₁"},
+            "result": "비대칭 → Overlay ∝ (I₊₁ - I₋₁)"
+          }
+        ],
+        "bias_marks": {
+          "mark_a": {"bias": "+d", "label": "마크 A: 바이어스 +d"},
+          "mark_b": {"bias": "-d", "label": "마크 B: 바이어스 -d"}
+        },
+        "formula": "OVL = (d/2) × (ΔI_A - ΔI_B) / (ΔI_A + ΔI_B)",
+        "colors": {
+          "current_layer": "#4169E1",
+          "reference_layer": "#FF8C00",
+          "plus1_beam": "#32CD32",
+          "minus1_beam": "#FF6347",
+          "substrate": "#C0C0C0"
+        },
+        "layout": "horizontal_2_panels",
+        "dimensions": "900x400"
+      }
+    },
+    {
+      "id": "02_09_img03",
+      "type": "E",
+      "method": "antigravity",
+      "filename": "sampling_map_comparison.png",
+      "title": "샘플링 맵 비교 (고정 격자 vs AI 최적화)",
+      "description": "Overlay 측정 포인트 배치 전략 비교. 좌: 전통적 균일 격자형 배치(40포인트). 우: AI 최적화 배치(40포인트, 변동이 큰 Edge에 집중, 정보량 최대화).",
+      "spec": {
+        "prompt": "A side-by-side comparison of two overlay measurement sampling strategies on circular 300mm wafer maps. Left wafer labeled 'Fixed Grid Sampling': shows uniformly distributed measurement points (blue dots) in a regular grid pattern across the wafer, with equal spacing between points. Right wafer labeled 'AI-Optimized Sampling': shows the same total number of measurement points but with denser point placement at the wafer edge (where overlay variation is highest) and sparser points at the center (where variation is low). Edge points are highlighted in red to indicate high-variation zones. A small information gain heatmap is shown below each wafer. The AI-optimized version shows arrows indicating 'More points where variation is high, fewer where it's predictable'. Clean infographic style.",
+        "style": "data visualization infographic",
+        "aspect_ratio": "16:9"
+      }
+    },
+    {
+      "id": "02_09_img04",
+      "type": "E",
+      "method": "svg",
+      "filename": "diffraction_principle.svg",
+      "title": "DBO 회절 원리 (±1차 강도 비교)",
+      "description": "주기적 격자에 빛을 조사했을 때, +1차와 -1차 회절광이 격자의 비대칭성(=Overlay)에 따라 강도가 달라지는 원리.",
+      "spec": {
+        "elements": [
+          {"type": "incident_light", "label": "입사광 (광대역)", "angle": "normal"},
+          {"type": "grating", "label": "합성 격자\n(이전층 + 현재층)", "pitch": "P"},
+          {"type": "diffracted_beam_plus1", "label": "+1차 회절광\n강도 I₊₁", "angle": "+θ"},
+          {"type": "diffracted_beam_minus1", "label": "-1차 회절광\n강도 I₋₁", "angle": "-θ"},
+          {"type": "zeroth_order", "label": "0차 (정반사)", "angle": "0"},
+          {"type": "detector_plus1", "label": "검출기 (+1)", "position": "right"},
+          {"type": "detector_minus1", "label": "검출기 (-1)", "position": "left"}
+        ],
+        "physics_note": "격자가 대칭이면 I₊₁ = I₋₁\n격자가 비대칭(OVL≠0)이면 I₊₁ ≠ I₋₁\n강도 차이 → Overlay 값 추출",
+        "diffraction_equation": "sinθ = mλ/P  (m = ±1, ±2, ...)",
+        "colors": {
+          "incident": "#FFD700",
+          "plus1": "#4169E1",
+          "minus1": "#FF6347",
+          "zeroth": "#808080",
+          "grating": "#333333"
+        },
+        "layout": "centered_optical_diagram",
+        "dimensions": "600x450"
+      }
+    }
+  ]
+}

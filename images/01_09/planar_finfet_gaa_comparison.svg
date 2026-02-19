@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" width="900" height="450">
+  <defs>
+    <style>
+      text { font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', Arial, sans-serif; }
+      .title { font-size: 20px; font-weight: bold; fill: #333; text-anchor: middle; }
+      .subtitle { font-size: 13px; fill: #555; text-anchor: middle; }
+      .label { font-size: 12px; fill: #333; text-anchor: middle; }
+      .label-small { font-size: 10px; fill: #666; text-anchor: middle; }
+      .annotation { font-size: 11px; fill: #444; text-anchor: middle; font-weight: bold; }
+      .legend-text { font-size: 10px; fill: #555; }
+    </style>
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="450" fill="#fafafa" rx="8"/>
+
+  <!-- Title -->
+  <text x="450" y="35" class="title">Planar → FinFET → GAA 트랜지스터 단면 비교</text>
+  <text x="450" y="55" class="subtitle">게이트가 채널을 감싸는 면의 수 진화: 1면 → 3면 → 4면</text>
+
+  <!-- ============ PLANAR (Column 1) ============ -->
+  <g transform="translate(50, 75)">
+    <!-- Section label -->
+    <text x="125" y="15" class="label" font-weight="bold" font-size="15">Planar</text>
+    <text x="125" y="32" class="label-small">(평면 트랜지스터)</text>
+
+    <!-- Substrate -->
+    <rect x="10" y="220" width="230" height="60" fill="#e0e0e0" rx="3" filter="url(#shadow)"/>
+    <text x="125" y="258" class="label-small" fill="#777">Substrate 기판</text>
+
+    <!-- Channel (flat bar on top of substrate) -->
+    <rect x="55" y="190" width="140" height="30" fill="#4a90d9" rx="2"/>
+    <text x="125" y="210" class="label-small" fill="white" font-size="9">Channel 채널</text>
+
+    <!-- Gate oxide (thin layer on top of channel) -->
+    <rect x="65" y="180" width="120" height="12" fill="#fff3b0" rx="1" stroke="#ddd08a" stroke-width="0.5"/>
+
+    <!-- Gate (on top of oxide - only 1 face contact) -->
+    <rect x="65" y="140" width="120" height="42" fill="#5dbe5d" rx="3" filter="url(#shadow)"/>
+    <text x="125" y="166" class="label-small" fill="white" font-weight="bold">Gate 게이트</text>
+
+    <!-- Source -->
+    <rect x="10" y="185" width="50" height="35" fill="#e85d5d" rx="3" filter="url(#shadow)"/>
+    <text x="35" y="207" class="label-small" fill="white" font-size="8">S</text>
+
+    <!-- Drain -->
+    <rect x="190" y="185" width="50" height="35" fill="#e85d5d" rx="3" filter="url(#shadow)"/>
+    <text x="215" y="207" class="label-small" fill="white" font-size="8">D</text>
+
+    <!-- Gate control indicator - 1 face (bottom only) -->
+    <line x1="75" y1="178" x2="175" y2="178" stroke="#2d8e2d" stroke-width="3" stroke-dasharray="4,2"/>
+    <text x="125" y="135" class="annotation" fill="#2d8e2d" font-size="12">▼ 1면 제어</text>
+
+    <!-- Annotation -->
+    <rect x="30" y="290" width="190" height="28" fill="#fff0f0" rx="10" stroke="#e85d5d" stroke-width="1"/>
+    <text x="125" y="309" class="annotation" fill="#c0392b" font-size="11">1면 제어 → 누설 ↑</text>
+  </g>
+
+  <!-- ============ FinFET (Column 2) ============ -->
+  <g transform="translate(325, 75)">
+    <!-- Section label -->
+    <text x="125" y="15" class="label" font-weight="bold" font-size="15">FinFET</text>
+    <text x="125" y="32" class="label-small">(핀 트랜지스터)</text>
+
+    <!-- Substrate -->
+    <rect x="10" y="220" width="230" height="60" fill="#e0e0e0" rx="3" filter="url(#shadow)"/>
+    <text x="125" y="258" class="label-small" fill="#777">Substrate 기판</text>
+
+    <!-- Fin (channel) - Center x=125, width=40 (x=105~145) -->
+    <rect x="105" y="145" width="40" height="75" fill="#4a90d9" rx="2" filter="url(#shadow)"/>
+
+    <!-- Gate oxide (wrapping 3 sides of fin) -->
+    <!-- Top: x=95~155 (width 60), y=135~145 (height 10) -->
+    <rect x="95" y="135" width="60" height="10" fill="#fff3b0" rx="1" stroke="#ddd08a" stroke-width="0.5"/>
+    <!-- Left: x=95~105 (width 10), y=135~220 (height 85) -->
+    <rect x="95" y="135" width="10" height="85" fill="#fff3b0" rx="1" stroke="#ddd08a" stroke-width="0.5"/>
+    <!-- Right: x=145~155 (width 10), y=135~220 (height 85) -->
+    <rect x="145" y="135" width="10" height="85" fill="#fff3b0" rx="1" stroke="#ddd08a" stroke-width="0.5"/>
+
+    <!-- Gate (wrapping 3 sides) -->
+    <!-- Left Leg: x=73~95 (width 22), y=100~220 (height 120) -->
+    <rect x="73" y="100" width="22" height="120" fill="#5dbe5d" rx="3" filter="url(#shadow)"/>
+    <!-- Right Leg: x=155~177 (width 22), y=100~220 (height 120) -->
+    <rect x="155" y="100" width="22" height="120" fill="#5dbe5d" rx="3" filter="url(#shadow)"/>
+    <!-- Top: x=73~177 (width 104), y=100~135 (height 35) -->
+    <rect x="73" y="100" width="104" height="35" fill="#5dbe5d" rx="3" filter="url(#shadow)"/>
+    
+    <text x="125" y="120" class="label-small" fill="white" font-weight="bold">Gate</text>
+    <text x="125" y="132" class="label-small" fill="white" font-weight="bold">게이트</text>
+
+    <!-- Channel label -->
+    <text x="125" y="190" class="label-small" fill="white" font-size="8">CH</text>
+
+    <!-- Source -->
+    <rect x="10" y="185" width="50" height="35" fill="#e85d5d" rx="3" filter="url(#shadow)"/>
+    <text x="35" y="207" class="label-small" fill="white" font-size="8">S</text>
+
+    <!-- Drain -->
+    <rect x="190" y="185" width="50" height="35" fill="#e85d5d" rx="3" filter="url(#shadow)"/>
+    <text x="215" y="207" class="label-small" fill="white" font-size="8">D</text>
+
+    <!-- Gate control indicator - 3 faces -->
+    <!-- Lines inside the Gate pointing to interface -->
+    <line x1="85" y1="150" x2="85" y2="210" stroke="#2d8e2d" stroke-width="2.5" stroke-dasharray="4,2"/>
+    <line x1="165" y1="150" x2="165" y2="210" stroke="#2d8e2d" stroke-width="2.5" stroke-dasharray="4,2"/>
+    <line x1="100" y1="120" x2="150" y2="120" stroke="#2d8e2d" stroke-width="2.5" stroke-dasharray="4,2"/>
+    <text x="125" y="93" class="annotation" fill="#2d8e2d" font-size="12">◀▼▶ 3면 제어</text>
+
+    <!-- Annotation -->
+    <rect x="30" y="290" width="190" height="28" fill="#f0fff0" rx="10" stroke="#5dbe5d" stroke-width="1"/>
+    <text x="125" y="309" class="annotation" fill="#27864a" font-size="11">3면 제어 → 누설 ↓↓</text>
+  </g>
+
+  <!-- ============ GAA (Column 3) ============ -->
+  <g transform="translate(600, 75)">
+    <!-- Section label -->
+    <text x="125" y="15" class="label" font-weight="bold" font-size="15">GAA</text>
+    <text x="125" y="32" class="label-small">(Gate-All-Around)</text>
+
+    <!-- Substrate -->
+    <rect x="10" y="220" width="230" height="60" fill="#e0e0e0" rx="3" filter="url(#shadow)"/>
+    <text x="125" y="258" class="label-small" fill="#777">Substrate 기판</text>
+
+    <!-- Nanosheet channels (stacked, surrounded by gate) -->
+    <!-- Gate background (full wrap) -->
+    <rect x="55" y="105" width="140" height="115" fill="#5dbe5d" rx="5" filter="url(#shadow)"/>
+    <text x="125" y="125" class="label-small" fill="white" font-weight="bold">Gate 게이트</text>
+
+    <!-- Oxide + Channel stack: 3 nanosheets -->
+    <!-- Nanosheet 1 (top) -->
+    <rect x="70" y="132" width="110" height="5" fill="#fff3b0" rx="2"/>
+    <rect x="73" y="137" width="104" height="16" fill="#4a90d9" rx="3"/>
+    <rect x="70" y="153" width="110" height="5" fill="#fff3b0" rx="2"/>
+
+    <!-- Nanosheet 2 (middle) -->
+    <rect x="70" y="163" width="110" height="5" fill="#fff3b0" rx="2"/>
+    <rect x="73" y="168" width="104" height="16" fill="#4a90d9" rx="3"/>
+    <rect x="70" y="184" width="110" height="5" fill="#fff3b0" rx="2"/>
+
+    <!-- Nanosheet 3 (bottom) -->
+    <rect x="70" y="194" width="110" height="5" fill="#fff3b0" rx="2"/>
+    <rect x="73" y="199" width="104" height="16" fill="#4a90d9" rx="3"/>
+    <rect x="70" y="215" width="110" height="5" fill="#fff3b0" rx="2"/>
+
+    <!-- Channel labels -->
+    <text x="125" y="149" class="label-small" fill="white" font-size="7">CH1</text>
+    <text x="125" y="180" class="label-small" fill="white" font-size="7">CH2</text>
+    <text x="125" y="211" class="label-small" fill="white" font-size="7">CH3</text>
+
+    <!-- Source -->
+    <rect x="10" y="185" width="50" height="35" fill="#e85d5d" rx="3" filter="url(#shadow)"/>
+    <text x="35" y="207" class="label-small" fill="white" font-size="8">S</text>
+
+    <!-- Drain -->
+    <rect x="190" y="185" width="50" height="35" fill="#e85d5d" rx="3" filter="url(#shadow)"/>
+    <text x="215" y="207" class="label-small" fill="white" font-size="8">D</text>
+
+    <!-- Gate control indicator - 4 faces (all around) -->
+    <text x="125" y="98" class="annotation" fill="#2d8e2d" font-size="12">◀▲▼▶ 4면 제어</text>
+
+    <!-- Annotation -->
+    <rect x="25" y="290" width="200" height="28" fill="#f0fff0" rx="10" stroke="#27864a" stroke-width="1.5"/>
+    <text x="125" y="309" class="annotation" fill="#27864a" font-size="11">4면 제어 → 누설 ↓↓↓</text>
+  </g>
+
+  <!-- Evolution arrows between columns -->
+  <g transform="translate(0, 240)">
+    <polygon points="290,0 310,0 310,-8 320,5 310,18 310,10 290,10" fill="#888"/>
+    <polygon points="565,0 585,0 585,-8 595,5 585,18 585,10 565,10" fill="#888"/>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(250, 420)">
+    <rect x="0" y="0" width="14" height="14" fill="#5dbe5d" rx="2"/>
+    <text x="18" y="12" class="legend-text">게이트 Gate</text>
+    <rect x="100" y="0" width="14" height="14" fill="#4a90d9" rx="2"/>
+    <text x="118" y="12" class="legend-text">채널 Channel</text>
+    <rect x="210" y="0" width="14" height="14" fill="#e85d5d" rx="2"/>
+    <text x="228" y="12" class="legend-text">S/D</text>
+    <rect x="270" y="0" width="14" height="14" fill="#fff3b0" rx="2" stroke="#ddd08a" stroke-width="0.5"/>
+    <text x="288" y="12" class="legend-text">산화막 Oxide</text>
+    <rect x="380" y="0" width="14" height="14" fill="#e0e0e0" rx="2"/>
+    <text x="398" y="12" class="legend-text">기판 Substrate</text>
+  </g>
+</svg>

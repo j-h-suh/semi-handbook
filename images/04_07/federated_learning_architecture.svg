@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" width="700" height="500"
+     font-family="Arial, AppleGothic, sans-serif">
+  <defs>
+    <marker id="arrowR" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+    <marker id="arrowL" markerWidth="10" markerHeight="7" refX="1" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="500" fill="#fafafa" rx="12"/>
+
+  <!-- Title -->
+  <text x="350" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">
+    Federated Learning 아키텍처 — 팹 간 지식 공유
+  </text>
+
+  <!-- Data Privacy Boundary (dashed circle) -->
+  <circle cx="350" cy="260" r="100" fill="none" stroke="#f39c12" stroke-width="2.5"
+          stroke-dasharray="10,6" opacity="0.7"/>
+  <text x="350" y="478" text-anchor="middle" font-size="13" fill="#f39c12" font-weight="bold">
+    🔒 Data Privacy Boundary — 가중치만 통과, 원시 데이터 차단
+  </text>
+
+  <!-- Central Aggregator -->
+  <rect x="290" y="225" width="120" height="70" rx="12" fill="#9b59b6" opacity="0.9"/>
+  <text x="350" y="255" text-anchor="middle" font-size="14" font-weight="bold" fill="white">Aggregator</text>
+  <text x="350" y="275" text-anchor="middle" font-size="11" fill="#e8daef">중앙 서버</text>
+
+  <!-- Fab A (Taiwan) - Top -->
+  <rect x="290" y="75" width="120" height="70" rx="12" fill="#e85d5d" opacity="0.9"/>
+  <text x="350" y="103" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Fab A</text>
+  <text x="350" y="123" text-anchor="middle" font-size="11" fill="#fadbd8">대만 (Taiwan)</text>
+
+  <!-- Fab B (USA) - Bottom Left -->
+  <rect x="80" y="340" width="120" height="70" rx="12" fill="#4a90d9" opacity="0.9"/>
+  <text x="140" y="368" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Fab B</text>
+  <text x="140" y="388" text-anchor="middle" font-size="11" fill="#d6eaf8">미국 (USA)</text>
+
+  <!-- Fab C (Korea) - Bottom Right -->
+  <rect x="500" y="340" width="120" height="70" rx="12" fill="#2ecc71" opacity="0.9"/>
+  <text x="560" y="368" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Fab C</text>
+  <text x="560" y="388" text-anchor="middle" font-size="11" fill="#d5f5e3">한국 (Korea)</text>
+
+  <!-- Arrows: Fab A ↔ Aggregator -->
+  <line x1="335" y1="145" x2="335" y2="225" stroke="#666" stroke-width="2" marker-end="url(#arrowR)"/>
+  <line x1="365" y1="225" x2="365" y2="145" stroke="#666" stroke-width="2" marker-end="url(#arrowR)"/>
+  <text x="395" y="190" font-size="9" fill="#888">가중치 ↕</text>
+
+  <!-- Arrows: Fab B ↔ Aggregator -->
+  <line x1="180" y1="340" x2="300" y2="295" stroke="#666" stroke-width="2" marker-end="url(#arrowR)"/>
+  <line x1="290" y1="275" x2="190" y2="340" stroke="#666" stroke-width="2" marker-end="url(#arrowL)"/>
+  <text x="205" y="295" font-size="9" fill="#888">가중치 ↕</text>
+
+  <!-- Arrows: Fab C ↔ Aggregator -->
+  <line x1="520" y1="340" x2="400" y2="295" stroke="#666" stroke-width="2" marker-end="url(#arrowL)"/>
+  <line x1="410" y1="275" x2="510" y2="340" stroke="#666" stroke-width="2" marker-end="url(#arrowR)"/>
+  <text x="460" y="295" font-size="9" fill="#888">가중치 ↕</text>
+
+  <!-- Data size labels -->
+  <rect x="15" y="440" width="160" height="45" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+  <text x="95" y="459" text-anchor="middle" font-size="10" fill="#27ae60" font-weight="bold">✓ 가중치 전송: 수 MB</text>
+  <text x="95" y="475" text-anchor="middle" font-size="10" fill="#e74c3c" font-weight="bold">✗ 원시 데이터: 수 TB 차단</text>
+
+  <!-- Local data icons near each Fab -->
+  <text x="350" y="65" text-anchor="middle" font-size="9" fill="#999">로컬 데이터 유지</text>
+  <text x="140" y="425" text-anchor="middle" font-size="9" fill="#999">로컬 데이터 유지</text>
+  <text x="560" y="425" text-anchor="middle" font-size="9" fill="#999">로컬 데이터 유지</text>
+</svg>

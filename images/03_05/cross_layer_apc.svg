@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 500" width="1100" height="500">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#E74C3C"/>
+    </marker>
+    <marker id="arrow-red-rev" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" fill="#E74C3C"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8E44AD"/>
+    </marker>
+    <marker id="arrow-purple-rev" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" fill="#8E44AD"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      text { font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1100" height="500" fill="#FFFFFF"/>
+  
+  <!-- Title -->
+  <text x="550" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#2C3E50">Cross-Layer APC 개념 — 다층 통합 최적화</text>
+  
+  <!-- ===== LEFT PANEL: 기존 독립 레이어별 APC ===== -->
+  <rect x="20" y="55" width="350" height="380" rx="12" fill="#F8F9FA" stroke="#BDC3C7" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="195" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C3E50">기존: 독립 레이어별 APC</text>
+  
+  <!-- Layer 3 + APC3 -->
+  <rect x="50" y="105" width="120" height="50" rx="8" fill="#AED6F1" stroke="#3498DB" stroke-width="1.5"/>
+  <text x="110" y="135" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Layer 3</text>
+  <text x="215" y="130" text-anchor="middle" font-size="16" fill="#555">→</text>
+  <rect x="240" y="105" width="100" height="50" rx="8" fill="#EBF5FB" stroke="#3498DB" stroke-width="1.5"/>
+  <text x="290" y="135" text-anchor="middle" font-size="13" font-weight="bold" fill="#3498DB">APC₃</text>
+  
+  <!-- Layer 4 + APC4 -->
+  <rect x="50" y="185" width="120" height="50" rx="8" fill="#A9DFBF" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="110" y="215" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Layer 4</text>
+  <text x="215" y="210" text-anchor="middle" font-size="16" fill="#555">→</text>
+  <rect x="240" y="185" width="100" height="50" rx="8" fill="#EAFAF1" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="290" y="215" text-anchor="middle" font-size="13" font-weight="bold" fill="#27AE60">APC₄</text>
+  
+  <!-- Layer 5 + APC5 -->
+  <rect x="50" y="265" width="120" height="50" rx="8" fill="#F9E79F" stroke="#F39C12" stroke-width="1.5"/>
+  <text x="110" y="295" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Layer 5</text>
+  <text x="215" y="290" text-anchor="middle" font-size="16" fill="#555">→</text>
+  <rect x="240" y="265" width="100" height="50" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5"/>
+  <text x="290" y="295" text-anchor="middle" font-size="13" font-weight="bold" fill="#F39C12">APC₅</text>
+  
+  <!-- No connection indicator (X marks) -->
+  <g opacity="0.4">
+    <line x1="170" y1="155" x2="170" y2="185" stroke="#BDC3C7" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="170" y1="235" x2="170" y2="265" stroke="#BDC3C7" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="182" y="173" font-size="14" fill="#E74C3C" font-weight="bold">✕</text>
+    <text x="182" y="253" font-size="14" fill="#E74C3C" font-weight="bold">✕</text>
+  </g>
+  
+  <!-- Issue label -->
+  <rect x="45" y="340" width="300" height="42" rx="6" fill="#FADBD8" stroke="#E74C3C" stroke-width="1"/>
+  <text x="195" y="358" text-anchor="middle" font-size="10" fill="#C0392B" font-weight="bold">각 APC가 자기 레이어만 최적화</text>
+  <text x="195" y="374" text-anchor="middle" font-size="10" fill="#C0392B">→ 레이어간 영향 무시</text>
+
+  <!-- ===== VS divider ===== -->
+  <circle cx="405" cy="245" r="20" fill="#ECF0F1" stroke="#BDC3C7" stroke-width="1.5"/>
+  <text x="405" y="251" text-anchor="middle" font-size="14" font-weight="bold" fill="#7F8C8D">VS</text>
+  
+  <!-- ===== RIGHT PANEL: AI Cross-Layer APC ===== -->
+  <rect x="430" y="55" width="350" height="380" rx="12" fill="#F5EEF8" stroke="#8E44AD" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="605" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#8E44AD">AI: Cross-Layer APC</text>
+  
+  <!-- Layers (left side of panel) -->
+  <rect x="455" y="120" width="110" height="45" rx="8" fill="#AED6F1" stroke="#3498DB" stroke-width="1.5"/>
+  <text x="510" y="148" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Layer 3</text>
+  
+  <rect x="455" y="200" width="110" height="45" rx="8" fill="#A9DFBF" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="510" y="228" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Layer 4</text>
+  
+  <rect x="455" y="280" width="110" height="45" rx="8" fill="#F9E79F" stroke="#F39C12" stroke-width="1.5"/>
+  <text x="510" y="308" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">Layer 5</text>
+  
+  <!-- Central AI Controller -->
+  <rect x="625" y="165" width="130" height="115" rx="14" fill="#D2B4DE" stroke="#8E44AD" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="690" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#8E44AD">Cross-Layer</text>
+  <text x="690" y="220" text-anchor="middle" font-size="12" font-weight="bold" fill="#8E44AD">AI Controller</text>
+  <text x="690" y="245" text-anchor="middle" font-size="20">🧠</text>
+  <text x="690" y="270" text-anchor="middle" font-size="9" fill="#8E44AD">Global Optimizer</text>
+
+  <!-- Bidirectional arrows: Layer ↔ Controller -->
+  <!-- Layer 3 ↔ Controller -->
+  <line x1="565" y1="142" x2="625" y2="185" stroke="#8E44AD" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <line x1="625" y1="180" x2="565" y2="140" stroke="#8E44AD" stroke-width="2" marker-end="url(#arrow-purple)" stroke-dasharray="4,3" opacity="0.5"/>
+  
+  <!-- Layer 4 ↔ Controller -->
+  <line x1="565" y1="222" x2="625" y2="222" stroke="#8E44AD" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <line x1="625" y1="228" x2="565" y2="228" stroke="#8E44AD" stroke-width="2" marker-end="url(#arrow-purple)" stroke-dasharray="4,3" opacity="0.5"/>
+  
+  <!-- Layer 5 ↔ Controller -->
+  <line x1="565" y1="302" x2="625" y2="262" stroke="#8E44AD" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <line x1="625" y1="265" x2="565" y2="300" stroke="#8E44AD" stroke-width="2" marker-end="url(#arrow-purple)" stroke-dasharray="4,3" opacity="0.5"/>
+  
+  <!-- Benefit label -->
+  <rect x="445" y="348" width="320" height="42" rx="6" fill="#D5F5E3" stroke="#27AE60" stroke-width="1"/>
+  <text x="605" y="366" text-anchor="middle" font-size="10" fill="#1E8449" font-weight="bold">Layer 3 보정 → Layer 5 영향 고려</text>
+  <text x="605" y="382" text-anchor="middle" font-size="10" fill="#1E8449">→ 전체 최적화 (Global Optimization)</text>
+  
+  <!-- ===== WAFER CROSS-SECTION (right side) ===== -->
+  <rect x="810" y="55" width="275" height="380" rx="12" fill="#FAFAFA" stroke="#BDC3C7" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="947" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">웨이퍼 단면도</text>
+  
+  <!-- Wafer substrate -->
+  <rect x="850" y="350" width="195" height="30" rx="3" fill="#D5D8DC" stroke="#ABB2B9" stroke-width="1"/>
+  <text x="947" y="370" text-anchor="middle" font-size="10" fill="#555">Si Substrate</text>
+  
+  <!-- ILD between substrate and M3 -->
+  <rect x="850" y="320" width="195" height="30" rx="0" fill="#FDEBD0" stroke="#E59866" stroke-width="0.5"/>
+  <text x="947" y="340" text-anchor="middle" font-size="9" fill="#935116">ILD</text>
+  
+  <!-- M3 (Metal 3) -->
+  <rect x="850" y="280" width="195" height="40" rx="3" fill="#AED6F1" stroke="#3498DB" stroke-width="1.5"/>
+  <text x="947" y="305" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">M3 (Metal 3)</text>
+  
+  <!-- Via 3-4 -->
+  <rect x="880" y="255" width="25" height="25" fill="#85929E" stroke="#5D6D7E" stroke-width="1"/>
+  <rect x="950" y="255" width="25" height="25" fill="#85929E" stroke="#5D6D7E" stroke-width="1"/>
+  <rect x="1000" y="255" width="25" height="25" fill="#85929E" stroke="#5D6D7E" stroke-width="1"/>
+  <text x="1060" y="272" text-anchor="start" font-size="9" fill="#5D6D7E" font-style="italic">Via 3→4</text>
+  
+  <!-- ILD -->
+  <rect x="850" y="235" width="195" height="20" rx="0" fill="#FDEBD0" stroke="#E59866" stroke-width="0.5"/>
+  <text x="947" y="249" text-anchor="middle" font-size="9" fill="#935116">ILD</text>
+  
+  <!-- M4 (Metal 4) -->
+  <rect x="850" y="195" width="195" height="40" rx="3" fill="#A9DFBF" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="947" y="220" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">M4 (Metal 4)</text>
+  
+  <!-- Via 4-5 -->
+  <rect x="870" y="170" width="25" height="25" fill="#85929E" stroke="#5D6D7E" stroke-width="1"/>
+  <rect x="930" y="170" width="25" height="25" fill="#85929E" stroke="#5D6D7E" stroke-width="1"/>
+  <rect x="1010" y="170" width="25" height="25" fill="#85929E" stroke="#5D6D7E" stroke-width="1"/>
+  <text x="1060" y="187" text-anchor="start" font-size="9" fill="#5D6D7E" font-style="italic">Via 4→5</text>
+  
+  <!-- ILD -->
+  <rect x="850" y="150" width="195" height="20" rx="0" fill="#FDEBD0" stroke="#E59866" stroke-width="0.5"/>
+  <text x="947" y="164" text-anchor="middle" font-size="9" fill="#935116">ILD</text>
+  
+  <!-- M5 (Metal 5) -->
+  <rect x="850" y="110" width="195" height="40" rx="3" fill="#F9E79F" stroke="#F39C12" stroke-width="1.5"/>
+  <text x="947" y="135" text-anchor="middle" font-size="11" font-weight="bold" fill="#2C3E50">M5 (Metal 5)</text>
+  
+  <!-- Cross-layer influence arrows on wafer cross-section -->
+  <path d="M 840 300 Q 820 220 840 130" fill="none" stroke="#E74C3C" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="808" y="220" text-anchor="middle" font-size="9" fill="#E74C3C" transform="rotate(-90 808 220)">Cross-Layer 영향</text>
+  
+  <!-- Bottom summary bar -->
+  <rect x="20" y="455" width="1060" height="35" rx="8" fill="#EBF5FB" stroke="#3498DB" stroke-width="1"/>
+  <text x="550" y="478" text-anchor="middle" font-size="12" fill="#2C3E50">
+    Cross-Layer APC: 개별 레이어 독립 최적화 → 다층 통합 최적화로 전환하여 Overlay/CD 품질 극대화
+  </text>
+</svg>
