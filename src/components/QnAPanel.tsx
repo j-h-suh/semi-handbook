@@ -40,11 +40,6 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
         setIsLoading(true);
 
         try {
-            // 1. Prepare system instruction + context + history
-            // Note: In BYOK mode, we hit the proxy route we will build (/api/chat) 
-            // passing the key securely from client -> Next.js server -> Gemini API.
-            // Doing it this way hides the API key from browser network tab sniffing by third parties (though it's still local).
-
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
@@ -53,23 +48,45 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                 },
                 body: JSON.stringify({
                     message: userMsg,
-                    context: currentDocumentContext, // Send the markdown of the current page as context
+                    context: currentDocumentContext,
                     history: messages.map(m => ({ role: m.role, parts: [{ text: m.content }] }))
                 })
             });
 
             if (!response.ok) {
-                const err = await response.json();
-                throw new Error(err.error || 'Failed to fetch response');
+                let errMsg = 'Failed to fetch response';
+                try { const err = await response.json(); errMsg = err.error || errMsg; } catch { }
+                throw new Error(errMsg);
             }
 
-            const data = await response.json();
+            // Stream the response
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
 
-            setMessages(prev => [...prev, { role: 'model', content: data.text }]);
+            if (!reader) throw new Error('No response stream');
+
+            // Add an empty AI message and update it as chunks arrive
+            setMessages(prev => [...prev, { role: 'model', content: '' }]);
+            setIsLoading(false); // Hide "생각 중..." since text is appearing
+
+            let accumulated = '';
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                accumulated += chunk;
+
+                // Update the last message (AI response) with accumulated text
+                setMessages(prev => {
+                    const updated = [...prev];
+                    updated[updated.length - 1] = { role: 'model', content: accumulated };
+                    return updated;
+                });
+            }
         } catch (error: any) {
             console.error(error);
             setMessages(prev => [...prev, { role: 'model', content: `Error: ${error.message}` }]);
-        } finally {
             setIsLoading(false);
         }
     };
