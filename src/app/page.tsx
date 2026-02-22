@@ -5,7 +5,7 @@ export default function Home() {
   const chapters = getSortedChaptersData();
 
   if (chapters.length > 0) {
-    redirect(`/chapter/${chapters[0].id}`);
+    redirect(`/chapter/${encodeURIComponent(chapters[0].id)}`);
   }
 
   return (

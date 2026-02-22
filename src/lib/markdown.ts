@@ -81,13 +81,23 @@ export function getSortedChaptersData(): ChapterMeta[] {
 }
 
 export async function getChapterData(id: string): Promise<Chapter> {
-  const rawId = decodeURIComponent(id);
-  const fullPath = path.join(contentDirectory, `${rawId}.md`);
+  const decodedId = decodeURIComponent(id);
 
-  // Fallback: if decoded path doesn't exist, try the raw id (for Vercel/Linux)
-  const resolvedPath = fs.existsSync(fullPath)
-    ? fullPath
-    : path.join(contentDirectory, `${id}.md`);
+  // Robust file matching: list directory and find by NFC-normalized comparison.
+  // This handles macOS (NFD) vs Linux (NFC) Unicode normalization differences
+  // that cause ENOENT errors on Vercel.
+  const files = fs.readdirSync(contentDirectory).filter(f => f.endsWith('.md'));
+  const matchingFile = files.find(f => {
+    const baseName = f.replace(/\.md$/, '');
+    return baseName.normalize('NFC') === decodedId.normalize('NFC')
+      || baseName.normalize('NFC') === id.normalize('NFC');
+  });
+
+  if (!matchingFile) {
+    throw new Error(`Chapter file not found for id: ${id} (decoded: ${decodedId})`);
+  }
+
+  const resolvedPath = path.join(contentDirectory, matchingFile);
   const fileContents = fs.readFileSync(resolvedPath, 'utf8');
 
   // Fix image paths manually before parsing if needed, e.g. mapping `images/` to `/content/images/`
