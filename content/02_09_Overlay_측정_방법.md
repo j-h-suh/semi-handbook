@@ -79,10 +79,10 @@ DBO에서는 Box-in-Box 대신 **주기적 격자(Grating) 패턴**을 사용한
 ```mermaid
 flowchart LR
     subgraph DBO 측정 원리
-        MA[마크 A<br/>바이어스 +d<br/>회절 강도: I_A+, I_A-]
-        MB[마크 B<br/>바이어스 -d<br/>회절 강도: I_B+, I_B-]
+        MA["마크 A<br/>바이어스 +d<br/>회절 강도: I_A+, I_A-"]
+        MB["마크 B<br/>바이어스 -d<br/>회절 강도: I_B+, I_B-"]
     end
-    MA --> CALC[Overlay 계산<br/>OVL = f(I_A+, I_A-, I_B+, I_B-)]
+    MA --> CALC["Overlay 계산<br/>OVL = f(I_A+, I_A-, I_B+, I_B-)"]
     MB --> CALC
 ```
 

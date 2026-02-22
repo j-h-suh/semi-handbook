@@ -1,0 +1,221 @@
+@import "tailwindcss";
+
+@theme {
+  --color-main-bg: #18181b;
+  /* zinc-900 for Notion dark feel */
+  --color-panel-bg: rgba(24, 24, 27, 0.95);
+  --color-border-glow: rgba(255, 255, 255, 0.05);
+}
+
+:root {
+  --background: var(--color-main-bg);
+  --foreground: #d4d4d8;
+  /* zinc-300 */
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Panel Design (Notion style: no border, just subtle shadow and background) */
+.glass-panel {
+  background: var(--color-panel-bg);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Markdown Typography - Notion Style */
+.prose {
+  color: #d4d4d8;
+  line-height: 1.6;
+}
+
+.prose h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+  margin-bottom: 1em;
+  color: #f4f4f5;
+  letter-spacing: -0.02em;
+}
+
+.prose h2 {
+  font-size: 1.75em;
+  font-weight: 600;
+  margin-top: 1.8em;
+  margin-bottom: 0.8em;
+  color: #f4f4f5;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.prose h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #e4e4e7;
+}
+
+.prose p {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.prose a {
+  color: #a1a1aa;
+  text-decoration: underline;
+  text-decoration-color: rgba(161, 161, 170, 0.4);
+  transition: opacity 0.2s;
+}
+
+.prose a:hover {
+  opacity: 0.8;
+}
+
+/* BOLD FIX: explicit overrides for all emphasis tags */
+.prose strong,
+.prose b {
+  font-weight: 700 !important;
+  color: #f4f4f5 !important;
+  background-color: transparent !important;
+  padding: 0;
+  -webkit-text-stroke: 0.3px #f4f4f5;
+  /* extra thickness if font isn't bold enough */
+}
+
+.prose blockquote {
+  font-weight: 400;
+  font-style: normal;
+  color: #a1a1aa;
+  border-left-width: 3px;
+  border-left-color: #52525b;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 1em;
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+.prose li {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.prose img {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  border-radius: 4px;
+}
+
+.prose code {
+  color: #eb5757;
+  background: rgba(135, 131, 120, 0.15);
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+}
+
+.prose pre {
+  color: #d4d4d8;
+  background-color: #27272a;
+  overflow-x: auto;
+  font-size: 85%;
+  line-height: 1.5;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 4px;
+  padding: 1rem;
+  width: max-content;
+  max-width: 100%;
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: center;
+  display: block;
+}
+
+.prose hr {
+  border-color: rgba(255, 255, 255, 0.08);
+  border-top-width: 1px;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/* Center images by default */
+.prose img {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Table Styles - Notion/Obsidian Inspired */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  font-size: 0.875rem;
+  /* text-sm */
+  line-height: 1.5;
+}
+
+.prose thead {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.prose th {
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  text-align: center !important;
+  /* slate-200 */
+}
+
+.prose td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.75rem 1rem;
+  color: #cbd5e1;
+  text-align: center !important;
+  /* slate-300 */
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.015);
+}
