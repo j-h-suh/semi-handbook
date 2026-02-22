@@ -33,7 +33,7 @@ export function getAllChapterIds() {
   return fileNames.map((fileName) => {
     return {
       params: {
-        id: encodeURIComponent(fileName.replace(/\.md$/, '')),
+        id: fileName.replace(/\.md$/, ''),
       },
     };
   });
@@ -43,8 +43,7 @@ export function getSortedChaptersData(): ChapterMeta[] {
   const fileNames = fs.readdirSync(contentDirectory).filter(file => file.endsWith('.md') && file !== 'handbook-toc.md');
 
   const allChaptersData = fileNames.map((fileName) => {
-    const rawId = fileName.replace(/\.md$/, '');
-    const id = encodeURIComponent(rawId); // use URI encoding so Next.js handles it properly in [id] routes
+    const id = fileName.replace(/\.md$/, '');
 
     // Read markdown file as string
     const fullPath = path.join(contentDirectory, fileName);
@@ -55,7 +54,7 @@ export function getSortedChaptersData(): ChapterMeta[] {
     const matterResult = matter(fileContents);
 
     // Extract title from first line of markdown if it starts with #
-    let title = rawId.replace(/_/g, ' '); // fallback
+    let title = id.replace(/_/g, ' '); // fallback
     const match = fileContents.match(/^#\s+(.*)/m);
     if (match) {
       title = match[1].trim();
@@ -64,7 +63,7 @@ export function getSortedChaptersData(): ChapterMeta[] {
     return {
       id,
       title,
-      part: getPartFromId(rawId),
+      part: getPartFromId(id),
       ...matterResult.data,
     } as ChapterMeta;
   });
@@ -84,14 +83,19 @@ export function getSortedChaptersData(): ChapterMeta[] {
 export async function getChapterData(id: string): Promise<Chapter> {
   const rawId = decodeURIComponent(id);
   const fullPath = path.join(contentDirectory, `${rawId}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
+
+  // Fallback: if decoded path doesn't exist, try the raw id (for Vercel/Linux)
+  const resolvedPath = fs.existsSync(fullPath)
+    ? fullPath
+    : path.join(contentDirectory, `${id}.md`);
+  const fileContents = fs.readFileSync(resolvedPath, 'utf8');
 
   // Fix image paths manually before parsing if needed, e.g. mapping `images/` to `/content/images/`
   const processedContents = fileContents.replace(/\]\(\/?images\//g, '](/content/images/');
 
   const matterResult = matter(processedContents);
 
-  let title = rawId.replace(/_/g, ' ');
+  let title = id.replace(/_/g, ' ');
   const match = processedContents.match(/^#\s+(.*)/m);
   if (match) {
     title = match[1].trim();
