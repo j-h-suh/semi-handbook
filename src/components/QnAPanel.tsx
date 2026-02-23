@@ -19,6 +19,7 @@ interface ChatMessage {
     role: 'user' | 'model';
     content: string;
     thinking?: string;
+    isStreaming?: boolean; // true while this message is still being streamed
 }
 
 export default function QnAPanel({ currentDocumentContext }: { currentDocumentContext: string }) {
@@ -26,8 +27,6 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [isThinking, setIsThinking] = useState(false);
-    const [liveThinking, setLiveThinking] = useState(''); // Real-time thinking content
     const scrollRef = useRef<HTMLDivElement>(null);
 
     // Auto scroll to bottom
@@ -35,7 +34,7 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [messages, isLoading, isThinking, liveThinking, isOpen]);
+    }, [messages, isLoading, isOpen]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -50,10 +49,13 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
 
         const userMsg = input.trim();
         setInput('');
-        setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+        // Add user message + empty AI message placeholder immediately
+        setMessages(prev => [
+            ...prev,
+            { role: 'user', content: userMsg },
+            { role: 'model', content: '', thinking: '', isStreaming: true }
+        ]);
         setIsLoading(true);
-        setIsThinking(true);
-        setLiveThinking('');
 
         try {
             const response = await fetch('/api/chat', {
@@ -84,7 +86,7 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
             let accumulatedText = '';
             let accumulatedThinking = '';
             let buffer = '';
-            let messageAdded = false;
+            let stillThinking = true;
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -100,56 +102,61 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                         const parsed = JSON.parse(line);
                         if (parsed.type === 'thinking') {
                             accumulatedThinking += parsed.content;
-                            // Show thinking content live
-                            setLiveThinking(accumulatedThinking);
                         } else if (parsed.type === 'text') {
-                            if (isThinking) setIsThinking(false);
-                            setLiveThinking('');
+                            stillThinking = false;
                             accumulatedText += parsed.content;
-
-                            if (!messageAdded) {
-                                messageAdded = true;
-                                setMessages(prev => [...prev, {
-                                    role: 'model',
-                                    content: accumulatedText,
-                                    thinking: accumulatedThinking
-                                }]);
-                            } else {
-                                setMessages(prev => {
-                                    const updated = [...prev];
-                                    updated[updated.length - 1] = {
-                                        role: 'model',
-                                        content: accumulatedText,
-                                        thinking: accumulatedThinking
-                                    };
-                                    return updated;
-                                });
-                            }
                         }
                     } catch {
                         accumulatedText += line;
+                        stillThinking = false;
                     }
                 }
+
+                // Update the last message (AI placeholder) in place
+                setMessages(prev => {
+                    const updated = [...prev];
+                    updated[updated.length - 1] = {
+                        role: 'model',
+                        content: accumulatedText,
+                        thinking: accumulatedThinking,
+                        isStreaming: stillThinking
+                    };
+                    return updated;
+                });
             }
 
-            // Finalize: ensure message exists even if only thinking was received
-            if (!messageAdded && accumulatedThinking) {
-                setMessages(prev => [...prev, {
-                    role: 'model',
-                    content: accumulatedText,
-                    thinking: accumulatedThinking
-                }]);
-            }
+            // Mark streaming as done
+            setMessages(prev => {
+                const updated = [...prev];
+                updated[updated.length - 1] = {
+                    ...updated[updated.length - 1],
+                    isStreaming: false
+                };
+                return updated;
+            });
 
-            setIsThinking(false);
-            setLiveThinking('');
         } catch (error: any) {
             console.error(error);
-            setMessages(prev => [...prev, { role: 'model', content: `Error: ${error.message}` }]);
+            setMessages(prev => {
+                const updated = [...prev];
+                // Update the placeholder message with error
+                if (updated.length > 0 && updated[updated.length - 1].role === 'model' && updated[updated.length - 1].isStreaming) {
+                    updated[updated.length - 1] = { role: 'model', content: `Error: ${error.message}`, isStreaming: false };
+                } else {
+                    updated.push({ role: 'model', content: `Error: ${error.message}` });
+                }
+                return updated;
+            });
             setIsLoading(false);
-            setIsThinking(false);
-            setLiveThinking('');
         }
+    };
+
+    // Extract first meaningful line as a title
+    const getThinkingTitle = (thinking: string) => {
+        const firstLine = thinking.split('\n').find(l => l.trim());
+        if (!firstLine) return '사고 중...';
+        const cleaned = firstLine.replace(/\*\*/g, '').replace(/\*/g, '');
+        return cleaned.length > 40 ? cleaned.slice(0, 40) + '…' : cleaned;
     };
 
     if (!isOpen) {
@@ -165,13 +172,6 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
             </div>
         );
     }
-
-    // Extract first line of thinking as a title/summary
-    const getThinkingTitle = (thinking: string) => {
-        const firstLine = thinking.split('\n').find(l => l.trim());
-        if (!firstLine) return '사고 과정';
-        return firstLine.length > 40 ? firstLine.slice(0, 40) + '…' : firstLine;
-    };
 
     return (
         <div className="w-[380px] h-full flex flex-col border-l border-white/5 glass-panel shrink-0 shadow-2xl relative z-40 transition-all bg-zinc-900/95">
@@ -192,7 +192,7 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                 ref={scrollRef}
                 className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"
             >
-                {messages.length === 0 && !isThinking && (
+                {messages.length === 0 && (
                     <div className="text-center text-slate-500 my-10 text-sm">
                         문서를 읽다가 궁금한 점을 질문해보세요!<br />
                         (현재 보고 계시는 페이지의 내용을 AI가 참조하여 답변합니다.)
@@ -206,13 +206,23 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                             {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
                         </div>
                         <div className={`max-w-[85%] ${msg.role === 'user' ? '' : 'space-y-2'}`}>
-                            {/* Thinking section (collapsible) */}
+                            {/* Thinking block — inside the message, always above content */}
                             {msg.role === 'model' && msg.thinking && (
                                 <ThinkingBlock
                                     title={getThinkingTitle(msg.thinking)}
                                     content={msg.thinking}
+                                    isLive={!!msg.isStreaming}
                                 />
                             )}
+
+                            {/* "사고 중" indicator when thinking hasn't started yet */}
+                            {msg.role === 'model' && msg.isStreaming && !msg.thinking && !msg.content && (
+                                <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-slate-400">
+                                    <Brain className="animate-pulse" size={16} />
+                                    <span className="text-xs">사고를 시작하는 중...</span>
+                                </div>
+                            )}
+
                             {/* Main response — always below thinking */}
                             {msg.content && (
                                 <div
@@ -227,19 +237,7 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                     </div>
                 ))}
 
-                {/* Live thinking indicator with real-time content */}
-                {isThinking && (
-                    <div className="flex gap-3">
-                        <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center shrink-0 text-cyan-400">
-                            <Bot size={16} />
-                        </div>
-                        <div className="max-w-[85%] space-y-2">
-                            <LiveThinkingBlock content={liveThinking} />
-                        </div>
-                    </div>
-                )}
-
-                {isLoading && !isThinking && (
+                {isLoading && (
                     <div className="flex gap-3">
                         <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center shrink-0 text-cyan-400">
                             <Bot size={16} />
@@ -258,13 +256,13 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        disabled={isLoading || isThinking}
+                        disabled={isLoading || messages.some(m => m.isStreaming)}
                         placeholder="질문을 입력하세요..."
                         className="w-full bg-black/50 border border-white/10 rounded-full pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all disabled:opacity-50"
                     />
                     <button
                         type="submit"
-                        disabled={isLoading || isThinking || !input.trim()}
+                        disabled={isLoading || messages.some(m => m.isStreaming) || !input.trim()}
                         className="absolute right-2 top-2 p-1.5 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-full disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
                     >
                         <Send size={18} />
@@ -275,53 +273,31 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
     );
 }
 
-/** Live thinking block — shown during the thinking phase with real-time content */
-function LiveThinkingBlock({ content }: { content: string }) {
-    const [isExpanded, setIsExpanded] = useState(true); // Open by default while thinking
+/** Thinking block — used for both live (streaming) and completed states */
+function ThinkingBlock({ title, content, isLive }: { title: string; content: string; isLive: boolean }) {
+    const [isExpanded, setIsExpanded] = useState(isLive); // Open by default while live
 
-    // Get a summary title from the first meaningful line
-    const title = (() => {
-        if (!content) return '사고를 시작하는 중...';
-        const firstLine = content.split('\n').find(l => l.trim());
-        if (!firstLine) return '사고 중...';
-        return firstLine.length > 35 ? firstLine.slice(0, 35) + '…' : firstLine;
-    })();
+    // Auto-open when live, allow manual toggle
+    useEffect(() => {
+        if (isLive) setIsExpanded(true);
+    }, [isLive]);
 
     return (
-        <div className="rounded-xl border border-purple-500/30 bg-purple-500/5 overflow-hidden animate-pulse-subtle">
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
-            >
-                <Brain size={14} className="animate-pulse shrink-0" />
-                <span className="truncate text-left flex-1 font-medium">{title}</span>
-                {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
-            </button>
-            {isExpanded && content && (
-                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[200px] overflow-y-auto custom-scrollbar"
-                    dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
-                />
-            )}
-        </div>
-    );
-}
-
-/** Completed thinking block — collapsible, shown after response is done */
-function ThinkingBlock({ title, content }: { title: string; content: string }) {
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    return (
-        <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 overflow-hidden">
+        <div className={`rounded-xl border overflow-hidden ${isLive
+            ? 'border-purple-500/30 bg-purple-500/5'
+            : 'border-purple-500/20 bg-purple-500/5'
+            }`}>
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="w-full flex items-center gap-2 px-3 py-2 text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
             >
-                <Brain size={12} className="shrink-0" />
-                <span className="truncate text-left flex-1">{title}</span>
+                <Brain size={13} className={`shrink-0 ${isLive ? 'animate-pulse' : ''}`} />
+                <span className="truncate text-left flex-1 font-medium">{title}</span>
                 {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
             </button>
             {isExpanded && (
-                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[300px] overflow-y-auto custom-scrollbar"
+                <div
+                    className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[250px] overflow-y-auto custom-scrollbar"
                     dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
                 />
             )}
