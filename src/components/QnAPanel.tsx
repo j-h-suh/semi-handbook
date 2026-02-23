@@ -1,18 +1,20 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Loader2, ChevronDown, ChevronRight, Brain } from 'lucide-react';
 
 interface ChatMessage {
     role: 'user' | 'model';
     content: string;
+    thinking?: string; // AI's thought process (for thinking mode)
 }
 
 export default function QnAPanel({ currentDocumentContext }: { currentDocumentContext: string }) {
-    const [isOpen, setIsOpen] = useState(false); // start closed by default or open, let's say closed so it's less intrusive
+    const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isThinking, setIsThinking] = useState(false); // true while AI is in "thinking" phase
     const scrollRef = useRef<HTMLDivElement>(null);
 
     // Auto scroll to bottom
@@ -20,7 +22,7 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [messages, isLoading, isOpen]);
+    }, [messages, isLoading, isThinking, isOpen]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,6 +40,7 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
         setInput('');
         setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
         setIsLoading(true);
+        setIsThinking(true);
 
         try {
             const response = await fetch('/api/chat', {
@@ -59,35 +62,64 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                 throw new Error(errMsg);
             }
 
-            // Stream the response
+            // Stream the response (JSON lines: { type: 'thinking' | 'text', content: '...' })
             const reader = response.body?.getReader();
             const decoder = new TextDecoder();
 
             if (!reader) throw new Error('No response stream');
 
             // Add an empty AI message and update it as chunks arrive
-            setMessages(prev => [...prev, { role: 'model', content: '' }]);
-            setIsLoading(false); // Hide "생각 중..." since text is appearing
+            setMessages(prev => [...prev, { role: 'model', content: '', thinking: '' }]);
+            setIsLoading(false);
 
-            let accumulated = '';
+            let accumulatedText = '';
+            let accumulatedThinking = '';
+            let buffer = '';
+
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                const chunk = decoder.decode(value, { stream: true });
-                accumulated += chunk;
+                buffer += decoder.decode(value, { stream: true });
 
-                // Update the last message (AI response) with accumulated text
+                // Process complete JSON lines
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || ''; // Keep incomplete last line in buffer
+
+                for (const line of lines) {
+                    if (!line.trim()) continue;
+                    try {
+                        const parsed = JSON.parse(line);
+                        if (parsed.type === 'thinking') {
+                            accumulatedThinking += parsed.content;
+                        } else if (parsed.type === 'text') {
+                            if (isThinking) setIsThinking(false);
+                            accumulatedText += parsed.content;
+                        }
+                    } catch {
+                        // If parsing fails, treat as raw text
+                        accumulatedText += line;
+                    }
+                }
+
+                // Update the last message with accumulated content
                 setMessages(prev => {
                     const updated = [...prev];
-                    updated[updated.length - 1] = { role: 'model', content: accumulated };
+                    updated[updated.length - 1] = {
+                        role: 'model',
+                        content: accumulatedText,
+                        thinking: accumulatedThinking
+                    };
                     return updated;
                 });
             }
+
+            setIsThinking(false);
         } catch (error: any) {
             console.error(error);
             setMessages(prev => [...prev, { role: 'model', content: `Error: ${error.message}` }]);
             setIsLoading(false);
+            setIsThinking(false);
         }
     };
 
@@ -137,23 +169,39 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                             }`}>
                             {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
                         </div>
-                        <div className={`px-4 py-2 rounded-2xl max-w-[85%] text-sm leading-relaxed ${msg.role === 'user'
-                            ? 'bg-indigo-600 text-white rounded-tr-sm'
-                            : 'bg-zinc-800 text-zinc-300 rounded-tl-sm border border-white/5'
-                            }`}>
-                            {msg.content}
+                        <div className={`max-w-[85%] ${msg.role === 'user' ? '' : 'space-y-2'}`}>
+                            {/* Thinking section (collapsible) */}
+                            {msg.role === 'model' && msg.thinking && (
+                                <ThinkingBlock content={msg.thinking} />
+                            )}
+                            {/* Main response */}
+                            <div className={`px-4 py-2 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                                ? 'bg-indigo-600 text-white rounded-tr-sm'
+                                : 'bg-zinc-800 text-zinc-300 rounded-tl-sm border border-white/5'
+                                }`}>
+                                {msg.content || (isThinking && idx === messages.length - 1 ? '' : msg.content)}
+                            </div>
                         </div>
                     </div>
                 ))}
 
-                {isLoading && (
+                {(isLoading || isThinking) && (
                     <div className="flex gap-3">
                         <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center shrink-0 text-cyan-400">
                             <Bot size={16} />
                         </div>
                         <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-slate-400">
-                            <Loader2 className="animate-spin" size={16} />
-                            <span className="text-xs">생각 중...</span>
+                            {isThinking ? (
+                                <>
+                                    <Brain className="animate-pulse" size={16} />
+                                    <span className="text-xs">사고 중...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Loader2 className="animate-spin" size={16} />
+                                    <span className="text-xs">연결 중...</span>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}
@@ -178,6 +226,29 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                     </button>
                 </form>
             </div>
+        </div>
+    );
+}
+
+/** Collapsible block to show the AI's thinking process */
+function ThinkingBlock({ content }: { content: string }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+        <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 overflow-hidden">
+            <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
+            >
+                <Brain size={12} />
+                <span>사고 과정 보기</span>
+                {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+            </button>
+            {isExpanded && (
+                <div className="px-3 pb-2 text-xs text-purple-200/60 leading-relaxed whitespace-pre-wrap border-t border-purple-500/10">
+                    {content}
+                </div>
+            )}
         </div>
     );
 }
