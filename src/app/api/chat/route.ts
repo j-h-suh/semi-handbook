@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 
 export async function POST(req: Request) {
     try {
@@ -40,7 +40,7 @@ ${context}
                 temperature: 0.3,
                 thinkingConfig: {
                     includeThoughts: true,
-                    thinkingLevel: 'low',
+                    thinkingLevel: ThinkingLevel.LOW,
                 }
             }
         });
