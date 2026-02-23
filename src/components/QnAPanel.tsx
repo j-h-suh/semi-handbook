@@ -148,11 +148,12 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
         }
     };
 
-    // Extract first meaningful line as a title
+    // Extract last meaningful line as a title (updates as thinking progresses)
     const getThinkingTitle = (thinking: string) => {
-        const firstLine = thinking.split('\n').find(l => l.trim());
-        if (!firstLine) return '사고 중...';
-        const cleaned = firstLine.replace(/\*\*/g, '').replace(/\*/g, '');
+        const lines = thinking.split('\n').filter(l => l.trim());
+        const lastLine = lines[lines.length - 1];
+        if (!lastLine) return '사고 중';
+        const cleaned = lastLine.replace(/\*\*/g, '').replace(/\*/g, '').trim();
         return cleaned.length > 40 ? cleaned.slice(0, 40) + '…' : cleaned;
     };
 
@@ -279,7 +280,9 @@ function ThinkingBlock({ title, content, isLive }: { title: string; content: str
                 className="w-full flex items-center gap-2 px-3 py-2 text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
             >
                 <Brain size={13} className={`shrink-0 ${isLive ? 'animate-pulse' : ''}`} />
-                <span className="truncate text-left flex-1 font-medium">{title}</span>
+                <span className="truncate text-left flex-1 font-medium">
+                    {title}{isLive && <span className="inline-block ml-1 animate-ellipsis">...</span>}
+                </span>
                 {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
             </button>
             {isExpanded && (

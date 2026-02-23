@@ -219,3 +219,25 @@ body {
 .prose tbody tr:hover td {
   background-color: rgba(255, 255, 255, 0.015);
 }
+
+/* Thinking dots animation */
+@keyframes ellipsis {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+.animate-ellipsis {
+  display: inline-block;
+  width: 1.5em;
+  text-align: left;
+  animation: ellipsis-clip 1.2s steps(4, end) infinite;
+}
+
+@keyframes ellipsis-clip {
+  0% { clip-path: inset(0 100% 0 0); }
+  25% { clip-path: inset(0 66% 0 0); }
+  50% { clip-path: inset(0 33% 0 0); }
+  75%, 100% { clip-path: inset(0 0 0 0); }
+}
