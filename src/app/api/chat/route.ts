@@ -33,7 +33,7 @@ ${context}
 
         // 5. Use streaming generation with thinking mode enabled
         const stream = await ai.models.generateContentStream({
-            model: 'gemini-3-pro-preview',
+            model: 'gemini-3.1-pro-preview',
             contents: fullPrompt,
             config: {
                 systemInstruction: systemInstruction,
