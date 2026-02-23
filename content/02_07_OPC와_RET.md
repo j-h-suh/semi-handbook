@@ -34,7 +34,7 @@
 ### Rule-Based OPC에서 Model-Based OPC로
 
 
-![OPC 보정 전/후 마스크 패턴 비교](https://image-proxy.jenghun-suh.workers.dev/images/02_07/opc_before_after.png)
+![OPC 보정 전/후 마스크 패턴 비교](/content/images/02_07/opc_before_after.png)
 
 초기(1990년대) OPC는 **규칙 기반(Rule-Based)**이었다. "패턴 끝에 20nm 세리프를 추가하라", "고립 선폭은 5nm 넓히고 밀집 선폭은 3nm 좁혀라" 같은 사전 정의된 규칙표를 적용했다. 단순하고 빠르지만, 현대의 수십억 개 패턴에 적용하려면 규칙이 폭발적으로 증가하고, 규칙 간 충돌이 발생하며, 패턴의 복잡한 상호작용을 포착하지 못한다.
 
@@ -62,7 +62,7 @@ OPC는 **RET(Resolution Enhancement Technique, 해상도 향상 기법)**의 한
 ### Off-Axis Illumination (OAI, 비축 조명)
 
 
-![조명 형태 비교 (Annular/Dipole/Quadrupole/Freeform)](https://image-proxy.jenghun-suh.workers.dev/images/02_07/illumination_shapes_comparison.svg)
+![조명 형태 비교 (Annular/Dipole/Quadrupole/Freeform)](/content/images/02_07/illumination_shapes_comparison.svg)
 
 2.2장에서 스캐너의 조명 시스템이 빛의 형태를 조절할 수 있다고 했다. 전통적인 수직 조명(Conventional Illumination) 대신 **경사진 각도**로 빛을 입사시키면, 패턴에 의한 회절광 중 렌즈에 들어오는 차수(Order)가 달라져 해상도와 DOF가 향상된다.
 
@@ -89,7 +89,7 @@ SMO의 결과로 나오는 조명 형태는 인간 엔지니어가 직관적으�
 ### ILT (Inverse Lithography Technology): 역으로 풀다
 
 
-![ILT 생성 마스크 패턴](https://image-proxy.jenghun-suh.workers.dev/images/02_07/ilt_mask_pattern.png)
+![ILT 생성 마스크 패턴](/content/images/02_07/ilt_mask_pattern.png)
 
 가장 진보된 OPC 기법인 **ILT(Inverse Lithography Technology, 역설계 리소그래피)**는 문제를 완전히 뒤집는다.
 

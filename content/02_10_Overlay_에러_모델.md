@@ -49,7 +49,7 @@ Overlay 오차를 모델링하려면 먼저 **두 가지 공간 스케일**을 �
 ### Inter-Field 선형 모델
 
 
-![선형 6성분 시각화 (Translation/Rotation/Magnification)](https://image-proxy.jenghun-suh.workers.dev/images/02_10/linear_6par_vector_map.png)
+![선형 6성분 시각화 (Translation/Rotation/Magnification)](/content/images/02_10/linear_6par_vector_map.png)
 
 ```
 OVL_x(X, Y) = Tx + Rx·Y + Mx·X
@@ -105,7 +105,7 @@ OVL_y(X, Y) = Ty - Rx·X + My·Y + d·X² + e·XY + f·Y²
 ### ASML의 고차 정렬 지원
 
 
-![선형 vs 고차 vs AI 모델 잔차 비교](https://image-proxy.jenghun-suh.workers.dev/images/02_10/model_residual_comparison.png)
+![선형 vs 고차 vs AI 모델 잔차 비교](/content/images/02_10/model_residual_comparison.png)
 
 ASML 스캐너는 이 개념을 단계적으로 구현하여 제공한다. **6par**는 기본 선형 모델(Translation + Rotation + Magnification)이고, **10par**는 6par에 비대칭 배율과 추가 항을 더한 것이다. **HOWA(Higher-Order Wafer Alignment)**는 최대 5차까지의 고차 다항식을 사용하여 웨이퍼 레벨의 복잡한 변형을 포착한다. **CPE(Corrections Per Exposure)**는 각 노광 필드에 **독립적인 보정값**을 적용하는 가장 유연한 방식이다 — 개념적으로 다항식 피팅이 아니라 **룩업 테이블(Lookup Table)**에 가깝다. 필드 위치마다 별도의 보정값을 저장하는 것이다.
 

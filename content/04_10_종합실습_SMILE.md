@@ -131,7 +131,7 @@ flowchart LR
 ### 대시보드와 알림
 
 
-![SMILE 모니터링 대시보드 목업](https://image-proxy.jenghun-suh.workers.dev/images/04_10/smile_dashboard_mockup.png)
+![SMILE 모니터링 대시보드 목업](/content/images/04_10/smile_dashboard_mockup.png)
 
 ```
 [SMILE 모니터링 대시보드]
@@ -161,7 +161,7 @@ flowchart LR
 ## 시스템 아키텍처 종합
 
 
-![SMILE 시스템 아키텍처 종합](https://image-proxy.jenghun-suh.workers.dev/images/04_10/smile_system_architecture.svg)
+![SMILE 시스템 아키텍처 종합](/content/images/04_10/smile_system_architecture.svg)
 
 ```
 [장비 레이어]
@@ -184,7 +184,7 @@ flowchart LR
 ## 개발 로드맵: 점진적 확장
 
 
-![SMILE 개발 로드맵 타임라인](https://image-proxy.jenghun-suh.workers.dev/images/04_10/smile_development_roadmap.svg)
+![SMILE 개발 로드맵 타임라인](/content/images/04_10/smile_development_roadmap.svg)
 
 ```
 Phase 1 (3개월): CD VM 단일 장비 PoC
