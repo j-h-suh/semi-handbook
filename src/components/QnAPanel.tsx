@@ -215,8 +215,8 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                             {/* Waiting indicator when neither thinking nor content has started */}
                             {msg.role === 'model' && msg.isStreaming && !msg.thinking && !msg.content && (
                                 <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-slate-400">
-                                    <Loader2 className="animate-spin" size={16} />
-                                    <span className="text-xs">연결 중...</span>
+                                    <Brain className="animate-pulse" size={16} />
+                                    <span className="text-xs">생각 중...</span>
                                 </div>
                             )}
 
