@@ -55,7 +55,6 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
             { role: 'user', content: userMsg },
             { role: 'model', content: '', thinking: '', isStreaming: true }
         ]);
-        setIsLoading(true);
 
         try {
             const response = await fetch('/api/chat', {
@@ -80,8 +79,6 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
             const reader = response.body?.getReader();
             const decoder = new TextDecoder();
             if (!reader) throw new Error('No response stream');
-
-            setIsLoading(false);
 
             let accumulatedText = '';
             let accumulatedThinking = '';
@@ -215,11 +212,11 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                                 />
                             )}
 
-                            {/* "사고 중" indicator when thinking hasn't started yet */}
+                            {/* Waiting indicator when neither thinking nor content has started */}
                             {msg.role === 'model' && msg.isStreaming && !msg.thinking && !msg.content && (
                                 <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-slate-400">
-                                    <Brain className="animate-pulse" size={16} />
-                                    <span className="text-xs">사고를 시작하는 중...</span>
+                                    <Loader2 className="animate-spin" size={16} />
+                                    <span className="text-xs">연결 중...</span>
                                 </div>
                             )}
 
@@ -237,17 +234,7 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                     </div>
                 ))}
 
-                {isLoading && (
-                    <div className="flex gap-3">
-                        <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center shrink-0 text-cyan-400">
-                            <Bot size={16} />
-                        </div>
-                        <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-slate-400">
-                            <Loader2 className="animate-spin" size={16} />
-                            <span className="text-xs">연결 중...</span>
-                        </div>
-                    </div>
-                )}
+
             </div>
 
             <div className="p-4 border-t border-white/5 bg-zinc-900/50">
@@ -275,11 +262,11 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
 
 /** Thinking block — used for both live (streaming) and completed states */
 function ThinkingBlock({ title, content, isLive }: { title: string; content: string; isLive: boolean }) {
-    const [isExpanded, setIsExpanded] = useState(isLive); // Open by default while live
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    // Auto-open when live, allow manual toggle
+    // Auto-collapse when streaming finishes (isLive → false)
     useEffect(() => {
-        if (isLive) setIsExpanded(true);
+        if (!isLive) setIsExpanded(false);
     }, [isLive]);
 
     return (
