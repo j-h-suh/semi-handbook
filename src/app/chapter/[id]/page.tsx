@@ -1,8 +1,7 @@
 import { getChapterData, getSortedChaptersData } from '@/lib/markdown';
 import Sidebar from '@/components/Sidebar';
 import MarkdownViewer from '@/components/MarkdownViewer';
-import QnAPanel from '@/components/QnAPanel';
-import SettingsModal from '@/components/SettingsModal';
+import SetDocumentContext from '@/components/SetDocumentContext';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -63,9 +62,8 @@ export default async function ChapterPage({ params }: { params: { id: string } }
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
             </main>
 
-            <QnAPanel currentDocumentContext={chapterData.contentHtml} />
-
-            <SettingsModal />
+            {/* Set document context for QnA panel (rendered at layout level) */}
+            <SetDocumentContext context={chapterData.contentHtml} />
         </>
     );
 }

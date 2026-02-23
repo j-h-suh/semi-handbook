@@ -21,8 +21,10 @@ interface ChatMessage {
     thinking?: string;
     isStreaming?: boolean; // true while this message is still being streamed
 }
+import { useQnAContext } from './QnAContext';
 
-export default function QnAPanel({ currentDocumentContext }: { currentDocumentContext: string }) {
+export default function QnAPanel() {
+    const { documentContext: currentDocumentContext } = useQnAContext();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
