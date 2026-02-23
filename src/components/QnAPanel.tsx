@@ -148,11 +148,19 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
         }
     };
 
-    // Extract last meaningful line as a title (updates as thinking progresses)
+    // Title: always show the LATEST bold heading (updates live as new sections stream in)
     const getThinkingTitle = (thinking: string) => {
         const lines = thinking.split('\n').filter(l => l.trim());
+        // Find the last bold heading (line starting with **)
+        const headings = lines.filter(l => l.trim().startsWith('**'));
+        if (headings.length > 0) {
+            const lastHeading = headings[headings.length - 1];
+            const cleaned = lastHeading.replace(/\*\*/g, '').trim();
+            return cleaned.length > 40 ? cleaned.slice(0, 40) + '…' : cleaned;
+        }
+        // Fallback
+        if (lines.length === 0) return '사고 중';
         const lastLine = lines[lines.length - 1];
-        if (!lastLine) return '사고 중';
         const cleaned = lastLine.replace(/\*\*/g, '').replace(/\*/g, '').trim();
         return cleaned.length > 40 ? cleaned.slice(0, 40) + '…' : cleaned;
     };
@@ -281,7 +289,7 @@ function ThinkingBlock({ title, content, isLive }: { title: string; content: str
             >
                 <Brain size={13} className={`shrink-0 ${isLive ? 'animate-pulse' : ''}`} />
                 <span className="truncate text-left flex-1 font-medium">
-                    {title}{isLive && <span className="inline-block ml-1 animate-ellipsis">...</span>}
+                    {title}{isLive && <AnimatedDots />}
                 </span>
                 {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
             </button>
@@ -292,5 +300,16 @@ function ThinkingBlock({ title, content, isLive }: { title: string; content: str
                 />
             )}
         </div>
+    );
+}
+
+/** Animated dots: each dot fades in/out with staggered delay */
+function AnimatedDots() {
+    return (
+        <span className="inline-flex ml-1 gap-[2px]">
+            <span className="w-[3px] h-[3px] rounded-full bg-purple-400 animate-bounce" style={{ animationDuration: '0.8s', animationDelay: '0s' }} />
+            <span className="w-[3px] h-[3px] rounded-full bg-purple-400 animate-bounce" style={{ animationDuration: '0.8s', animationDelay: '0.15s' }} />
+            <span className="w-[3px] h-[3px] rounded-full bg-purple-400 animate-bounce" style={{ animationDuration: '0.8s', animationDelay: '0.3s' }} />
+        </span>
     );
 }
