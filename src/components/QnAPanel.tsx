@@ -3,6 +3,18 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, ChevronDown, ChevronRight, Brain } from 'lucide-react';
 
+/** Convert basic markdown (bold, italic, code, newlines) to HTML */
+function renderMarkdown(text: string): string {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1 py-0.5 rounded text-cyan-300">$1</code>')
+        .replace(/\n/g, '<br/>');
+}
+
 interface ChatMessage {
     role: 'user' | 'model';
     content: string;
@@ -201,14 +213,15 @@ export default function QnAPanel({ currentDocumentContext }: { currentDocumentCo
                                     content={msg.thinking}
                                 />
                             )}
-                            {/* Main response */}
+                            {/* Main response — always below thinking */}
                             {msg.content && (
-                                <div className={`px-4 py-2 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                    ? 'bg-indigo-600 text-white rounded-tr-sm'
-                                    : 'bg-zinc-800 text-zinc-300 rounded-tl-sm border border-white/5'
-                                    }`}>
-                                    {msg.content}
-                                </div>
+                                <div
+                                    className={`px-4 py-2 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                                        ? 'bg-indigo-600 text-white rounded-tr-sm'
+                                        : 'bg-zinc-800 text-zinc-300 rounded-tl-sm border border-white/5'
+                                        }`}
+                                    dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
+                                />
                             )}
                         </div>
                     </div>
@@ -285,9 +298,9 @@ function LiveThinkingBlock({ content }: { content: string }) {
                 {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
             </button>
             {isExpanded && content && (
-                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed whitespace-pre-wrap border-t border-purple-500/10 max-h-[200px] overflow-y-auto custom-scrollbar">
-                    {content}
-                </div>
+                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[200px] overflow-y-auto custom-scrollbar"
+                    dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
+                />
             )}
         </div>
     );
@@ -308,9 +321,9 @@ function ThinkingBlock({ title, content }: { title: string; content: string }) {
                 {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
             </button>
             {isExpanded && (
-                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed whitespace-pre-wrap border-t border-purple-500/10 max-h-[300px] overflow-y-auto custom-scrollbar">
-                    {content}
-                </div>
+                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[300px] overflow-y-auto custom-scrollbar"
+                    dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
+                />
             )}
         </div>
     );
