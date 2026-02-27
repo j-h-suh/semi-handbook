@@ -12,66 +12,69 @@ export default function MarkdownViewer({ title, contentHtml }: { title: string; 
     useEffect(() => {
         if (!contentRef.current) return;
 
-        // ============================================================
-        // 1. MERMAID: Find and render mermaid code blocks
-        // ============================================================
-        const mermaidCodeBlocks = contentRef.current.querySelectorAll('pre code.language-mermaid');
+        // Wait for DOM to be fully painted after dangerouslySetInnerHTML update
+        const rafId = requestAnimationFrame(() => {
+            if (!contentRef.current) return;
 
-        mermaidCodeBlocks.forEach((codeEl) => {
-            const preEl = codeEl.parentElement;
-            if (!preEl || !preEl.parentElement) return;
+            // ============================================================
+            // 1. MERMAID: Find and render mermaid code blocks
+            // ============================================================
+            const mermaidCodeBlocks = contentRef.current.querySelectorAll('pre code.language-mermaid');
 
-            let diagramSource = codeEl.innerHTML || '';
-            diagramSource = diagramSource
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>')
-                .replace(/&amp;/g, '&');
+            mermaidCodeBlocks.forEach((codeEl) => {
+                const preEl = codeEl.parentElement;
+                if (!preEl || !preEl.parentElement) return;
 
-            const mermaidDiv = document.createElement('div');
-            mermaidDiv.className = 'mermaid flex justify-center py-8 w-full overflow-x-auto text-sm';
-            mermaidDiv.textContent = diagramSource;
+                let diagramSource = codeEl.innerHTML || '';
+                diagramSource = diagramSource
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&amp;/g, '&');
 
-            preEl.parentElement.replaceChild(mermaidDiv, preEl);
+                const mermaidDiv = document.createElement('div');
+                mermaidDiv.className = 'mermaid flex justify-center py-8 w-full overflow-x-auto text-sm';
+                mermaidDiv.textContent = diagramSource;
+
+                preEl.parentElement.replaceChild(mermaidDiv, preEl);
+            });
+
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'dark',
+                securityLevel: 'loose',
+                flowchart: { useMaxWidth: false },
+            });
+
+            mermaid.run({
+                querySelector: '.mermaid',
+            }).catch(e => console.error("Mermaid Render Error:", e));
+
+            // ============================================================
+            // 2. DIAGRAMS: Replace <img> tags with React components
+            // ============================================================
+            const images = contentRef.current.querySelectorAll('img');
+
+            images.forEach((img) => {
+                const src = img.getAttribute('src');
+                if (!src) return;
+
+                const DiagramComponent = diagramRegistry[src];
+                if (!DiagramComponent) return;
+
+                const container = document.createElement('div');
+                container.className = 'diagram-interactive';
+
+                img.parentElement?.replaceChild(container, img);
+
+                const root = createRoot(container);
+                root.render(<DiagramComponent />);
+                diagramRootsRef.current.push(root);
+            });
         });
 
-        mermaid.initialize({
-            startOnLoad: false,
-            theme: 'dark',
-            securityLevel: 'loose',
-            flowchart: { useMaxWidth: false },
-        });
-
-        mermaid.run({
-            querySelector: '.mermaid',
-        }).catch(e => console.error("Mermaid Render Error:", e));
-
-        // ============================================================
-        // 2. DIAGRAMS: Replace <img> tags with React components
-        // ============================================================
-        const images = contentRef.current.querySelectorAll('img');
-
-        images.forEach((img) => {
-            const src = img.getAttribute('src');
-            if (!src) return;
-
-            const DiagramComponent = diagramRegistry[src];
-            if (!DiagramComponent) return; // Not a registered diagram, keep as-is
-
-            // Create a container div to mount the React component
-            const container = document.createElement('div');
-            container.className = 'diagram-interactive';
-
-            // Replace the img tag with the container
-            img.parentElement?.replaceChild(container, img);
-
-            // Mount the React component
-            const root = createRoot(container);
-            root.render(<DiagramComponent />);
-            diagramRootsRef.current.push(root);
-        });
-
-        // Cleanup mounted React roots on unmount (deferred to avoid race condition)
+        // Cleanup
         return () => {
+            cancelAnimationFrame(rafId);
             const roots = [...diagramRootsRef.current];
             diagramRootsRef.current = [];
             setTimeout(() => {

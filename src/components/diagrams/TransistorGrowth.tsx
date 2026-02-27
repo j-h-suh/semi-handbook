@@ -1,5 +1,7 @@
 'use client';
 
+import { FONT, COLOR } from './diagramTokens';
+
 import {
     ResponsiveContainer,
     ScatterChart,
@@ -73,15 +75,15 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
                 maxWidth: 240,
             }}
         >
-            <p style={{ color: '#22d3ee', fontWeight: 600, fontSize: 14, margin: '0 0 4px' }}>
+            <p style={{ color: '#22d3ee', fontWeight: 600, fontSize: FONT.cardHeader, margin: '0 0 4px' }}>
                 {data.name}
             </p>
-            <p style={{ color: '#a1a1aa', fontSize: 12, margin: '0 0 8px' }}>
+            <p style={{ color: COLOR.textMuted, fontSize: FONT.subtitle, margin: '0 0 8px' }}>
                 {data.note}
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16 }}>
-                <span style={{ color: '#71717a', fontSize: 12 }}>{data.year}년</span>
-                <span style={{ color: '#f4f4f5', fontSize: 12, fontWeight: 600 }}>
+                <span style={{ color: COLOR.textDim, fontSize: FONT.subtitle }}>{data.year}년</span>
+                <span style={{ color: '#f4f4f5', fontSize: FONT.subtitle, fontWeight: 600 }}>
                     {formatCountKorean(data.count)}
                 </span>
             </div>
@@ -97,7 +99,7 @@ export default function TransistorGrowth() {
                 style={{
                     textAlign: 'center',
                     color: '#e4e4e7',
-                    fontSize: 16,
+                    fontSize: FONT.title,
                     fontWeight: 700,
                     marginBottom: 8,
                 }}
@@ -109,11 +111,11 @@ export default function TransistorGrowth() {
             <div style={{ display: 'flex', gap: 24, justifyContent: 'center', marginBottom: 4 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <svg width="28" height="12"><line x1="0" y1="6" x2="28" y2="6" stroke="#818cf8" strokeWidth="2" strokeDasharray="6 4" /></svg>
-                    <span style={{ color: '#a1a1aa', fontSize: 11 }}>무어의 법칙 (2년마다 2배)</span>
+                    <span style={{ color: COLOR.textMuted, fontSize: FONT.small }}>무어의 법칙 (2년마다 2배)</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#ef4444" /></svg>
-                    <span style={{ color: '#a1a1aa', fontSize: 11 }}>실측 데이터</span>
+                    <span style={{ color: COLOR.textMuted, fontSize: FONT.small }}>실측 데이터</span>
                 </div>
             </div>
 
@@ -129,14 +131,14 @@ export default function TransistorGrowth() {
                             type="number"
                             domain={[1968, 2026]}
                             ticks={[1970, 1980, 1990, 2000, 2010, 2020]}
-                            tick={{ fill: '#71717a', fontSize: 11 }}
+                            tick={{ fill: COLOR.textDim, fontSize: FONT.small }}
                             axisLine={{ stroke: '#3f3f46' }}
                             tickLine={{ stroke: '#3f3f46' }}
                             label={{
                                 value: '연도 (Year)',
                                 position: 'bottom',
                                 offset: 20,
-                                style: { fill: '#71717a', fontSize: 12 },
+                                style: { fill: COLOR.textDim, fontSize: FONT.subtitle },
                             }}
                         />
                         <YAxis
@@ -146,7 +148,7 @@ export default function TransistorGrowth() {
                             domain={[1000, 1e12]}
                             ticks={[1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11]}
                             tickFormatter={formatCount}
-                            tick={{ fill: '#71717a', fontSize: 11 }}
+                            tick={{ fill: COLOR.textDim, fontSize: FONT.small }}
                             axisLine={{ stroke: '#3f3f46' }}
                             tickLine={{ stroke: '#3f3f46' }}
                             label={{
@@ -154,7 +156,7 @@ export default function TransistorGrowth() {
                                 angle: -90,
                                 position: 'insideLeft',
                                 offset: -5,
-                                style: { fill: '#71717a', fontSize: 12, textAnchor: 'middle' },
+                                style: { fill: COLOR.textDim, fontSize: FONT.subtitle, textAnchor: 'middle' },
                             }}
                         />
 

@@ -2,8 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
-import html from 'remark-html';
 import gfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import remarkRehype from 'remark-rehype';
+import rehypeKatex from 'rehype-katex';
+import rehypeStringify from 'rehype-stringify';
 
 const contentDirectory = path.join(process.cwd(), 'content');
 
@@ -126,7 +129,10 @@ export async function getChapterData(id: string): Promise<Chapter> {
   // Use remark to convert markdown into HTML string
   const processedContent = await remark()
     .use(gfm, { singleTilde: false })
-    .use(html, { sanitize: false }) // Allow HTML inside markdown
+    .use(remarkMath)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeKatex)
+    .use(rehypeStringify, { allowDangerousHtml: true })
     .process(fixedBoldContent);
 
   const contentHtml = processedContent.toString();

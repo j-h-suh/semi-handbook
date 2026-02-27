@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FONT, COLOR } from './diagramTokens';
 
 type StepId = 'wafer' | 'frontend' | 'oxidation' | 'deposition' | 'litho' | 'etch' | 'implant' | 'cmp' | 'backend' | 'test' | 'ship' | null;
 
@@ -110,7 +111,7 @@ export default function ChipProcessFlow() {
 
     return (
         <div className="my-8 relative" ref={containerRef} onMouseLeave={() => setHovered(null)}>
-            <h3 style={{ textAlign: 'center', color: '#e4e4e7', fontSize: 16, fontWeight: 700, marginBottom: 16 }}>
+            <h3 style={{ textAlign: 'center', color: COLOR.textBright, fontSize: FONT.title, fontWeight: 700, marginBottom: 16 }}>
                 칩 제조 공정 흐름
             </h3>
 
@@ -134,7 +135,7 @@ export default function ChipProcessFlow() {
                 padding: '10px 12px',
                 background: 'rgba(129, 140, 248, 0.03)',
             }}>
-                <div style={{ color: '#818cf8', fontSize: 11, fontWeight: 600, textAlign: 'center', marginBottom: 8 }}>
+                <div style={{ color: '#818cf8', fontSize: FONT.small, fontWeight: 600, textAlign: 'center', marginBottom: 8 }}>
                     ↑ 전공정 세부 공정 (수십~수백 회 반복)
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
@@ -172,10 +173,10 @@ export default function ChipProcessFlow() {
                             maxWidth: 260,
                             boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                         }}>
-                            <p style={{ color: '#818cf8', fontWeight: 600, fontSize: 13, margin: '0 0 4px' }}>
+                            <p style={{ color: '#818cf8', fontWeight: 600, fontSize: FONT.cardHeader, margin: '0 0 4px' }}>
                                 {stepData[hovered].label}
                             </p>
-                            <p style={{ color: '#a1a1aa', fontSize: 12, margin: 0, lineHeight: 1.5 }}>
+                            <p style={{ color: COLOR.textMuted, fontSize: FONT.subtitle, margin: 0, lineHeight: 1.5 }}>
                                 {stepData[hovered].desc}
                             </p>
                         </div>

@@ -5,6 +5,9 @@ import type { ComponentType } from 'react';
 const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: false });
 const TransistorGrowth = dynamic(() => import('./TransistorGrowth'), { ssr: false });
 const ChipProcessFlow = dynamic(() => import('./ChipProcessFlow'), { ssr: false });
+const SiliconPurity = dynamic(() => import('./SiliconPurity'), { ssr: false });
+const IngotToWafer = dynamic(() => import('./IngotToWafer'), { ssr: false });
+const CrystalOrientation = dynamic(() => import('./CrystalOrientation'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -19,4 +22,7 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_01/mosfet_cross_section.svg': MOSFETCrossSection,
     '/content/images/01_01/transistor_growth.png': TransistorGrowth,
     '/content/images/01_01/chip_process_flow.svg': ChipProcessFlow,
+    '/content/images/01_02/silicon_purity_comparison.png': SiliconPurity,
+    '/content/images/01_02/ingot_to_wafer_process.svg': IngotToWafer,
+    '/content/images/01_02/crystal_orientation.svg': CrystalOrientation,
 };

@@ -12,16 +12,21 @@
     "@google/genai": "^1.42.0",
     "framer-motion": "^12.34.3",
     "gray-matter": "^4.0.3",
+    "katex": "^0.16.33",
     "lucide-react": "^0.575.0",
     "mermaid": "^11.12.3",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "recharts": "^3.7.0",
+    "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",
+    "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "remark-math": "^6.0.0",
+    "remark-rehype": "^11.1.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

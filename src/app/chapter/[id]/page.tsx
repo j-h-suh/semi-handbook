@@ -11,7 +11,8 @@ export async function generateStaticParams() {
 }
 
 export default async function ChapterPage({ params }: { params: { id: string } }) {
-    const { id } = await params;
+    const { id: rawId } = await params;
+    const id = decodeURIComponent(rawId);
     const chapterData = await getChapterData(id);
     const allChapters = getSortedChaptersData();
 

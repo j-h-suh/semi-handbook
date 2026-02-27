@@ -1,18 +1,41 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Bot, User, Loader2, ChevronDown, ChevronRight, Brain } from 'lucide-react';
+import katex from 'katex';
 
-/** Convert basic markdown (bold, italic, code, newlines) to HTML */
+/** Convert markdown (bold, italic, code, newlines, math) to HTML with KaTeX */
 function renderMarkdown(text: string): string {
-    return text
+    let html = text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
+        .replace(/>/g, '&gt;');
+
+    // Block math: $$...$$
+    html = html.replace(/\$\$([\s\S]*?)\$\$/g, (_match, tex) => {
+        try {
+            return katex.renderToString(tex.trim(), { displayMode: true, throwOnError: false });
+        } catch { return `<code>${tex}</code>`; }
+    });
+
+    // Inline math: $...$
+    html = html.replace(/\$([^$\n]+?)\$/g, (_match, tex) => {
+        try {
+            return katex.renderToString(tex.trim(), { displayMode: false, throwOnError: false });
+        } catch { return `<code>${tex}</code>`; }
+    });
+
+    // Headers: ### → h4, ## → h3
+    html = html.replace(/^### (.+)$/gm, '<h4 style="font-weight:600;margin:8px 0 4px;font-size:14px">$1</h4>');
+
+    // Bold, italic, code
+    html = html
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1 py-0.5 rounded text-cyan-300">$1</code>')
         .replace(/\n/g, '<br/>');
+
+    return html;
 }
 
 interface ChatMessage {
@@ -30,6 +53,8 @@ export default function QnAPanel() {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [panelWidth, setPanelWidth] = useState(420);
+    const isResizing = useRef(false);
 
     // Auto scroll to bottom
     useEffect(() => {
@@ -37,6 +62,27 @@ export default function QnAPanel() {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages, isLoading, isOpen]);
+
+    // Resize handler
+    const handleMouseDown = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        isResizing.current = true;
+        const startX = e.clientX;
+        const startWidth = panelWidth;
+
+        const onMouseMove = (ev: MouseEvent) => {
+            if (!isResizing.current) return;
+            const delta = startX - ev.clientX;
+            setPanelWidth(Math.max(320, Math.min(700, startWidth + delta)));
+        };
+        const onMouseUp = () => {
+            isResizing.current = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    }, [panelWidth]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -182,7 +228,12 @@ export default function QnAPanel() {
     }
 
     return (
-        <div className="w-[380px] h-full flex flex-col border-l border-white/5 glass-panel shrink-0 shadow-2xl relative z-40 transition-all bg-zinc-900/95">
+        <div style={{ width: panelWidth }} className="h-full flex flex-col border-l border-white/5 glass-panel shrink-0 shadow-2xl relative z-40 transition-[background] bg-zinc-900/95">
+            {/* Resize handle */}
+            <div
+                onMouseDown={handleMouseDown}
+                className="absolute left-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-cyan-500/30 transition-colors z-50"
+            />
             <div className="p-4 border-b border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Bot className="text-cyan-400" size={20} />
