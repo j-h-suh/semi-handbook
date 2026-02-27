@@ -70,3 +70,38 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 - KaTeX (수식)
 - Mermaid (다이어그램)
 - Vercel 배포
+
+## 9. 다이어그램 스타일 가이드
+
+### 공통 규칙
+- `'use client'` 선언 필수
+- `diagramTokens.ts`의 `FONT`, `COLOR` import (하드코딩 금지)
+- 래퍼에 `className="my-8"` 상하 여백
+- **다크 테마** 기반: 배경 `rgba(255,255,255,0.02~0.06)`, zinc 계열 텍스트
+
+### 제목 구조
+```
+<h3> 한글 제목   → FONT.title (18px), COLOR.textBright, bold
+<p>  영문 부제   → FONT.subtitle (14px), COLOR.textDim (선택)
+```
+
+### 두 가지 렌더링 유형
+
+| 유형 | 사용 시점 | 의존성 |
+|------|----------|--------|
+| SVG 인터랙티브 | 구조도, 프로세스 플로우 | Framer Motion (`motion.div`, `motion.g`) |
+| 차트형 | 데이터 비교, 시계열 | Recharts (`BarChart`, `ScatterChart` 등) |
+
+### 인터랙션 패턴
+- **hover dimming**: 비호버 요소 `opacity: 0.35`
+- **hover scale**: 호버 요소 `scale: 1.02~1.05`
+- **floating tooltip**: `AnimatePresence` + 마우스 좌표 추적
+  - 배경: `rgba(24,24,27,0.95)` + `backdrop-blur(8px)`
+  - 보더: `rgba(255,255,255,0.1)`, `borderRadius: 8`
+  - 제목: 엑센트 색상, `FONT.cardHeader`, bold
+  - 본문: `COLOR.textMuted`, `FONT.small`
+
+### 색상 팔레트
+- 툴팁 제목 엑센트: `#22d3ee`(cyan) 또는 `#818cf8`(indigo)
+- 데이터 엑센트: `#ef4444`(red), `#3b82f6`(blue), `#22c55e`(green), `#f59e0b`(amber), `#8b5cf6`(purple)
+- 보조 요소: zinc 계열 (`#a1a1aa`, `#71717a`, `#4b5563`)
