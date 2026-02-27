@@ -9,6 +9,8 @@ const SiliconPurity = dynamic(() => import('./SiliconPurity'), { ssr: false });
 const IngotToWafer = dynamic(() => import('./IngotToWafer'), { ssr: false });
 const CrystalOrientation = dynamic(() => import('./CrystalOrientation'), { ssr: false });
 const FrontEndProcessFlow = dynamic(() => import('./FrontEndProcessFlow'), { ssr: false });
+const ChipCrossSection = dynamic(() => import('./ChipCrossSection'), { ssr: false });
+const ProcessDataVolume = dynamic(() => import('./ProcessDataVolume'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -27,4 +29,6 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_02/ingot_to_wafer_process.svg': IngotToWafer,
     '/content/images/01_02/crystal_orientation.svg': CrystalOrientation,
     '/content/images/01_03/frontend_process_flow.svg': FrontEndProcessFlow,
+    '/content/images/01_03/chip_cross_section_feol_beol.svg': ChipCrossSection,
+    '/content/images/01_03/process_data_volume.png': ProcessDataVolume,
 };
