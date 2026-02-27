@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 
 // Lazy-load diagram components to keep bundle size small
 const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: false });
+const TransistorGrowth = dynamic(() => import('./TransistorGrowth'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -15,4 +16,5 @@ const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: 
  */
 export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_01/mosfet_cross_section.svg': MOSFETCrossSection,
+    '/content/images/01_01/transistor_growth.png': TransistorGrowth,
 };
