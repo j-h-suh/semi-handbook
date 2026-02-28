@@ -1,12 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import gfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import remarkRehype from 'remark-rehype';
-import rehypeKatex from 'rehype-katex';
-import rehypeStringify from 'rehype-stringify';
 
 const contentDirectory = path.join(process.cwd(), 'content');
 
@@ -17,7 +11,7 @@ export interface ChapterMeta {
 }
 
 export interface Chapter extends ChapterMeta {
-  contentHtml: string;
+  content: string;
 }
 
 // Helper to determine part from filename (e.g. 01_01_... -> Part 1)
@@ -126,22 +120,11 @@ export async function getChapterData(id: string): Promise<Chapter> {
   // because remark breaks if ** touches Korean characters or parentheses without spaces.
   const fixedBoldContent = cleanContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-  // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(gfm, { singleTilde: false })
-    .use(remarkMath)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeKatex)
-    .use(rehypeStringify, { allowDangerousHtml: true })
-    .process(fixedBoldContent);
-
-  const contentHtml = processedContent.toString();
-
   return {
     id,
     title,
     part: getPartFromId(id),
-    contentHtml,
+    content: fixedBoldContent,
     ...matterResult.data,
   };
 }

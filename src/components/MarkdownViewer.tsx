@@ -1,100 +1,140 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { createRoot, type Root } from 'react-dom/client';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import remarkUnwrapImages from 'remark-unwrap-images';
+import rehypeKatex from 'rehype-katex';
+import rehypeRaw from 'rehype-raw';
 import mermaid from 'mermaid';
 import { diagramRegistry } from './diagrams/diagramRegistry';
+import { FONT } from './diagrams/diagramTokens';
+import 'katex/dist/katex.min.css';
 
-export default function MarkdownViewer({ title, contentHtml }: { title: string; contentHtml: string }) {
-    const contentRef = useRef<HTMLDivElement>(null);
-    const diagramRootsRef = useRef<Root[]>([]);
+interface MarkdownViewerProps {
+    title: string;
+    content: string;
+}
 
+export default function MarkdownViewer({ title, content }: MarkdownViewerProps) {
+    const mermaidRef = useRef<HTMLDivElement>(null);
+
+    // Re-initialize mermaid when content changes
     useEffect(() => {
-        if (!contentRef.current) return;
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: { useMaxWidth: true },
+            fontSize: FONT.small,
+            themeVariables: {
+                background: 'transparent',
+                mainBkg: '#1e3a5f',
+                nodeBorder: '#3b82f6',
+                clusterBkg: 'transparent',
+                clusterBorder: 'transparent',
+                primaryColor: '#1e3a5f',
+                primaryTextColor: '#e2e8f0',
+                primaryBorderColor: '#3b82f6',
+                lineColor: '#64748b',
+                secondaryColor: '#312e81',
+                tertiaryColor: '#1e293b',
+                edgeLabelBackground: 'transparent',
+            },
+        });
 
-        // Wait for DOM to be fully painted after dangerouslySetInnerHTML update
-        const rafId = requestAnimationFrame(() => {
-            if (!contentRef.current) return;
-
-            // ============================================================
-            // 1. MERMAID: Find and render mermaid code blocks
-            // ============================================================
-            const mermaidCodeBlocks = contentRef.current.querySelectorAll('pre code.language-mermaid');
-
-            mermaidCodeBlocks.forEach((codeEl) => {
-                const preEl = codeEl.parentElement;
-                if (!preEl || !preEl.parentElement) return;
-
-                let diagramSource = codeEl.innerHTML || '';
-                diagramSource = diagramSource
-                    .replace(/&lt;/g, '<')
-                    .replace(/&gt;/g, '>')
-                    .replace(/&amp;/g, '&');
-
-                const mermaidDiv = document.createElement('div');
-                mermaidDiv.className = 'mermaid flex justify-center py-8 w-full overflow-x-auto text-sm';
-                mermaidDiv.textContent = diagramSource;
-
-                preEl.parentElement.replaceChild(mermaidDiv, preEl);
-            });
-
-            mermaid.initialize({
-                startOnLoad: false,
-                theme: 'dark',
-                securityLevel: 'loose',
-                flowchart: { useMaxWidth: false },
-            });
-
+        // Find all mermaid divs and render them
+        if (mermaidRef.current) {
             mermaid.run({
                 querySelector: '.mermaid',
             }).catch(e => console.error("Mermaid Render Error:", e));
-
-            // ============================================================
-            // 2. DIAGRAMS: Replace <img> tags with React components
-            // ============================================================
-            const images = contentRef.current.querySelectorAll('img');
-
-            images.forEach((img) => {
-                const src = img.getAttribute('src');
-                if (!src) return;
-
-                const DiagramComponent = diagramRegistry[src];
-                if (!DiagramComponent) return;
-
-                const container = document.createElement('div');
-                container.className = 'diagram-interactive';
-
-                img.parentElement?.replaceChild(container, img);
-
-                const root = createRoot(container);
-                root.render(<DiagramComponent />);
-                diagramRootsRef.current.push(root);
-            });
-        });
-
-        // Cleanup
-        return () => {
-            cancelAnimationFrame(rafId);
-            const roots = [...diagramRootsRef.current];
-            diagramRootsRef.current = [];
-            setTimeout(() => {
-                roots.forEach(root => root.unmount());
-            }, 0);
-        };
-    }, [contentHtml]);
+        }
+    }, [content]);
 
     return (
-        <article className="max-w-4xl mx-auto w-full px-8 py-12 lg:px-12">
+        <article className="max-w-4xl mx-auto w-full px-8 py-12 lg:px-12" ref={mermaidRef}>
             <header className="mb-12">
                 <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
                     {title}
                 </h1>
             </header>
-            <div
-                ref={contentRef}
-                className="prose prose-slate prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: contentHtml }}
-            />
+
+            <div className="prose prose-slate prose-invert max-w-none">
+                <ReactMarkdown
+                    remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath, remarkUnwrapImages]}
+                    rehypePlugins={[rehypeRaw, rehypeKatex]}
+                    components={{
+                        // 1. Intercept <img> to render custom diagram components
+                        img: ({ src, alt, ...props }) => {
+                            const imgSrc = src as string;
+                            if (imgSrc && diagramRegistry[imgSrc]) {
+                                const DiagramComponent = diagramRegistry[imgSrc];
+                                return (
+                                    <span className="diagram-interactive my-8 block w-full" aria-label={alt}>
+                                        <DiagramComponent />
+                                    </span>
+                                );
+                            }
+                            // Fallback to standard img tag (we need native img here since it might be an external src)
+                            // eslint-disable-next-line @next/next/no-img-element
+                            return <img src={imgSrc} alt={alt} className="mx-auto block" {...props} />;
+                        },
+
+                        // 2. Intercept <code> to render mermaid blocks
+                        code({ className, children, ...props }) {
+                            const match = /language-(\w+)/.exec(className || '');
+                            const isMermaid = match && match[1] === 'mermaid';
+
+                            if (isMermaid) {
+                                return (
+                                    <code className="mermaid flex justify-center py-8 w-full overflow-x-auto text-sm block">
+                                        {String(children).replace(/\n$/, '')}
+                                    </code>
+                                );
+                            }
+
+                            // Let regular code blocks use default rendering
+                            return (
+                                <code className={className} {...props}>
+                                    {children}
+                                </code>
+                            );
+                        },
+
+                        // 3. Intercept <p> to prevent invalid HTML nesting
+                        // react-markdown wraps images in <p>, and rehype-raw can add nested <p> wrappers
+                        // Any block-level element inside <p> is invalid HTML and causes hydration errors
+                        p({ children, ...props }) {
+                            const BLOCK_TAGS = new Set(['div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'table', 'pre', 'blockquote', 'hr', 'section', 'figure', 'img']);
+
+                            const hasBlock = (child: React.ReactNode): boolean => {
+                                if (!child || typeof child !== 'object') return false;
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                const el = child as any;
+                                if (!el.props) return false;
+                                // Check for our diagram wrapper
+                                const cn = el.props.className || '';
+                                if (typeof cn === 'string' && cn.includes('diagram-interactive')) return true;
+                                // Check for block-level HTML tags
+                                if (typeof el.type === 'string' && BLOCK_TAGS.has(el.type)) return true;
+                                return false;
+                            };
+
+                            const shouldUnwrap = Array.isArray(children)
+                                ? children.some(hasBlock)
+                                : hasBlock(children);
+
+                            if (shouldUnwrap) {
+                                return <div {...props}>{children}</div>;
+                            }
+                            return <p {...props}>{children}</p>;
+                        }
+                    }}
+                >
+                    {content}
+                </ReactMarkdown>
+            </div>
         </article>
     );
 }

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-main-bg: #18181b;
@@ -51,88 +52,8 @@ body {
   line-height: 1.6;
 }
 
-.prose h1 {
-  font-size: 2.5em;
-  font-weight: 700;
-  margin-bottom: 1em;
-  color: #f4f4f5;
-  letter-spacing: -0.02em;
-}
 
-.prose h2 {
-  font-size: 1.75em;
-  font-weight: 600;
-  margin-top: 1.8em;
-  margin-bottom: 0.8em;
-  color: #f4f4f5;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.prose h3 {
-  font-size: 1.25em;
-  font-weight: 600;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  color: #e4e4e7;
-}
-
-.prose p {
-  margin-top: 0.5em;
-  margin-bottom: 1em;
-}
-
-.prose a {
-  color: #a1a1aa;
-  text-decoration: underline;
-  text-decoration-color: rgba(161, 161, 170, 0.4);
-  transition: opacity 0.2s;
-}
-
-.prose a:hover {
-  opacity: 0.8;
-}
-
-/* BOLD FIX: explicit overrides for all emphasis tags */
-.prose strong,
-.prose b {
-  font-weight: 700 !important;
-  color: #f4f4f5 !important;
-  background-color: transparent !important;
-  padding: 0;
-  -webkit-text-stroke: 0.3px #f4f4f5;
-  /* extra thickness if font isn't bold enough */
-}
-
-.prose blockquote {
-  font-weight: 400;
-  font-style: normal;
-  color: #a1a1aa;
-  border-left-width: 3px;
-  border-left-color: #52525b;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  padding-left: 1em;
-}
-
-.prose ul,
-.prose ol {
-  margin-top: 0.5em;
-  margin-bottom: 1em;
-  padding-left: 1.5em;
-}
-
-.prose li {
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-}
-
-.prose img {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
-  border-radius: 4px;
-}
-
+/* Accent for inline code */
 .prose code {
   color: #eb5757;
   background: rgba(135, 131, 120, 0.15);
@@ -142,28 +63,50 @@ body {
   font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
 }
 
-.prose pre {
-  color: #d4d4d8;
-  background-color: #27272a;
-  overflow-x: auto;
-  font-size: 100%;
-  line-height: 1.5;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 4px;
-  padding: 1rem;
-  width: max-content;
-  max-width: 100%;
-}
-
+/* Override block code center alignment since we use inline code above */
 .prose pre code {
   background-color: transparent;
   color: inherit;
   padding: 0;
-  text-align: center;
+  text-align: left;
   display: block;
+}
+
+/* Mermaid diagrams: strip prose code/pre styling */
+.prose pre:has(.mermaid),
+.prose .mermaid {
+  background: transparent !important;
+  border: none !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+.prose pre:has(.mermaid) {
+  padding: 0 !important;
+  margin: 2em 0 !important;
+}
+
+.prose .mermaid {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Mermaid SVG: transparent background */
+.prose .mermaid svg {
+  background-color: transparent !important;
+}
+
+/* KaTeX display math: center block equations */
+.prose .katex-display {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 .prose hr {
@@ -222,10 +165,21 @@ body {
 
 /* Thinking dots animation */
 @keyframes ellipsis {
-  0% { content: ''; }
-  25% { content: '.'; }
-  50% { content: '..'; }
-  75% { content: '...'; }
+  0% {
+    content: '';
+  }
+
+  25% {
+    content: '.';
+  }
+
+  50% {
+    content: '..';
+  }
+
+  75% {
+    content: '...';
+  }
 }
 
 .animate-ellipsis {
@@ -236,8 +190,20 @@ body {
 }
 
 @keyframes ellipsis-clip {
-  0% { clip-path: inset(0 100% 0 0); }
-  25% { clip-path: inset(0 66% 0 0); }
-  50% { clip-path: inset(0 33% 0 0); }
-  75%, 100% { clip-path: inset(0 0 0 0); }
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  25% {
+    clip-path: inset(0 66% 0 0);
+  }
+
+  50% {
+    clip-path: inset(0 33% 0 0);
+  }
+
+  75%,
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
 }

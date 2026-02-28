@@ -29,7 +29,7 @@ export default async function ChapterPage({ params }: { params: { id: string } }
                 <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 w-full">
                     <MarkdownViewer
                         title={chapterData.title}
-                        contentHtml={chapterData.contentHtml}
+                        content={chapterData.content}
                     />
 
                     {/* Navigation Links */}
@@ -64,7 +64,7 @@ export default async function ChapterPage({ params }: { params: { id: string } }
             </main>
 
             {/* Set document context for QnA panel (rendered at layout level) */}
-            <SetDocumentContext context={chapterData.contentHtml} />
+            <SetDocumentContext context={chapterData.content} />
         </>
     );
 }

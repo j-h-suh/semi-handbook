@@ -11,6 +11,9 @@ const CrystalOrientation = dynamic(() => import('./CrystalOrientation'), { ssr: 
 const FrontEndProcessFlow = dynamic(() => import('./FrontEndProcessFlow'), { ssr: false });
 const ChipCrossSection = dynamic(() => import('./ChipCrossSection'), { ssr: false });
 const ProcessDataVolume = dynamic(() => import('./ProcessDataVolume'), { ssr: false });
+const ThermalOxidationFurnace = dynamic(() => import('./ThermalOxidationFurnace'), { ssr: false });
+const DealGroveOxidation = dynamic(() => import('./DealGroveOxidation'), { ssr: false });
+const ALDvsCVDConformality = dynamic(() => import('./ALDvsCVDConformality'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -31,4 +34,7 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_03/frontend_process_flow.svg': FrontEndProcessFlow,
     '/content/images/01_03/chip_cross_section_feol_beol.svg': ChipCrossSection,
     '/content/images/01_03/process_data_volume.png': ProcessDataVolume,
+    '/content/images/01_04/thermal_oxidation_furnace.svg': ThermalOxidationFurnace,
+    '/content/images/01_04/deal_grove_oxidation.png': DealGroveOxidation,
+    '/content/images/01_04/ald_vs_cvd_conformality.svg': ALDvsCVDConformality,
 };

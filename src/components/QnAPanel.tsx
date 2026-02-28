@@ -1,42 +1,13 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Bot, User, Loader2, ChevronDown, ChevronRight, Brain } from 'lucide-react';
-import katex from 'katex';
+import { Send, Bot, User, ChevronDown, ChevronRight, Brain } from 'lucide-react';
 
-/** Convert markdown (bold, italic, code, newlines, math) to HTML with KaTeX */
-function renderMarkdown(text: string): string {
-    let html = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-
-    // Block math: $$...$$
-    html = html.replace(/\$\$([\s\S]*?)\$\$/g, (_match, tex) => {
-        try {
-            return katex.renderToString(tex.trim(), { displayMode: true, throwOnError: false });
-        } catch { return `<code>${tex}</code>`; }
-    });
-
-    // Inline math: $...$
-    html = html.replace(/\$([^$\n]+?)\$/g, (_match, tex) => {
-        try {
-            return katex.renderToString(tex.trim(), { displayMode: false, throwOnError: false });
-        } catch { return `<code>${tex}</code>`; }
-    });
-
-    // Headers: ### → h4, ## → h3
-    html = html.replace(/^### (.+)$/gm, '<h4 style="font-weight:600;margin:8px 0 4px;font-size:14px">$1</h4>');
-
-    // Bold, italic, code
-    html = html
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1 py-0.5 rounded text-cyan-300">$1</code>')
-        .replace(/\n/g, '<br/>');
-
-    return html;
-}
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 
 interface ChatMessage {
     role: 'user' | 'model';
@@ -180,6 +151,7 @@ export default function QnAPanel() {
                 return updated;
             });
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error(error);
             setMessages(prev => {
@@ -285,12 +257,18 @@ export default function QnAPanel() {
                             {/* Main response — always below thinking */}
                             {msg.content && (
                                 <div
-                                    className={`px-4 py-2 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                                    className={`px-4 py-2 rounded-2xl text-sm leading-relaxed prose prose-invert max-w-none prose-p:my-1 prose-pre:my-2 prose-h3:text-sm prose-h3:mt-3 prose-h3:mb-1 ${msg.role === 'user'
                                         ? 'bg-indigo-600 text-white rounded-tr-sm'
                                         : 'bg-zinc-800 text-zinc-300 rounded-tl-sm border border-white/5'
                                         }`}
-                                    dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
-                                />
+                                >
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm, remarkMath]}
+                                        rehypePlugins={[rehypeKatex]}
+                                    >
+                                        {msg.content}
+                                    </ReactMarkdown>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -328,6 +306,7 @@ function ThinkingBlock({ title, content, isLive }: { title: string; content: str
 
     // Auto-collapse when streaming finishes (isLive → false)
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (!isLive) setIsExpanded(false);
     }, [isLive]);
 
@@ -347,10 +326,14 @@ function ThinkingBlock({ title, content, isLive }: { title: string; content: str
                 {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
             </button>
             {isExpanded && (
-                <div
-                    className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[250px] overflow-y-auto custom-scrollbar"
-                    dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
-                />
+                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[250px] overflow-y-auto custom-scrollbar prose prose-invert max-w-none prose-p:my-0.5 prose-pre:my-1">
+                    <ReactMarkdown
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        rehypePlugins={[rehypeKatex]}
+                    >
+                        {content}
+                    </ReactMarkdown>
+                </div>
             )}
         </div>
     );

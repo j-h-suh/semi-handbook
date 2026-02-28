@@ -14,6 +14,7 @@ export default function SettingsModal() {
 
         // Load from localStorage
         const savedKey = localStorage.getItem('gemini-api-key');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (savedKey) setGeminiKey(savedKey);
 
         return () => window.removeEventListener('open-settings', handleOpen);

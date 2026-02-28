@@ -84,6 +84,7 @@ ${context}
             },
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error('Chat API Error:', error);
         return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
