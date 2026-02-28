@@ -14,6 +14,10 @@ const ProcessDataVolume = dynamic(() => import('./ProcessDataVolume'), { ssr: fa
 const ThermalOxidationFurnace = dynamic(() => import('./ThermalOxidationFurnace'), { ssr: false });
 const DealGroveOxidation = dynamic(() => import('./DealGroveOxidation'), { ssr: false });
 const ALDvsCVDConformality = dynamic(() => import('./ALDvsCVDConformality'), { ssr: false });
+const WetVsDryEtchProfile = dynamic(() => import('./WetVsDryEtchProfile'), { ssr: false });
+const RIEChamber = dynamic(() => import('./RIEChamber'), { ssr: false });
+const EtchProfileDefects = dynamic(() => import('./EtchProfileDefects'), { ssr: false });
+const OESEndpointDetection = dynamic(() => import('./OESEndpointDetection'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -37,4 +41,8 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_04/thermal_oxidation_furnace.svg': ThermalOxidationFurnace,
     '/content/images/01_04/deal_grove_oxidation.png': DealGroveOxidation,
     '/content/images/01_04/ald_vs_cvd_conformality.svg': ALDvsCVDConformality,
+    '/content/images/01_05/wet_vs_dry_etch_profile.svg': WetVsDryEtchProfile,
+    '/content/images/01_05/rie_chamber_cross_section.svg': RIEChamber,
+    '/content/images/01_05/etch_profile_defects.svg': EtchProfileDefects,
+    '/content/images/01_05/oes_endpoint_detection.png': OESEndpointDetection,
 };

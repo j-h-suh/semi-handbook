@@ -34,6 +34,16 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `01_02/silicon_purity_comparison.png` | `SiliconPurity` | 1.2 |
 | `01_02/ingot_to_wafer_process.svg` | `IngotToWafer` | 1.2 |
 | `01_02/crystal_orientation.svg` | `CrystalOrientation` | 1.2 |
+| `01_03/frontend_process_flow.svg` | `FrontEndProcessFlow` | 1.3 |
+| `01_03/chip_cross_section_feol_beol.svg` | `ChipCrossSection` | 1.3 |
+| `01_03/process_data_volume.png` | `ProcessDataVolume` | 1.3 |
+| `01_04/thermal_oxidation_furnace.svg` | `ThermalOxidationFurnace` | 1.4 |
+| `01_04/deal_grove_oxidation.png` | `DealGroveOxidation` | 1.4 |
+| `01_04/ald_vs_cvd_conformality.svg` | `ALDvsCVDConformality` | 1.4 |
+| `01_05/wet_vs_dry_etch_profile.svg` | `WetVsDryEtchProfile` | 1.5 |
+| `01_05/rie_chamber_cross_section.svg` | `RIEChamber` | 1.5 |
+| `01_05/etch_profile_defects.svg` | `EtchProfileDefects` | 1.5 |
+| `01_05/oes_endpoint_detection.png` | `OESEndpointDetection` | 1.5 |
 
 ## 4. 마크다운 작성 규칙
 
