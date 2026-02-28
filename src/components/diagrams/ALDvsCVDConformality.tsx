@@ -157,7 +157,7 @@ function ALDCoating({ ox }: { ox: number }) {
  */
 function DimLabel({ x, y, label, color }: { x: number; y: number; label: string; color: string }) {
     return (
-        <text x={x} y={y} textAnchor="middle" fontSize={10} fill={color} opacity={0.8} fontFamily="monospace">
+        <text x={x} y={y} textAnchor="middle" fontSize={FONT.min} fill={color} opacity={0.8} fontFamily="monospace">
             {label}
         </text>
     );
@@ -205,7 +205,13 @@ export default function ALDvsCVDConformality() {
                         <CVDCoating ox={cvdOx} />
 
 
-
+                        {/* Overhang annotation */}
+                        <text
+                            x={cvdOx + SW} y={BASE_Y - CVD_TOP - 4}
+                            textAnchor="start" fontSize={FONT.min} fill="#f59e0b" opacity={0.7}
+                        >
+                            ↓ Overhang(돌출)
+                        </text>
 
                         {/* Dimension labels */}
                         <DimLabel x={cvdOx + SW / 2} y={BASE_Y - CVD_TOP - 4} label={`${CVD_TOP}nm`} color="#f59e0b" />
