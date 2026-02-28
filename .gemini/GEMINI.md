@@ -44,6 +44,9 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `01_05/rie_chamber_cross_section.svg` | `RIEChamber` | 1.5 |
 | `01_05/etch_profile_defects.svg` | `EtchProfileDefects` | 1.5 |
 | `01_05/oes_endpoint_detection.png` | `OESEndpointDetection` | 1.5 |
+| `01_06/doping_profile_energy.png` | `DopingProfileEnergy` | 1.6 |
+| `01_06/channeling_effect.svg` | `ChannelingEffect` | 1.6 |
+| `01_06/anneal_lattice_recovery.svg` | `AnnealLatticeRecovery` | 1.6 |
 
 ## 4. 마크다운 작성 규칙
 

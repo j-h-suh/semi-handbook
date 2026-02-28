@@ -18,6 +18,9 @@ const WetVsDryEtchProfile = dynamic(() => import('./WetVsDryEtchProfile'), { ssr
 const RIEChamber = dynamic(() => import('./RIEChamber'), { ssr: false });
 const EtchProfileDefects = dynamic(() => import('./EtchProfileDefects'), { ssr: false });
 const OESEndpointDetection = dynamic(() => import('./OESEndpointDetection'), { ssr: false });
+const DopingProfileEnergy = dynamic(() => import('./DopingProfileEnergy'), { ssr: false });
+const ChannelingEffect = dynamic(() => import('./ChannelingEffect'), { ssr: false });
+const AnnealLatticeRecovery = dynamic(() => import('./AnnealLatticeRecovery'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -45,4 +48,7 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_05/rie_chamber_cross_section.svg': RIEChamber,
     '/content/images/01_05/etch_profile_defects.svg': EtchProfileDefects,
     '/content/images/01_05/oes_endpoint_detection.png': OESEndpointDetection,
+    '/content/images/01_06/doping_profile_energy.png': DopingProfileEnergy,
+    '/content/images/01_06/channeling_effect.svg': ChannelingEffect,
+    '/content/images/01_06/anneal_lattice_recovery.svg': AnnealLatticeRecovery,
 };
