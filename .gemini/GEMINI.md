@@ -47,6 +47,11 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `01_06/doping_profile_energy.png` | `DopingProfileEnergy` | 1.6 |
 | `01_06/channeling_effect.svg` | `ChannelingEffect` | 1.6 |
 | `01_06/anneal_lattice_recovery.svg` | `AnnealLatticeRecovery` | 1.6 |
+| `01_07/cmp_necessity.svg` | `CMPNecessity` | 1.7 |
+| `01_07/dishing_erosion.svg` | `DishingErosion` | 1.7 |
+| `01_07/beol_metal_layers.svg` | `BEOLMetalLayers` | 1.7 |
+| `01_07/damascene_process_steps.svg` | `DamasceneProcessSteps` | 1.7 |
+| `01_07/rc_delay_vs_gate_delay.png` | `RCDelayVsGateDelay` | 1.7 |
 
 ## 4. 마크다운 작성 규칙
 

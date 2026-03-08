@@ -21,6 +21,11 @@ const OESEndpointDetection = dynamic(() => import('./OESEndpointDetection'), { s
 const DopingProfileEnergy = dynamic(() => import('./DopingProfileEnergy'), { ssr: false });
 const ChannelingEffect = dynamic(() => import('./ChannelingEffect'), { ssr: false });
 const AnnealLatticeRecovery = dynamic(() => import('./AnnealLatticeRecovery'), { ssr: false });
+const CMPNecessity = dynamic(() => import('./CMPNecessity'), { ssr: false });
+const DishingErosion = dynamic(() => import('./DishingErosion'), { ssr: false });
+const BEOLMetalLayers = dynamic(() => import('./BEOLMetalLayers'), { ssr: false });
+const DamasceneProcessSteps = dynamic(() => import('./DamasceneProcessSteps'), { ssr: false });
+const RCDelayVsGateDelay = dynamic(() => import('./RCDelayVsGateDelay'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -51,4 +56,9 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_06/doping_profile_energy.png': DopingProfileEnergy,
     '/content/images/01_06/channeling_effect.svg': ChannelingEffect,
     '/content/images/01_06/anneal_lattice_recovery.svg': AnnealLatticeRecovery,
+    '/content/images/01_07/cmp_necessity.svg': CMPNecessity,
+    '/content/images/01_07/dishing_erosion.svg': DishingErosion,
+    '/content/images/01_07/beol_metal_layers.svg': BEOLMetalLayers,
+    '/content/images/01_07/damascene_process_steps.svg': DamasceneProcessSteps,
+    '/content/images/01_07/rc_delay_vs_gate_delay.png': RCDelayVsGateDelay,
 };
