@@ -26,6 +26,10 @@ const DishingErosion = dynamic(() => import('./DishingErosion'), { ssr: false })
 const BEOLMetalLayers = dynamic(() => import('./BEOLMetalLayers'), { ssr: false });
 const DamasceneProcessSteps = dynamic(() => import('./DamasceneProcessSteps'), { ssr: false });
 const RCDelayVsGateDelay = dynamic(() => import('./RCDelayVsGateDelay'), { ssr: false });
+const WireBondVsFlipchip = dynamic(() => import('./WireBondVsFlipchip'), { ssr: false });
+const BinningDistribution = dynamic(() => import('./BinningDistribution'), { ssr: false });
+const Packaging2_5D3D = dynamic(() => import('./Packaging2_5D3D'), { ssr: false });
+const WaferMapPatterns = dynamic(() => import('./WaferMapPatterns'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -61,4 +65,8 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_07/beol_metal_layers.svg': BEOLMetalLayers,
     '/content/images/01_07/damascene_process_steps.svg': DamasceneProcessSteps,
     '/content/images/01_07/rc_delay_vs_gate_delay.png': RCDelayVsGateDelay,
+    '/content/images/01_08/wire_bond_vs_flipchip.svg': WireBondVsFlipchip,
+    '/content/images/01_08/binning_distribution.png': BinningDistribution,
+    '/content/images/01_08/2_5d_3d_packaging.svg': Packaging2_5D3D,
+    '/content/images/01_08/wafer_map_patterns.png': WaferMapPatterns,
 };
