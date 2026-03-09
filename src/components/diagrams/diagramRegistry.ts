@@ -30,6 +30,10 @@ const WireBondVsFlipchip = dynamic(() => import('./WireBondVsFlipchip'), { ssr: 
 const BinningDistribution = dynamic(() => import('./BinningDistribution'), { ssr: false });
 const Packaging2_5D3D = dynamic(() => import('./Packaging2_5D3D'), { ssr: false });
 const WaferMapPatterns = dynamic(() => import('./WaferMapPatterns'), { ssr: false });
+const MooresLawGraph = dynamic(() => import('./MooresLawGraph'), { ssr: false });
+const TransistorDensityByNode = dynamic(() => import('./TransistorDensityByNode'), { ssr: false });
+const ClockFrequencyStagnation = dynamic(() => import('./ClockFrequencyStagnation'), { ssr: false });
+const PlanarFinFETGAA = dynamic(() => import('./PlanarFinFETGAA'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -69,4 +73,8 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_08/binning_distribution.png': BinningDistribution,
     '/content/images/01_08/2_5d_3d_packaging.svg': Packaging2_5D3D,
     '/content/images/01_08/wafer_map_patterns.png': WaferMapPatterns,
+    '/content/images/01_09/moores_law_graph.png': MooresLawGraph,
+    '/content/images/01_09/transistor_density_by_node.png': TransistorDensityByNode,
+    '/content/images/01_09/clock_frequency_stagnation.png': ClockFrequencyStagnation,
+    '/content/images/01_09/planar_finfet_gaa_comparison.svg': PlanarFinFETGAA,
 };

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@google/genai": "^1.42.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "@tailwindcss/typography": "^0.5.19",
     "framer-motion": "^12.34.3",
     "gray-matter": "^4.0.3",
@@ -30,13 +32,15 @@
     "remark-html": "^16.0.1",
     "remark-math": "^6.0.0",
     "remark-rehype": "^11.1.2",
-    "remark-unwrap-images": "^4.0.1"
+    "remark-unwrap-images": "^4.0.1",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.183.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",

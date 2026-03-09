@@ -52,6 +52,14 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `01_07/beol_metal_layers.svg` | `BEOLMetalLayers` | 1.7 |
 | `01_07/damascene_process_steps.svg` | `DamasceneProcessSteps` | 1.7 |
 | `01_07/rc_delay_vs_gate_delay.png` | `RCDelayVsGateDelay` | 1.7 |
+| `01_08/wire_bond_vs_flipchip.svg` | `WireBondVsFlipchip` | 1.8 |
+| `01_08/binning_distribution.png` | `BinningDistribution` | 1.8 |
+| `01_08/2_5d_3d_packaging.svg` | `Packaging2_5D3D` | 1.8 |
+| `01_08/wafer_map_patterns.png` | `WaferMapPatterns` | 1.8 |
+| `01_09/moores_law_graph.png` | `MooresLawGraph` | 1.9 |
+| `01_09/transistor_density_by_node.png` | `TransistorDensityByNode` | 1.9 |
+| `01_09/clock_frequency_stagnation.png` | `ClockFrequencyStagnation` | 1.9 |
+| `01_09/planar_finfet_gaa_comparison.svg` | `PlanarFinFETGAA` | 1.9 |
 
 ## 4. 마크다운 작성 규칙
 
