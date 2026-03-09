@@ -230,11 +230,7 @@ export default function PlanarFinFETGAA() {
                         <motion.div key="default" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }}
                             style={{ background: COLOR.tooltipBg, backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, padding: '10px 16px' }}>
                             <div style={{ fontSize: FONT.small, color: COLOR.textMuted, lineHeight: 1.6 }}>
-                                트랜지스터 미세화가 진행될수록, 게이트가 채널을 감싸는 면의 수가 늘어나며 제어력이 향상되었다.
-                                <span style={{ color: '#3b82f6' }}> Planar(1면)</span> →
-                                <span style={{ color: '#f59e0b' }}> FinFET(3면)</span> →
-                                <span style={{ color: '#22c55e' }}> GAA(4면)</span>.
-                                각 구조를 호버하여 상세 설명을 확인하세요.
+                                💡 3D가 표시되지 않는 경우: Chrome 설정 → 시스템 → &quot;하드웨어 가속 사용&quot; 활성화 후 브라우저를 재시작하세요.
                             </div>
                         </motion.div>
                     )}
