@@ -34,6 +34,11 @@ const MooresLawGraph = dynamic(() => import('./MooresLawGraph'), { ssr: false })
 const TransistorDensityByNode = dynamic(() => import('./TransistorDensityByNode'), { ssr: false });
 const ClockFrequencyStagnation = dynamic(() => import('./ClockFrequencyStagnation'), { ssr: false });
 const PlanarFinFETGAA = dynamic(() => import('./PlanarFinFETGAA'), { ssr: false });
+const FoundryMarketShare = dynamic(() => import('./FoundryMarketShare'), { ssr: false });
+const FabConstructionCost = dynamic(() => import('./FabConstructionCost'), { ssr: false });
+const ASMLEuvScanner = dynamic(() => import('./ASMLEuvScanner'), { ssr: false });
+const SemiIndustryStructure = dynamic(() => import('./SemiIndustryStructure'), { ssr: false });
+const SemiValueChain = dynamic(() => import('./SemiValueChain'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -77,4 +82,9 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_09/transistor_density_by_node.png': TransistorDensityByNode,
     '/content/images/01_09/clock_frequency_stagnation.png': ClockFrequencyStagnation,
     '/content/images/01_09/planar_finfet_gaa_comparison.svg': PlanarFinFETGAA,
+    '/content/images/01_10/foundry_market_share.png': FoundryMarketShare,
+    '/content/images/01_10/fab_construction_cost.png': FabConstructionCost,
+    '/content/images/01_10/asml_euv_scanner.png': ASMLEuvScanner,
+    '/content/images/01_10/semi_industry_structure.svg': SemiIndustryStructure,
+    '/content/images/01_10/semi_value_chain.svg': SemiValueChain,
 };
