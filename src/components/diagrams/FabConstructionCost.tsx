@@ -82,7 +82,7 @@ export default function FabConstructionCost() {
             </div>
 
             {/* Tooltip */}
-            <div style={{ maxWidth: 600, margin: '8px auto 0', minHeight: 44 }}>
+            <div style={{ maxWidth: 600, margin: '8px auto 0', height: 72 }}>
                 {activeIdx !== null && DATA[activeIdx] && (
                     <div style={{ background: COLOR.tooltipBg, backdropFilter: 'blur(8px)', border: `1px solid rgba(255,255,255,0.06)`,
                         borderRadius: 8, padding: '8px 14px' }}>

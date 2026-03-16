@@ -42,7 +42,7 @@ const MODELS: Record<Exclude<ModelId, null>, ModelInfo> = {
 /* ─── 박스 상수 ─── */
 const BOX_W = 200;
 const BOX_H = 80;
-const GAP_X = 40;
+const GAP_X = 80;
 const ARROW_LEN = 40;
 const SVG_W = BOX_W * 3 + GAP_X * 2;
 const SVG_H = BOX_H + 80; // 박스 + 화살표 영역
@@ -109,7 +109,7 @@ export default function SemiIndustryStructure() {
                     <line x1={positions.fabless.x + BOX_W} y1={BOX_H / 2}
                         x2={positions.foundry.x} y2={BOX_H / 2}
                         stroke="#f59e0b" strokeWidth={1.5} markerEnd="url(#arrowHead)" />
-                    <text x={positions.fabless.x + BOX_W + ARROW_LEN / 2} y={BOX_H / 2 - 8}
+                    <text x={(positions.fabless.x + BOX_W + positions.foundry.x) / 2} y={BOX_H / 2 - 8}
                         textAnchor="middle" fill="#f59e0b" fontSize={FONT.min}>
                         위탁 제조
                     </text>
