@@ -112,7 +112,7 @@ export default function SemiValueChain() {
                 {/* Fabless → Foundry */}
                 <motion.g animate={{ opacity: isDimmed('fabless') && isDimmed('foundry') ? 0.15 : 0.6 }}>
                     <line x1={CX} y1={30 + BH} x2={CX} y2={FDY} stroke="#3b82f6" strokeWidth={1.5} markerEnd="url(#vcArrowBlue)" />
-                    <text x={CX + 8} y={(30 + BH + FDY) / 2 + 4} fill="#3b82f6" fontSize={FONT.min - 1}>GDSII</text>
+                    <text x={CX + 8} y={(30 + BH + FDY) / 2 + 4} fill="#3b82f6" fontSize={FONT.min - 1}>설계데이터 (GDS2)</text>
                 </motion.g>
 
                 {/* 좌측 → IDM 화살표 (Equipment, Materials, SW) */}
