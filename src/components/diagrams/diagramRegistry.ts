@@ -39,6 +39,12 @@ const FabConstructionCost = dynamic(() => import('./FabConstructionCost'), { ssr
 const ASMLEuvScanner = dynamic(() => import('./ASMLEuvScanner'), { ssr: false });
 const SemiIndustryStructure = dynamic(() => import('./SemiIndustryStructure'), { ssr: false });
 const SemiValueChain = dynamic(() => import('./SemiValueChain'), { ssr: false });
+const PhotoPrintingVsLitho = dynamic(() => import('./PhotoPrintingVsLitho'), { ssr: false });
+const TrackScannerSystem = dynamic(() => import('./TrackScannerSystem'), { ssr: false });
+const SpinCoatingCrossSection = dynamic(() => import('./SpinCoatingCrossSection'), { ssr: false });
+const ReductionProjectionOptics = dynamic(() => import('./ReductionProjectionOptics'), { ssr: false });
+const LithoProcessFlow = dynamic(() => import('./LithoProcessFlow'), { ssr: false });
+const Part2Roadmap = dynamic(() => import('./Part2Roadmap'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -87,4 +93,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/01_10/asml_euv_scanner.png': ASMLEuvScanner,
     '/content/images/01_10/semi_industry_structure.svg': SemiIndustryStructure,
     '/content/images/01_10/semi_value_chain.svg': SemiValueChain,
+    '/content/images/02_01/photo_printing_vs_lithography.png': PhotoPrintingVsLitho,
+    '/content/images/02_01/track_scanner_inline_system.png': TrackScannerSystem,
+    '/content/images/02_01/spin_coating_cross_section.svg': SpinCoatingCrossSection,
+    '/content/images/02_01/reduction_projection_optics.svg': ReductionProjectionOptics,
+    '/content/images/02_01/litho_process_flow.svg': LithoProcessFlow,
+    '/content/images/02_01/part2_roadmap.svg': Part2Roadmap,
 };
