@@ -45,6 +45,11 @@ const SpinCoatingCrossSection = dynamic(() => import('./SpinCoatingCrossSection'
 const ReductionProjectionOptics = dynamic(() => import('./ReductionProjectionOptics'), { ssr: false });
 const LithoProcessFlow = dynamic(() => import('./LithoProcessFlow'), { ssr: false });
 const Part2Roadmap = dynamic(() => import('./Part2Roadmap'), { ssr: false });
+const StepperOperation = dynamic(() => import('./StepperOperation'), { ssr: false });
+const ScannerSlitScanning = dynamic(() => import('./ScannerSlitScanning'), { ssr: false });
+const IlluminationShapes = dynamic(() => import('./IlluminationShapes'), { ssr: false });
+const DualStageConcept = dynamic(() => import('./DualStageConcept'), { ssr: false });
+const ASMLTwinscanScanner = dynamic(() => import('./ASMLTwinscanScanner'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -99,4 +104,9 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_01/reduction_projection_optics.svg': ReductionProjectionOptics,
     '/content/images/02_01/litho_process_flow.svg': LithoProcessFlow,
     '/content/images/02_01/part2_roadmap.svg': Part2Roadmap,
+    '/content/images/02_02/stepper_operation.svg': StepperOperation,
+    '/content/images/02_02/scanner_slit_scanning.svg': ScannerSlitScanning,
+    '/content/images/02_02/illumination_shapes.svg': IlluminationShapes,
+    '/content/images/02_02/dual_stage_concept.png': DualStageConcept,
+    '/content/images/02_02/asml_twinscan_scanner.png': ASMLTwinscanScanner,
 };
