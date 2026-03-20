@@ -50,6 +50,10 @@ const ScannerSlitScanning = dynamic(() => import('./ScannerSlitScanning'), { ssr
 const IlluminationShapes = dynamic(() => import('./IlluminationShapes'), { ssr: false });
 const DualStageConcept = dynamic(() => import('./DualStageConcept'), { ssr: false });
 const ASMLTwinscanScanner = dynamic(() => import('./ASMLTwinscanScanner'), { ssr: false });
+const WavelengthVsResolution = dynamic(() => import('./WavelengthVsResolution'), { ssr: false });
+const LightSourceEvolution = dynamic(() => import('./LightSourceEvolution'), { ssr: false });
+const DuvVsEuvOptics = dynamic(() => import('./DuvVsEuvOptics'), { ssr: false });
+const EuvSourceMechanism = dynamic(() => import('./EuvSourceMechanism'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -109,4 +113,9 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_02/illumination_shapes.svg': IlluminationShapes,
     '/content/images/02_02/dual_stage_concept.png': DualStageConcept,
     '/content/images/02_02/asml_twinscan_scanner.png': ASMLTwinscanScanner,
+    /* Chapter 2.3 */
+    '/content/images/02_03/wavelength_vs_resolution.png': WavelengthVsResolution,
+    '/content/images/02_03/light_source_evolution.svg': LightSourceEvolution,
+    '/content/images/02_03/duv_vs_euv_optics.png': DuvVsEuvOptics,
+    '/content/images/02_03/euv_source_mechanism.svg': EuvSourceMechanism,
 };
