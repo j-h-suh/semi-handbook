@@ -98,6 +98,14 @@ const CDSEMEdgeProfile = dynamic(() => import('./CDSEMEdgeProfile'), { ssr: fals
 const OCDPrinciple = dynamic(() => import('./OCDPrinciple'), { ssr: false });
 const OCDSpectrumMatching = dynamic(() => import('./OCDSpectrumMatching'), { ssr: false });
 const CDSAXSConcept = dynamic(() => import('./CDSAXSConcept'), { ssr: false });
+const LELEProcessFlow = dynamic(() => import('./LELEProcessFlow'), { ssr: false });
+const SADPProcessFlow = dynamic(() => import('./SADPProcessFlow'), { ssr: false });
+const LELEOverlayPitchVariation = dynamic(() => import('./LELEOverlayPitchVariation'), { ssr: false });
+const SADP4StepCrossSection = dynamic(() => import('./SADP4StepCrossSection'), { ssr: false });
+const ArFSAQPvsEUVComparison = dynamic(() => import('./ArFSAQPvsEUVComparison'), { ssr: false });
+const EuvScannerInstallation = dynamic(() => import('./EuvScannerInstallation'), { ssr: false });
+const StochasticDefectsDilemma = dynamic(() => import('./StochasticDefectsDilemma'), { ssr: false });
+const AnamorphicReduction = dynamic(() => import('./AnamorphicReduction'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -222,4 +230,16 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_12/ocd_principle.svg': OCDPrinciple,
     '/content/images/02_12/ocd_spectrum_matching.png': OCDSpectrumMatching,
     '/content/images/02_12/cd_saxs_concept.png': CDSAXSConcept,
+
+    /* Chapter 2.13 */
+    '/content/images/02_13/lele_process_flow.svg': LELEProcessFlow,
+    '/content/images/02_13/lele_overlay_pitch_variation.png': LELEOverlayPitchVariation,
+    '/content/images/02_13/sadp_process_flow.svg': SADPProcessFlow,
+    '/content/images/02_13/sadp_4step_cross_section.png': SADP4StepCrossSection,
+    '/content/images/02_13/arf_saqp_vs_euv_sp_comparison.png': ArFSAQPvsEUVComparison,
+
+    /* Chapter 2.14 */
+    '/content/images/02_14/euv_scanner_installation_trend.png': EuvScannerInstallation,
+    '/content/images/02_14/stochastic_defects_dilemma.svg': StochasticDefectsDilemma,
+    '/content/images/02_14/anamorphic_4x_8x_reduction.png': AnamorphicReduction,
 };

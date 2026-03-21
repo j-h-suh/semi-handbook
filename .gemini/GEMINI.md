@@ -97,6 +97,11 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_12/ocd_principle.svg` | `OCDPrinciple` | 2.12 |
 | `02_12/ocd_spectrum_matching.png` | `OCDSpectrumMatching` | 2.12 |
 | `02_12/cd_saxs_concept.png` | `CDSAXSConcept` | 2.12 |
+| `02_13/lele_process_flow.svg` | `LELEProcessFlow` | 2.13 |
+| `02_13/lele_overlay_pitch_variation.png` | `LELEOverlayPitchVariation` | 2.13 |
+| `02_13/sadp_process_flow.svg` | `SADPProcessFlow` | 2.13 |
+| `02_13/sadp_4step_cross_section.png` | `SADP4StepCrossSection` | 2.13 |
+| `02_13/arf_saqp_vs_euv_sp_comparison.png` | `ArFSAQPvsEUVComparison` | 2.13 |
 
 ## 4. 마크다운 작성 규칙
 
