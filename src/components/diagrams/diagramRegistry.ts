@@ -103,6 +103,11 @@ const SADPProcessFlow = dynamic(() => import('./SADPProcessFlow'), { ssr: false 
 const LELEOverlayPitchVariation = dynamic(() => import('./LELEOverlayPitchVariation'), { ssr: false });
 const SADP4StepCrossSection = dynamic(() => import('./SADP4StepCrossSection'), { ssr: false });
 const ArFSAQPvsEUVComparison = dynamic(() => import('./ArFSAQPvsEUVComparison'), { ssr: false });
+const YieldStructureFlow = dynamic(() => import('./YieldStructureFlow'), { ssr: false });
+const YieldRampupStages = dynamic(() => import('./YieldRampupStages'), { ssr: false });
+const YieldVsD0AThreeModels = dynamic(() => import('./YieldVsD0AThreeModels'), { ssr: false });
+const YieldRampupSCurve = dynamic(() => import('./YieldRampupSCurve'), { ssr: false });
+const WaferMapPatternTypes = dynamic(() => import('./WaferMapPatternTypes'), { ssr: false });
 const EuvScannerInstallation = dynamic(() => import('./EuvScannerInstallation'), { ssr: false });
 const StochasticDefectsDilemma = dynamic(() => import('./StochasticDefectsDilemma'), { ssr: false });
 const AnamorphicReduction = dynamic(() => import('./AnamorphicReduction'), { ssr: false });
@@ -242,4 +247,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_14/euv_scanner_installation_trend.png': EuvScannerInstallation,
     '/content/images/02_14/stochastic_defects_dilemma.svg': StochasticDefectsDilemma,
     '/content/images/02_14/anamorphic_4x_8x_reduction.png': AnamorphicReduction,
+
+    /* Chapter 3.1 */
+    '/content/images/03_01/yield_structure_flow.svg': YieldStructureFlow,
+    '/content/images/03_01/yield_vs_d0a_three_models.png': YieldVsD0AThreeModels,
+    '/content/images/03_01/yield_rampup_scurve.png': YieldRampupSCurve,
+    '/content/images/03_01/yield_rampup_stages.svg': YieldRampupStages,
+    '/content/images/03_01/wafer_map_pattern_types.png': WaferMapPatternTypes,
 };

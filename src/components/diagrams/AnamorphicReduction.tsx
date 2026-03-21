@@ -33,7 +33,7 @@ const ZONES: Record<Exclude<ZoneId, null>, ZoneInfo> = {
 
 /* ─── SVG 레이아웃 상수 ─── */
 const SVG_W = 580;
-const SVG_H = 310;
+const SVG_H = 390;
 const CX = SVG_W / 2;
 const GAP = 40;
 
@@ -82,11 +82,6 @@ export default function AnamorphicReduction() {
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} style={{ width: '100%', maxWidth: 580 }}>
-                    <defs>
-                        <marker id="arrowDown" viewBox="0 0 10 10" refX="5" refY="10" markerWidth={6} markerHeight={6} orient="auto">
-                            <path d="M0 0 L5 10 L10 0 z" fill="rgba(255,255,255,0.3)" />
-                        </marker>
-                    </defs>
 
                     {/* ─── 좌측: Current EUV ─── */}
                     <motion.g
@@ -112,9 +107,12 @@ export default function AnamorphicReduction() {
                         <text x={LEFT_CX} y={MASK_Y + MASK_H_CURRENT / 2 + 5} textAnchor="middle"
                             fill={COLOR.textDim} fontSize={FONT.min}>Mask</text>
 
-                        {/* 축소 화살표 */}
-                        <line x1={LEFT_CX} y1={ARROW_Y} x2={LEFT_CX} y2={ARROW_Y + ARROW_LEN}
-                            stroke="rgba(255,255,255,0.25)" strokeWidth={1.5} markerEnd="url(#arrowDown)" />
+                        {/* 축소 화살표 ▼ */}
+                        <line x1={LEFT_CX} y1={ARROW_Y} x2={LEFT_CX} y2={ARROW_Y + ARROW_LEN - 6}
+                            stroke="rgba(255,255,255,0.3)" strokeWidth={1.5} />
+                        <polygon
+                            points={`${LEFT_CX},${ARROW_Y + ARROW_LEN} ${LEFT_CX - 5},${ARROW_Y + ARROW_LEN - 10} ${LEFT_CX + 5},${ARROW_Y + ARROW_LEN - 10}`}
+                            fill="rgba(255,255,255,0.3)" />
                         <text x={LEFT_CX + 40} y={ARROW_Y + ARROW_LEN / 2 + 4} textAnchor="middle"
                             fill={COLOR.textDim} fontSize={FONT.min}>4:1 × 4:1</text>
 
@@ -151,9 +149,12 @@ export default function AnamorphicReduction() {
                         <text x={RIGHT_CX} y={MASK_Y + MASK_H_HIGHNA / 2 + 5} textAnchor="middle"
                             fill={COLOR.textDim} fontSize={FONT.min}>Mask</text>
 
-                        {/* 축소 화살표 */}
-                        <line x1={RIGHT_CX} y1={ARROW_Y} x2={RIGHT_CX} y2={ARROW_Y + ARROW_LEN}
-                            stroke="rgba(255,255,255,0.25)" strokeWidth={1.5} markerEnd="url(#arrowDown)" />
+                        {/* 축소 화살표 ▼ */}
+                        <line x1={RIGHT_CX} y1={ARROW_Y} x2={RIGHT_CX} y2={ARROW_Y + ARROW_LEN - 6}
+                            stroke="rgba(255,255,255,0.3)" strokeWidth={1.5} />
+                        <polygon
+                            points={`${RIGHT_CX},${ARROW_Y + ARROW_LEN} ${RIGHT_CX - 5},${ARROW_Y + ARROW_LEN - 10} ${RIGHT_CX + 5},${ARROW_Y + ARROW_LEN - 10}`}
+                            fill="rgba(255,255,255,0.3)" />
                         <text x={RIGHT_CX + 44} y={ARROW_Y + ARROW_LEN / 2 + 4} textAnchor="middle"
                             fill={COLOR.textDim} fontSize={FONT.min}>4:1 × 8:1</text>
 
@@ -197,7 +198,7 @@ export default function AnamorphicReduction() {
             </div>
 
             {/* 툴팁 */}
-            <div style={{ maxWidth: 640, margin: '0 auto', height: 64 }}>
+            <div style={{ maxWidth: 640, margin: '16px auto 0', height: 64 }}>
                 <AnimatePresence mode="wait">
                     {hovered ? (
                         <motion.div key={hovered} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }}

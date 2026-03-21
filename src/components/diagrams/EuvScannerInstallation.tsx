@@ -30,12 +30,12 @@ export default function EuvScannerInstallation() {
             <h3 style={{ textAlign: 'center', color: COLOR.textBright, fontSize: FONT.title, fontWeight: 700, marginBottom: 4 }}>
                 전 세계 EUV 스캐너 누적 설치 추이
             </h3>
-            <p style={{ textAlign: 'center', color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 8 }}>
+            <p style={{ textAlign: 'center', color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 16 }}>
                 Cumulative EUV Scanner Installations by Customer (2017–2025)
             </p>
 
             <ResponsiveContainer width="100%" height={360}>
-                <BarChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 24 }}>
+                <BarChart data={data} margin={{ top: 28, right: 30, left: 10, bottom: 24 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                     <XAxis
                         dataKey="year"
@@ -79,7 +79,7 @@ export default function EuvScannerInstallation() {
                         <Bar key={s.key} dataKey={s.key} name={s.name} stackId="a" fill={s.color} opacity={0.85} />
                     ))}
                     <ReferenceLine x={2019} stroke="#ef4444" strokeDasharray="4 3" strokeWidth={1} opacity={0.5}
-                        label={{ value: 'N7+ 양산', position: 'top', fill: COLOR.textDim, fontSize: FONT.min }} />
+                        label={{ value: 'N7+ 양산', position: 'insideTopRight', fill: COLOR.textMuted, fontSize: FONT.min, offset: 6 }} />
                 </BarChart>
             </ResponsiveContainer>
 

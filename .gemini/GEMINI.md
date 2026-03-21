@@ -102,6 +102,11 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_13/sadp_process_flow.svg` | `SADPProcessFlow` | 2.13 |
 | `02_13/sadp_4step_cross_section.png` | `SADP4StepCrossSection` | 2.13 |
 | `02_13/arf_saqp_vs_euv_sp_comparison.png` | `ArFSAQPvsEUVComparison` | 2.13 |
+| `03_01/yield_structure_flow.svg` | `YieldStructureFlow` | 3.1 |
+| `03_01/yield_vs_d0a_three_models.png` | `YieldVsD0AThreeModels` | 3.1 |
+| `03_01/yield_rampup_scurve.png` | `YieldRampupSCurve` | 3.1 |
+| `03_01/yield_rampup_stages.svg` | `YieldRampupStages` | 3.1 |
+| `03_01/wafer_map_pattern_types.png` | `WaferMapPatternTypes` | 3.1 |
 
 ## 4. 마크다운 작성 규칙
 

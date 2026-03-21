@@ -36,22 +36,23 @@ const PANELS: Record<Exclude<PanelId, null>, PanelInfo> = {
 };
 
 /* ─── SVG 레이아웃 상수 ─── */
-const SVG_W = 520;
+const SVG_W = 580;
 const SVG_H = 200;
 const CX = SVG_W / 2;
 
 /* 패널 크기 및 위치 */
 const PANEL_W = 190;
 const PANEL_H = 140;
-const PANEL_GAP = 20;
+const PANEL_GAP = 80;
 const PANEL_Y = 28;
 const LEFT_X = CX - PANEL_GAP / 2 - PANEL_W;
 const RIGHT_X = CX + PANEL_GAP / 2;
 const PANEL_RX = 10;
 
-/* 중앙 화살표 */
-const ARROW_Y_TOP = PANEL_Y + 30;
-const ARROW_Y_BOT = PANEL_Y + PANEL_H - 30;
+/* 중앙 화살표 (좌우) */
+const ARROW_CY = PANEL_Y + PANEL_H / 2;
+const ARROW_X_LEFT = LEFT_X + PANEL_W + 8;
+const ARROW_X_RIGHT = RIGHT_X - 8;
 
 /* 항목 행 높이 */
 const ITEM_START_Y = PANEL_Y + 54;
@@ -111,20 +112,19 @@ export default function StochasticDefectsDilemma() {
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} style={{ width: '100%', maxWidth: 520 }}>
-                    {/* 중앙 양방향 화살표 */}
-                    <defs>
-                        <marker id="arrowL" viewBox="0 0 10 10" refX="0" refY="5" markerWidth={6} markerHeight={6} orient="auto">
-                            <path d="M10 0 L0 5 L10 10 z" fill="rgba(255,255,255,0.25)" />
-                        </marker>
-                        <marker id="arrowR" viewBox="0 0 10 10" refX="10" refY="5" markerWidth={6} markerHeight={6} orient="auto">
-                            <path d="M0 0 L10 5 L0 10 z" fill="rgba(255,255,255,0.25)" />
-                        </marker>
-                    </defs>
-                    <line x1={CX} y1={ARROW_Y_TOP} x2={CX} y2={ARROW_Y_BOT}
-                        stroke="rgba(255,255,255,0.15)" strokeWidth={1.5}
-                        markerStart="url(#arrowL)" markerEnd="url(#arrowR)" />
-                    <text x={CX} y={PANEL_Y + PANEL_H / 2 + 5} textAnchor="middle"
+                <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} style={{ width: '100%', maxWidth: 580 }}>
+                    {/* 중앙 좌우 양방향 화살표 ◀───▶ */}
+                    <line x1={ARROW_X_LEFT + 12} y1={ARROW_CY} x2={ARROW_X_RIGHT - 12} y2={ARROW_CY}
+                        stroke="rgba(255,255,255,0.3)" strokeWidth={2} />
+                    {/* 좌측 화살촉 ◀ — 꼭짓점이 왼쪽 */}
+                    <polygon
+                        points={`${ARROW_X_LEFT},${ARROW_CY} ${ARROW_X_LEFT + 12},${ARROW_CY - 7} ${ARROW_X_LEFT + 12},${ARROW_CY + 7}`}
+                        fill="rgba(255,255,255,0.3)" />
+                    {/* 우측 화살촉 ▶ — 꼭짓점이 오른쪽 */}
+                    <polygon
+                        points={`${ARROW_X_RIGHT},${ARROW_CY} ${ARROW_X_RIGHT - 12},${ARROW_CY - 7} ${ARROW_X_RIGHT - 12},${ARROW_CY + 7}`}
+                        fill="rgba(255,255,255,0.3)" />
+                    <text x={CX} y={ARROW_CY - 10} textAnchor="middle"
                         fill={COLOR.textDim} fontSize={FONT.min} fontWeight={600}>
                         Trade-off
                     </text>
