@@ -65,6 +65,11 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_05/spin_coating_3step.svg` | `SpinCoating3Step` | 2.5 |
 | `02_05/pr_profile_defects.svg` | `PRProfileDefects` | 2.5 |
 | `02_05/rls_trilemma.svg` | `RLSTrilemma` | 2.5 |
+| `02_05/car_mechanism.svg` | `CARMechanism` | 2.5 |
+| `02_06/dof_concept_diagram.svg` | `DOFConceptDiagram` | 2.6 |
+| `02_06/na_resolution_dof_tradeoff.png` | `NAResolutionDOFTradeoff` | 2.6 |
+| `02_06/process_window_dose_focus.png` | `ProcessWindowDoseFocus` | 2.6 |
+| `02_06/bossung_curve.png` | `BossungCurve` | 2.6 |
 
 ## 4. 마크다운 작성 규칙
 

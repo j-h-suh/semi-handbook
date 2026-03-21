@@ -66,6 +66,10 @@ const SpinCoating3Step = dynamic(() => import('./SpinCoating3Step'), { ssr: fals
 const PRProfileDefects = dynamic(() => import('./PRProfileDefects'), { ssr: false });
 const RLSTrilemma = dynamic(() => import('./RLSTrilemma'), { ssr: false });
 const CARMechanism = dynamic(() => import('./CARMechanism'), { ssr: false });
+const DOFConceptDiagram = dynamic(() => import('./DOFConceptDiagram'), { ssr: false });
+const NAResolutionDOFTradeoff = dynamic(() => import('./NAResolutionDOFTradeoff'), { ssr: false });
+const ProcessWindowDoseFocus = dynamic(() => import('./ProcessWindowDoseFocus'), { ssr: false });
+const BossungCurve = dynamic(() => import('./BossungCurve'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -144,4 +148,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_05/pr_profile_defects.svg': PRProfileDefects,
     '/content/images/02_05/rls_trilemma.svg': RLSTrilemma,
     '/content/images/02_05/car_mechanism.svg': CARMechanism,
+
+    /* Chapter 2.6 */
+    '/content/images/02_06/dof_concept_diagram.svg': DOFConceptDiagram,
+    '/content/images/02_06/na_resolution_dof_tradeoff.png': NAResolutionDOFTradeoff,
+    '/content/images/02_06/process_window_dose_focus.png': ProcessWindowDoseFocus,
+    '/content/images/02_06/bossung_curve.png': BossungCurve,
 };
