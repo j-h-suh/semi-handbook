@@ -88,6 +88,11 @@ const Linear6parVectorMap = dynamic(() => import('./Linear6parVectorMap'), { ssr
 const ModelResidualComparison = dynamic(() => import('./ModelResidualComparison'), { ssr: false });
 const CorrectablesResidualsFlow = dynamic(() => import('./CorrectablesResidualsFlow'), { ssr: false });
 const APCControlLoop = dynamic(() => import('./APCControlLoop'), { ssr: false });
+const CDUHierarchy = dynamic(() => import('./CDUHierarchy'), { ssr: false });
+const GlobalCDUWaferHeatmap = dynamic(() => import('./GlobalCDUWaferHeatmap'), { ssr: false });
+const LERLWRSemImage = dynamic(() => import('./LERLWRSemImage'), { ssr: false });
+const MEEFvsK1 = dynamic(() => import('./MEEFvsK1'), { ssr: false });
+const CDApcLoop = dynamic(() => import('./CDApcLoop'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -198,4 +203,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_10/model_residual_comparison.png': ModelResidualComparison,
     '/content/images/02_10/correctables_residuals_flow.svg': CorrectablesResidualsFlow,
     '/content/images/02_10/apc_control_loop.svg': APCControlLoop,
+
+    /* Chapter 2.11 */
+    '/content/images/02_11/cdu_hierarchy.svg': CDUHierarchy,
+    '/content/images/02_11/global_cdu_wafer_heatmap.png': GlobalCDUWaferHeatmap,
+    '/content/images/02_11/ler_lwr_sem_image.png': LERLWRSemImage,
+    '/content/images/02_11/meef_vs_k1.png': MEEFvsK1,
+    '/content/images/02_11/cd_apc_loop.svg': CDApcLoop,
 };

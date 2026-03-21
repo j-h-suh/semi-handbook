@@ -87,6 +87,11 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_10/model_residual_comparison.png` | `ModelResidualComparison` | 2.10 |
 | `02_10/correctables_residuals_flow.svg` | `CorrectablesResidualsFlow` | 2.10 |
 | `02_10/apc_control_loop.svg` | `APCControlLoop` | 2.10 |
+| `02_11/cdu_hierarchy.svg` | `CDUHierarchy` | 2.11 |
+| `02_11/global_cdu_wafer_heatmap.png` | `GlobalCDUWaferHeatmap` | 2.11 |
+| `02_11/ler_lwr_sem_image.png` | `LERLWRSemImage` | 2.11 |
+| `02_11/meef_vs_k1.png` | `MEEFvsK1` | 2.11 |
+| `02_11/cd_apc_loop.svg` | `CDApcLoop` | 2.11 |
 
 ## 4. 마크다운 작성 규칙
 
