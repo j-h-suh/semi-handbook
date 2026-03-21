@@ -60,6 +60,11 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `01_09/transistor_density_by_node.png` | `TransistorDensityByNode` | 1.9 |
 | `01_09/clock_frequency_stagnation.png` | `ClockFrequencyStagnation` | 1.9 |
 | `01_09/planar_finfet_gaa_comparison.svg` | `PlanarFinFETGAA` | 1.9 |
+| `02_05/positive_vs_negative_resist.svg` | `PositiveVsNegativeResist` | 2.5 |
+| `02_05/peb_temp_vs_cd.png` | `PEBTempVsCD` | 2.5 |
+| `02_05/spin_coating_3step.svg` | `SpinCoating3Step` | 2.5 |
+| `02_05/pr_profile_defects.svg` | `PRProfileDefects` | 2.5 |
+| `02_05/rls_trilemma.svg` | `RLSTrilemma` | 2.5 |
 
 ## 4. 마크다운 작성 규칙
 

@@ -60,6 +60,12 @@ const PSMInterference = dynamic(() => import('./PSMInterference'), { ssr: false 
 const MaskSetCostTrend = dynamic(() => import('./MaskSetCostTrend'), { ssr: false });
 const EuvReflectiveMask = dynamic(() => import('./EuvReflectiveMask'), { ssr: false });
 const PelliclePrinciple = dynamic(() => import('./PelliclePrinciple'), { ssr: false });
+const PositiveVsNegativeResist = dynamic(() => import('./PositiveVsNegativeResist'), { ssr: false });
+const PEBTempVsCD = dynamic(() => import('./PEBTempVsCD'), { ssr: false });
+const SpinCoating3Step = dynamic(() => import('./SpinCoating3Step'), { ssr: false });
+const PRProfileDefects = dynamic(() => import('./PRProfileDefects'), { ssr: false });
+const RLSTrilemma = dynamic(() => import('./RLSTrilemma'), { ssr: false });
+const CARMechanism = dynamic(() => import('./CARMechanism'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -131,4 +137,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_04/mask_set_cost_trend.png': MaskSetCostTrend,
     '/content/images/02_04/euv_reflective_mask_cross_section.svg': EuvReflectiveMask,
     '/content/images/02_04/pellicle_principle.svg': PelliclePrinciple,
+    /* Chapter 2.5 */
+    '/content/images/02_05/positive_vs_negative_resist.svg': PositiveVsNegativeResist,
+    '/content/images/02_05/peb_temp_vs_cd.png': PEBTempVsCD,
+    '/content/images/02_05/spin_coating_3step.svg': SpinCoating3Step,
+    '/content/images/02_05/pr_profile_defects.svg': PRProfileDefects,
+    '/content/images/02_05/rls_trilemma.svg': RLSTrilemma,
+    '/content/images/02_05/car_mechanism.svg': CARMechanism,
 };
