@@ -84,6 +84,10 @@ const DiffractionPrinciple = dynamic(() => import('./DiffractionPrinciple'), { s
 const DBOGratingCrossSection = dynamic(() => import('./DBOGratingCrossSection'), { ssr: false });
 const DBOMeasurementPrinciple = dynamic(() => import('./DBOMeasurementPrinciple'), { ssr: false });
 const SamplingMapComparison = dynamic(() => import('./SamplingMapComparison'), { ssr: false });
+const Linear6parVectorMap = dynamic(() => import('./Linear6parVectorMap'), { ssr: false });
+const ModelResidualComparison = dynamic(() => import('./ModelResidualComparison'), { ssr: false });
+const CorrectablesResidualsFlow = dynamic(() => import('./CorrectablesResidualsFlow'), { ssr: false });
+const APCControlLoop = dynamic(() => import('./APCControlLoop'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -188,4 +192,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_09/dbo_grating_mark_cross_section.svg': DBOGratingCrossSection,
     '/content/images/02_09/dbo_measurement_principle.svg': DBOMeasurementPrinciple,
     '/content/images/02_09/sampling_map_comparison.png': SamplingMapComparison,
+
+    /* Chapter 2.10 */
+    '/content/images/02_10/linear_6par_vector_map.png': Linear6parVectorMap,
+    '/content/images/02_10/model_residual_comparison.png': ModelResidualComparison,
+    '/content/images/02_10/correctables_residuals_flow.svg': CorrectablesResidualsFlow,
+    '/content/images/02_10/apc_control_loop.svg': APCControlLoop,
 };

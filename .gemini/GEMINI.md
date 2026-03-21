@@ -83,6 +83,10 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_09/dbo_grating_mark_cross_section.svg` | `DBOGratingCrossSection` | 2.9 |
 | `02_09/dbo_measurement_principle.svg` | `DBOMeasurementPrinciple` | 2.9 |
 | `02_09/sampling_map_comparison.png` | `SamplingMapComparison` | 2.9 |
+| `02_10/linear_6par_vector_map.png` | `Linear6parVectorMap` | 2.10 |
+| `02_10/model_residual_comparison.png` | `ModelResidualComparison` | 2.10 |
+| `02_10/correctables_residuals_flow.svg` | `CorrectablesResidualsFlow` | 2.10 |
+| `02_10/apc_control_loop.svg` | `APCControlLoop` | 2.10 |
 
 ## 4. 마크다운 작성 규칙
 
