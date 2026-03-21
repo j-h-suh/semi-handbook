@@ -70,6 +70,10 @@ const DOFConceptDiagram = dynamic(() => import('./DOFConceptDiagram'), { ssr: fa
 const NAResolutionDOFTradeoff = dynamic(() => import('./NAResolutionDOFTradeoff'), { ssr: false });
 const ProcessWindowDoseFocus = dynamic(() => import('./ProcessWindowDoseFocus'), { ssr: false });
 const BossungCurve = dynamic(() => import('./BossungCurve'), { ssr: false });
+const OPCBeforeAfter = dynamic(() => import('./OPCBeforeAfter'), { ssr: false });
+const OPCFlowLoop = dynamic(() => import('./OPCFlowLoop'), { ssr: false });
+const IlluminationShapesOAI = dynamic(() => import('./IlluminationShapesOAI'), { ssr: false });
+const OPCCorrectionTypes = dynamic(() => import('./OPCCorrectionTypes'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -154,4 +158,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_06/na_resolution_dof_tradeoff.png': NAResolutionDOFTradeoff,
     '/content/images/02_06/process_window_dose_focus.png': ProcessWindowDoseFocus,
     '/content/images/02_06/bossung_curve.png': BossungCurve,
+
+    /* Chapter 2.7 */
+    '/content/images/02_07/opc_before_after.png': OPCBeforeAfter,
+    '/content/images/02_07/opc_flow_loop.svg': OPCFlowLoop,
+    '/content/images/02_07/illumination_shapes_comparison.svg': IlluminationShapesOAI,
+    '/content/images/02_07/opc_correction_types.svg': OPCCorrectionTypes,
 };

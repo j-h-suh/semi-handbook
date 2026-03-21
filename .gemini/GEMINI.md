@@ -70,6 +70,9 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_06/na_resolution_dof_tradeoff.png` | `NAResolutionDOFTradeoff` | 2.6 |
 | `02_06/process_window_dose_focus.png` | `ProcessWindowDoseFocus` | 2.6 |
 | `02_06/bossung_curve.png` | `BossungCurve` | 2.6 |
+| `02_07/opc_before_after.png` | `OPCBeforeAfter` | 2.7 |
+| `02_07/opc_flow_loop.svg` | `OPCFlowLoop` | 2.7 |
+| `02_07/illumination_shapes_comparison.svg` | `IlluminationShapesOAI` | 2.7 |
 
 ## 4. 마크다운 작성 규칙
 
