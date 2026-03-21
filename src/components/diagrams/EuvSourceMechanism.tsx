@@ -27,10 +27,10 @@ const STEPS: Record<Exclude<StepId, null>, StepInfo> = {
 const STEP_ORDER: Exclude<StepId, null>[] = ['droplet', 'prepulse', 'mainpulse', 'plasma', 'collector', 'output'];
 
 /* ─── SVG 레이아웃 ─── */
-const SVG_W = 700;
-const SVG_H = 100;
-const BOX_W = 88;
-const BOX_H = 56;
+const SVG_W = 810;
+const SVG_H = 120;
+const BOX_W = 107;
+const BOX_H = 68;
 const ARROW_W = 16;
 const TOTAL = STEP_ORDER.length * BOX_W + (STEP_ORDER.length - 1) * ARROW_W;
 const START_X = (SVG_W - TOTAL) / 2;
@@ -70,8 +70,8 @@ export default function EuvSourceMechanism() {
                                     fill={active ? info.color + '20' : 'rgba(255,255,255,0.03)'}
                                     stroke={active ? info.color : 'rgba(255,255,255,0.12)'} strokeWidth={active ? 2 : 1} />
                                 {/* 아이콘 + 라벨 */}
-                                <text x={x + BOX_W / 2} y={CY - 8} textAnchor="middle" fontSize={14}>{info.icon}</text>
-                                <text x={x + BOX_W / 2} y={CY + 8} textAnchor="middle"
+                                <text x={x + BOX_W / 2} y={CY - 14} textAnchor="middle" fontSize={14}>{info.icon}</text>
+                                <text x={x + BOX_W / 2} y={CY + 6} textAnchor="middle"
                                     fill={active ? info.color : COLOR.textBright} fontSize={FONT.min} fontWeight={600}>
                                     {info.label}
                                 </text>

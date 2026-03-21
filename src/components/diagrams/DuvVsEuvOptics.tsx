@@ -77,28 +77,44 @@ function LensStack({ x, w, isDuv, active }: { x: number; w: number; isDuv: boole
                     웨이퍼
                 </text>
                 <text x={cx + 38} y={LENS_Y + 70} fill={COLOR.textDim} fontSize={FONT.min}>굴절 렌즈</text>
-                <text x={cx - 50} y={LENS_Y + 50} fill="rgba(59,130,246,0.5)" fontSize={FONT.min}>공기/물</text>
+                <text x={cx - 70} y={LENS_Y + 50} fill="rgba(59,130,246,0.5)" fontSize={FONT.min} textAnchor="end">공기/물</text>
             </g>
         );
     } else {
-        /* 반사 거울 (대각선 바) */
+        /* 반사 거울 — 거울이 좌우 교대로, 빛이 거울 앞면에서 반사 */
+        const mirrors = [
+            { y: LENS_Y + 20, side: 'left' as const },
+            { y: LENS_Y + 70, side: 'right' as const },
+            { y: LENS_Y + 120, side: 'left' as const },
+        ];
+        const mirrorW = 44;
+        const mirrorH = 6;
+        const offset = 35;
+
         return (
             <g>
-                {[0, 50, 100].map((dy, i) => {
-                    const my = LENS_Y + 20 + dy;
-                    const angle = i % 2 === 0 ? 20 : -20;
+                {/* 거울 — 좌측 거울은 \방향, 우측 거울은 /방향 (입사=반사각) */}
+                {mirrors.map((m, i) => {
+                    const mx = m.side === 'left' ? cx - offset : cx + offset;
+                    const angle = m.side === 'left' ? 75 : -75;
                     return (
-                        <g key={i} transform={`rotate(${angle}, ${cx}, ${my})`}>
-                            <rect x={cx - 25} y={my - 3} width={50} height={6} rx={2}
-                                fill={active ? lensColor + '30' : 'rgba(255,255,255,0.06)'}
-                                stroke={active ? lensColor : 'rgba(255,255,255,0.15)'} strokeWidth={active ? 1.5 : 0.8} />
+                        <g key={i} transform={`rotate(${angle}, ${mx}, ${m.y})`}>
+                            {/* 거울 반사면 (두꺼운 쪽) */}
+                            <rect x={mx - mirrorW / 2} y={m.y - mirrorH / 2} width={mirrorW} height={mirrorH} rx={1}
+                                fill={active ? lensColor + '40' : 'rgba(255,255,255,0.1)'}
+                                stroke={active ? lensColor : 'rgba(255,255,255,0.25)'} strokeWidth={active ? 1.5 : 1} />
+                            {/* 뒷면 해칭 (거울 뒤) */}
+                            <rect x={mx - mirrorW / 2} y={m.y + mirrorH / 2} width={mirrorW} height={3} rx={0.5}
+                                fill="rgba(255,255,255,0.04)" stroke="none" />
                         </g>
                     );
                 })}
-                {/* 빔 (지그재그 반사) */}
+
+                {/* 빔 — 거울 앞면에서 반사, 지그재그 */}
                 <polyline
-                    points={`${cx},${TOP_Y + 10} ${cx - 15},${LENS_Y + 35} ${cx + 15},${LENS_Y + 80} ${cx - 10},${LENS_Y + 125} ${cx},${LENS_Y + BEAM_H}`}
-                    fill="none" stroke="rgba(192,132,252,0.3)" strokeWidth={1.5} strokeDasharray="4 3" />
+                    points={`${cx},${TOP_Y + 10} ${cx - offset + 5},${mirrors[0].y} ${cx + offset - 5},${mirrors[1].y} ${cx - offset + 5},${mirrors[2].y} ${cx},${LENS_Y + BEAM_H}`}
+                    fill="none" stroke={active ? 'rgba(192,132,252,0.5)' : 'rgba(192,132,252,0.25)'} strokeWidth={1.5} />
+
                 {/* 라벨 */}
                 <text x={cx} y={TOP_Y + 6} textAnchor="middle" fill={active ? lensColor : COLOR.textDim} fontSize={FONT.min}>
                     반사형 마스크
@@ -106,10 +122,10 @@ function LensStack({ x, w, isDuv, active }: { x: number; w: number; isDuv: boole
                 <text x={cx} y={LENS_Y + BEAM_H + 16} textAnchor="middle" fill={COLOR.textDim} fontSize={FONT.min}>
                     웨이퍼
                 </text>
-                <text x={cx + 38} y={LENS_Y + 70} fill={COLOR.textDim} fontSize={FONT.min}>Mo/Si 거울</text>
-                <text x={cx - 46} y={LENS_Y + 50} fill="rgba(192,132,252,0.5)" fontSize={FONT.min}>진공</text>
+                <text x={cx + offset + 30} y={mirrors[1].y + 4} fill={COLOR.textDim} fontSize={FONT.min}>Mo/Si 거울</text>
+                <text x={cx - offset - 30} y={mirrors[0].y + 16} fill="rgba(192,132,252,0.5)" fontSize={FONT.min} textAnchor="end">진공</text>
                 {/* 진공 챔버 표시 */}
-                <rect x={x + 8} y={TOP_Y - 5} width={w - 16} height={BEAM_H + LENS_Y - TOP_Y + 25} rx={8}
+                <rect x={cx - offset - 40} y={TOP_Y - 5} width={(offset + 40) * 2} height={BEAM_H + LENS_Y - TOP_Y + 25} rx={8}
                     fill="none" stroke="rgba(192,132,252,0.15)" strokeWidth={1} strokeDasharray="6 4" />
             </g>
         );

@@ -54,6 +54,7 @@ const WavelengthVsResolution = dynamic(() => import('./WavelengthVsResolution'),
 const LightSourceEvolution = dynamic(() => import('./LightSourceEvolution'), { ssr: false });
 const DuvVsEuvOptics = dynamic(() => import('./DuvVsEuvOptics'), { ssr: false });
 const EuvSourceMechanism = dynamic(() => import('./EuvSourceMechanism'), { ssr: false });
+const ImmersionStructure = dynamic(() => import('./ImmersionStructure'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -118,4 +119,5 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_03/light_source_evolution.svg': LightSourceEvolution,
     '/content/images/02_03/duv_vs_euv_optics.png': DuvVsEuvOptics,
     '/content/images/02_03/euv_source_mechanism.svg': EuvSourceMechanism,
+    '/content/images/02_03/immersion_structure.svg': ImmersionStructure,
 };

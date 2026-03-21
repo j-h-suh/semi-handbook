@@ -25,7 +25,7 @@ const DATA: DataPoint[] = [
     { name: 'KrF', wavelength: 248, resolution: 180, year: '2000s', color: '#ef4444', group: 'DUV' },
     { name: 'ArF (dry)', wavelength: 193, resolution: 65, year: '2003', color: '#3b82f6', group: 'DUV' },
     { name: 'ArF-i (SP)', wavelength: 193, resolution: 38, year: '2006', color: '#60a5fa', group: 'DUV' },
-    { name: 'ArF-i (MP)', wavelength: 193, resolution: 7, year: '2015', color: '#818cf8', group: 'DUV', note: '멀티패터닝' },
+    { name: 'ArF-i (Multi-Patterning)', wavelength: 193, resolution: 7, year: '2015', color: '#818cf8', group: 'DUV', note: '멀티패터닝 병용' },
     { name: 'EUV', wavelength: 13.5, resolution: 13, year: '2019', color: '#c084fc', group: 'EUV' },
     { name: 'High-NA EUV', wavelength: 13.5, resolution: 8, year: '2026', color: '#e879f9', group: 'EUV', note: '예상' },
 ];
@@ -93,7 +93,7 @@ export default function WavelengthVsResolution() {
                         label={{ value: '해상도 (nm)', angle: -90, position: 'insideLeft', offset: -5, fill: COLOR.textDim, fontSize: FONT.min }}
                         tick={{ fill: COLOR.textDim, fontSize: FONT.min }} stroke="rgba(255,255,255,0.15)"
                         allowDataOverflow />
-                    <Tooltip content={<CustomTooltip />} cursor={false} />
+                    <Tooltip content={<CustomTooltip />} cursor={false} isAnimationActive={false} />
                     <Scatter data={DATA} isAnimationActive={false}>
                         {DATA.map((d, i) => (
                             <Cell key={i} fill={d.color}

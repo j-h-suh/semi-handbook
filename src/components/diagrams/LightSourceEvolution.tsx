@@ -21,7 +21,7 @@ const GENS: Record<Exclude<GenId, null>, GenInfo> = {
     iline: { label: 'i-line', wavelength: '365nm', resolution: '~350nm', year: '1990s', desc: '수은 램프 i-line. 장비 가격이 저렴하고 기술이 성숙. 패키징, MEMS에서 현역.', color: '#f59e0b' },
     krf: { label: 'KrF', wavelength: '248nm', resolution: '~180nm', year: '2000s', desc: 'DUV 엑시머 레이저의 시작. 크립톤 플루오라이드(KrF). Deep Ultraviolet 용어의 기원.', color: '#ef4444' },
     arf: { label: 'ArF', wavelength: '193nm', resolution: '~65nm', year: '2003~', desc: '아르곤 플루오라이드(ArF). 건식 기준. 현재까지 양산 주력. 형석(CaF₂) 렌즈 필요.', color: '#3b82f6' },
-    arfi: { label: 'ArF-i', wavelength: '193nm 침수', resolution: '~7nm*', year: '2006~', desc: 'ArF 침수(Immersion). 물(n=1.44)로 NA 1.35 달성. 멀티패터닝 병용 시 7nm까지. *MP 필요.', color: '#818cf8' },
+    arfi: { label: 'ArF-i', wavelength: '193nm 침수', resolution: '~7nm*', year: '2006~', desc: 'ArF 침수(Immersion). 물(n=1.44)로 NA 1.35 달성. 멀티패터닝 병용 시 7nm까지. *Multi-Patterning 필요.', color: '#818cf8' },
     euv: { label: 'EUV', wavelength: '13.5nm', resolution: '~3nm', year: '2019~', desc: '극자외선(Extreme UV). 파장 14배 감소. 진공+반사 광학계. 주석 플라즈마 광원. High-NA로 진화 중.', color: '#e879f9' },
 };
 
