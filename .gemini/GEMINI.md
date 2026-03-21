@@ -73,6 +73,10 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_07/opc_before_after.png` | `OPCBeforeAfter` | 2.7 |
 | `02_07/opc_flow_loop.svg` | `OPCFlowLoop` | 2.7 |
 | `02_07/illumination_shapes_comparison.svg` | `IlluminationShapesOAI` | 2.7 |
+| `02_08/overlay_concept.svg` | `OverlayConcept` | 2.8 |
+| `02_08/overlay_open_short_cross_section.svg` | `OverlayOpenShort` | 2.8 |
+| `02_08/overlay_budget.svg` | `OverlayBudget` | 2.8 |
+| `02_08/mark_asymmetry_distortion.svg` | `MarkAsymmetry` | 2.8 |
 
 ## 4. 마크다운 작성 규칙
 

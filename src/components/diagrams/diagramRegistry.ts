@@ -74,6 +74,11 @@ const OPCBeforeAfter = dynamic(() => import('./OPCBeforeAfter'), { ssr: false })
 const OPCFlowLoop = dynamic(() => import('./OPCFlowLoop'), { ssr: false });
 const IlluminationShapesOAI = dynamic(() => import('./IlluminationShapesOAI'), { ssr: false });
 const OPCCorrectionTypes = dynamic(() => import('./OPCCorrectionTypes'), { ssr: false });
+const OverlayConcept = dynamic(() => import('./OverlayConcept'), { ssr: false });
+const OverlayOpenShort = dynamic(() => import('./OverlayOpenShort'), { ssr: false });
+const OverlayBudget = dynamic(() => import('./OverlayBudget'), { ssr: false });
+const MarkAsymmetry = dynamic(() => import('./MarkAsymmetry'), { ssr: false });
+const WaferDistortionPatterns = dynamic(() => import('./WaferDistortionPatterns'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -164,4 +169,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_07/opc_flow_loop.svg': OPCFlowLoop,
     '/content/images/02_07/illumination_shapes_comparison.svg': IlluminationShapesOAI,
     '/content/images/02_07/opc_correction_types.svg': OPCCorrectionTypes,
+
+    /* Chapter 2.8 */
+    '/content/images/02_08/overlay_concept.svg': OverlayConcept,
+    '/content/images/02_08/overlay_open_short_cross_section.svg': OverlayOpenShort,
+    '/content/images/02_08/overlay_budget.svg': OverlayBudget,
+    '/content/images/02_08/mark_asymmetry_distortion.svg': MarkAsymmetry,
+    '/content/images/02_08/wafer_distortion_patterns.png': WaferDistortionPatterns,
 };

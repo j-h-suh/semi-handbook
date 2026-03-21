@@ -19,16 +19,7 @@
 
 Overlay는 이 "맞물림의 정밀도"를 나노미터 단위로 측정한 것이다.
 
-```mermaid
-flowchart TB
-    subgraph Overlay 개념
-        L2[현재 층 패턴<br/>Current Layer]
-        L1[이전 층 패턴<br/>Reference Layer]
-        OVL[Overlay 오차<br/>Δx, Δy]
-    end
-    L2 -->|이상: 완벽 정렬| L1
-    L2 -->|현실: 오차 존재| OVL
-```
+![Overlay 개념](/content/images/02_08/overlay_concept.svg)
 
 Overlay는 **나노미터(nm)** 단위의 벡터량이다. x 방향 오차(OVLx)와 y 방향 오차(OVLy)를 따로 관리하며, 크기뿐 아니라 방향도 중요하다. 통계적으로는 Mean(평균 — 체계적 오차 성분), 3σ(3 표준편차 — 랜덤 오차 성분), Max(최대값)로 관리한다.
 
@@ -71,24 +62,13 @@ Overlay가 허용 범위를 벗어나면 칩에 치명적인 결과가 발생한
 
 Overlay 오차는 하나의 원인에서 나오지 않는다. 스캐너, 공정, 웨이퍼, 마스크, 계측 — **수십 가지 요인이 각각 기여하는 오차의 합**이다. 이 각 요인에 허용 오차를 배분하는 체계를 **Overlay 버짓(Overlay Budget)**이라 한다.
 
-```mermaid
-flowchart TB
-    subgraph Overlay Budget 구성
-        TOTAL[전체 Overlay 요구<br/>예: 2nm 3σ]
-        TOTAL --> SC[스캐너 기여<br/>~0.8nm]
-        TOTAL --> PR[공정 기여<br/>~0.6nm]
-        TOTAL --> WF[웨이퍼 기여<br/>~0.5nm]
-        TOTAL --> MK[마스크 기여<br/>~0.3nm]
-        TOTAL --> MT[계측 기여<br/>~0.2nm]
-        TOTAL --> RS[잔여 마진<br/>~0.3nm]
-    end
-```
+![Overlay Budget 구성](/content/images/02_08/overlay_budget.svg)
 
 핵심은 합산 방식이다. 각 요인이 통계적으로 독립이라고 가정하면(대부분의 경우 합리적 가정), 전체 Overlay는 각 요인의 **제곱합의 제곱근(RSS, Root Sum of Squares)**으로 합산된다.
 
-```
-Total OVL = √(Scanner² + Process² + Wafer² + Mask² + Metrology² + ...)
-```
+$$
+\text{Total OVL} = \sqrt{\text{Scanner}^2 + \text{Process}^2 + \text{Wafer}^2 + \text{Mask}^2 + \text{Metrology}^2 + \cdots}
+$$
 
 RSS 합산의 의미를 이해하는 것이 중요하다. 만약 스캐너 기여분을 0.8nm에서 0.4nm로 **절반**으로 줄였다면, 전체 Overlay는 얼마나 줄어들까? 다른 항이 고정이라면, √(0.8² + 나머지) → √(0.4² + 나머지)로, 전체 감소 폭은 0.4nm의 절반보다 훨씬 적다. RSS에서는 **하나의 항만 줄여서는 전체 효과가 제한적**이다. 모든 항을 동시에 줄여야 의미 있는 전체 개선이 달성된다. 이것이 Overlay 개선이 어려운 근본적 이유다 — 어느 한 요인의 혁신만으로는 충분하지 않고, **모든 요인의 균형 잡힌 개선**이 필요하다.
 
