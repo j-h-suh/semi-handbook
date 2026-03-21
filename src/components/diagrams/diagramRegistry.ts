@@ -111,6 +111,10 @@ const WaferMapPatternTypes = dynamic(() => import('./WaferMapPatternTypes'), { s
 const InspectionCheckpoints = dynamic(() => import('./InspectionCheckpoints'), { ssr: false });
 const ADCPipeline = dynamic(() => import('./ADCPipeline'), { ssr: false });
 const BFvsDFInspection = dynamic(() => import('./BFvsDFInspection'), { ssr: false });
+const ControlVsSpecLimits = dynamic(() => import('./ControlVsSpecLimits'), { ssr: false });
+const WECORulesPatterns = dynamic(() => import('./WECORulesPatterns'), { ssr: false });
+const CpVsCpkVisualization = dynamic(() => import('./CpVsCpkVisualization'), { ssr: false });
+const MultivariateT2Chart = dynamic(() => import('./MultivariateT2Chart'), { ssr: false });
 const EuvScannerInstallation = dynamic(() => import('./EuvScannerInstallation'), { ssr: false });
 const StochasticDefectsDilemma = dynamic(() => import('./StochasticDefectsDilemma'), { ssr: false });
 const AnamorphicReduction = dynamic(() => import('./AnamorphicReduction'), { ssr: false });
@@ -262,4 +266,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/03_02/inspection_checkpoints.svg': InspectionCheckpoints,
     '/content/images/03_02/bf_vs_df_inspection.svg': BFvsDFInspection,
     '/content/images/03_02/adc_pipeline.svg': ADCPipeline,
+
+    /* Chapter 3.3 */
+    '/content/images/03_03/control_vs_spec_limits.svg': ControlVsSpecLimits,
+    '/content/images/03_03/weco_rules_patterns.svg': WECORulesPatterns,
+    '/content/images/03_03/cp_vs_cpk_visualization.png': CpVsCpkVisualization,
+    '/content/images/03_03/multivariate_spc_t2_chart.png': MultivariateT2Chart,
 };

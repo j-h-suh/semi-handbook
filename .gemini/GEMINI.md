@@ -110,6 +110,10 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `03_02/inspection_checkpoints.svg` | `InspectionCheckpoints` | 3.2 |
 | `03_02/bf_vs_df_inspection.svg` | `BFvsDFInspection` | 3.2 |
 | `03_02/adc_pipeline.svg` | `ADCPipeline` | 3.2 |
+| `03_03/control_vs_spec_limits.svg` | `ControlVsSpecLimits` | 3.3 |
+| `03_03/weco_rules_patterns.svg` | `WECORulesPatterns` | 3.3 |
+| `03_03/cp_vs_cpk_visualization.png` | `CpVsCpkVisualization` | 3.3 |
+| `03_03/multivariate_spc_t2_chart.png` | `MultivariateT2Chart` | 3.3 |
 
 ## 4. 마크다운 작성 규칙
 
