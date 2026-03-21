@@ -77,6 +77,12 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_08/overlay_open_short_cross_section.svg` | `OverlayOpenShort` | 2.8 |
 | `02_08/overlay_budget.svg` | `OverlayBudget` | 2.8 |
 | `02_08/mark_asymmetry_distortion.svg` | `MarkAsymmetry` | 2.8 |
+| `02_08/wafer_distortion_patterns.png` | `WaferDistortionPatterns` | 2.8 |
+| `02_09/box_in_box_microscope.png` | `BoxInBoxMicroscope` | 2.9 |
+| `02_09/diffraction_principle.svg` | `DiffractionPrinciple` | 2.9 |
+| `02_09/dbo_grating_mark_cross_section.svg` | `DBOGratingCrossSection` | 2.9 |
+| `02_09/dbo_measurement_principle.svg` | `DBOMeasurementPrinciple` | 2.9 |
+| `02_09/sampling_map_comparison.png` | `SamplingMapComparison` | 2.9 |
 
 ## 4. 마크다운 작성 규칙
 

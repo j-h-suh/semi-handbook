@@ -79,6 +79,11 @@ const OverlayOpenShort = dynamic(() => import('./OverlayOpenShort'), { ssr: fals
 const OverlayBudget = dynamic(() => import('./OverlayBudget'), { ssr: false });
 const MarkAsymmetry = dynamic(() => import('./MarkAsymmetry'), { ssr: false });
 const WaferDistortionPatterns = dynamic(() => import('./WaferDistortionPatterns'), { ssr: false });
+const BoxInBoxMicroscope = dynamic(() => import('./BoxInBoxMicroscope'), { ssr: false });
+const DiffractionPrinciple = dynamic(() => import('./DiffractionPrinciple'), { ssr: false });
+const DBOGratingCrossSection = dynamic(() => import('./DBOGratingCrossSection'), { ssr: false });
+const DBOMeasurementPrinciple = dynamic(() => import('./DBOMeasurementPrinciple'), { ssr: false });
+const SamplingMapComparison = dynamic(() => import('./SamplingMapComparison'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -176,4 +181,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_08/overlay_budget.svg': OverlayBudget,
     '/content/images/02_08/mark_asymmetry_distortion.svg': MarkAsymmetry,
     '/content/images/02_08/wafer_distortion_patterns.png': WaferDistortionPatterns,
+
+    /* Chapter 2.9 */
+    '/content/images/02_09/box_in_box_microscope.png': BoxInBoxMicroscope,
+    '/content/images/02_09/diffraction_principle.svg': DiffractionPrinciple,
+    '/content/images/02_09/dbo_grating_mark_cross_section.svg': DBOGratingCrossSection,
+    '/content/images/02_09/dbo_measurement_principle.svg': DBOMeasurementPrinciple,
+    '/content/images/02_09/sampling_map_comparison.png': SamplingMapComparison,
 };
