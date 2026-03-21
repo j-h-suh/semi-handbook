@@ -93,6 +93,11 @@ const GlobalCDUWaferHeatmap = dynamic(() => import('./GlobalCDUWaferHeatmap'), {
 const LERLWRSemImage = dynamic(() => import('./LERLWRSemImage'), { ssr: false });
 const MEEFvsK1 = dynamic(() => import('./MEEFvsK1'), { ssr: false });
 const CDApcLoop = dynamic(() => import('./CDApcLoop'), { ssr: false });
+const CDSEMPrinciple = dynamic(() => import('./CDSEMPrinciple'), { ssr: false });
+const CDSEMEdgeProfile = dynamic(() => import('./CDSEMEdgeProfile'), { ssr: false });
+const OCDPrinciple = dynamic(() => import('./OCDPrinciple'), { ssr: false });
+const OCDSpectrumMatching = dynamic(() => import('./OCDSpectrumMatching'), { ssr: false });
+const CDSAXSConcept = dynamic(() => import('./CDSAXSConcept'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -210,4 +215,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_11/ler_lwr_sem_image.png': LERLWRSemImage,
     '/content/images/02_11/meef_vs_k1.png': MEEFvsK1,
     '/content/images/02_11/cd_apc_loop.svg': CDApcLoop,
+
+    /* Chapter 2.12 */
+    '/content/images/02_12/cd_sem_principle.svg': CDSEMPrinciple,
+    '/content/images/02_12/cd_sem_edge_profile.png': CDSEMEdgeProfile,
+    '/content/images/02_12/ocd_principle.svg': OCDPrinciple,
+    '/content/images/02_12/ocd_spectrum_matching.png': OCDSpectrumMatching,
+    '/content/images/02_12/cd_saxs_concept.png': CDSAXSConcept,
 };

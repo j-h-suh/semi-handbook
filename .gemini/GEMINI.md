@@ -92,6 +92,11 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `02_11/ler_lwr_sem_image.png` | `LERLWRSemImage` | 2.11 |
 | `02_11/meef_vs_k1.png` | `MEEFvsK1` | 2.11 |
 | `02_11/cd_apc_loop.svg` | `CDApcLoop` | 2.11 |
+| `02_12/cd_sem_principle.svg` | `CDSEMPrinciple` | 2.12 |
+| `02_12/cd_sem_edge_profile.png` | `CDSEMEdgeProfile` | 2.12 |
+| `02_12/ocd_principle.svg` | `OCDPrinciple` | 2.12 |
+| `02_12/ocd_spectrum_matching.png` | `OCDSpectrumMatching` | 2.12 |
+| `02_12/cd_saxs_concept.png` | `CDSAXSConcept` | 2.12 |
 
 ## 4. 마크다운 작성 규칙
 
