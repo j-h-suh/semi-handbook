@@ -55,6 +55,11 @@ const LightSourceEvolution = dynamic(() => import('./LightSourceEvolution'), { s
 const DuvVsEuvOptics = dynamic(() => import('./DuvVsEuvOptics'), { ssr: false });
 const EuvSourceMechanism = dynamic(() => import('./EuvSourceMechanism'), { ssr: false });
 const ImmersionStructure = dynamic(() => import('./ImmersionStructure'), { ssr: false });
+const DuvMaskStructure = dynamic(() => import('./DuvMaskStructure'), { ssr: false });
+const PSMInterference = dynamic(() => import('./PSMInterference'), { ssr: false });
+const MaskSetCostTrend = dynamic(() => import('./MaskSetCostTrend'), { ssr: false });
+const EuvReflectiveMask = dynamic(() => import('./EuvReflectiveMask'), { ssr: false });
+const PelliclePrinciple = dynamic(() => import('./PelliclePrinciple'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -120,4 +125,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/02_03/duv_vs_euv_optics.png': DuvVsEuvOptics,
     '/content/images/02_03/euv_source_mechanism.svg': EuvSourceMechanism,
     '/content/images/02_03/immersion_structure.svg': ImmersionStructure,
+    /* Chapter 2.4 */
+    '/content/images/02_04/duv_mask_structure.svg': DuvMaskStructure,
+    '/content/images/02_04/phase_shift_mask_interference.png': PSMInterference,
+    '/content/images/02_04/mask_set_cost_trend.png': MaskSetCostTrend,
+    '/content/images/02_04/euv_reflective_mask_cross_section.svg': EuvReflectiveMask,
+    '/content/images/02_04/pellicle_principle.svg': PelliclePrinciple,
 };
