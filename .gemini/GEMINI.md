@@ -107,6 +107,9 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `03_01/yield_rampup_scurve.png` | `YieldRampupSCurve` | 3.1 |
 | `03_01/yield_rampup_stages.svg` | `YieldRampupStages` | 3.1 |
 | `03_01/wafer_map_pattern_types.png` | `WaferMapPatternTypes` | 3.1 |
+| `03_02/inspection_checkpoints.svg` | `InspectionCheckpoints` | 3.2 |
+| `03_02/bf_vs_df_inspection.svg` | `BFvsDFInspection` | 3.2 |
+| `03_02/adc_pipeline.svg` | `ADCPipeline` | 3.2 |
 
 ## 4. 마크다운 작성 규칙
 

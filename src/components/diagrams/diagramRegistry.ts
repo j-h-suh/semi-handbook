@@ -108,6 +108,9 @@ const YieldRampupStages = dynamic(() => import('./YieldRampupStages'), { ssr: fa
 const YieldVsD0AThreeModels = dynamic(() => import('./YieldVsD0AThreeModels'), { ssr: false });
 const YieldRampupSCurve = dynamic(() => import('./YieldRampupSCurve'), { ssr: false });
 const WaferMapPatternTypes = dynamic(() => import('./WaferMapPatternTypes'), { ssr: false });
+const InspectionCheckpoints = dynamic(() => import('./InspectionCheckpoints'), { ssr: false });
+const ADCPipeline = dynamic(() => import('./ADCPipeline'), { ssr: false });
+const BFvsDFInspection = dynamic(() => import('./BFvsDFInspection'), { ssr: false });
 const EuvScannerInstallation = dynamic(() => import('./EuvScannerInstallation'), { ssr: false });
 const StochasticDefectsDilemma = dynamic(() => import('./StochasticDefectsDilemma'), { ssr: false });
 const AnamorphicReduction = dynamic(() => import('./AnamorphicReduction'), { ssr: false });
@@ -254,4 +257,9 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/03_01/yield_rampup_scurve.png': YieldRampupSCurve,
     '/content/images/03_01/yield_rampup_stages.svg': YieldRampupStages,
     '/content/images/03_01/wafer_map_pattern_types.png': WaferMapPatternTypes,
+
+    /* Chapter 3.2 */
+    '/content/images/03_02/inspection_checkpoints.svg': InspectionCheckpoints,
+    '/content/images/03_02/bf_vs_df_inspection.svg': BFvsDFInspection,
+    '/content/images/03_02/adc_pipeline.svg': ADCPipeline,
 };
