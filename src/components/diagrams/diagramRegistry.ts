@@ -115,6 +115,10 @@ const ControlVsSpecLimits = dynamic(() => import('./ControlVsSpecLimits'), { ssr
 const WECORulesPatterns = dynamic(() => import('./WECORulesPatterns'), { ssr: false });
 const CpVsCpkVisualization = dynamic(() => import('./CpVsCpkVisualization'), { ssr: false });
 const MultivariateT2Chart = dynamic(() => import('./MultivariateT2Chart'), { ssr: false });
+const PCABasedFDC = dynamic(() => import('./PCABasedFDC'), { ssr: false });
+const NormalVsAbnormalTrace = dynamic(() => import('./NormalVsAbnormalTrace'), { ssr: false });
+const AutoencoderReconstructionError = dynamic(() => import('./AutoencoderReconstructionError'), { ssr: false });
+const EquipmentHealthDashboard = dynamic(() => import('./EquipmentHealthDashboard'), { ssr: false });
 const EuvScannerInstallation = dynamic(() => import('./EuvScannerInstallation'), { ssr: false });
 const StochasticDefectsDilemma = dynamic(() => import('./StochasticDefectsDilemma'), { ssr: false });
 const AnamorphicReduction = dynamic(() => import('./AnamorphicReduction'), { ssr: false });
@@ -272,4 +276,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/03_03/weco_rules_patterns.svg': WECORulesPatterns,
     '/content/images/03_03/cp_vs_cpk_visualization.png': CpVsCpkVisualization,
     '/content/images/03_03/multivariate_spc_t2_chart.png': MultivariateT2Chart,
+
+    /* Chapter 3.4 */
+    '/content/images/03_04/pca_based_fdc.svg': PCABasedFDC,
+    '/content/images/03_04/normal_vs_abnormal_trace.png': NormalVsAbnormalTrace,
+    '/content/images/03_04/autoencoder_reconstruction_error.png': AutoencoderReconstructionError,
+    '/content/images/03_04/equipment_health_dashboard.svg': EquipmentHealthDashboard,
 };

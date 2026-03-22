@@ -114,6 +114,9 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `03_03/weco_rules_patterns.svg` | `WECORulesPatterns` | 3.3 |
 | `03_03/cp_vs_cpk_visualization.png` | `CpVsCpkVisualization` | 3.3 |
 | `03_03/multivariate_spc_t2_chart.png` | `MultivariateT2Chart` | 3.3 |
+| `03_04/pca_based_fdc.svg` | `PCABasedFDC` | 3.4 |
+| `03_04/normal_vs_abnormal_trace.png` | `NormalVsAbnormalTrace` | 3.4 |
+| `03_04/autoencoder_reconstruction_error.png` | `AutoencoderReconstructionError` | 3.4 |
 
 ## 4. 마크다운 작성 규칙
 
