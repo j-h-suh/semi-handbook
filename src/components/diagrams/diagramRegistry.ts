@@ -140,8 +140,8 @@ const FabDataVolumeBySource = dynamic(() => import('./FabDataVolumeBySource'), {
 const DataMatchingJoin = dynamic(() => import('./DataMatchingJoin'), { ssr: false });
 const DataCollectionArch = dynamic(() => import('./DataCollectionArch'), { ssr: false });
 const ModernDataArch = dynamic(() => import('./ModernDataArch'), { ssr: false });
-const SpatiotemporalDataCube = dynamic(() => import('./SpatiotemporalDataCube'), { ssr: false });
 const VarianceDecompositionPie = dynamic(() => import('./VarianceDecompositionPie'), { ssr: false });
+const KrigingSpatialInterpolation = dynamic(() => import('./KrigingSpatialInterpolation'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -330,6 +330,6 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/03_08/modern_data_architecture.svg': ModernDataArch,
 
     /* Chapter 3.9 */
-    '/content/images/03_09/spatiotemporal_data_cube.svg': SpatiotemporalDataCube,
     '/content/images/03_09/variance_decomposition_pie.svg': VarianceDecompositionPie,
+    '/content/images/03_09/kriging_spatial_interpolation.svg': KrigingSpatialInterpolation,
 };
