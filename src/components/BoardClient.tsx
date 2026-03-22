@@ -17,6 +17,7 @@ async function hashPassword(pw: string): Promise<string> {
 export default function BoardClient() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [commentCounts, setCommentCounts] = useState<Record<number, number>>({});
+    const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
     const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState<string>('전체');
     const [showWrite, setShowWrite] = useState(false);
@@ -53,6 +54,17 @@ export default function BoardClient() {
         }
         const { data } = await query;
         setPosts(data ?? []);
+
+        // Fetch category counts (always from all posts)
+        const { data: allPosts } = await supabase.from('posts').select('category');
+        const catMap: Record<string, number> = {};
+        let total = 0;
+        (allPosts ?? []).forEach((p: { category: string }) => {
+            catMap[p.category] = (catMap[p.category] || 0) + 1;
+            total++;
+        });
+        catMap['전체'] = total;
+        setCategoryCounts(catMap);
 
         // Fetch comment counts
         if (data && data.length > 0) {
@@ -240,7 +252,7 @@ export default function BoardClient() {
                                 : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
                         }`}
                     >
-                        {cat}
+                        {cat}{(categoryCounts[cat] ?? 0) > 0 && <span className="ml-1 opacity-60">({categoryCounts[cat]})</span>}
                     </button>
                 ))}
             </div>
