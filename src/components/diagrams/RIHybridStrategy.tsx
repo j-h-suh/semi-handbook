@@ -16,22 +16,27 @@ const NODES: Record<Exclude<NodeId, null>, { label: string; sub: string; desc: s
 };
 
 /* ─── SVG 레이아웃 상수 ─── */
-const SVG_W = 480;
-const SVG_H = 280;
+const SVG_W = 600;
+const SVG_H = 330;
 const CX = SVG_W / 2;
 
 /* 노드 위치 (세로 플로우) */
-const NODE_W = 140;
-const NODE_H = 40;
-const STEP_GAP = 56;
+const NODE_W = 180;
+const NODE_H = 50;
+const STEP_GAP = 80;
+const BRANCH_OFFSET = 140;
 
 const POS: Record<Exclude<NodeId, null>, { x: number; y: number }> = {
-    vm:     { x: CX, y: 30 },
-    ri:     { x: CX, y: 30 + STEP_GAP },
-    use:    { x: CX - 100, y: 30 + STEP_GAP * 2 },
-    actual: { x: CX + 100, y: 30 + STEP_GAP * 2 },
-    update: { x: CX + 100, y: 30 + STEP_GAP * 3 },
+    vm:     { x: CX, y: 40 },
+    ri:     { x: CX, y: 40 + STEP_GAP },
+    use:    { x: CX - BRANCH_OFFSET, y: 40 + STEP_GAP * 2 },
+    actual: { x: CX + BRANCH_OFFSET, y: 40 + STEP_GAP * 2 },
+    update: { x: CX + BRANCH_OFFSET, y: 40 + STEP_GAP * 3 },
 };
+
+/* 다이아몬드 크기 */
+const DIAMOND_W = 170;
+const DIAMOND_H = 56;
 
 export default function RIHybridStrategy() {
     const [hovered, setHovered] = useState<NodeId>(null);
@@ -43,13 +48,13 @@ export default function RIHybridStrategy() {
         const active = hovered === id;
         const dimmed = isDimmed(id);
         const isDecision = id === 'ri';
-        const w = isDecision ? 130 : NODE_W;
-        const h = isDecision ? 44 : NODE_H;
+        const w = isDecision ? DIAMOND_W : NODE_W;
+        const h = isDecision ? DIAMOND_H : NODE_H;
 
         return (
             <motion.g key={id} onMouseEnter={() => setHovered(id)} onMouseLeave={() => setHovered(null)}
                 animate={{ opacity: dimmed ? 0.2 : 1 }} transition={{ duration: 0.15 }} style={{ cursor: 'pointer' }}>
-                <rect x={pos.x - w / 2 - 6} y={pos.y - h / 2 - 4} width={w + 12} height={h + 8} fill="transparent" />
+                <rect x={pos.x - w / 2 - 8} y={pos.y - h / 2 - 6} width={w + 16} height={h + 12} fill="transparent" />
                 {isDecision ? (
                     <polygon
                         points={`${pos.x},${pos.y - h / 2} ${pos.x + w / 2},${pos.y} ${pos.x},${pos.y + h / 2} ${pos.x - w / 2},${pos.y}`}
@@ -57,12 +62,12 @@ export default function RIHybridStrategy() {
                         stroke={active ? `${info.color}50` : 'rgba(255,255,255,0.08)'} strokeWidth={active ? 1.5 : 1}
                     />
                 ) : (
-                    <rect x={pos.x - w / 2} y={pos.y - h / 2} width={w} height={h} rx={8}
+                    <rect x={pos.x - w / 2} y={pos.y - h / 2} width={w} height={h} rx={10}
                         fill={active ? `${info.color}15` : 'rgba(255,255,255,0.03)'}
                         stroke={active ? `${info.color}50` : 'rgba(255,255,255,0.08)'} strokeWidth={active ? 1.5 : 1} />
                 )}
-                <text x={pos.x} y={pos.y - 4} textAnchor="middle" fill={active ? info.color : COLOR.textMuted} fontSize={FONT.min} fontWeight={600}>{info.label}</text>
-                <text x={pos.x} y={pos.y + 12} textAnchor="middle" fill={COLOR.textDim} fontSize={FONT.min}>{info.sub}</text>
+                <text x={pos.x} y={pos.y - 4} textAnchor="middle" fill={active ? info.color : COLOR.textMuted} fontSize={FONT.body} fontWeight={700}>{info.label}</text>
+                <text x={pos.x} y={pos.y + 14} textAnchor="middle" fill={COLOR.textDim} fontSize={FONT.min}>{info.sub}</text>
             </motion.g>
         );
     };
@@ -73,14 +78,14 @@ export default function RIHybridStrategy() {
         const len = Math.sqrt(dx * dx + dy * dy);
         const ux = dx / len, uy = dy / len;
         const tipX = x2, tipY = y2;
-        const baseX = tipX - ux * 8, baseY = tipY - uy * 8;
-        const perpX = -uy * 4, perpY = ux * 4;
+        const baseX = tipX - ux * 10, baseY = tipY - uy * 10;
+        const perpX = -uy * 5, perpY = ux * 5;
         return (
             <g>
                 <line x1={x1} y1={y1} x2={baseX} y2={baseY} stroke={color} strokeWidth={1.5} />
                 <polygon points={`${tipX},${tipY} ${baseX + perpX},${baseY + perpY} ${baseX - perpX},${baseY - perpY}`} fill={color} />
                 {label && (
-                    <text x={(x1 + x2) / 2 + (dx === 0 ? 14 : 0)} y={(y1 + y2) / 2 + (dy === 0 ? -6 : 0)}
+                    <text x={(x1 + x2) / 2 + (dx === 0 ? 16 : 0)} y={(y1 + y2) / 2 + (dy === 0 ? -8 : 0)}
                         textAnchor="middle" fill={COLOR.textDim} fontSize={FONT.min} fontWeight={600}>{label}</text>
                 )}
             </g>
@@ -97,14 +102,14 @@ export default function RIHybridStrategy() {
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} style={{ width: '100%', maxWidth: 480 }}>
+                <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} style={{ width: '100%', maxWidth: 600 }}>
                     {/* 연결선 */}
-                    {arrow(POS.vm.x, POS.vm.y + NODE_H / 2, POS.ri.x, POS.ri.y - 22, 'rgba(255,255,255,0.2)')}
-                    {arrow(POS.ri.x - 65, POS.ri.y, POS.use.x, POS.use.y - NODE_H / 2, 'rgba(34,197,94,0.4)', 'Yes')}
-                    {arrow(POS.ri.x + 65, POS.ri.y, POS.actual.x, POS.actual.y - NODE_H / 2, 'rgba(239,68,68,0.4)', 'No')}
+                    {arrow(POS.vm.x, POS.vm.y + NODE_H / 2, POS.ri.x, POS.ri.y - DIAMOND_H / 2, 'rgba(255,255,255,0.2)')}
+                    {arrow(POS.ri.x - DIAMOND_W / 2, POS.ri.y, POS.use.x, POS.use.y - NODE_H / 2, 'rgba(34,197,94,0.4)', 'Yes')}
+                    {arrow(POS.ri.x + DIAMOND_W / 2, POS.ri.y, POS.actual.x, POS.actual.y - NODE_H / 2, 'rgba(239,68,68,0.4)', 'No')}
                     {arrow(POS.actual.x, POS.actual.y + NODE_H / 2, POS.update.x, POS.update.y - NODE_H / 2, 'rgba(167,139,250,0.4)')}
                     {/* Feedback loop */}
-                    <path d={`M ${POS.update.x + NODE_W / 2 + 4} ${POS.update.y} C ${POS.update.x + NODE_W / 2 + 40} ${POS.update.y}, ${POS.vm.x + NODE_W / 2 + 40} ${POS.vm.y}, ${POS.vm.x + NODE_W / 2 + 4} ${POS.vm.y}`}
+                    <path d={`M ${POS.update.x + NODE_W / 2 + 4} ${POS.update.y} C ${POS.update.x + NODE_W / 2 + 50} ${POS.update.y}, ${POS.vm.x + NODE_W / 2 + 50} ${POS.vm.y}, ${POS.vm.x + NODE_W / 2 + 4} ${POS.vm.y}`}
                         fill="none" stroke="rgba(167,139,250,0.3)" strokeWidth={1} strokeDasharray="4 3" />
 
                     {/* 노드 */}
@@ -117,7 +122,7 @@ export default function RIHybridStrategy() {
             </div>
 
             {/* 툴팁 */}
-            <div style={{ maxWidth: 640, margin: '8px auto 0', height: 52 }}>
+            <div style={{ maxWidth: 640, margin: '0 auto', height: 52 }}>
                 <AnimatePresence mode="wait">
                     {hovered ? (
                         <motion.div key={hovered} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }}

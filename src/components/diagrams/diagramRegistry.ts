@@ -132,6 +132,10 @@ const RIDistributionThreshold = dynamic(() => import('./RIDistributionThreshold'
 const VMModelDegradation = dynamic(() => import('./VMModelDegradation'), { ssr: false });
 const VMInputOutputFlow = dynamic(() => import('./VMInputOutputFlow'), { ssr: false });
 const RIHybridStrategy = dynamic(() => import('./RIHybridStrategy'), { ssr: false });
+const CNNWaferMapPipeline = dynamic(() => import('./CNNWaferMapPipeline'), { ssr: false });
+const WaferMapAnalysisPipeline = dynamic(() => import('./WaferMapAnalysisPipeline'), { ssr: false });
+const WaferMap8Patterns = dynamic(() => import('./WaferMap8Patterns'), { ssr: false });
+const MixedPatternDecomposition = dynamic(() => import('./MixedPatternDecomposition'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -306,4 +310,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/03_06/vm_model_degradation.png': VMModelDegradation,
     '/content/images/03_06/vm_input_output_flow.svg': VMInputOutputFlow,
     '/content/images/03_06/ri_hybrid_strategy.svg': RIHybridStrategy,
+
+    /* Chapter 3.7 */
+    '/content/images/03_07/cnn_wafer_map_pipeline.svg': CNNWaferMapPipeline,
+    '/content/images/03_07/wafer_map_analysis_pipeline.svg': WaferMapAnalysisPipeline,
+    '/content/images/03_07/wafer_map_8_patterns.svg': WaferMap8Patterns,
+    '/content/images/03_07/mixed_pattern_decomposition.svg': MixedPatternDecomposition,
 };

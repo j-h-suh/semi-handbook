@@ -49,6 +49,7 @@ export default function RIDistributionThreshold() {
                         label={{ value: '웨이퍼 수', angle: -90, position: 'insideLeft', offset: 4, style: { fontSize: FONT.min, fill: COLOR.textDim } }}
                     />
                     <Tooltip
+                        isAnimationActive={false}
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         content={({ payload }: any) => {
                             if (!payload || payload.length === 0) return null;

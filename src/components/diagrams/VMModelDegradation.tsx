@@ -77,14 +77,20 @@ export default function VMModelDegradation() {
                     <ReferenceLine y={0.80} stroke="#ef4444" strokeDasharray="6 4" strokeWidth={1.5}
                         label={{ value: '최소 허용 R² = 0.80', position: 'insideTopLeft', fill: '#ef4444', fontSize: FONT.min }} />
                     {/* R² 추이선 */}
-                    <Scatter data={data} fill="#3b82f6" line={{ stroke: '#3b82f6', strokeWidth: 2 }}>
-                        {data.map((entry, i) => {
-                            const event = events.find(e => e.week === entry.week);
-                            const color = event ? (event.type === 'PM' ? '#f59e0b' : '#22c55e') : '#3b82f6';
-                            const r = event ? 6 : 4;
-                            return <circle key={i} r={r} fill={color} opacity={0.9} />;
-                        })}
-                    </Scatter>
+                    <Scatter data={data} fill="#3b82f6" line={{ stroke: '#3b82f6', strokeWidth: 2 }}
+                        shape={(props: { cx?: number; cy?: number }) => (
+                            <circle cx={props.cx} cy={props.cy} r={4} fill="#3b82f6" opacity={0.9} />
+                        )} />
+                    {/* PM 이벤트 오버레이 */}
+                    <Scatter data={events.filter(e => e.type === 'PM')} fill="#f59e0b"
+                        shape={(props: { cx?: number; cy?: number }) => (
+                            <circle cx={props.cx} cy={props.cy} r={7} fill="#f59e0b" opacity={0.9} />
+                        )} />
+                    {/* 재학습 이벤트 오버레이 */}
+                    <Scatter data={events.filter(e => e.type === 'retrain')} fill="#22c55e"
+                        shape={(props: { cx?: number; cy?: number }) => (
+                            <circle cx={props.cx} cy={props.cy} r={7} fill="#22c55e" opacity={0.9} />
+                        )} />
                 </ScatterChart>
             </ResponsiveContainer>
 

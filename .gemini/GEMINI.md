@@ -123,6 +123,8 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `03_05/ff_fb_combined_correction.svg` | `FFBCombinedCorrection` | 3.5 |
 | `03_05/apc_cd_before_after.png` | `APCCDBeforeAfter` | 3.5 |
 | `03_05/cross_layer_apc.svg` | `CrossLayerAPC` | 3.5 |
+| `03_07/cnn_wafer_map_pipeline.svg` | `CNNWaferMapPipeline` | 3.7 |
+| `03_07/wafer_map_analysis_pipeline.svg` | `WaferMapAnalysisPipeline` | 3.7 |
 
 ## 4. 마크다운 작성 규칙
 

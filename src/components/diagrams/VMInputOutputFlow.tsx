@@ -20,7 +20,7 @@ const NODES: Record<Exclude<NodeId, null>, { label: string; sub: string; desc: s
 
 /* ─── SVG 레이아웃 상수 ─── */
 const SVG_W = 640;
-const SVG_H = 200;
+const SVG_H = 280;
 
 const INPUT_X = 80;
 const VM_X = SVG_W / 2;
@@ -29,16 +29,16 @@ const OUTPUT_X = SVG_W - 80;
 const INPUT_ITEMS: Exclude<NodeId, null>[] = ['fdc', 'trace', 'meta', 'prev'];
 const OUTPUT_ITEMS: Exclude<NodeId, null>[] = ['cd', 'ovl', 'thk'];
 
-const INPUT_GAP = 40;
+const INPUT_GAP = 54;
 const INPUT_START_Y = (SVG_H - (INPUT_ITEMS.length - 1) * INPUT_GAP) / 2;
-const OUTPUT_GAP = 44;
+const OUTPUT_GAP = 58;
 const OUTPUT_START_Y = (SVG_H - (OUTPUT_ITEMS.length - 1) * OUTPUT_GAP) / 2;
 const VM_Y = SVG_H / 2;
 
 const NODE_W = 110;
 const NODE_H = 40;
-const VM_W = 100;
-const VM_H = 48;
+const VM_W = 140;
+const VM_H = 52;
 
 export default function VMInputOutputFlow() {
     const [hovered, setHovered] = useState<NodeId>(null);
