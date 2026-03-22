@@ -178,6 +178,11 @@ const SmilePipelineOverview = dynamic(() => import('./SmilePipelineOverview'), {
 const VmServingArchitecture = dynamic(() => import('./VmServingArchitecture'), { ssr: false });
 const SmileSystemArchitecture = dynamic(() => import('./SmileSystemArchitecture'), { ssr: false });
 const SmileDevelopmentRoadmap = dynamic(() => import('./SmileDevelopmentRoadmap'), { ssr: false });
+const AnamorphicOpticsConcept = dynamic(() => import('./AnamorphicOpticsConcept'), { ssr: false });
+const DsaProcessFlow = dynamic(() => import('./DsaProcessFlow'), { ssr: false });
+const LithoTechApplicationMap = dynamic(() => import('./LithoTechApplicationMap'), { ssr: false });
+const NextgenLithoComparison = dynamic(() => import('./NextgenLithoComparison'), { ssr: false });
+const NilImprintPrinciple = dynamic(() => import('./NilImprintPrinciple'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -425,4 +430,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_10/smile_system_architecture.svg': SmileSystemArchitecture,
     '/content/images/04_10/smile_dashboard_mockup.png': SmilePipelineOverview,
     '/content/images/04_10/smile_development_roadmap.svg': SmileDevelopmentRoadmap,
+
+    /* Chapter 5.1 */
+    '/content/images/05_01/anamorphic_optics_concept.svg': AnamorphicOpticsConcept,
+    '/content/images/05_01/dsa_process_flow.svg': DsaProcessFlow,
+    '/content/images/05_01/nil_imprint_principle.png': NilImprintPrinciple,
+    '/content/images/05_01/litho_tech_application_map.svg': LithoTechApplicationMap,
+    '/content/images/05_01/nextgen_litho_comparison.png': NextgenLithoComparison,
 };
