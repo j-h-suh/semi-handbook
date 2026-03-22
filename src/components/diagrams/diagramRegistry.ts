@@ -188,6 +188,10 @@ const AutonomousFabMaturity = dynamic(() => import('./AutonomousFabMaturity'), {
 const FoundationModelArchitecture = dynamic(() => import('./FoundationModelArchitecture'), { ssr: false });
 const EdgeAiLatencyComparison = dynamic(() => import('./EdgeAiLatencyComparison'), { ssr: false });
 const SemiconductorAiRoadmap = dynamic(() => import('./SemiconductorAiRoadmap'), { ssr: false });
+const CrossCompetencyVenn = dynamic(() => import('./CrossCompetencyVenn'), { ssr: false });
+const JobRoleRadarChart = dynamic(() => import('./JobRoleRadarChart'), { ssr: false });
+const CareerGrowthTimeline = dynamic(() => import('./CareerGrowthTimeline'), { ssr: false });
+const SemiconductorAiMarketGrowth = dynamic(() => import('./SemiconductorAiMarketGrowth'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -450,4 +454,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/05_02/foundation_model_architecture.svg': FoundationModelArchitecture,
     '/content/images/05_02/edge_ai_latency_comparison.png': EdgeAiLatencyComparison,
     '/content/images/05_02/semiconductor_ai_roadmap_timeline.svg': SemiconductorAiRoadmap,
+
+    /* Chapter 5.3 */
+    '/content/images/05_03/cross_competency_venn.svg': CrossCompetencyVenn,
+    '/content/images/05_03/job_role_radar_chart.png': JobRoleRadarChart,
+    '/content/images/05_03/career_growth_timeline.svg': CareerGrowthTimeline,
+    '/content/images/05_03/semiconductor_ai_market_growth.png': SemiconductorAiMarketGrowth,
 };
