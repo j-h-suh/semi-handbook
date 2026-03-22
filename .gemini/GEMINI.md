@@ -126,6 +126,9 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `03_07/cnn_wafer_map_pipeline.svg` | `CNNWaferMapPipeline` | 3.7 |
 | `03_07/wafer_map_analysis_pipeline.svg` | `WaferMapAnalysisPipeline` | 3.7 |
 | `03_09/variance_decomposition_pie.svg` | `VarianceDecompositionPie` | 3.9 |
+| `04_02/trace_settling_overshoot.png` | `TraceSettlingOvershoot` | 4.2 |
+| `04_02/cross_layer_r2_comparison.png` | `CrossLayerR2Comparison` | 4.2 |
+| `04_02/feature_importance_top20.png` | `FeatureImportanceTop20` | 4.2 |
 
 ## 4. 마크다운 작성 규칙
 
