@@ -142,6 +142,12 @@ const DataCollectionArch = dynamic(() => import('./DataCollectionArch'), { ssr: 
 const ModernDataArch = dynamic(() => import('./ModernDataArch'), { ssr: false });
 const VarianceDecompositionPie = dynamic(() => import('./VarianceDecompositionPie'), { ssr: false });
 const KrigingSpatialInterpolation = dynamic(() => import('./KrigingSpatialInterpolation'), { ssr: false });
+const ParetoFrontCdOvl = dynamic(() => import('./ParetoFrontCdOvl'), { ssr: false });
+const AsymmetricLossFunction = dynamic(() => import('./AsymmetricLossFunction'), { ssr: false });
+const ProblemTypeGuide = dynamic(() => import('./ProblemTypeGuide'), { ssr: false });
+const TraceSettlingOvershoot = dynamic(() => import('./TraceSettlingOvershoot'), { ssr: false });
+const CrossLayerR2Comparison = dynamic(() => import('./CrossLayerR2Comparison'), { ssr: false });
+const FeatureImportanceTop20 = dynamic(() => import('./FeatureImportanceTop20'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -332,4 +338,14 @@ export const diagramRegistry: Record<string, ComponentType> = {
     /* Chapter 3.9 */
     '/content/images/03_09/variance_decomposition_pie.svg': VarianceDecompositionPie,
     '/content/images/03_09/kriging_spatial_interpolation.svg': KrigingSpatialInterpolation,
+
+    /* Chapter 4.1 */
+    '/content/images/04_01/pareto_front_cd_ovl.png': ParetoFrontCdOvl,
+    '/content/images/04_01/asymmetric_loss_function.png': AsymmetricLossFunction,
+    '/content/images/04_01/problem_type_guide.svg': ProblemTypeGuide,
+
+    /* Chapter 4.2 */
+    '/content/images/04_02/trace_settling_overshoot.png': TraceSettlingOvershoot,
+    '/content/images/04_02/cross_layer_r2_comparison.png': CrossLayerR2Comparison,
+    '/content/images/04_02/feature_importance_top20.png': FeatureImportanceTop20,
 };
