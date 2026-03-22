@@ -160,6 +160,9 @@ const DataDriftPsiTrend = dynamic(() => import('./DataDriftPsiTrend'), { ssr: fa
 const ModelRegistryTimeline = dynamic(() => import('./ModelRegistryTimeline'), { ssr: false });
 const MLDeployArch = dynamic(() => import('./MLDeployArch'), { ssr: false });
 const MonitoringDashboard = dynamic(() => import('./MonitoringDashboard'), { ssr: false });
+const ResNet18SemArchitecture = dynamic(() => import('./ResNet18SemArchitecture'), { ssr: false });
+const CnnAdcPipeline = dynamic(() => import('./CnnAdcPipeline'), { ssr: false });
+const DlVsXgboostPerformance = dynamic(() => import('./DlVsXgboostPerformance'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -378,4 +381,9 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_05/model_registry_timeline.svg': ModelRegistryTimeline,
     '/content/images/04_05/ml_deploy_arch.svg': MLDeployArch,
     '/content/images/04_05/monitoring_dashboard.svg': MonitoringDashboard,
+
+    /* Chapter 4.6 */
+    '/content/images/04_06/resnet18_sem_architecture.svg': ResNet18SemArchitecture,
+    '/content/images/04_06/cnn_adc_pipeline.svg': CnnAdcPipeline,
+    '/content/images/04_06/dl_vs_xgboost_performance.png': DlVsXgboostPerformance,
 };

@@ -132,6 +132,9 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `04_04/shap_waterfall_cd.png` | `ShapWaterfallCd` | 4.4 |
 | `04_04/physics_informed_hybrid_model.svg` | `PhysicsInformedHybridModel` | 4.4 |
 | `04_04/trust_building_roadmap.svg` | `TrustBuildingRoadmap` | 4.4 |
+| `04_06/resnet18_sem_architecture.svg` | `ResNet18SemArchitecture` | 4.6 |
+| `04_06/cnn_adc_pipeline.svg` | `CnnAdcPipeline` | 4.6 |
+| `04_06/dl_vs_xgboost_performance.png` | `DlVsXgboostPerformance` | 4.6 |
 
 ## 4. 마크다운 작성 규칙
 
