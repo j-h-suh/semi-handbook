@@ -155,6 +155,11 @@ const FeatureImportanceTop20 = dynamic(() => import('./FeatureImportanceTop20'),
 const ShapWaterfallCd = dynamic(() => import('./ShapWaterfallCd'), { ssr: false });
 const PhysicsInformedHybridModel = dynamic(() => import('./PhysicsInformedHybridModel'), { ssr: false });
 const TrustBuildingRoadmap = dynamic(() => import('./TrustBuildingRoadmap'), { ssr: false });
+const ShapBeeswarmCd = dynamic(() => import('./ShapBeeswarmCd'), { ssr: false });
+const DataDriftPsiTrend = dynamic(() => import('./DataDriftPsiTrend'), { ssr: false });
+const ModelRegistryTimeline = dynamic(() => import('./ModelRegistryTimeline'), { ssr: false });
+const MLDeployArch = dynamic(() => import('./MLDeployArch'), { ssr: false });
+const MonitoringDashboard = dynamic(() => import('./MonitoringDashboard'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -366,4 +371,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_04/shap_waterfall_cd.png': ShapWaterfallCd,
     '/content/images/04_04/physics_informed_hybrid_model.svg': PhysicsInformedHybridModel,
     '/content/images/04_04/trust_building_roadmap.svg': TrustBuildingRoadmap,
+    '/content/images/04_04/shap_beeswarm_cd.svg': ShapBeeswarmCd,
+
+    /* Chapter 4.5 */
+    '/content/images/04_05/data_drift_psi_trend.png': DataDriftPsiTrend,
+    '/content/images/04_05/model_registry_timeline.svg': ModelRegistryTimeline,
+    '/content/images/04_05/ml_deploy_arch.svg': MLDeployArch,
+    '/content/images/04_05/monitoring_dashboard.svg': MonitoringDashboard,
 };

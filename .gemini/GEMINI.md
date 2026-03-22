@@ -129,6 +129,9 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `04_02/trace_settling_overshoot.png` | `TraceSettlingOvershoot` | 4.2 |
 | `04_02/cross_layer_r2_comparison.png` | `CrossLayerR2Comparison` | 4.2 |
 | `04_02/feature_importance_top20.png` | `FeatureImportanceTop20` | 4.2 |
+| `04_04/shap_waterfall_cd.png` | `ShapWaterfallCd` | 4.4 |
+| `04_04/physics_informed_hybrid_model.svg` | `PhysicsInformedHybridModel` | 4.4 |
+| `04_04/trust_building_roadmap.svg` | `TrustBuildingRoadmap` | 4.4 |
 
 ## 4. 마크다운 작성 규칙
 
