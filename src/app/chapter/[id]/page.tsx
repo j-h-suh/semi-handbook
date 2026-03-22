@@ -1,5 +1,4 @@
 import { getChapterData, getSortedChaptersData } from '@/lib/markdown';
-import Sidebar from '@/components/Sidebar';
 import MarkdownViewer from '@/components/MarkdownViewer';
 import SetDocumentContext from '@/components/SetDocumentContext';
 import Link from 'next/link';
@@ -22,8 +21,6 @@ export default async function ChapterPage({ params }: { params: { id: string } }
 
     return (
         <>
-            <Sidebar chapters={allChapters} />
-
             <main className="flex-1 w-full flex overflow-hidden relative">
                 {/* Scrollable Document Area */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 w-full">

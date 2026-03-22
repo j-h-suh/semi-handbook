@@ -4,6 +4,7 @@ import './globals.css';
 import 'katex/dist/katex.min.css';
 import ClientLayout from '@/components/ClientLayout';
 import { buildSearchData } from '@/lib/searchIndex';
+import { getSortedChaptersData } from '@/lib/markdown';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,12 +18,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const chapters = getSortedChaptersData();
+
   return (
     <html lang="ko" className="dark">
       <body className={`${inter.className} bg-slate-950 text-slate-200 antialiased overflow-hidden selection:bg-cyan-500/30`}>
         {/* Main Application Container */}
         <div className="flex h-screen w-screen overflow-hidden">
-          <ClientLayout searchData={buildSearchData()}>
+          <ClientLayout searchData={buildSearchData()} chapters={chapters}>
             {children}
           </ClientLayout>
         </div>
