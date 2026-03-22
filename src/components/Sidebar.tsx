@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings } from 'lucide-react';
+import { BookOpen, Settings, BookText } from 'lucide-react';
 import type { ChapterMeta } from '@/lib/markdown';
 
 export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
@@ -59,8 +59,19 @@ export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
                 ))}
             </div>
 
-            {/* Settings / API Key section hook at the bottom */}
-            <div className="p-4 border-t border-slate-800">
+            {/* Glossary + Settings at the bottom */}
+            <div className="p-4 border-t border-slate-800 space-y-1">
+                <Link
+                    href="/glossary"
+                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
+                        pathname === '/glossary'
+                            ? 'bg-cyan-500/10 text-cyan-400 font-medium border border-cyan-500/20'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    }`}
+                >
+                    <BookText size={16} />
+                    <span>용어 사전</span>
+                </Link>
                 <button
                     className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors"
                     onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
