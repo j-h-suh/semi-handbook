@@ -183,6 +183,11 @@ const DsaProcessFlow = dynamic(() => import('./DsaProcessFlow'), { ssr: false })
 const LithoTechApplicationMap = dynamic(() => import('./LithoTechApplicationMap'), { ssr: false });
 const NextgenLithoComparison = dynamic(() => import('./NextgenLithoComparison'), { ssr: false });
 const NilImprintPrinciple = dynamic(() => import('./NilImprintPrinciple'), { ssr: false });
+const DigitalTwinFlow = dynamic(() => import('./DigitalTwinFlow'), { ssr: false });
+const AutonomousFabMaturity = dynamic(() => import('./AutonomousFabMaturity'), { ssr: false });
+const FoundationModelArchitecture = dynamic(() => import('./FoundationModelArchitecture'), { ssr: false });
+const EdgeAiLatencyComparison = dynamic(() => import('./EdgeAiLatencyComparison'), { ssr: false });
+const SemiconductorAiRoadmap = dynamic(() => import('./SemiconductorAiRoadmap'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -437,4 +442,12 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/05_01/nil_imprint_principle.png': NilImprintPrinciple,
     '/content/images/05_01/litho_tech_application_map.svg': LithoTechApplicationMap,
     '/content/images/05_01/nextgen_litho_comparison.png': NextgenLithoComparison,
+
+    /* Chapter 5.2 */
+    '/content/images/05_02/digital_twin_flow.svg': DigitalTwinFlow,
+    '/content/images/05_02/autonomous_fab_maturity.svg': AutonomousFabMaturity,
+    '/content/images/05_02/autonomous_fab_maturity_overview.svg': AutonomousFabMaturity,
+    '/content/images/05_02/foundation_model_architecture.svg': FoundationModelArchitecture,
+    '/content/images/05_02/edge_ai_latency_comparison.png': EdgeAiLatencyComparison,
+    '/content/images/05_02/semiconductor_ai_roadmap_timeline.svg': SemiconductorAiRoadmap,
 };
