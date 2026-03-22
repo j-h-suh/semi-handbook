@@ -16,6 +16,7 @@ async function hashPassword(pw: string): Promise<string> {
 
 export default function BoardClient() {
     const [posts, setPosts] = useState<Post[]>([]);
+    const [commentCounts, setCommentCounts] = useState<Record<number, number>>({});
     const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState<string>('전체');
     const [showWrite, setShowWrite] = useState(false);
@@ -52,6 +53,20 @@ export default function BoardClient() {
         }
         const { data } = await query;
         setPosts(data ?? []);
+
+        // Fetch comment counts
+        if (data && data.length > 0) {
+            const ids = data.map((p: Post) => p.id);
+            const { data: counts } = await supabase
+                .from('comments')
+                .select('post_id')
+                .in('post_id', ids);
+            const countMap: Record<number, number> = {};
+            (counts ?? []).forEach((c: { post_id: number }) => {
+                countMap[c.post_id] = (countMap[c.post_id] || 0) + 1;
+            });
+            setCommentCounts(countMap);
+        }
         setLoading(false);
     }, [activeCategory]);
 
@@ -254,6 +269,11 @@ export default function BoardClient() {
                             <div className="flex items-center gap-3 text-xs text-slate-600">
                                 <span>{post.nickname}</span>
                                 <span className="flex items-center gap-1"><Clock size={11} />{formatDate(post.created_at)}</span>
+                                {(commentCounts[post.id] ?? 0) > 0 && (
+                                    <span className="flex items-center gap-1 text-cyan-600">
+                                        <MessageCircle size={11} />{commentCounts[post.id]}
+                                    </span>
+                                )}
                             </div>
                         </button>
                     ))}
