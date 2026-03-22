@@ -136,6 +136,12 @@ const CNNWaferMapPipeline = dynamic(() => import('./CNNWaferMapPipeline'), { ssr
 const WaferMapAnalysisPipeline = dynamic(() => import('./WaferMapAnalysisPipeline'), { ssr: false });
 const WaferMap8Patterns = dynamic(() => import('./WaferMap8Patterns'), { ssr: false });
 const MixedPatternDecomposition = dynamic(() => import('./MixedPatternDecomposition'), { ssr: false });
+const FabDataVolumeBySource = dynamic(() => import('./FabDataVolumeBySource'), { ssr: false });
+const DataMatchingJoin = dynamic(() => import('./DataMatchingJoin'), { ssr: false });
+const DataCollectionArch = dynamic(() => import('./DataCollectionArch'), { ssr: false });
+const ModernDataArch = dynamic(() => import('./ModernDataArch'), { ssr: false });
+const SpatiotemporalDataCube = dynamic(() => import('./SpatiotemporalDataCube'), { ssr: false });
+const VarianceDecompositionPie = dynamic(() => import('./VarianceDecompositionPie'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -316,4 +322,14 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/03_07/wafer_map_analysis_pipeline.svg': WaferMapAnalysisPipeline,
     '/content/images/03_07/wafer_map_8_patterns.svg': WaferMap8Patterns,
     '/content/images/03_07/mixed_pattern_decomposition.svg': MixedPatternDecomposition,
+
+    /* Chapter 3.8 */
+    '/content/images/03_08/fab_data_volume_by_source.png': FabDataVolumeBySource,
+    '/content/images/03_08/data_matching_join.svg': DataMatchingJoin,
+    '/content/images/03_08/data_collection_arch.svg': DataCollectionArch,
+    '/content/images/03_08/modern_data_architecture.svg': ModernDataArch,
+
+    /* Chapter 3.9 */
+    '/content/images/03_09/spatiotemporal_data_cube.svg': SpatiotemporalDataCube,
+    '/content/images/03_09/variance_decomposition_pie.svg': VarianceDecompositionPie,
 };
