@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import 'katex/dist/katex.min.css';
 import ClientLayout from '@/components/ClientLayout';
+import { buildSearchData } from '@/lib/searchIndex';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-slate-950 text-slate-200 antialiased overflow-hidden selection:bg-cyan-500/30`}>
         {/* Main Application Container */}
         <div className="flex h-screen w-screen overflow-hidden">
-          <ClientLayout>
+          <ClientLayout searchData={buildSearchData()}>
             {children}
           </ClientLayout>
         </div>

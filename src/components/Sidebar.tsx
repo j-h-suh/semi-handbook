@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings, BookText } from 'lucide-react';
+import { BookOpen, Settings, BookText, Search } from 'lucide-react';
 import type { ChapterMeta } from '@/lib/markdown';
 
 export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
@@ -59,8 +59,16 @@ export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
                 ))}
             </div>
 
-            {/* Glossary + Settings at the bottom */}
+            {/* Search + Glossary + Settings at the bottom */}
             <div className="p-4 border-t border-slate-800 space-y-1">
+                <button
+                    onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors cursor-pointer"
+                >
+                    <Search size={16} />
+                    <span>검색</span>
+                    <kbd className="ml-auto text-[10px] text-slate-600 bg-slate-800/50 px-1.5 py-0.5 rounded border border-slate-700/50">⌘K</kbd>
+                </button>
                 <Link
                     href="/glossary"
                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
