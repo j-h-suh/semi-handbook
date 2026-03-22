@@ -145,9 +145,16 @@ const KrigingSpatialInterpolation = dynamic(() => import('./KrigingSpatialInterp
 const ParetoFrontCdOvl = dynamic(() => import('./ParetoFrontCdOvl'), { ssr: false });
 const AsymmetricLossFunction = dynamic(() => import('./AsymmetricLossFunction'), { ssr: false });
 const ProblemTypeGuide = dynamic(() => import('./ProblemTypeGuide'), { ssr: false });
+const RandomVsTimeSplitR2 = dynamic(() => import('./RandomVsTimeSplitR2'), { ssr: false });
+const SlidingWindowVisualization = dynamic(() => import('./SlidingWindowVisualization'), { ssr: false });
+const TimeBasedSplit = dynamic(() => import('./TimeBasedSplit'), { ssr: false });
+const SemiMLPipeline = dynamic(() => import('./SemiMLPipeline'), { ssr: false });
 const TraceSettlingOvershoot = dynamic(() => import('./TraceSettlingOvershoot'), { ssr: false });
 const CrossLayerR2Comparison = dynamic(() => import('./CrossLayerR2Comparison'), { ssr: false });
 const FeatureImportanceTop20 = dynamic(() => import('./FeatureImportanceTop20'), { ssr: false });
+const ShapWaterfallCd = dynamic(() => import('./ShapWaterfallCd'), { ssr: false });
+const PhysicsInformedHybridModel = dynamic(() => import('./PhysicsInformedHybridModel'), { ssr: false });
+const TrustBuildingRoadmap = dynamic(() => import('./TrustBuildingRoadmap'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -344,8 +351,19 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_01/asymmetric_loss_function.png': AsymmetricLossFunction,
     '/content/images/04_01/problem_type_guide.svg': ProblemTypeGuide,
 
+    /* Chapter 4.3 */
+    '/content/images/04_03/random_vs_time_split_r2.png': RandomVsTimeSplitR2,
+    '/content/images/04_03/sliding_window_visualization.svg': SlidingWindowVisualization,
+    '/content/images/04_03/time_based_split.svg': TimeBasedSplit,
+    '/content/images/04_03/semi_ml_pipeline.svg': SemiMLPipeline,
+
     /* Chapter 4.2 */
     '/content/images/04_02/trace_settling_overshoot.png': TraceSettlingOvershoot,
     '/content/images/04_02/cross_layer_r2_comparison.png': CrossLayerR2Comparison,
     '/content/images/04_02/feature_importance_top20.png': FeatureImportanceTop20,
+
+    /* Chapter 4.4 */
+    '/content/images/04_04/shap_waterfall_cd.png': ShapWaterfallCd,
+    '/content/images/04_04/physics_informed_hybrid_model.svg': PhysicsInformedHybridModel,
+    '/content/images/04_04/trust_building_roadmap.svg': TrustBuildingRoadmap,
 };
