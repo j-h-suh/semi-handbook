@@ -12,6 +12,7 @@
     "@google/genai": "^1.42.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@supabase/supabase-js": "^2.99.3",
     "@tailwindcss/typography": "^0.5.19",
     "flexsearch": "^0.8.212",
     "framer-motion": "^12.34.3",
@@ -44,6 +45,7 @@
     "@types/three": "^0.183.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "supabase": "^2.83.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
