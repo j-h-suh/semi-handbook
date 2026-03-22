@@ -167,6 +167,10 @@ const DomainGapVsTransferPerformance = dynamic(() => import('./DomainGapVsTransf
 const MultiTaskProductHead = dynamic(() => import('./MultiTaskProductHead'), { ssr: false });
 const FederatedLearningArchitecture = dynamic(() => import('./FederatedLearningArchitecture'), { ssr: false });
 const FewShotDataVsPerformance = dynamic(() => import('./FewShotDataVsPerformance'), { ssr: false });
+const BayesianOptimizationLoop = dynamic(() => import('./BayesianOptimizationLoop'), { ssr: false });
+const GpSurrogateAcquisition = dynamic(() => import('./GpSurrogateAcquisition'), { ssr: false });
+const ParetoFrontCdOvlOptimization = dynamic(() => import('./ParetoFrontCdOvlOptimization'), { ssr: false });
+const SafeExplorationStages = dynamic(() => import('./SafeExplorationStages'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -396,4 +400,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_07/multi_task_product_head.svg': MultiTaskProductHead,
     '/content/images/04_07/federated_learning_architecture.svg': FederatedLearningArchitecture,
     '/content/images/04_07/few_shot_data_vs_performance.png': FewShotDataVsPerformance,
+
+    /* Chapter 4.8 */
+    '/content/images/04_08/bayesian_optimization_loop.svg': BayesianOptimizationLoop,
+    '/content/images/04_08/gp_surrogate_acquisition.png': GpSurrogateAcquisition,
+    '/content/images/04_08/pareto_front_cd_ovl_optimization.png': ParetoFrontCdOvlOptimization,
+    '/content/images/04_08/safe_exploration_stages.svg': SafeExplorationStages,
 };
