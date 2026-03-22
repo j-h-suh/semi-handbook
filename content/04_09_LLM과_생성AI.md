@@ -16,10 +16,9 @@
 
 LLM의 가치는 **사람과 시스템 사이의 인터페이스**에 있다.
 
-```
-LLM ≠ VM/APC/FDC 대체
-LLM = 엔지니어의 생산성 도구 (지식 검색, 보고서, 코드, 대화형 인터페이스)
-```
+$$
+\text{LLM} \neq \text{VM/APC/FDC 대체} \quad\quad \text{LLM} = \text{엔지니어 생산성 도구 (Q\&A, 보고서, 코드, 인터페이스)}
+$$
 
 이 포지셔닝을 명확히 한 위에서, LLM이 반도체에서 어떤 구체적 가치를 만들 수 있는지 살펴보겠다.
 
@@ -35,14 +34,7 @@ LLM = 엔지니어의 생산성 도구 (지식 검색, 보고서, 코드, 대화
 
 **RAG(Retrieval-Augmented Generation)**은 이 문제를 해결한다.
 
-```mermaid
-flowchart LR
-    subgraph RAG 기반 공정 Q&A
-        Q[엔지니어 질문<br/>"Ring 패턴 원인은?"] --> RETR[검색<br/>매뉴얼, 과거 보고서<br/>트러블슈팅 기록]
-        RETR --> LLM_GEN[LLM 생성<br/>관련 문서 기반<br/>답변 생성]
-        LLM_GEN --> ANS[답변 + 출처<br/>"Ring 패턴은 주로<br/>핫플레이트 온도 불균일이<br/>원인입니다. [보고서 #2024-0847]"]
-    end
-```
+![RAG 기반 공정 Q&A](/content/images/04_09/rag_pipeline_qna.svg)
 
 파이프라인은 네 단계다. 팹 문서(매뉴얼, SOP, 과거 보고서, 트러블슈팅 기록)를 **벡터 DB**(Chroma, Pinecone 등)에 임베딩하여 인덱싱한다. 질문이 들어오면 의미적으로 **관련 문서를 검색**(Retrieval)한다. 검색된 문서와 질문을 LLM에 전달하여 **답변을 생성**한다. 답변에 **출처(Source)**를 함께 제공하여 엔지니어가 검증할 수 있게 한다.
 
@@ -138,7 +130,7 @@ LLM의 가장 흥미로운 활용은 **도구 사용 에이전트(Tool-Using Age
 
 ![On-Premise vs Cloud LLM 비교](/content/images/04_09/onpremise_vs_cloud_llm.svg)
 
-**클라우드 LLM(GPT-4, Claude 등)** — 팹 데이터를 외부 서버에 전송할 수 없다(영업 비밀, 고객 NDA). 반도체 교과서 수준의 일반 지식이나 코드 생성에는 활용 가능하지만, 팹 내부 데이터와 결합하면 안 된다.
+**클라우드 LLM(OpenAI, Claude 등)** — 팹 데이터를 외부 서버에 전송할 수 없다(영업 비밀, 고객 NDA). 반도체 교과서 수준의 일반 지식이나 코드 생성에는 활용 가능하지만, 팹 내부 데이터와 결합하면 안 된다.
 
 **On-Premise LLM(Llama, Mistral 등)** — 팹 내부에서 운영하여 데이터 유출이 없다. 팹 데이터로 Fine-Tuning하여 도메인 특화가 가능하다. 다만 모델 크기 제약으로 성능이 클라우드 모델보다 낮을 수 있고, GPU 인프라 투자가 필요하다. 4.5장의 On-Premise 배포 원칙이 LLM에도 동일하게 적용된다.
 

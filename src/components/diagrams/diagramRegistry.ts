@@ -171,6 +171,9 @@ const BayesianOptimizationLoop = dynamic(() => import('./BayesianOptimizationLoo
 const GpSurrogateAcquisition = dynamic(() => import('./GpSurrogateAcquisition'), { ssr: false });
 const ParetoFrontCdOvlOptimization = dynamic(() => import('./ParetoFrontCdOvlOptimization'), { ssr: false });
 const SafeExplorationStages = dynamic(() => import('./SafeExplorationStages'), { ssr: false });
+const RagPipelineQna = dynamic(() => import('./RagPipelineQna'), { ssr: false });
+const ToolUsingAgentArchitecture = dynamic(() => import('./ToolUsingAgentArchitecture'), { ssr: false });
+const OnpremiseVsCloudLlm = dynamic(() => import('./OnpremiseVsCloudLlm'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -406,4 +409,9 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_08/gp_surrogate_acquisition.png': GpSurrogateAcquisition,
     '/content/images/04_08/pareto_front_cd_ovl_optimization.png': ParetoFrontCdOvlOptimization,
     '/content/images/04_08/safe_exploration_stages.svg': SafeExplorationStages,
+
+    /* Chapter 4.9 */
+    '/content/images/04_09/rag_pipeline_qna.svg': RagPipelineQna,
+    '/content/images/04_09/tool_using_agent_architecture.svg': ToolUsingAgentArchitecture,
+    '/content/images/04_09/onpremise_vs_cloud_llm.svg': OnpremiseVsCloudLlm,
 };
