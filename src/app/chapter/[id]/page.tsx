@@ -30,6 +30,8 @@ export default async function ChapterPage({ params }: { params: { id: string } }
                     <MarkdownViewer
                         title={chapterData.title}
                         content={chapterData.content}
+                        lastUpdated={chapterData.lastUpdated}
+                        commitHistory={chapterData.commitHistory}
                     />
 
                     {/* Navigation Links */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
@@ -10,14 +10,18 @@ import rehypeRaw from 'rehype-raw';
 import mermaid from 'mermaid';
 import { diagramRegistry } from './diagrams/diagramRegistry';
 import { FONT } from './diagrams/diagramTokens';
+import type { GitCommit } from '@/lib/markdown';
 import 'katex/dist/katex.min.css';
 
 interface MarkdownViewerProps {
     title: string;
     content: string;
+    lastUpdated?: string | null;
+    commitHistory?: GitCommit[];
 }
 
-export default function MarkdownViewer({ title, content }: MarkdownViewerProps) {
+export default function MarkdownViewer({ title, content, lastUpdated, commitHistory }: MarkdownViewerProps) {
+    const [showHistory, setShowHistory] = useState(false);
     const mermaidRef = useRef<HTMLDivElement>(null);
 
     // Re-initialize mermaid when content changes
@@ -58,6 +62,29 @@ export default function MarkdownViewer({ title, content }: MarkdownViewerProps) 
                 <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
                     {title}
                 </h1>
+                {lastUpdated && (
+                    <div className="mt-3">
+                        <button
+                            onClick={() => setShowHistory(!showHistory)}
+                            className="text-sm text-slate-500 hover:text-slate-400 transition-colors cursor-pointer"
+                        >
+                            최종 수정: {lastUpdated} {commitHistory && commitHistory.length > 0 && (
+                                <span className="ml-1 text-slate-600">{showHistory ? '▲' : '▼'}</span>
+                            )}
+                        </button>
+                        {showHistory && commitHistory && commitHistory.length > 0 && (
+                            <ul className="mt-2 space-y-1 text-xs text-slate-600 border-l-2 border-slate-800 pl-3">
+                                {commitHistory.slice(0, 5).map((c, i) => (
+                                    <li key={i}>
+                                        <span className="text-slate-500">{c.date}</span>
+                                        <span className="mx-1.5 text-slate-700">—</span>
+                                        <span>{c.message}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )}
             </header>
 
             <div className="prose prose-slate prose-invert max-w-none">

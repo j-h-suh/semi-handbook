@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 import matter from 'gray-matter';
 
 const contentDirectory = path.join(process.cwd(), 'content');
@@ -10,8 +11,15 @@ export interface ChapterMeta {
   part: string;
 }
 
+export interface GitCommit {
+  date: string;
+  message: string;
+}
+
 export interface Chapter extends ChapterMeta {
   content: string;
+  lastUpdated: string | null;
+  commitHistory: GitCommit[];
 }
 
 // Helper to determine part from filename (e.g. 01_01_... -> Part 1)
@@ -120,11 +128,37 @@ export async function getChapterData(id: string): Promise<Chapter> {
   // because remark breaks if ** touches Korean characters or parentheses without spaces.
   const fixedBoldContent = cleanContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
+  // Get git commit history for this file
+  let lastUpdated: string | null = null;
+  const commitHistory: GitCommit[] = [];
+  try {
+    const gitLog = execSync(
+      `git log --follow --format="%ci|||%s" -- "${resolvedPath}"`,
+      { cwd: process.cwd(), encoding: 'utf8' }
+    ).trim();
+    if (gitLog) {
+      const lines = gitLog.split('\n').filter(Boolean);
+      for (const line of lines) {
+        const [dateStr, ...msgParts] = line.split('|||');
+        const date = dateStr.trim().split(' ')[0]; // YYYY-MM-DD
+        const message = msgParts.join('|||').trim();
+        commitHistory.push({ date, message });
+      }
+      if (commitHistory.length > 0) {
+        lastUpdated = commitHistory[0].date;
+      }
+    }
+  } catch {
+    // git not available
+  }
+
   return {
     id,
     title,
     part: getPartFromId(id),
     content: fixedBoldContent,
+    lastUpdated,
+    commitHistory,
     ...matterResult.data,
   };
 }
