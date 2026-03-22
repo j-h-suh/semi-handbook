@@ -22,17 +22,7 @@ Part 1의 반도체 공정 이해, Part 2의 리소그래피 심화 기술, Part
 
 ## End-to-End 파이프라인: 6단계
 
-```mermaid
-flowchart TB
-    subgraph SMILE 파이프라인
-        DATA[1. 데이터 수집<br/>스캐너 EDA + 트랙 로그<br/>+ 계측 데이터] --> FE[2. 피처 엔지니어링<br/>도메인 피처 + FDC Summary<br/>+ Cross-Layer]
-        FE --> MODEL[3. 모델 학습<br/>XGBoost + SHAP<br/>Time-Based CV]
-        MODEL --> VM_SRV[4. VM 서빙<br/>실시간 CD/OVL 예측<br/>RI 신뢰도 평가]
-        VM_SRV --> APC[5. APC 보정<br/>최적 Dose/Focus/OVL<br/>Safety Guard]
-        APC --> MON[6. 모니터링<br/>Drift 감지, 성능 추적<br/>재학습 트리거]
-    end
-    MON -->|재학습| MODEL
-```
+![SMILE 파이프라인](/content/images/04_10/smile_pipeline_overview.svg)
 
 이 파이프라인의 마지막 화살표 — 모니터링에서 재학습으로의 피드백 루프 — 가 시스템을 **살아 있게** 만든다. 한 번 배포하고 방치하는 것이 아니라, 공정 변화에 끊임없이 적응하는 자율 시스템이다.
 
@@ -93,16 +83,7 @@ flowchart TB
 
 ### 실시간 예측 아키텍처
 
-```mermaid
-flowchart LR
-    subgraph VM 서빙 아키텍처
-        KAFKA[Kafka<br/>FDC 스트림] --> FEAT[피처 계산<br/>실시간 변환]
-        FEAT --> INFER[추론 서버<br/>XGBoost 모델<br/>FastAPI]
-        INFER --> RI_CHK[신뢰도 평가<br/>RI 계산]
-        RI_CHK -->|RI ≥ 0.7| RESULT[VM 예측값<br/>CD, Overlay]
-        RI_CHK -->|RI < 0.7| ACTUAL[실제 계측 요청]
-    end
-```
+![VM 서빙 아키텍처](/content/images/04_10/vm_serving_architecture.svg)
 
 3.6장의 **Reliance Index(RI)**가 여기서 구현된다. 입력 데이터가 학습 데이터의 분포에서 얼마나 벗어났는지를 계산하여, RI가 0.7 이상이면 VM 예측을 신뢰하고 실제 계측을 생략하며, RI가 0.7 미만이면 "이 예측은 신뢰할 수 없다"고 판단하여 실제 계측을 요청한다. **계측 절감과 안전성의 균형**이다.
 
@@ -114,9 +95,9 @@ flowchart LR
 
 3.5장의 EWMA와 SMILE의 VM을 **혼합**하는 것이 가장 안전한 접근이다.
 
-```
-보정값 = α × VM_기반_보정 + (1-α) × EWMA_기반_보정
-```
+$$
+\text{보정값} = \alpha \cdot \underbrace{\text{VM 기반 보정}}_{\text{RI 높으면 } \alpha\uparrow} + (1 - \alpha) \cdot \underbrace{\text{EWMA 기반 보정}}_{\text{RI 낮으면 } \alpha\downarrow}
+$$
 
 α는 VM 신뢰도(RI)에 따라 동적으로 조절된다. RI가 높으면 α↑(VM 가중), RI가 낮으면 α↓(EWMA 가중). 4.4장의 "Shadow → Advisory → Semi-Auto → Full Auto" 로드맵에서 α를 점진적으로 높이며 VM의 기여를 늘려가는 것이다.
 
@@ -133,26 +114,7 @@ flowchart LR
 
 ![SMILE 모니터링 대시보드 목업](/content/images/04_10/smile_dashboard_mockup.png)
 
-```
-[SMILE 모니터링 대시보드]
 
-┌─ 실시간 VM 성능 ──────────────────┐
-│ RMSE 추이 (최근 7일): 0.42nm ✅    │
-│ R² 추이: 0.86                      │
-│ RI 분포: 평균 0.82                 │
-└────────────────────────────────────┘
-
-┌─ Data Drift 감시 ─────────────────┐
-│ PSI (FDC 피처): 0.08 ✅ (< 0.2)   │
-│ 이상 센서: 없음                    │
-└────────────────────────────────────┘
-
-┌─ APC 보정 현황 ───────────────────┐
-│ 보정 적용률: 94%                   │
-│ 클램핑 발생: 2회/일 (정상 범위)    │
-│ CD 3σ: 1.2nm (목표 1.5nm 이내) ✅ │
-└────────────────────────────────────┘
-```
 
 4.5장의 Data Drift(PSI/KS)와 Concept Drift(잔차 추세) 모니터링이 실시간으로 작동하며, 임계값 초과 시 재학습을 자동 트리거한다.
 
@@ -163,19 +125,6 @@ flowchart LR
 
 ![SMILE 시스템 아키텍처 종합](/content/images/04_10/smile_system_architecture.svg)
 
-```
-[장비 레이어]
-  스캐너 ──EDA──┐
-  트랙 ──SECS──┤──→ Kafka ──→ [피처 엔진] ──→ [VM 서버] ──→ [APC 서버] ──→ 스캐너
-  계측기 ──API──┘                                               │
-                                                          [모니터링]
-[학습 레이어]                                                  │
-  Spark + GPU 서버 ←── 재학습 트리거 ←─────────────────────────┘
-  ↓
-  Model Registry (MLflow)
-  ↓
-  새 모델 배포 → VM 서버
-```
 
 이 아키텍처는 4.5장의 **Edge + Central 2계층**을 구현한다. VM/APC 서버(Edge)가 실시간 추론과 보정을 수행하고, Spark/GPU 서버(Central)가 재학습과 모델 관리를 수행한다.
 
@@ -186,29 +135,7 @@ flowchart LR
 
 ![SMILE 개발 로드맵 타임라인](/content/images/04_10/smile_development_roadmap.svg)
 
-```
-Phase 1 (3개월): CD VM 단일 장비 PoC
-  - 데이터 수집 파이프라인 구축
-  - XGBoost VM 모델 개발, 오프라인 검증
-  - 목표: R² > 0.8, RMSE < 0.5nm
 
-Phase 2 (3개월): VM 실전 배포 + APC 연동
-  - 실시간 추론 서비스 배포 (Shadow Mode 시작)
-  - EWMA + VM 하이브리드 APC
-  - 모니터링 대시보드, 재학습 파이프라인
-  - 목표: 계측 절감 30%, CD 3σ 10% 개선
-
-Phase 3 (6개월): 다장비/다제품 확장
-  - 전이 학습(4.7장)으로 다장비 확장
-  - Overlay VM 추가
-  - 멀티 팹 배포 준비
-  - 목표: 3개 장비 × 2개 제품 커버
-
-Phase 4 (지속): 고도화
-  - 딥러닝 모델 (Trace 직접 활용, 4.6장)
-  - 강화 학습 APC (4.8장)
-  - LLM 기반 엔지니어 인터페이스 (4.9장)
-```
 
 4.4장의 "Shadow → Advisory → Semi-Auto → Full Auto" 로드맵이 Phase 2에서 시작되어 Phase 3~4에 걸쳐 진행된다. **점진적 확장**이 핵심이다 — 단일 장비에서 성공을 증명한 후에야 다장비로 확장한다.
 

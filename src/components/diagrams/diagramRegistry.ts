@@ -174,6 +174,10 @@ const SafeExplorationStages = dynamic(() => import('./SafeExplorationStages'), {
 const RagPipelineQna = dynamic(() => import('./RagPipelineQna'), { ssr: false });
 const ToolUsingAgentArchitecture = dynamic(() => import('./ToolUsingAgentArchitecture'), { ssr: false });
 const OnpremiseVsCloudLlm = dynamic(() => import('./OnpremiseVsCloudLlm'), { ssr: false });
+const SmilePipelineOverview = dynamic(() => import('./SmilePipelineOverview'), { ssr: false });
+const VmServingArchitecture = dynamic(() => import('./VmServingArchitecture'), { ssr: false });
+const SmileSystemArchitecture = dynamic(() => import('./SmileSystemArchitecture'), { ssr: false });
+const SmileDevelopmentRoadmap = dynamic(() => import('./SmileDevelopmentRoadmap'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -414,4 +418,11 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_09/rag_pipeline_qna.svg': RagPipelineQna,
     '/content/images/04_09/tool_using_agent_architecture.svg': ToolUsingAgentArchitecture,
     '/content/images/04_09/onpremise_vs_cloud_llm.svg': OnpremiseVsCloudLlm,
+
+    /* Chapter 4.10 */
+    '/content/images/04_10/smile_pipeline_overview.svg': SmilePipelineOverview,
+    '/content/images/04_10/vm_serving_architecture.svg': VmServingArchitecture,
+    '/content/images/04_10/smile_system_architecture.svg': SmileSystemArchitecture,
+    '/content/images/04_10/smile_dashboard_mockup.png': SmilePipelineOverview,
+    '/content/images/04_10/smile_development_roadmap.svg': SmileDevelopmentRoadmap,
 };
