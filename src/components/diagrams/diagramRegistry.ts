@@ -163,6 +163,10 @@ const MonitoringDashboard = dynamic(() => import('./MonitoringDashboard'), { ssr
 const ResNet18SemArchitecture = dynamic(() => import('./ResNet18SemArchitecture'), { ssr: false });
 const CnnAdcPipeline = dynamic(() => import('./CnnAdcPipeline'), { ssr: false });
 const DlVsXgboostPerformance = dynamic(() => import('./DlVsXgboostPerformance'), { ssr: false });
+const DomainGapVsTransferPerformance = dynamic(() => import('./DomainGapVsTransferPerformance'), { ssr: false });
+const MultiTaskProductHead = dynamic(() => import('./MultiTaskProductHead'), { ssr: false });
+const FederatedLearningArchitecture = dynamic(() => import('./FederatedLearningArchitecture'), { ssr: false });
+const FewShotDataVsPerformance = dynamic(() => import('./FewShotDataVsPerformance'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -386,4 +390,10 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/04_06/resnet18_sem_architecture.svg': ResNet18SemArchitecture,
     '/content/images/04_06/cnn_adc_pipeline.svg': CnnAdcPipeline,
     '/content/images/04_06/dl_vs_xgboost_performance.png': DlVsXgboostPerformance,
+
+    /* Chapter 4.7 */
+    '/content/images/04_07/domain_gap_vs_transfer_performance.png': DomainGapVsTransferPerformance,
+    '/content/images/04_07/multi_task_product_head.svg': MultiTaskProductHead,
+    '/content/images/04_07/federated_learning_architecture.svg': FederatedLearningArchitecture,
+    '/content/images/04_07/few_shot_data_vs_performance.png': FewShotDataVsPerformance,
 };
