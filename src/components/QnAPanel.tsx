@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Bot, User, ChevronDown, ChevronRight, Brain } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -19,6 +21,7 @@ import { useQnAContext } from './QnAContext';
 
 export default function QnAPanel() {
     const { documentContext: currentDocumentContext } = useQnAContext();
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
@@ -150,6 +153,14 @@ export default function QnAPanel() {
                 };
                 return updated;
             });
+
+            // Log Q&A to Supabase
+            const chapterMatch = decodeURIComponent(pathname).match(/\/chapter\/(.+)/);
+            supabase.from('qna_logs').insert({
+                chapter_id: chapterMatch ? chapterMatch[1] : null,
+                question: userMsg,
+                answer: accumulatedText,
+            }).then(() => {});  // fire-and-forget
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
