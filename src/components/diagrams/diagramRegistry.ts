@@ -119,9 +119,19 @@ const PCABasedFDC = dynamic(() => import('./PCABasedFDC'), { ssr: false });
 const NormalVsAbnormalTrace = dynamic(() => import('./NormalVsAbnormalTrace'), { ssr: false });
 const AutoencoderReconstructionError = dynamic(() => import('./AutoencoderReconstructionError'), { ssr: false });
 const EquipmentHealthDashboard = dynamic(() => import('./EquipmentHealthDashboard'), { ssr: false });
+const APCControlHierarchy = dynamic(() => import('./APCControlHierarchy'), { ssr: false });
+const EWMAControlLoop = dynamic(() => import('./EWMAControlLoop'), { ssr: false });
+const FFBCombinedCorrection = dynamic(() => import('./FFBCombinedCorrection'), { ssr: false });
+const APCCDBeforeAfter = dynamic(() => import('./APCCDBeforeAfter'), { ssr: false });
+const CrossLayerAPC = dynamic(() => import('./CrossLayerAPC'), { ssr: false });
 const EuvScannerInstallation = dynamic(() => import('./EuvScannerInstallation'), { ssr: false });
 const StochasticDefectsDilemma = dynamic(() => import('./StochasticDefectsDilemma'), { ssr: false });
 const AnamorphicReduction = dynamic(() => import('./AnamorphicReduction'), { ssr: false });
+const VMPredictedVsActual = dynamic(() => import('./VMPredictedVsActual'), { ssr: false });
+const RIDistributionThreshold = dynamic(() => import('./RIDistributionThreshold'), { ssr: false });
+const VMModelDegradation = dynamic(() => import('./VMModelDegradation'), { ssr: false });
+const VMInputOutputFlow = dynamic(() => import('./VMInputOutputFlow'), { ssr: false });
+const RIHybridStrategy = dynamic(() => import('./RIHybridStrategy'), { ssr: false });
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -282,4 +292,18 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/03_04/normal_vs_abnormal_trace.png': NormalVsAbnormalTrace,
     '/content/images/03_04/autoencoder_reconstruction_error.png': AutoencoderReconstructionError,
     '/content/images/03_04/equipment_health_dashboard.svg': EquipmentHealthDashboard,
+
+    /* Chapter 3.5 */
+    '/content/images/03_05/apc_control_hierarchy.svg': APCControlHierarchy,
+    '/content/images/03_05/ewma_control_loop.svg': EWMAControlLoop,
+    '/content/images/03_05/ff_fb_combined_correction.svg': FFBCombinedCorrection,
+    '/content/images/03_05/apc_cd_before_after.png': APCCDBeforeAfter,
+    '/content/images/03_05/cross_layer_apc.svg': CrossLayerAPC,
+
+    /* Chapter 3.6 */
+    '/content/images/03_06/vm_predicted_vs_actual.png': VMPredictedVsActual,
+    '/content/images/03_06/ri_distribution_threshold.png': RIDistributionThreshold,
+    '/content/images/03_06/vm_model_degradation.png': VMModelDegradation,
+    '/content/images/03_06/vm_input_output_flow.svg': VMInputOutputFlow,
+    '/content/images/03_06/ri_hybrid_strategy.svg': RIHybridStrategy,
 };

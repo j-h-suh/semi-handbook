@@ -117,6 +117,12 @@ FONT.min        = 12px   (최소 허용 — 이보다 작은 텍스트 금지)
 | `03_04/pca_based_fdc.svg` | `PCABasedFDC` | 3.4 |
 | `03_04/normal_vs_abnormal_trace.png` | `NormalVsAbnormalTrace` | 3.4 |
 | `03_04/autoencoder_reconstruction_error.png` | `AutoencoderReconstructionError` | 3.4 |
+| `03_04/equipment_health_dashboard.svg` | `EquipmentHealthDashboard` | 3.4 |
+| `03_05/apc_control_hierarchy.svg` | `APCControlHierarchy` | 3.5 |
+| `03_05/ewma_control_loop.svg` | `EWMAControlLoop` | 3.5 |
+| `03_05/ff_fb_combined_correction.svg` | `FFBCombinedCorrection` | 3.5 |
+| `03_05/apc_cd_before_after.png` | `APCCDBeforeAfter` | 3.5 |
+| `03_05/cross_layer_apc.svg` | `CrossLayerAPC` | 3.5 |
 
 ## 4. 마크다운 작성 규칙
 
