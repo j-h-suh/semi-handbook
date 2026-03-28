@@ -16,19 +16,11 @@ import {
 
 const data = [
     {
-        stage: '해변 모래',
-        stageSub: 'Beach Sand',
-        purity: '2N',
-        ppm: 10000,
-        desc: '자연 상태의 모래 (SiO₂). 순도 약 99%.',
-        color: '#60a5fa',
-    },
-    {
         stage: '야금급 Si',
-        stageSub: 'MG-Si',
+        stageSub: 'MG-Si, 2N',
         purity: '2N',
         ppm: 10000,
-        desc: '전기로에서 환원한 실리콘. 순도 98~99%.',
+        desc: '모래(SiO₂)에서 산소를 분리해 추출한 실리콘. 순도 98~99%.',
         color: '#60a5fa',
     },
     {

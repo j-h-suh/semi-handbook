@@ -56,8 +56,7 @@
       "description": "MG-Si → EG-Si로의 순도 변화를 로그 스케일로 비교. 불순물 농도(ppm)가 극적으로 감소하는 과정을 시각화",
       "spec": {
         "data": [
-          {"stage": "해변 모래\n(Beach Sand)", "purity_nines": 2, "impurity_ppm": 10000},
-          {"stage": "야금급 Si\n(MG-Si)", "purity_nines": 2, "impurity_ppm": 10000},
+          {"stage": "야금급 Si\n(MG-Si, 2N)", "purity_nines": 2, "impurity_ppm": 10000},
           {"stage": "트리클로로실란\n(SiHCl₃ 정제)", "purity_nines": 6, "impurity_ppm": 1},
           {"stage": "전자급 Si\n(EG-Si, 11N)", "purity_nines": 11, "impurity_ppm": 0.00001}
         ],
@@ -67,7 +66,7 @@
         "y_scale": "log",
         "style": "학술, 격자선, DPI 300, 10x5 인치",
         "highlight": "EG-Si 바에 강조 색상",
-        "note": "순도 수치는 본문 기반 (해변모래 99% → EG-Si 99.999999999%). 불순물 ppm은 순도로부터 계산한 추정치"
+        "note": "순도 수치는 본문 기반 (MG-Si 98-99% → EG-Si 99.999999999%). 불순물 ppm은 순도로부터 계산한 추정치"
       }
     }
   ]
