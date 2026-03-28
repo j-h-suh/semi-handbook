@@ -14,6 +14,7 @@ export interface Post {
     chapter_id: string | null;
     password_hash: string;
     created_at: string;
+    status: string | null;
 }
 
 export interface Comment {

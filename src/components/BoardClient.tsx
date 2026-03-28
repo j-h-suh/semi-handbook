@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase, type Post, type Comment } from '@/lib/supabase';
-import { MessageSquarePlus, X, Send, Clock, Tag, Pencil, Trash2, MessageCircle } from 'lucide-react';
+import { MessageSquarePlus, X, Send, Clock, Tag, Pencil, Trash2, MessageCircle, CheckCircle2 } from 'lucide-react';
 
 const CATEGORIES = ['전체', '질문', '수정요청', '자유'] as const;
 const WRITE_CATEGORIES = ['질문', '수정요청', '자유'] as const;
@@ -38,6 +38,11 @@ export default function BoardClient() {
     const [commentForm, setCommentForm] = useState({ nickname: '', content: '', password: '' });
     const [commentSubmitting, setCommentSubmitting] = useState(false);
     const commentGuard = useRef(false);
+
+    // Status change
+    const [statusPrompt, setStatusPrompt] = useState<Post | null>(null);
+    const [statusPwInput, setStatusPwInput] = useState('');
+    const [statusPwError, setStatusPwError] = useState('');
 
     // Comment password prompt
     const [commentPwPrompt, setCommentPwPrompt] = useState<{ action: 'edit' | 'delete'; comment: Comment } | null>(null);
@@ -112,6 +117,7 @@ export default function BoardClient() {
                 title: form.title.trim(),
                 content: form.content.trim(),
                 password_hash: pw_hash,
+                status: (form.category === '질문' || form.category === '수정요청') ? '대기' : null,
             });
         }
         setForm({ nickname: '', category: '자유', title: '', content: '', password: '' });
@@ -277,6 +283,16 @@ export default function BoardClient() {
                                     {post.category}
                                 </span>
                                 <span className="text-base font-medium text-slate-200 line-clamp-1">{post.title}</span>
+                                {post.status && (post.category === '질문' || post.category === '수정요청') && (
+                                    <span className={`flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-md border shrink-0 ${
+                                        post.status === '완료'
+                                            ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                                            : 'text-slate-500 bg-white/5 border-white/10'
+                                    }`}>
+                                        {post.status === '완료' && <CheckCircle2 size={10} />}
+                                        {post.status}
+                                    </span>
+                                )}
                             </div>
                             <div className="flex items-center gap-3 text-xs text-slate-600">
                                 <span>{post.nickname}</span>
@@ -304,6 +320,16 @@ export default function BoardClient() {
                             <span className={`text-[11px] px-2 py-0.5 rounded-md border ${categoryColor(selectedPost.category)}`}>
                                 {selectedPost.category}
                             </span>
+                            {selectedPost.status && (selectedPost.category === '질문' || selectedPost.category === '수정요청') && (
+                                <span className={`flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-md border ${
+                                    selectedPost.status === '완료'
+                                        ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                                        : 'text-slate-500 bg-white/5 border-white/10'
+                                }`}>
+                                    {selectedPost.status === '완료' && <CheckCircle2 size={10} />}
+                                    {selectedPost.status}
+                                </span>
+                            )}
                             <span className="text-xs text-slate-600">{selectedPost.nickname} · {formatDate(selectedPost.created_at)}</span>
                         </div>
                         <h2 className="text-lg font-bold text-white mb-4">{selectedPost.title}</h2>
@@ -374,6 +400,19 @@ export default function BoardClient() {
 
                         {/* Edit / Delete buttons */}
                         <div className="flex gap-2 justify-end border-t border-white/5 pt-4">
+                            {(selectedPost.category === '질문' || selectedPost.category === '수정요청') && (
+                                <button
+                                    onClick={() => { setStatusPrompt(selectedPost); setStatusPwInput(''); setStatusPwError(''); }}
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer mr-auto ${
+                                        selectedPost.status === '완료'
+                                            ? 'text-slate-400 bg-white/5 border border-white/8 hover:bg-white/10'
+                                            : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20'
+                                    }`}
+                                >
+                                    <CheckCircle2 size={12} />
+                                    {selectedPost.status === '완료' ? '대기로 변경' : '완료 처리'}
+                                </button>
+                            )}
                             <button
                                 onClick={() => { setPwPrompt({ action: 'edit', post: selectedPost }); setPwInput(''); setPwError(''); }}
                                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 bg-white/5 hover:bg-white/10 border border-white/8 rounded-lg transition-colors cursor-pointer"
@@ -463,6 +502,75 @@ export default function BoardClient() {
                                         ? 'text-rose-400 bg-rose-500/10 border border-rose-500/20'
                                         : 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/20'
                                 }`}
+                            >
+                                확인
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Status change password modal */}
+            {statusPrompt && (
+                <div className="fixed inset-0 z-[95] flex items-center justify-center" onClick={() => setStatusPrompt(null)}>
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                    <div className="relative w-full max-w-xs mx-4 bg-[#0f1729] border border-white/10 rounded-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+                        <h3 className="text-sm font-bold text-white mb-3">
+                            관리자 비밀번호 확인
+                        </h3>
+                        <p className="text-xs text-slate-500 mb-3">
+                            상태를 <span className="text-slate-300">{statusPrompt.status === '완료' ? '대기' : '완료'}</span>(으)로 변경합니다.
+                        </p>
+                        <input
+                            type="password"
+                            placeholder="관리자 비밀번호"
+                            value={statusPwInput}
+                            onChange={e => { setStatusPwInput(e.target.value); setStatusPwError(''); }}
+                            onKeyDown={async e => {
+                                if (e.key === 'Enter') {
+                                    const newStatus = statusPrompt.status === '완료' ? '대기' : '완료';
+                                    const res = await fetch('/api/status', {
+                                        method: 'PATCH',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ postId: statusPrompt.id, status: newStatus, password: statusPwInput }),
+                                    });
+                                    if (!res.ok) {
+                                        setStatusPwError('비밀번호가 일치하지 않습니다.');
+                                        return;
+                                    }
+                                    setSelectedPost(prev => prev ? { ...prev, status: newStatus } : null);
+                                    setStatusPrompt(null);
+                                    fetchPosts();
+                                }
+                            }}
+                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40 mb-2"
+                            autoFocus
+                        />
+                        {statusPwError && <p className="text-xs text-rose-400 mb-2">{statusPwError}</p>}
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setStatusPrompt(null)}
+                                className="flex-1 px-3 py-2 text-xs text-slate-400 bg-white/5 border border-white/8 rounded-lg cursor-pointer"
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    const newStatus = statusPrompt.status === '완료' ? '대기' : '완료';
+                                    const res = await fetch('/api/status', {
+                                        method: 'PATCH',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ postId: statusPrompt.id, status: newStatus, password: statusPwInput }),
+                                    });
+                                    if (!res.ok) {
+                                        setStatusPwError('비밀번호가 일치하지 않습니다.');
+                                        return;
+                                    }
+                                    setSelectedPost(prev => prev ? { ...prev, status: newStatus } : null);
+                                    setStatusPrompt(null);
+                                    fetchPosts();
+                                }}
+                                className="flex-1 px-3 py-2 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg cursor-pointer"
                             >
                                 확인
                             </button>
