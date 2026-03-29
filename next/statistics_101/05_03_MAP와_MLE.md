@@ -15,9 +15,15 @@
 
 $$\hat{\theta}_{\text{MLE}} = \arg\max_\theta P(\text{data} \mid \theta)$$
 
+→ "이 데이터를 가장 잘 설명하는 $\theta$ 하나를 찾아라." 사전 지식 없이, 데이터만으로.
+
 $$\hat{\theta}_{\text{MAP}} = \arg\max_\theta P(\text{data} \mid \theta) \cdot P(\theta)$$
 
+→ "데이터도 잘 설명하면서 사전 지식과도 부합하는 $\theta$ 하나를 찾아라." 두 기준의 균형.
+
 $$P(\theta \mid \text{data}) = \frac{P(\text{data} \mid \theta) \cdot P(\theta)}{P(\text{data})} \quad \text{(완전 베이즈)}$$
+
+→ "$\theta$가 가질 수 있는 **모든 값의 확률분포**를 구하라." 점 하나가 아니라 분포 전체.
 
 세 가지의 차이:
 
