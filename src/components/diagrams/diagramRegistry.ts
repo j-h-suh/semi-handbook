@@ -21,6 +21,11 @@ const HypothesisTestVisualizer = dynamic(() => import('./stats/HypothesisTestVis
 const TDistributionComparison = dynamic(() => import('./stats/TDistributionComparison'), { ssr: false });
 const AnovaDecomposition = dynamic(() => import('./stats/AnovaDecomposition'), { ssr: false });
 const MultipleTestingComparison = dynamic(() => import('./stats/MultipleTestingComparison'), { ssr: false });
+const OLSFitVisualizer = dynamic(() => import('./stats/OLSFitVisualizer'), { ssr: false });
+const ResidualPatterns = dynamic(() => import('./stats/ResidualPatterns'), { ssr: false });
+const SigmoidCurve = dynamic(() => import('./stats/SigmoidCurve'), { ssr: false });
+const L1L2ContourPlot = dynamic(() => import('./stats/L1L2ContourPlot'), { ssr: false });
+const BiasVarianceTradeoff = dynamic(() => import('./stats/BiasVarianceTradeoff'), { ssr: false });
 
 /* ─── 반도체 핸드북 ─── */
 const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: false });
@@ -536,4 +541,19 @@ export const diagramRegistry: Record<string, ComponentType> = {
 
     /* Stats 03_06 — 다중검정 */
     '/content/images/stats/03_06/multiple_testing_comparison.svg': MultipleTestingComparison,
+
+    /* Stats 04_01 — 선형회귀의 통계학적 의미 */
+    '/content/images/stats/04_01/ols_fit_visualizer.svg': OLSFitVisualizer,
+
+    /* Stats 04_02 — 회귀 진단 */
+    '/content/images/stats/04_02/residual_patterns.svg': ResidualPatterns,
+
+    /* Stats 04_03 — 로지스틱 회귀 */
+    '/content/images/stats/04_03/sigmoid_curve.svg': SigmoidCurve,
+
+    /* Stats 04_04 — 정규화의 통계적 해석 */
+    '/content/images/stats/04_04/l1_l2_contour_plot.svg': L1L2ContourPlot,
+
+    /* Stats 04_05 — 편향-분산 트레이드오프 */
+    '/content/images/stats/04_05/bias_variance_tradeoff.svg': BiasVarianceTradeoff,
 };
