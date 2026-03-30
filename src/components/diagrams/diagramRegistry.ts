@@ -26,6 +26,12 @@ const ResidualPatterns = dynamic(() => import('./stats/ResidualPatterns'), { ssr
 const SigmoidCurve = dynamic(() => import('./stats/SigmoidCurve'), { ssr: false });
 const L1L2ContourPlot = dynamic(() => import('./stats/L1L2ContourPlot'), { ssr: false });
 const BiasVarianceTradeoff = dynamic(() => import('./stats/BiasVarianceTradeoff'), { ssr: false });
+const PosteriorConvergence = dynamic(() => import('./stats/PosteriorConvergence'), { ssr: false });
+const MCMCTraceViewer = dynamic(() => import('./stats/MCMCTraceViewer'), { ssr: false });
+const SampleSizeCalculator = dynamic(() => import('./stats/SampleSizeCalculator'), { ssr: false });
+const KLDivergenceAsymmetry = dynamic(() => import('./stats/KLDivergenceAsymmetry'), { ssr: false });
+const CurseDimensionality = dynamic(() => import('./stats/CurseDimensionality'), { ssr: false });
+const CausalDAGExplorer = dynamic(() => import('./stats/CausalDAGExplorer'), { ssr: false });
 
 /* ─── 반도체 핸드북 ─── */
 const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: false });
@@ -556,4 +562,22 @@ export const diagramRegistry: Record<string, ComponentType> = {
 
     /* Stats 04_05 — 편향-분산 트레이드오프 */
     '/content/images/stats/04_05/bias_variance_tradeoff.svg': BiasVarianceTradeoff,
+
+    /* Stats 05_01 — 빈도주의 vs 베이지안 */
+    '/content/images/stats/05_01/posterior_convergence.svg': PosteriorConvergence,
+
+    /* Stats 05_04 — MCMC 맛보기 */
+    '/content/images/stats/05_04/mcmc_trace_viewer.svg': MCMCTraceViewer,
+
+    /* Stats 06_01 — A/B테스트 설계 */
+    '/content/images/stats/06_01/sample_size_calculator.svg': SampleSizeCalculator,
+
+    /* Stats 06_03 — 정보이론 기초 */
+    '/content/images/stats/06_03/kl_divergence_asymmetry.svg': KLDivergenceAsymmetry,
+
+    /* Stats 06_04 — 차원의 저주 */
+    '/content/images/stats/06_04/curse_dimensionality.svg': CurseDimensionality,
+
+    /* Stats 06_05 — 인과추론 입문 */
+    '/content/images/stats/06_05/causal_dag_explorer.svg': CausalDAGExplorer,
 };
