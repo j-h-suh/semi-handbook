@@ -42,6 +42,32 @@ export const COLOR = {
     cardBg: 'rgba(255,255,255,0.02)',
 } as const;
 
+/* ─── 통계학 핸드북 액센트 컬러 ─── */
+export const STATS_COLOR = {
+    /** 주 액센트 (에메랄드) */
+    accent: '#34d399',
+    accentMuted: '#6ee7b7',
+    accentDim: '#065f46',
+    accentBg: 'rgba(52, 211, 153, 0.1)',
+    accentBorder: 'rgba(52, 211, 153, 0.2)',
+
+    /** 차트 시리즈 (최대 6색) */
+    series: [
+        '#34d399', // emerald
+        '#38bdf8', // sky
+        '#f472b6', // pink
+        '#fbbf24', // amber
+        '#a78bfa', // violet
+        '#fb923c', // orange
+    ] as readonly string[],
+
+    /** 강조 영역 (p-value 꼬리, CI 등) */
+    areaFill: 'rgba(52, 211, 153, 0.15)',
+    areaStroke: '#34d399',
+    areaNegFill: 'rgba(244, 114, 182, 0.15)',
+    areaNegStroke: '#f472b6',
+} as const;
+
 /* ─── 간격 ─── */
 export const SPACING = {
     /** 다이어그램 상하 여백 */

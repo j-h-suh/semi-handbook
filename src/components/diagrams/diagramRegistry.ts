@@ -2,6 +2,15 @@ import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
 
 // Lazy-load diagram components to keep bundle size small
+
+/* ─── 통계학 핸드북 ─── */
+const CentralTendencyComparison = dynamic(() => import('./stats/CentralTendencyComparison'), { ssr: false });
+const EmpiricalRuleNormal = dynamic(() => import('./stats/EmpiricalRuleNormal'), { ssr: false });
+const BoxplotAnatomy = dynamic(() => import('./stats/BoxplotAnatomy'), { ssr: false });
+const AnscombeQuartet = dynamic(() => import('./stats/AnscombeQuartet'), { ssr: false });
+const HistogramBinComparison = dynamic(() => import('./stats/HistogramBinComparison'), { ssr: false });
+
+/* ─── 반도체 핸드북 ─── */
 const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: false });
 const TransistorGrowth = dynamic(() => import('./TransistorGrowth'), { ssr: false });
 const ChipProcessFlow = dynamic(() => import('./ChipProcessFlow'), { ssr: false });
@@ -460,4 +469,23 @@ export const diagramRegistry: Record<string, ComponentType> = {
     '/content/images/05_03/job_role_radar_chart.png': JobRoleRadarChart,
     '/content/images/05_03/career_growth_timeline.svg': CareerGrowthTimeline,
     '/content/images/05_03/semiconductor_ai_market_growth.png': SemiconductorAiMarketGrowth,
+
+    /* ═══════════════════════════════════════════════════════
+     *  통계학 핸드북 (stats)
+     * ═══════════════════════════════════════════════════════ */
+
+    /* Stats 01_01 — 평균, 중앙값, 최빈값 */
+    '/content/images/stats/01_01/central_tendency_comparison.svg': CentralTendencyComparison,
+
+    /* Stats 01_02 — 분산과 표준편차 */
+    '/content/images/stats/01_02/empirical_rule_normal.svg': EmpiricalRuleNormal,
+
+    /* Stats 01_03 — 백분위수와 IQR */
+    '/content/images/stats/01_03/boxplot_anatomy.svg': BoxplotAnatomy,
+
+    /* Stats 01_04 — 상관계수의 함정 */
+    '/content/images/stats/01_04/anscombe_quartet.svg': AnscombeQuartet,
+
+    /* Stats 01_05 — 시각화의 통계학 */
+    '/content/images/stats/01_05/histogram_bin_comparison.svg': HistogramBinComparison,
 };

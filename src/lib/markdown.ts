@@ -4,6 +4,7 @@ import { execSync } from 'child_process';
 import matter from 'gray-matter';
 
 const contentDirectory = path.join(process.cwd(), 'content');
+const statsDirectory = path.join(process.cwd(), 'next', 'statistics_101');
 
 export interface ChapterMeta {
   id: string;
@@ -156,6 +157,99 @@ export async function getChapterData(id: string): Promise<Chapter> {
     id,
     title,
     part: getPartFromId(id),
+    content: fixedBoldContent,
+    lastUpdated,
+    commitHistory,
+    ...matterResult.data,
+  };
+}
+
+/* ─── 통계학 핸드북 (임시 라우트) ─── */
+
+function getStatsPartFromId(id: string) {
+  if (id.startsWith('00_')) return '들어가며';
+  if (id.startsWith('01_')) return 'Part 1: 기술통계';
+  if (id.startsWith('02_')) return 'Part 2: 확률과 분포';
+  if (id.startsWith('03_')) return 'Part 3: 추론통계';
+  if (id.startsWith('04_')) return 'Part 4: 회귀와 모델링';
+  if (id.startsWith('05_')) return 'Part 5: 베이지안 통계';
+  if (id.startsWith('06_')) return 'Part 6: 실전 응용';
+  return '기타';
+}
+
+export function getSortedStatsChapters(): ChapterMeta[] {
+  const fileNames = fs.readdirSync(statsDirectory)
+    .filter(file => file.endsWith('.md') && !file.startsWith('00_기획'));
+
+  const chapters = fileNames.map((fileName) => {
+    const id = fileName.replace(/\.md$/, '');
+    const fullPath = path.join(statsDirectory, fileName);
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const matterResult = matter(fileContents);
+
+    let title = id.replace(/_/g, ' ');
+    const match = fileContents.match(/^#\s+(.*)/m);
+    if (match) title = match[1].trim();
+
+    return { id, title, part: getStatsPartFromId(id), ...matterResult.data } as ChapterMeta;
+  });
+
+  return chapters.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+}
+
+export async function getStatsChapterData(id: string): Promise<Chapter> {
+  const decodedId = decodeURIComponent(id);
+
+  const files = fs.readdirSync(statsDirectory).filter(f => f.endsWith('.md'));
+  const matchingFile = files.find(f => {
+    const baseName = f.replace(/\.md$/, '');
+    return baseName.normalize('NFC') === decodedId.normalize('NFC')
+      || baseName.normalize('NFC') === id.normalize('NFC');
+  });
+
+  if (!matchingFile) {
+    throw new Error(`Stats chapter not found for id: ${id}`);
+  }
+
+  const resolvedPath = path.join(statsDirectory, matchingFile);
+  const fileContents = fs.readFileSync(resolvedPath, 'utf8');
+
+  const processedContents = fileContents.replace(/\]\(\/?images\//g, '](/content/images/stats/');
+  const matterResult = matter(processedContents);
+
+  let title = id.replace(/_/g, ' ');
+  const match = processedContents.match(/^#\s+(.*)/m);
+  if (match) title = match[1].trim();
+
+  const contentWithoutTitle = matterResult.content.replace(/^#\s+(.*)/m, '');
+  const cleanContent = contentWithoutTitle.replace(/^\*다음 챕터:.*?\*$/gm, '').replace(/^\*이전 챕터:.*?\*$/gm, '');
+  const fixedBoldContent = cleanContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  let lastUpdated: string | null = null;
+  const commitHistory: GitCommit[] = [];
+  try {
+    const gitLog = execSync(
+      `git log --follow --format="%ci|||%s" -- "${resolvedPath}"`,
+      { cwd: process.cwd(), encoding: 'utf8' }
+    ).trim();
+    if (gitLog) {
+      const lines = gitLog.split('\n').filter(Boolean);
+      for (const line of lines) {
+        const [dateStr, ...msgParts] = line.split('|||');
+        const date = dateStr.trim().split(' ')[0];
+        const message = msgParts.join('|||').trim();
+        commitHistory.push({ date, message });
+      }
+      if (commitHistory.length > 0) lastUpdated = commitHistory[0].date;
+    }
+  } catch {
+    // git not available
+  }
+
+  return {
+    id,
+    title,
+    part: getStatsPartFromId(id),
     content: fixedBoldContent,
     lastUpdated,
     commitHistory,
