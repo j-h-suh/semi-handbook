@@ -149,7 +149,7 @@ F가 크면 → 노이즈에 비해 그룹 간 차이가 크다 → 적어도 �
 
 F가 1에 가까우면 → 그룹 간 차이가 노이즈 수준이다 → 차이가 없을 가능성 높다.
 
-<!-- [DIAGRAM: 두 시나리오. 왼쪽(F 큼): 세 그룹의 분포가 서로 떨어져 있고 각 그룹 내 변동은 작음. 오른쪽(F 작음): 세 그룹의 분포가 겹쳐 있고 그룹 내 변동이 큼. 각 시나리오에 F 값 표시.] -->
+![ANOVA 분산 분해](/content/images/stats/03_05/anova_decomposition.svg)
 
 <details>
 <summary>🔬 Deep Dive — ANOVA의 분해</summary>

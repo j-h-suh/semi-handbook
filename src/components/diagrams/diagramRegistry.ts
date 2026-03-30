@@ -15,6 +15,12 @@ const DiscreteDistributionExplorer = dynamic(() => import('./stats/DiscreteDistr
 const ContinuousDistributionExplorer = dynamic(() => import('./stats/ContinuousDistributionExplorer'), { ssr: false });
 const CLTSimulation = dynamic(() => import('./stats/CLTSimulation'), { ssr: false });
 const LLNConvergence = dynamic(() => import('./stats/LLNConvergence'), { ssr: false });
+const EstimatorTargetBoard = dynamic(() => import('./stats/EstimatorTargetBoard'), { ssr: false });
+const ConfidenceIntervalSim = dynamic(() => import('./stats/ConfidenceIntervalSim'), { ssr: false });
+const HypothesisTestVisualizer = dynamic(() => import('./stats/HypothesisTestVisualizer'), { ssr: false });
+const TDistributionComparison = dynamic(() => import('./stats/TDistributionComparison'), { ssr: false });
+const AnovaDecomposition = dynamic(() => import('./stats/AnovaDecomposition'), { ssr: false });
+const MultipleTestingComparison = dynamic(() => import('./stats/MultipleTestingComparison'), { ssr: false });
 
 /* ─── 반도체 핸드북 ─── */
 const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: false });
@@ -512,4 +518,22 @@ export const diagramRegistry: Record<string, ComponentType> = {
 
     /* Stats 02_06 — 큰 수의 법칙 */
     '/content/images/stats/02_06/lln_convergence.svg': LLNConvergence,
+
+    /* Stats 03_01 — 모수와 통계량 */
+    '/content/images/stats/03_01/estimator_target_board.svg': EstimatorTargetBoard,
+
+    /* Stats 03_02 — 점추정과 구간추정 */
+    '/content/images/stats/03_02/confidence_interval_sim.svg': ConfidenceIntervalSim,
+
+    /* Stats 03_03 — 가설검정의 프레임워크 */
+    '/content/images/stats/03_03/hypothesis_test_visualizer.svg': HypothesisTestVisualizer,
+
+    /* Stats 03_04 — t검정과 z검정 */
+    '/content/images/stats/03_04/t_distribution_comparison.svg': TDistributionComparison,
+
+    /* Stats 03_05 — 카이제곱, ANOVA */
+    '/content/images/stats/03_05/anova_decomposition.svg': AnovaDecomposition,
+
+    /* Stats 03_06 — 다중검정 */
+    '/content/images/stats/03_06/multiple_testing_comparison.svg': MultipleTestingComparison,
 };
