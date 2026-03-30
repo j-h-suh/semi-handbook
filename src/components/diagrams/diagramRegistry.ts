@@ -9,6 +9,12 @@ const EmpiricalRuleNormal = dynamic(() => import('./stats/EmpiricalRuleNormal'),
 const BoxplotAnatomy = dynamic(() => import('./stats/BoxplotAnatomy'), { ssr: false });
 const AnscombeQuartet = dynamic(() => import('./stats/AnscombeQuartet'), { ssr: false });
 const HistogramBinComparison = dynamic(() => import('./stats/HistogramBinComparison'), { ssr: false });
+const BayesTheoremSlider = dynamic(() => import('./stats/BayesTheoremSlider'), { ssr: false });
+const PmfPdfCdfGrid = dynamic(() => import('./stats/PmfPdfCdfGrid'), { ssr: false });
+const DiscreteDistributionExplorer = dynamic(() => import('./stats/DiscreteDistributionExplorer'), { ssr: false });
+const ContinuousDistributionExplorer = dynamic(() => import('./stats/ContinuousDistributionExplorer'), { ssr: false });
+const CLTSimulation = dynamic(() => import('./stats/CLTSimulation'), { ssr: false });
+const LLNConvergence = dynamic(() => import('./stats/LLNConvergence'), { ssr: false });
 
 /* ─── 반도체 핸드북 ─── */
 const MOSFETCrossSection = dynamic(() => import('./MOSFETCrossSection'), { ssr: false });
@@ -488,4 +494,22 @@ export const diagramRegistry: Record<string, ComponentType> = {
 
     /* Stats 01_05 — 시각화의 통계학 */
     '/content/images/stats/01_05/histogram_bin_comparison.svg': HistogramBinComparison,
+
+    /* Stats 02_01 — 베이즈 정리 */
+    '/content/images/stats/02_01/bayes_theorem_slider.svg': BayesTheoremSlider,
+
+    /* Stats 02_02 — PMF, PDF, CDF */
+    '/content/images/stats/02_02/pmf_pdf_cdf_grid.svg': PmfPdfCdfGrid,
+
+    /* Stats 02_03 — 이산확률분포 */
+    '/content/images/stats/02_03/discrete_distribution_explorer.svg': DiscreteDistributionExplorer,
+
+    /* Stats 02_04 — 연속확률분포 */
+    '/content/images/stats/02_04/continuous_distribution_explorer.svg': ContinuousDistributionExplorer,
+
+    /* Stats 02_05 — 중심극한정리 */
+    '/content/images/stats/02_05/clt_simulation.svg': CLTSimulation,
+
+    /* Stats 02_06 — 큰 수의 법칙 */
+    '/content/images/stats/02_06/lln_convergence.svg': LLNConvergence,
 };
