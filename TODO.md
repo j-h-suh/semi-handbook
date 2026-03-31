@@ -333,74 +333,68 @@
 | **D. 개념도** | SVG + Framer Motion | 호버 시 부분 하이라이트 + 설명 패널 | 과녁 비유, 벤 다이어그램, DAG |
 | **E. 영역 시각화** | Recharts AreaChart + 참조선 | 호버/클릭으로 영역(α, β, p-value) 강조 | p-value 꼬리, 검정력 곡선 |
 
-### Sprint 1: Part 1 — 기술통계 (5개 컴포넌트)
+### Sprint 1: Part 1 — 기술통계 (5개 컴포넌트) ✅
 
-| # | 챕터 | 컴포넌트명 | 유형 | 설명 |
+| # | 챕터 | 컴포넌트명 | 유형 | 상태 |
 |---|------|-----------|------|------|
-| 1 | 01_01 | `CentralTendencyComparison` | D | 대칭/왼쪽 치우침/오른쪽 치우침 분포 위에 mean·median·mode 위치 표시, 탭 전환 |
-| 2 | 01_02 | `EmpiricalRuleNormal` | A | 정규분포 위 68-95-99.7% 영역 채색, σ 슬라이더 |
-| 3 | 01_03 | `BoxplotAnatomy` | D | 박스플롯 해부도 — Q1/Q2/Q3/IQR/fence/아웃라이어 호버 시 설명 |
-| 4 | 01_04 | `AnscombeQuartet` | C | 4개 산점도 + 동일한 통계량 표시, 호버 시 점 강조 |
-| 5 | 01_05 | `HistogramBinComparison` | A | 동일 데이터에 bin 수(5/20/50) 슬라이더 → 히스토그램 실시간 변화 |
+| 1 | 01_01 | `CentralTendencyComparison` | D | ✅ |
+| 2 | 01_02 | `EmpiricalRuleNormal` | A | ✅ |
+| 3 | 01_03 | `BoxplotAnatomy` | D | ✅ |
+| 4 | 01_04 | `AnscombeQuartet` | C | ✅ |
+| 5 | 01_05 | `HistogramBinComparison` | A | ✅ |
 
-### Sprint 2: Part 2 — 확률과 분포 (6개 컴포넌트)
+### Sprint 2: Part 2 — 확률과 분포 (6개 컴포넌트) ✅
 
-| # | 챕터 | 컴포넌트명 | 유형 | 설명 |
+| # | 챕터 | 컴포넌트명 | 유형 | 상태 |
 |---|------|-----------|------|------|
-| 6 | 02_01 | `BayesTheoremSlider` | A+E | 유병률 슬라이더 → 양성예측도(PPV) 곡선 실시간 변화 |
-| 7 | 02_02 | `PmfPdfCdfGrid` | C | PMF/PDF/CDF 2×2 비교 (이산 vs 연속), 탭 전환 |
-| 8 | 02_03 | `DiscreteDistributionExplorer` | A | 이항(n, p 슬라이더) / 포아송(λ 슬라이더) PMF, 탭 전환 |
-| 9 | 02_04 | `ContinuousDistributionExplorer` | A | 정규(μ, σ) / 지수(λ) / 균등(a, b) PDF, 탭 전환 |
-| 10 | 02_05 | `CLTSimulation` | B | ★핵심★ 모집단 선택(균등/지수/이항) → n 증가 시 표본평균 분포가 정규로 수렴하는 4단계 애니메이션 |
-| 11 | 02_06 | `LLNConvergence` | B | 표본 크기 증가 → 표본평균이 모평균으로 수렴하는 과정 실시간 시각화 |
+| 6 | 02_01 | `BayesTheoremSlider` | A+E | ✅ |
+| 7 | 02_02 | `PmfPdfCdfGrid` | C | ✅ |
+| 8 | 02_03 | `DiscreteDistributionExplorer` | A | ✅ |
+| 9 | 02_04 | `ContinuousDistributionExplorer` | A | ✅ |
+| 10 | 02_05 | `CLTSimulation` | B | ✅ |
+| 11 | 02_06 | `LLNConvergence` | B | ✅ |
 
-### Sprint 3: Part 3 — 추론통계 (6개 컴포넌트)
+### Sprint 3: Part 3 — 추론통계 (6개 컴포넌트) ✅
 
-| # | 챕터 | 컴포넌트명 | 유형 | 설명 |
+| # | 챕터 | 컴포넌트명 | 유형 | 상태 |
 |---|------|-----------|------|------|
-| 12 | 03_01 | `EstimatorTargetBoard` | D | 과녁 4종 (편향/불편 × 효율/비효율), 탭 전환 + 점 애니메이션 |
-| 13 | 03_02 | `ConfidenceIntervalSim` | B | 100번 샘플링 → 95개쯤 모수를 포함하는 구간 시각화, "샘플링" 버튼 |
-| 14 | 03_03 | `HypothesisTestVisualizer` | E | 귀무/대립 두 분포 곡선, α/β/검정력 영역 호버 시 강조 + 임계값 슬라이더 |
-| 15 | 03_04 | `TDistributionComparison` | A | t-분포(df 슬라이더) vs 표준정규분포 오버레이, 꼬리 두께 변화 |
-| 16 | 03_05 | `AnovaDecomposition` | D+E | 분산 분해(SSB/SSW/SST) 막대 + F-분포 영역 시각화 |
-| 17 | 03_06 | `MultipleTestingComparison` | E | m개 검정 시 FWER/FDR 비교 곡선, m 슬라이더 |
+| 12 | 03_01 | `EstimatorTargetBoard` | D | ✅ |
+| 13 | 03_02 | `ConfidenceIntervalSim` | B | ✅ |
+| 14 | 03_03 | `HypothesisTestVisualizer` | E | ✅ |
+| 15 | 03_04 | `TDistributionComparison` | A | ✅ |
+| 16 | 03_05 | `AnovaDecomposition` | D+E | ✅ |
+| 17 | 03_06 | `MultipleTestingComparison` | E | ✅ |
 
-### Sprint 4: Part 4 — 회귀와 모델링 (5개 컴포넌트)
+### Sprint 4: Part 4 — 회귀와 모델링 (5개 컴포넌트) ✅
 
-| # | 챕터 | 컴포넌트명 | 유형 | 설명 |
+| # | 챕터 | 컴포넌트명 | 유형 | 상태 |
 |---|------|-----------|------|------|
-| 18 | 04_01 | `OLSFitVisualizer` | A | 산점도 + 회귀선, 잔차 선분 표시, 데이터 포인트 드래그 가능 |
-| 19 | 04_02 | `ResidualPatterns` | C | 3종 잔차 패턴(정상/이분산/비선형) 비교 패널 |
-| 20 | 04_03 | `SigmoidCurve` | A | 시그모이드 + 결정 경계, β₀/β₁ 슬라이더 → 곡선 실시간 변화 |
-| 21 | 04_04 | `L1L2ContourPlot` | D | L1(다이아몬드)/L2(원) 제약 영역 + 손실 등고선, λ 슬라이더 → 교점 이동 |
-| 22 | 04_05 | `BiasVarianceTradeoff` | A+D | 편향²+분산+총오차 U자 곡선, 복잡도 슬라이더 + 과녁 4종 연동 |
+| 18 | 04_01 | `OLSFitVisualizer` | A | ✅ |
+| 19 | 04_02 | `ResidualPatterns` | C | ✅ |
+| 20 | 04_03 | `SigmoidCurve` | A | ✅ |
+| 21 | 04_04 | `L1L2ContourPlot` | D | ✅ |
+| 22 | 04_05 | `BiasVarianceTradeoff` | A+D | ✅ |
 
-### Sprint 5: Part 5 & 6 — 베이지안 + 실전 (6개 컴포넌트)
+### Sprint 5: Part 5 & 6 — 베이지안 + 실전 (6개 컴포넌트) ✅
 
-| # | 챕터 | 컴포넌트명 | 유형 | 설명 |
+| # | 챕터 | 컴포넌트명 | 유형 | 상태 |
 |---|------|-----------|------|------|
-| 23 | 05_01 | `PosteriorConvergence` | B | 사전분포(무정보/약정보/강정보) 선택 → 데이터 추가될수록 사후분포 수렴 애니메이션 |
-| 24 | 05_04 | `MCMCTraceViewer` | B | trace plot + 사후분포 히스토그램 나란히, burn-in 영역 표시, 재실행 버튼 |
-| 25 | 06_01 | `SampleSizeCalculator` | A | MDE 슬라이더 → 필요 샘플 크기 곡선 (α, power 토글) |
-| 26 | 06_03 | `KLDivergenceAsymmetry` | A | 두 정규분포 P/Q, μ₂/σ₂ 슬라이더 → KL(P‖Q) vs KL(Q‖P) 실시간 비교 |
-| 27 | 06_04 | `CurseDimensionality` | B | 차원 슬라이더 → 거리 히스토그램(max-min 대비 축소) + 껍데기 부피 비율 |
-| 28 | 06_05 | `CausalDAGExplorer` | D | 혼란변수/선택편향/매개변수 DAG 3종, 탭 전환 + 노드 호버 시 경로 하이라이트 |
+| 23 | 05_01 | `PosteriorConvergence` | B | ✅ |
+| 24 | 05_04 | `MCMCTraceViewer` | B | ✅ |
+| 25 | 06_01 | `SampleSizeCalculator` | A | ✅ |
+| 26 | 06_03 | `KLDivergenceAsymmetry` | A | ✅ |
+| 27 | 06_04 | `CurseDimensionality` | B | ✅ |
+| 28 | 06_05 | `CausalDAGExplorer` | D | ✅ |
 
-### 우선순위 & 일정 가이드
-
-- **Sprint 1~2 먼저** (Part 1~2): 기초 개념이라 독자가 가장 먼저 만남
-- **Sprint 3**: CLT/검정 시각화가 핸드북 전체 이해도를 좌우
-- **Sprint 4~5**: 심화 내용, 이전 Sprint의 컴포넌트 패턴 재활용 가능
-- **컴포넌트 재사용**: Sprint 2의 분포 슬라이더 패턴을 Sprint 3~5에서 반복 활용
-- **총 28개 컴포넌트**, Sprint당 5~6개
+→ **28/28 컴포넌트 구현 완료. 전 챕터 registry 등록 + 마크다운 연결 완료.**
 
 ### 인프라 선행 작업 (Sprint 0)
 
-- [ ] `src/components/diagrams/stats/` 디렉토리 생성
-- [ ] `diagramRegistry.ts`에 stats 섹션 구분 주석 추가
-- [ ] 통계학 다이어그램용 색상 팔레트 결정 (반도체=시안 계열 → 통계=에메랄드/그린 계열)
-- [ ] 공용 훅 `useSlider`, `useSimulation` 추출 (반복 패턴이면)
-- [ ] 마크다운 내 이미지 플레이스홀더 일괄 삽입 스크립트 or 수동
+- [x] `src/components/diagrams/stats/` 디렉토리 생성
+- [x] `diagramRegistry.ts`에 stats 섹션 구분 주석 추가
+- [x] 통계학 다이어그램용 색상 팔레트 결정 (반도체=시안 계열 → 통계=에메랄드/그린 계열)
+- [ ] 공용 훅 `useSlider`, `useSimulation` 추출 (반복 패턴이면) — 현재 각 컴포넌트에서 useState로 직접 처리, 추후 필요 시 추출
+- [x] 마크다운 내 이미지 플레이스홀더 일괄 삽입 — 수동 완료
 
 ---
 
