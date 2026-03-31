@@ -259,8 +259,8 @@ export default function HypothesisTestVisualizer() {
                             fontSize: FONT.small,
                             color: COLOR.text,
                         }}
-                        formatter={(value: number) => [value.toFixed(4), 'f(z)']}
-                        labelFormatter={(label: number) => `z = ${label.toFixed(2)}`}
+                        formatter={(value?: number) => value != null ? [value.toFixed(4), 'f(z)'] : ['', 'f(z)']}
+                        labelFormatter={(label) => `z = ${Number(label).toFixed(2)}`}
                     />
 
                     {/* Rejection regions */}
