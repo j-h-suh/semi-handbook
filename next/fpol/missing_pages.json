@@ -1,0 +1,29 @@
+{
+  "status": "done",
+  "batch_size": 5,
+  "next_index": 19,
+  "missing_pages": [
+    {"page": 69, "chapter": 2, "raw_dir": "ch02_raw", "img_dir": "ch02"},
+    {"page": 70, "chapter": 2, "raw_dir": "ch02_raw", "img_dir": "ch02"},
+    {"page": 71, "chapter": 2, "raw_dir": "ch02_raw", "img_dir": "ch02"},
+    {"page": 72, "chapter": 2, "raw_dir": "ch02_raw", "img_dir": "ch02"},
+    {"page": 73, "chapter": 2, "raw_dir": "ch02_raw", "img_dir": "ch02"},
+    {"page": 74, "chapter": 2, "raw_dir": "ch02_raw", "img_dir": "ch02"},
+    {"page": 80, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 81, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 82, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 83, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 84, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 88, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 89, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 90, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 91, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 92, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 93, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 94, "chapter": 3, "raw_dir": "ch03_raw", "img_dir": "ch03"},
+    {"page": 447, "chapter": 10, "raw_dir": "ch10_raw", "img_dir": "ch10"}
+  ],
+  "completed": [69, 70, 71, 72, 73, 74, 80, 81, 82, 83, 84, 88, 89, 90, 91, 92, 93, 94, 447],
+  "affected_chapters": [2, 3, 10],
+  "remerge_needed": false
+}

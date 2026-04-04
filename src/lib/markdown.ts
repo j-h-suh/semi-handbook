@@ -3,8 +3,8 @@ import path from 'path';
 import { execSync } from 'child_process';
 import matter from 'gray-matter';
 
-const contentDirectory = path.join(process.cwd(), 'content');
-const statsDirectory = path.join(process.cwd(), 'next', 'statistics_101');
+const contentDirectory = path.join(process.cwd(), 'content', 'semi');
+const statsDirectory = path.join(process.cwd(), 'content', 'stats');
 
 export interface ChapterMeta {
   id: string;

@@ -14,7 +14,7 @@ export interface SearchEntry {
  * Called at build time (server only).
  */
 export function buildSearchData(): SearchEntry[] {
-    const contentDirectory = path.join(process.cwd(), 'content');
+    const contentDirectory = path.join(process.cwd(), 'content', 'semi');
     const chapters = getSortedChaptersData();
     const entries: SearchEntry[] = [];
 

@@ -15,7 +15,7 @@ export default function Home() {
     const totalDiagrams = fs.readdirSync(diagramDir).filter(f => f.endsWith('.tsx') && f !== 'diagramRegistry.ts' && f !== 'diagramRegistry.tsx').length;
 
     // Recent updates: get last commit date for each chapter file
-    const contentDir = path.join(process.cwd(), 'content');
+    const contentDir = path.join(process.cwd(), 'content', 'semi');
     const chaptersWithDates = chapters.map(ch => {
         try {
             const filePath = path.join(contentDir, `${ch.id}.md`);

@@ -1,0 +1,59 @@
+{
+  "status": "done",
+  "batch_size": 10,
+  "next_page": 467,
+  "chapters": {
+    "1": {
+      "start": 1,
+      "end": 28,
+      "status": "done"
+    },
+    "2": {
+      "start": 29,
+      "end": 74,
+      "status": "done"
+    },
+    "3": {
+      "start": 75,
+      "end": 152,
+      "status": "done"
+    },
+    "4": {
+      "start": 153,
+      "end": 192,
+      "status": "done"
+    },
+    "5": {
+      "start": 193,
+      "end": 240,
+      "status": "done"
+    },
+    "6": {
+      "start": 241,
+      "end": 260,
+      "status": "done"
+    },
+    "7": {
+      "start": 261,
+      "end": 300,
+      "status": "done"
+    },
+    "8": {
+      "start": 301,
+      "end": 392,
+      "status": "done"
+    },
+    "9": {
+      "start": 393,
+      "end": 418,
+      "status": "done"
+    },
+    "10": {
+      "start": 419,
+      "end": 466,
+      "status": "done"
+    }
+  },
+  "review_status": "done",
+  "review_next_chapter": 11
+}

@@ -1,0 +1,330 @@
+# 부록 A (Appendix A)
+
+# 마이크로리소그래피 용어 해설 (Glossary of Microlithographic Terms)
+
+"내가 어떤 단어를 사용할 때, 그것은 내가 선택한 의미, 그 이상도 그 이하도 아니다."
+험프티 덤프티 (루이스 캐롤의 *이상한 나라의 앨리스*)
+
+다음은 반도체 마이크로리소그래피 분야에서 사용되는 일반적인 단어나 구문 및 해당 정의의 목록이다. 리소그래피처럼 풍부하고 다양한 분야에서, 어떤 용어 목록도 완벽할 수는 없다. 그러나 여기에 포함된 용어들이 참고 자료로 유용하기를 바란다. 특히, 리소그래피 분야를 처음 접하거나 외부 사람들은 이 목록을 통해 혜택을 볼 수 있을 것이다. 정의는 독자가 일반적인 기술적 배경과 반도체 산업에 대한 기본적인 지식을 가지고 있다고 가정한다.
+
+용어 해설 항목의 형식:
+용어 (Glossary Item) 반도체 마이크로리소그래피 맥락에서의 용어 정의가 여기에 주어진다.
+예: *용어의 사용을 설명하는 예문이 여기에 나타난다.*
+
+예문은 리소그래피 맥락에서 용어의 사용을 설명하기 위한 것이며, 용어 정의의 일부는 아니다.
+
+## A
+
+ABC 매개변수 (ABC Parameters) 딜 매개변수(Dill Parameters)를 보라.
+
+수차, 렌즈 (Aberrations, Lens) 광학 시스템(렌즈)의 실제 성능이 이상적인(푸리에 광학) 성능에서 벗어난 모든 편차. 렌즈 수차의 예로는 코마(coma), 구면 수차(spherical aberration), 상면 만곡(field curvature), 비점 수차(astigmatism), 왜곡(distortion), 색 수차(chromatic aberration) 등이 있다. 렌즈 수차를 설명하는 한 가지 방법은 각 필드 포인트에 대해 렌즈의 사출 동공에서의 파면 오차를 제르니케 다항식(Zernike polynomial)으로 피팅하는 것이다.
+예: *대물 렌즈의 수차는 이미지 품질에 눈에 띄는 저하를 일으켰다.*
+흡수 계수 (Absorption Coefficient) 단위 거리당 물질을 통과하는 빛의 강도가 부분적으로 감소하는 정도. 소멸 계수(Extinction Coefficient)도 보라.
+예: *ArF 레지스트의 흡수 계수가 너무 높아서 얇은 레지스트 막만 사용할 수 있었다.*
+
+산 촉매 레지스트 (Acid-Catalyzed Resist) 산이 노광의 산물로 생성되고, 이 산이 레지스트의 용해도를 변화시키는 열 반응의 촉매 역할을 하는 화학 증폭형 레지스트의 일종. 화학 증폭형 레지스트(Chemically Amplified Resist)도 보라.
+예: *산 촉매 레지스트는 심자외선(deep-UV) 리소그래피에서 가장 일반적인 레지스트 유형이다.*
+
+활성화 에너지 (Activation Energy) 아레니우스 식(Arrhenius equation)에서의 역할로 정의되며, 화학 반응 속도 상수, 확산도 및 기타 온도 의존적 속성 항의 온도 의존성을 결정한다. 높은 활성화 에너지는 큰 온도 의존성을 생성한다.
+예: *이 낮은 활성화 에너지 레지스트는 상온에서 산 촉매 탈보호 반응을 시작할 것이다.*
+
+감광 파장 (Actinic Wavelength) 리소그래피 시스템에서 포토레지스트를 노광하는 데 사용되는 파장.
+예: *최적의 BARC를 설계하기 위해서는 감광 파장에서 기판의 굴절률 측정이 필요하다.*
+
+가산 패터닝 (Additive Patterning) 패턴이 형성될 장소에 재료가 추가되는 공정. 예로는 리프트 오프(lift-off) 및 전기도금 공정이 있다.
+예: *구리를 플라즈마 식각할 수 없기 때문에 대신 가산 패터닝 접근 방식이 선택되었다.*
+
+접착 촉진제 (Adhesion Promoter) 웨이퍼에 대한 레지스트의 접착력을 향상시키기 위해 웨이퍼 표면에 적용되는 화학 물질로, 종종 웨이퍼 표면의 물을 제거한다.
+예: *접착 촉진제로 사용되는 HMDS는 증기 프라임 장치를 사용하여 적용되었다.*
+
+고급 공정 제어 (Advanced Process Control, APC) 리소그래피 공정을 제어하기 위해 자동화된 피드백 및 피드포워드 루프를 사용하는 것.
+예: *오버레이 APC 시스템을 켠 후 재작업률과 라인 끝 수율이 모두 향상되었다.*
+
+공간상 (Aerial Image) 광학 시스템에 의해 포토레지스트가 코팅된 웨이퍼 위에 투영되는 마스크 패턴의 이미지.
+예: *고립된 선의 공간상은 밀집된 선의 공간상과 상당히 다른 것으로 밝혀졌다.*
+
+정렬기 (Aligner) 마스크 정렬기(Mask Aligner)를 보라.
+
+정렬 (Alignment) 포토마스크의 특정 지점(정렬 키)을 웨이퍼의 특정 지점(정렬 타겟)에 위치시키는 행위. 정렬 정확도는 이 정렬 타겟에서 측정된 오버레이이다.
+예: *스테퍼의 정렬 시스템은 고급 이미지 인식 알고리즘을 사용했다.*
+정렬 키 (Alignment Key) 정렬을 수행하는 데 사용되는 포토마스크의 패턴.
+예: *이 마스크에는 여러 가지 다른 스테퍼에서 사용할 수 있는 여러 정렬 키가 있었다.*
+
+정렬 마크 (Alignment Mark) 정렬 키(Alignment Key) 또는 정렬 타겟(Alignment Target)을 보라.
+
+정렬 타겟 (Alignment Target) 정렬을 수행하는 데 사용되는 웨이퍼의 패턴.
+예: *메사 구조(mesa structure)가 이 소자의 게이트 층에 대한 정렬 타겟으로 사용된다.*
+
+교대 PSM (Alternating PSM) 작은 크롬 선 한쪽의 투명한 영역이 동일한 선의 다른 쪽 투명한 영역과 비교하여 위상이 $180^\circ$ 변이된 위상 반전 마스크의 한 유형. 교대 개구 PSM 또는 레벤슨 PSM(Levenson PSM)이라고도 한다.
+예: *교대 PSM은 극도의 해상도와 좋은 초점 심도를 약속하지만, 위상 충돌로 인해 일반적인 회로 패턴에 대한 사용이 제한된다.*
+
+환형 조명 (Annular Illumination) 도넛 모양(환형)의 빛 고리가 광원으로 사용되는 비축 조명(off-axis illumination)의 한 유형.
+예: *환형 조명을 사용하면 초점 심도가 눈에 띄게 향상되는 것으로 나타났다.*
+
+반사 방지 코팅 (Antireflective Coating, ARC) 빛의 반사를 줄여 정재파(standing waves)나 박막 간섭의 해로운 영향을 줄이기 위해 레지스트 층 위나 아래에 배치되는 코팅. 상부 반사 방지 코팅(Top Antireflective Coating) 및 하부 반사 방지 코팅(Bottom Antireflective Coating)도 보라.
+예: *반사 방지 코팅의 두께를 최적화하여 스윙 곡선 진폭이 거의 0으로 감소했다.*
+
+APC 고급 공정 제어(Advanced Process Control)를 보라.
+
+조리개, 수치 (Aperture, Numerical) 수치 조리개(Numerical Aperture)를 보라.
+
+개구 조리개 (Aperture Stop) 동공, 렌즈(Pupil, Lens)를 보라.
+
+ARC 반사 방지 코팅(Antireflective Coating)을 보라.
+
+ArF 약 193 nm의 빛을 방출하는 광학 리소그래피에 사용되는 엑시머 레이저(excimer laser)의 한 유형인 아르곤 불소(Argon Fluoride).
+예: *불화칼슘 렌즈 부품을 생산하는 데 어려움이 있어, ArF 노광 장비는 제조 비용이 상당히 더 많이 든다.*
+
+아레니우스 계수 (Arrhenius Coefficient) 아레니우스 식(Arrhenius equation)에서의 역할로 정의되며, 화학 반응 속도 상수, 확산도 및 기타 온도 의존적 속도 항의 온도 의존성을 정의하는 식에서 지수 앞의 항이다.
+예: *아레니우스 계수는 종종 온도 의존적 속도 상수를 무한히 높은 온도로 외삽한 것으로 간주된다.*
+
+아레니우스 식 (Arrhenius Equation) 화학 반응 속도 상수, 확산도 및 기타 온도 의존적 속도 항의 온도 의존성을 절대 온도의 역수와 지수 관계(exponential relationship)로 나타낸 식.
+예: *아레니우스 식은 PEB 온도에 따라 반응 속도와 확산 거리가 어떻게 변하는지 결정하는 데 사용된다.*
+Aspect Ratio: 종횡비(Aspect Ratio). 레지스트 형상의 높이 대 너비의 비율이다.
+Example: 종횡비가 약 3:1을 초과할 때마다 레지스트 이미지가 패턴 붕괴(pattern collapse)를 겪었다.
+
+Astigmatism: 비점수차(Astigmatism). 방사형으로 배향된 라인 패턴의 최적 초점이 접선 방향으로 배향된 패턴의 초점과 비교하여 이동하는 결과를 낳는 수차이다.
+Example: 일반적으로, 초점에 따른 H-V 바이어스(bias)의 변화는 비점수차의 징후이다.
+
+Attenuated PSM: 감쇠형 위상 반전 마스크(Attenuated PSM). 마스크의 명목상 어두운 영역이 마스크의 투명한 영역을 통과하는 빛과 180° 위상 차이를 갖는 빛의 일부(예: 6%)를 투과시키도록 허용하는 위상 반전 마스크의 한 유형이다.
+Example: 교대형 PSM(alternating PSM)이 더 나은 성능을 제공하지만, 감쇠형 PSM은 설계 및 제조의 용이성으로 인해 매우 인기가 높아졌다.
+
+Autofocus System: 자동 초점 시스템(Autofocus System). 웨이퍼의 상단 표면을 초점 평면으로부터 설정된 거리에 자동으로 위치시키는 투영 이미징 장비의 일부이다.
+Example: 스캐너의 자동 초점 시스템이 정교함에도 불구하고, 리소그래피 엔지니어(lithographer)는 여전히 초점-노광 매트릭스(focus-exposure matrix)를 촬영하여 최적 초점을 수동으로 결정해야 한다.
+
+## B
+
+Bandwidth, Illumination: 조명 대역폭(Bandwidth, Illumination). 마스크를 조명하고 따라서 레지스트를 노광하는 데 사용되는 파장의 범위이다.
+Example: 전형적인 g-line 스테퍼(stepper)의 조명 대역폭은 약 10 nm FWHM이다.
+
+BARC: 하부 반사 방지 코팅(Bottom Antireflective Coating)을 참조하라.
+
+Bias: 마스크 바이어스(Mask Bias)를 참조하라.
+
+Binary Mask: 이진 마스크(Binary Mask). 마스크의 투과율이 0 또는 1이 되도록 불투명 영역과 투명 영역(예: 크롬과 유리로 구성된 것)으로 만들어진 마스크이다. 이진 강도 마스크(binary intensity mask)라고도 불린다.
+Example: 필요한 해상도는 기존의 이진 마스크를 사용하여 얻을 수 없었다.
+
+Birefringence: 복굴절(Birefringence). 재료의 굴절률이 재료를 통과하는 빛의 편광에 대한 함수인 일부 재료(주로 결정)의 다소 드문 특성이다.
+Example: 불화칼슘(calcium fluoride)이 상당한 고유 복굴절을 나타낸다는 발견은 157 nm 리소그래피 개발 중에 큰 당혹감을 불러일으켰다.
+
+Bleaching, Photoresist: 포토레지스트 표백(Bleaching, Photoresist). 빛에 노출될 때 발생하는 화학적 변화로 인한 포토레지스트의 광 흡수 감소이다.
+Example: 포토레지스트 표백이 없다면, 이 레지스트는 약 2 $\mu\text{m}$보다 큰 두께에서 효과적으로 사용될 수 없을 것이다.
+
+Bossung Curves: 보성 곡선(Bossung Curves). 초점-노광 매트릭스(Focus-Exposure Matrix)를 참조하라(이 곡선을 처음 발표한 엔지니어 John Bossung의 이름을 따서 명명됨).
+
+Bottom Antireflective Coating (BARC): 하부 반사 방지 코팅(BARC). 기판으로부터의 반사를 줄이기 위해 포토레지스트 바로 아래에 배치되는 반사 방지 코팅이다.
+Example: 하부 반사 방지 코팅의 사용은 스윙 곡선(swing curve)을 줄였을 뿐만 아니라, 반사 노칭(reflective notching)의 효과도 거의 제거했다.
+
+## C
+
+CAR: 화학 증폭형 레지스트(Chemically Amplified Resist)를 참조하라.
+
+Catadioptric: 반사굴절(Catadioptric). 굴절 요소(렌즈)와 반사 요소(거울) 모두로 구성된 광학 시스템이다.
+Example: 반사굴절 렌즈 시스템은 기존의 전굴절(all-refractive) 렌즈보다 훨씬 더 넓은 조명 대역폭을 수용할 수 있었다.
+
+Catoptric: 반사(Catoptric). 반사 요소(거울)로만 구성된 광학 시스템이다.
+Example: 최초의 Perkin-Elmer 스캐너들은 독특한 반사 렌즈 설계를 사용했다.
+
+Cauchy Coefficients: 코시 계수(Cauchy Coefficients). 파장의 함수로서 재료의 굴절률 변화에 대한 경험적 표현을 제공하는 코시 방정식(Cauchy equation)의 계수들이다.
+Example: 레지스트 두께를 측정하기 위해 반사율 분광 도구를 사용하려면 레지스트의 코시 계수가 필요하다.
+
+CD: 임계 치수(Critical Dimension)를 참조하라.
+
+Characteristic Curve: 특성 곡선(Characteristic Curve). 대비 곡선(Contrast Curve)을 참조하라.
+
+Chemically Amplified Resist: 화학 증폭형 레지스트(Chemically Amplified Resist). 주로 심자외선(deep-UV) 공정에 사용되는 포토레지스트의 한 유형으로, 노광 후 베이크(post-exposure bake) 시 화학적 촉매 작용을 통해 화학 반응의 수를 증폭시킨다.
+Example: 화학 증폭형 레지스트는 공기 중의 염기성 오염 물질에 큰 민감도를 보였다.
+
+Chromatic Aberration: 색수차(Chromatic Aberration). 파장의 함수로서 렌즈의 수차 거동의 변화이다.
+Example: KrF 리소그래피 장비의 경우, 주요 색수차는 파장의 함수로서 초점의 선형 이동이다.
+
+Circular Definition: 원형 정의(Circular Definition). 정의, 원형(Definition, Circular)을 참조하라.
+
+Clearing Dose ($E_0$): 소거 선량(Clearing Dose, $E_0$). 소거 선량(Dose-to-Clear)을 참조하라.
+
+Coater, Resist: 레지스트 코터(Coater, Resist). 레지스트 코팅을 수행하는 데 사용되는 장비이다. 이 장비는 종종 레지스트 트랙(track) 또는 클러스터 툴(cluster tool)의 일부이다.
+Example: 이 레지스트 코터는 1000에서 5000 rpm의 회전 속도에서 사용될 수 있다.
+
+Coating, Resist Spin: 레지스트 스핀 코팅(Coating, Resist Spin). 스핀 코팅(Spin Coating)을 참조하라.
+
+Coherence Factor: 간섭성 인자(Coherence Factor). 부분 간섭성(Partial Coherence)을 참조하라.
+
+Coherence, Spatial: 공간적 간섭성(Coherence, Spatial). 공간상의 두 다른 지점에서 빛의 임의의 순간에서의 위상 관계이다. 마스크 조명의 경우, 공간적 간섭성은 마스크에 입사하는 각도의 범위에 의해 결정된다.
+Example: 리소그래피 장비의 경우, 조명의 공간적 간섭성은 부분 간섭성 인자(partial coherence factor)에 의해 가장 쉽게 설명된다.
+Coherent Illumination: 간섭성 조명(Coherent Illumination). 오직 한 방향에서 온 빛으로 마스크를 조명하는 점광원(point source)으로부터 발생하는 조명의 유형이다. 이것은 공간적 간섭성 조명(spatially coherent illumination)이라고 부르는 것이 더 정확하다.
+Example: 간섭성 조명은 위상 반전 마스크에 대해 최고의 해상도 성능을 제공했지만, 매우 나쁜 조명 균일성을 초래했다.
+
+Coma: 코마(Coma). 종종 5개 라인 그룹에서 왼쪽 라인과 오른쪽 라인 사이의 선폭 차이로 나타나는 수차이다.
+Example: 또한 코마는 초점의 변화에 따라 변하는 레지스트 프로파일의 비대칭성(오른쪽 대 왼쪽)을 유발한다.
+
+Condenser Lens: 집광 렌즈(Condenser Lens). 마스크를 조명하기 위해 빛을 준비하는 광학 투영 시스템 내의 렌즈 시스템이다.
+Example: 쾰러 조명(Köhler illumination)의 경우, 집광 렌즈는 대물 렌즈의 입사 동공(entrance pupil)에 광원의 이미지를 형성한다.
+
+Contact Printing: 접촉 인쇄(Contact Printing). 포토마스크를 포토레지스트가 코팅된 웨이퍼와 직접 접촉시키고 포토마스크를 통해 포토레지스트로 빛을 노출시켜 패턴을 전사하는 리소그래피 방법이다.
+Example: 접촉 인쇄는 좋은 해상도를 보여주었지만, 결함 밀도에 의해 제한되었다.
+
+Contrast, Image: 이미지 대비(Contrast, Image). 이미지 대비(Image Contrast)를 참조하라.
+
+Contrast, Resist: 레지스트 대비(Contrast, Resist). 포토레지스트 대비(Photoresist Contrast)를 참조하라.
+
+Contrast Curve: 대비 곡선(Contrast Curve). H-D 곡선(H-D curve)을 참조하라.
+
+Contrast Enhancement Layer (CEL): 대비 향상층(Contrast Enhancement Layer, CEL). 그것을 통해 투영된 공간상(aerial image)의 대비를 향상시키는 역할을 하는, 포토레지스트 위의 표백성이 매우 높은 코팅이다.
+Example: 대비 향상층은 레지스트 측벽 각도를 개선했지만, 처리량(throughput)이 감소하는 대가를 치렀다.
+
+Corner Rounding: 모서리 라운딩(Corner Rounding). 패터닝 공정의 고유한 해상도 한계로 인해, 인쇄된 리소그래피 형상의 명목상 날카로운 사각형 모서리가 둥글게 되는 것이다.
+Example: 레티클 상의 모서리 라운딩은 마스크 개구부를 통해 투과되는 총 에너지의 감소를 초래했다.
+
+Critical Dimension (CD): 임계 치수(Critical Dimension, CD). 기판 위 특정 높이에서 측정된, 레지스트에 인쇄된 형상의 크기(너비)이다. 선폭(linewidth) 또는 형상 너비(feature width)라고도 불린다. (시간이 지남에 따라 '임계'의 의미는 모호해졌으며, 측정할 가치가 있는 모든 치수는 임계적인 것으로 보인다.)
+Example: 이 소자에 대한 임계 치수 사양(specifications)은 매우 타이트하다.
+
+Critical Shape (CS): 임계 형상(Critical Shape, CS). 1차원 임계 치수를 2차원 형상으로 확장한 것으로, 임계 형상은 형상의 위에서 본(기판 평면에서의) 모양을 정의하는 다각형이다.
+Example: 라인 끝(line-end) 임계 형상은 심각한 라인 끝 단축(line-end shortening)을 겪었다.
+Critical Shape Difference (CSD): 임계 형상 차이(Critical Shape Difference, CSD). 두 임계 형상 간의 차이(즉, 점별 거리)를 설명하는 벡터 집합에 대한 통계적 분석(예: 평균 크기)이다.
+Example: 두 웨이퍼 패턴 사이의 큰 임계 형상 차이는 심각한 공정 문제를 나타냈다.
+
+Critical Shape Error (CSE): 임계 형상 오류(Critical Shape Error, CSE). 측정되는 패턴과 이상적인 '원하는' 임계 형상 간의 임계 형상 차이이다.
+Example: 20 nm의 임계 형상 오류는 이 소자 패턴에 대해 허용 가능한 것으로 간주되었다.
+
+## D
+
+Deep-Ultraviolet (DUV): 심자외선(Deep-Ultraviolet, DUV). 약 150에서 300 nm 범위의 파장을 가진 빛을 설명하는 데 사용되는 일반적이지만 모호한 용어이다. deep-UV라고도 불린다.
+Example: 광학 리소그래피 파장이 i-line에서 심자외선으로 전환되는 것은 업계가 350 nm 해상도 노드 아래로 내려가면서 가속화되었다.
+
+Deep-UV Lithography: 심자외선 리소그래피(Deep-UV Lithography). 약 150에서 300 nm 범위 파장의 빛을 사용하는 리소그래피로, 약 250 nm가 가장 일반적이다.
+Example: 대부분의 리소그래피 엔지니어들은 0.3 마이크론 미만의 소자 치수에는 심자외선 리소그래피가 필요하다는 데 동의한다.
+
+Definition, Circular: 정의, 원형(Definition, Circular). 원형 정의(Circular Definition)를 참조하라.
+
+Defocus: 디포커스(Defocus). 레지스트가 코팅된 웨이퍼의 위치와 웨이퍼가 최적 초점에 있을 때의 위치 사이의 거리로, 광축을 따라(즉, 최적 초점 평면에 수직으로) 측정된다.
+Example: 최적 초점을 측정하는 적절한 방법 없이는 디포커스의 양을 결정할 수 없다.
+
+Degree of Coherence: 간섭도(Degree of Coherence). 부분 간섭성(Partial Coherence)을 참조하라.
+
+Dehydration Bake: 탈수 베이크(Dehydration Bake). 웨이퍼 표면에서 수분을 제거하기 위해 레지스트를 코팅하기 전에 웨이퍼에 수행하는 베이크 단계이다.
+Example: 탈수 베이크는 웨이퍼 표면에서 수분을 제거하는 데 부분적으로만 효과적이었다.
+
+Depolarization: 탈편광(Depolarization). 산란 현상의 결과로 빛이 편광된 상태에서 비편광된 상태(즉, 무작위로 편광된 상태)로 변화하는 것이다.
+Example: 뮬러 행렬(Mueller matrices)은 할 수 있지만, 존스 행렬(Jones matrices)은 렌즈를 통과하는 빛의 탈편광을 설명할 수 없다.
+
+Depth of Focus (DOF): 초점 심도(Depth of Focus, DOF). 허용될 수 있는 초점의 전체 범위, 즉 결과적으로 인쇄된 형상을 다양한 사양(선폭, 측벽 각도, 레지스트 손실, 노광 관용도 등) 내로 유지하는 초점의 범위이다.
+Example: 임계 형상의 DOF를 최대화하는 값을 찾음으로써 개구수(numerical aperture)를 최적화하는 것은 CD 제어를 개선하는 데 매우 효과적인 것으로 밝혀졌다.
+Design Rule: 디자인 룰(Design Rule). 마스크 패턴을 레이아웃할 때 사용되는 최소 너비 및/또는 간격을 정의하는 기하학적 규칙이다.
+Example: 설계자는 왜 디자인 룰이 이 특정 피치의 사용을 금지하는지 확신할 수 없었지만, 마지못해 따랐다.
+
+Design Rule Checker (DRC): 디자인 룰 검사기(Design Rule Checker, DRC). 칩 설계가 일련의 디자인 룰을 준수하는지 확인하는 소프트웨어 패키지이다.
+Example: 디자인 룰 검사기 도구가 DRC 위반을 수정하는 기능을 가지고 있었기 때문에, 이 도구를 프로그래밍하여 규칙 기반 OPC를 수행하는 것이 가능했다.
+
+Developer: 현상액(Developer). 레지스트의 화학적 조성의 함수로서 레지스트를 선택적으로 용해시키는 데 사용되는 화학 물질(일반적으로 액체)이다.
+Example: 현상액의 온도 제어는 $\pm 0.2^{\circ}\text{C}$보다 좋아야 한다.
+
+Development: 현상(Development). 현상액이라고 불리는 액체가 레지스트가 받은 노광 에너지의 함수로서 레지스트를 선택적으로 용해시키는 공정이다. develop이라고도 불린다.
+Example: 현상액 소비를 줄이기 위해 퍼들 현상(puddle development) 공정이 사용되었다.
+
+Development Rate: 현상 속도(Development Rate). 주어진 조건 집합에 대해 레지스트가 현상액에서 용해되는 속도(단위 시간당 두께 변화)이다.
+Example: 현상 속도는 로그-로그 스케일(log-log scale)에서 노광 에너지의 함수로 플롯되었다.
+
+Development Rate Monitor (DRM): 현상 속도 모니터(Development Rate Monitor, DRM). 현상이 진행됨에 따라 *in situ*로 레지스트의 두께를 측정하여 레지스트의 현상 속도를 측정하는 데 사용되는 장비이다.
+Example: 노광 에너지의 함수로서의 현상 속도는 현상 속도 모니터를 사용하여 특성화되었다.
+
+Diattenuation: 이감쇠(Diattenuation). 입사광의 편광의 함수로서 렌즈의 진폭 투과율의 차이이다.
+Example: 매우 큰 개구수에서, 렌즈 반사 방지 코팅의 비이상적인 거동은 가장 높은 공간 주파수에서 이감쇠를 유발했다.
+
+Dichroism: 이색성(Dichroism). 입사광의 편광의 함수로서 렌즈에 의한 빛 흡수의 차이이다.
+Example: 이감쇠는 하이퍼-NA(hyper-NA) 렌즈에서 우려 사항이지만, 이색성은 매우 작은 문제로 남아 있다.
+
+Die: 다이(Die). 웨이퍼에 인쇄된 단일의 완전한 집적 회로로, 아마도 절단되었지만 패키징 전의 상태이다. 칩(chip)이라고도 불린다.
+Example: ASIC 칩의 크기 때문에, 스테퍼는 각 노광 필드에 오직 하나의 다이만 수용할 수 있었다.
+
+Diffraction: 회절(Diffraction). 경계가 존재할 때 빛의 전파이다. 이것은 파동면이 가장자리를 통과할 때 굽어지게 만드는 빛의 성질이다.
+Example: 이상적인 이미징 시스템에서 공간상(aerial image)의 품질은 오직 회절에 의해서만 제한된다.
+Diffraction Limited: 회절 한계(Diffraction Limited). 렌즈의 어떤 수차도 무시할 수 있을 만큼 충분히 작다는 렌즈에 대한 설명이다. 이론적으로 완벽한 렌즈는 없으므로, 회절 한계라는 용어는 항상 근사치이며 그 사용의 적절성은 상황에 따라 다르다.
+Example: 사진 시스템 및 리소그래피보다 덜 엄격한 다른 이미징 응용 분야에서, RMS 광경로 편차(optical path deviation)가 파장의 10분의 1보다 작을 때 렌즈는 종종 회절 한계라고 설명된다.
+
+Diffraction Order: 회절 차수(Diffraction Order). 무한히 반복되는 마스크 패턴의 경우, 회절 패턴은 이산적(discrete)이 되며 회절 차수라고 불리는 규칙적으로 간격을 둔 빛의 점들로 구성된다.
+Example: 리소그래피에서, 고해상도 라인/스페이스 패턴은 0차 및 플러스/마이너스 1차 회절 차수만이 렌즈를 통과하여 이미지화된다.
+
+Diffraction Pattern: 회절 패턴(Diffraction Pattern). 마스크에 의한 회절로 인해 대물 렌즈로 들어가는 빛의 패턴이다.
+Example: 라인과 스페이스가 반복되는 패턴의 회절 패턴은 이산적인 빛의 점들, 즉 회절 차수들로 구성된다.
+
+Diffusion Coefficient: 확산 계수(Diffusion Coefficient). 주어진 공정 조건 집합에 대해 입자가 주어진 매질을 통해 확산되는 속도를 정의하는 속도 상수이다.
+Example: 화학 증폭형 레지스트 내 산(acid)의 확산 계수는 증폭 반응에 의해 생성된 자유 부피(free volume) 때문에 노광 후 베이크(post-exposure bake) 동안 일정하지 않았다.
+
+Diffusion Length: 확산 거리(Diffusion Length). 주어진 공정에 대해 입자가 확산될 평균 거리이다.
+Example: PEB 동안 감광 화합물(photoactive compound)의 확산 거리는 결과적인 레지스트 프로파일에서 정재파(standing waves)를 제거하는 데 효과적이기 위해서 정재파 반주기(half period)보다 커야 한다.
+
+Diffusivity: 확산도(Diffusivity). 확산 계수(Diffusion Coefficient)를 참조하라.
+
+Dill Parameters: 딜 파라미터(Dill Parameters). 포토레지스트에 대한 Dill 노광 모델에서 사용되는 $A$, $B$, $C$라는 이름의 세 가지 파라미터이다. $A$와 $B$는 각각 레지스트의 표백 가능 및 표백 불가능 흡수 계수를 나타내며, $C$는 노광 반응의 1차 반응 속도 상수를 나타낸다. (이 모델을 처음 발표한 Frederick Dill의 이름을 따서 명명됨.) 포토레지스트 $ABC$ 파라미터라고도 불린다.
+Example: Dill 파라미터($A$, $B$, $C$)는 단일 광 투과 실험에서 측정되었다.
+
+Dioptric: 굴절(Dioptric). 굴절 요소(렌즈)로만 구성된 광학 시스템이다.
+Example: 굴절 렌즈 시스템은 전굴절 렌즈의 자연스러운 부분인 색수차를 보정하기 위해 광범위한 노력이 필요하다.
+
+Dipole Illumination: 다이폴 조명(Dipole Illumination). 광축을 중심으로 두 개의 원 또는 빛의 아크(arc)가 사용되는 비축 조명(off-axis illumination)의 한 유형이다. 이 두 원은 광축 주위에 고르게 간격을 두고 있으며, 수직 또는 수평으로 배향된다.
+Example: 다이폴 조명은 가능한 가장 큰 밀집 라인(dense line) 해상도를 제공하지만, 라인과 스페이스의 한 방향에 대해서만 그렇다.
+Direct-Write Lithography: 직접 쓰기 리소그래피(Direct-Write Lithography). 마스크를 사용하지 않고 패턴을 웨이퍼에 직접 쓰는 리소그래피 방법이다.
+Example: 처리량 한계 때문에, 직접 쓰기 리소그래피는 IC 대량 생산에 결코 실용적이지 않을 수도 있다.
+
+Dispersion: 분산(Dispersion). 파장의 함수로서 재료의 굴절률 변화이다.
+Example: 유리의 분산 때문에, 렌즈는 필연적으로 색수차를 겪는다.
+
+Dissolution Inhibitor: 용해 억제제(Dissolution Inhibitor). 포토레지스트에 첨가될 때, 현상액에서 레지스트의 용해 속도를 감소시키는 화학 물질이다. 많은 양성(positive) 포토레지스트의 경우, 감광 화합물(photoactive compound)이 용해 억제제 역할을 한다.
+Example: 용해 억제제가 노볼락(novolac) 수지에 직접 결합되어 있다면, PEB 동안 확산은 일어나지 않는다.
+
+Dissolution Promoter: 용해 촉진제(Dissolution Promoter). 포토레지스트에 첨가될 때, 현상액에서 레지스트의 용해 속도를 증가시키는 화학 물질이다. 많은 양성 포토레지스트의 경우, 노광된 감광 화합물이 용해 촉진제 역할을 한다.
+Example: 빛에 노출될 때, DNQ 용해 억제제는 약한 용해 촉진제가 된다.
+
+Dissolution Rate: 용해 속도(Dissolution Rate). 현상 속도(Development Rate)를 참조하라.
+
+Distortion: 왜곡(Distortion). 필드 위치의 함수로서 패턴 배치 오류의 변화를 유발하는 광학 수차이다.
+Example: 스테퍼마다 왜곡의 변화가 있기 때문에, 임계 층(critical layers)을 인쇄할 때 렌즈 매칭(lens matching)이 필요하거나, 전용 스테퍼를 사용해야 할 수도 있다.
+
+DOF: 초점 심도(Depth of Focus)를 참조하라.
+
+Dose: 선량(Dose). 노광 에너지(Exposure Energy)를 참조하라.
+
+Dose-to-Clear ($E_0$): 소거 선량(Dose-to-Clear, $E_0$). 주어진 공정에 대해 넓은 투명 영역(clear area)에서 레지스트를 완전히 제거하는 데 필요한 노광 에너지의 양이다. clearing dose라고도 불린다.
+Example: 소거 선량은 교대조(shift)마다 한 번씩 측정되었으며 공정 모니터로 사용되었다.
+
+Dose-to-Size: 사이징 선량(Dose-to-Size). 레지스트 형상의 적절한 치수를 생성하는 데 필요한 노광 에너지의 양이다.
+Example: 포토레지스트의 두께를 변경하면 콘택트 홀의 사이징 선량에 큰 변화가 초래되었다.
+
+DRM: 현상 속도 모니터(Development Rate Monitor)를 참조하라.
+
+DUV: 심자외선(Deep Ultraviolet)을 참조하라.
+
+DUV Lithography: 심자외선 리소그래피(Deep-UV Lithography)를 참조하라.
+Dyed Resist: 염색 레지스트(Dyed Resist). 노광 파장의 빛을 흡수하는 비감광성 화학 물질이 첨가된 포토레지스트이다.
+Example: 염색 레지스트는 스윙 곡선을 줄이는 데 효과적이었지만, 결과적인 측벽 각도는 허용할 수 없을 정도로 낮았다.
+
+## E
+
+E-beam Lithography: 전자빔 리소그래피(Electron Beam Lithography)를 참조하라.
+
+EBR: 가장자리 비드 제거(Edge Bead Removal)를 참조하라.
+
+Edge Bead: 가장자리 비드(Edge Bead). 스핀 코팅 공정 중 레지스트의 표면 장력에 의해 발생하는 웨이퍼의 바깥쪽 가장자리를 따른 레지스트의 축적(buildup)이다.
+Example: 제거되지 않으면, 가장자리 비드는 후속 웨이퍼 공정 중에 오염을 유발한다.
+
+Edge Bead Removal (EBR): 가장자리 비드 제거(Edge Bead Removal, EBR). 스핀 코팅 공정 중 가장자리를 따라 형성되는 두꺼운 레지스트 '비드'를 제거하기 위해 웨이퍼의 바깥쪽 가장자리에서 레지스트를 제거하는 공정이다.
+Example: 스핀 코팅 모듈에는 전면 및 후면 가장자리 비드 제거 시스템이 모두 포함되었다.
+
+Edge Placement Error (EPE): 가장자리 배치 오류(Edge Placement Error, EPE). 광학 근접 보정(OPC)에서 사용되는 용어로, 거리 벡터가 원하는 형상에 수직이 되도록 제한되는 임계 형상 오류이다.
+Example: 모델 기반 OPC 시스템은 최적화 절차의 비용 함수로 최대 가장자리 배치 오류를 사용했다.
+
+Electron Beam Lithography: 전자빔 리소그래피(Electron Beam Lithography). 전자 빔으로 레지스트를 노광하여 수행하는 리소그래피이다. e-beam lithography라고도 불린다.
+Example: 전자빔 리소그래피는 고해상도 마스크를 생산하는 데 가장 인기 있는 기술로 남아 있다.
+
+Embedded PSM (EPSM): 매립형 위상 반전 마스크(Embedded PSM, EPSM). 감쇠형 위상 반전 마스크(Attenuated PSM)를 참조하라.
+
+Entrance Pupil, Lens: 렌즈 입사 동공(Entrance Pupil, Lens). 렌즈의 입사 측에서 보았을 때 이미징 렌즈의 동공(개구 조리개(aperture stop)라고도 함)의 이미지이다.
+Example: 물체에서 렌즈의 입사 동공까지의 거리는 사출 동공에서 이미지까지의 거리에 렌즈의 축소율을 곱한 것과 정확히 같다.
+
+EPSM: 감쇠형 위상 반전 마스크(Attenuated PSM)를 참조하라.
+
+Etch Selectivity: 식각 선택비(Etch Selectivity). 식각하려는 재료의 수직 식각 속도와 식각하고 싶지 않은 재료(마스킹 재료 또는 기판 재료)의 수직 식각 속도의 비율이다.
+Example: 스퍼터링(sputtering)은 식각 선택비가 부족함에도 불구하고 매우 좋은 이방성 식각 공정이기 때문에 때때로 사용된다.
+
+Etching, Anisotropic: 이방성 식각(Etching, Anisotropic). 주어진 재료 내에서 수직 식각 속도가 수평 식각 속도보다 빠른 식각 공정이다.
+Example: 스퍼터링은 식각 선택비가 부족함에도 불구하고 매우 좋은 이방성 식각 공정이기 때문에 때때로 사용된다.
