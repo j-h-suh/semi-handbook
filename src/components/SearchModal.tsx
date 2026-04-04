@@ -67,7 +67,7 @@ export default function SearchModal({ searchData }: Props) {
                 chapterId: entry.chapterId,
                 chapterTitle: entry.chapterTitle,
                 snippet,
-                book: 'book' in entry ? (entry as any).book : 'semi',
+                book: entry.book ?? 'semi',
             });
 
             if (matches.length >= 100) break;
@@ -129,7 +129,16 @@ export default function SearchModal({ searchData }: Props) {
                             onClick={() => navigate(r.book, r.chapterId)}
                             className="w-full text-left px-5 py-3 hover:bg-white/5 transition-colors border-b border-white/3 cursor-pointer"
                         >
-                            <div className="text-xs text-cyan-500 font-medium mb-1">{r.chapterTitle}</div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className={`text-[9px] px-1.5 py-0.5 rounded border font-medium ${
+                                    r.book === 'stats'
+                                        ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                                        : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
+                                }`}>
+                                    {r.book === 'stats' ? '통계' : '반도체'}
+                                </span>
+                                <span className="text-xs text-cyan-500 font-medium">{r.chapterTitle}</span>
+                            </div>
                             <div className="text-sm text-slate-400 leading-relaxed">
                                 {highlightMatch(r.snippet, query)}
                             </div>
