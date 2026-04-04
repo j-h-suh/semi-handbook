@@ -90,7 +90,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                                 return (
                                     <Link
                                         key={ch}
-                                        href={`/chapter/${found.id}`}
+                                        href={`/semi/${found.id}`}
                                         className="text-[11px] text-cyan-600 hover:text-cyan-400 transition-colors"
                                         title={found.title}
                                     >

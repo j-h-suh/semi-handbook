@@ -84,7 +84,7 @@ export default function SearchModal({ searchData }: Props) {
 
     const navigate = useCallback((chapterId: string) => {
         setOpen(false);
-        router.push(`/chapter/${chapterId}`);
+        router.push(`/semi/${chapterId}`);
     }, [router]);
 
     if (!open) return null;

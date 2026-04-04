@@ -58,7 +58,7 @@ export default function HomeClient({ totalChapters, totalTerms, totalDiagrams, r
                         반도체 포토리소그래피와 AI 기술을 체계적으로 정리한 핸드북
                     </p>
                     <Link
-                        href="/chapter/00_00_들어가며"
+                        href="/semi/00_00_들어가며"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 font-medium rounded-xl hover:bg-cyan-500/25 transition-colors text-sm"
                     >
                         읽기 시작하기 <ArrowRight size={16} />
@@ -99,7 +99,7 @@ export default function HomeClient({ totalChapters, totalTerms, totalDiagrams, r
                             {recentChapters.map(ch => (
                                 <Link
                                     key={ch.id}
-                                    href={`/chapter/${ch.id}`}
+                                    href={`/semi/${ch.id}`}
                                     className="block px-4 py-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
                                 >
                                     <div className="text-sm font-medium text-slate-200 line-clamp-1 mb-1">{ch.title}</div>

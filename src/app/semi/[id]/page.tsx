@@ -34,7 +34,7 @@ export default async function ChapterPage({ params }: { params: { id: string } }
                     {/* Navigation Links */}
                     <div className="max-w-4xl mx-auto w-full px-8 py-12 lg:px-12 flex items-center justify-between border-t border-white/10 mt-8 mb-16">
                         {prevChapter ? (
-                            <Link href={`/chapter/${prevChapter.id}`} className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all w-[48%] max-w-[320px]">
+                            <Link href={`/semi/${prevChapter.id}`} className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all w-[48%] max-w-[320px]">
                                 <span className="flex items-center gap-2 text-sm text-slate-400 group-hover:text-cyan-400 transition-colors">
                                     <ArrowLeft size={16} /> 이전 챕터
                                 </span>
@@ -45,7 +45,7 @@ export default async function ChapterPage({ params }: { params: { id: string } }
                         )}
 
                         {nextChapter ? (
-                            <Link href={`/chapter/${nextChapter.id}`} className="group flex flex-col items-end gap-2 p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all w-[48%] max-w-[320px] text-right">
+                            <Link href={`/semi/${nextChapter.id}`} className="group flex flex-col items-end gap-2 p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all w-[48%] max-w-[320px] text-right">
                                 <span className="flex items-center gap-2 text-sm text-slate-400 group-hover:text-cyan-400 transition-colors">
                                     다음 챕터 <ArrowRight size={16} />
                                 </span>

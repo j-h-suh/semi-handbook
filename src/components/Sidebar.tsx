@@ -23,7 +23,7 @@ export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
     // Auto-expand the Part that contains the active chapter
     const activePart = useMemo(() => {
         for (const [part, chs] of Object.entries(groupedChapters)) {
-            if (chs.some(ch => decodedPathname === `/chapter/${ch.id}`)) return part;
+            if (chs.some(ch => decodedPathname === `/semi/${ch.id}`)) return part;
         }
         return null;
     }, [pathname, groupedChapters]);
@@ -74,11 +74,11 @@ export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
                             {isOpen && (
                                 <ul className="space-y-1 mt-1">
                                     {partChapters.map((chapter) => {
-                                        const isActive = decodedPathname === `/chapter/${chapter.id}`;
+                                        const isActive = decodedPathname === `/semi/${chapter.id}`;
                                         return (
                                             <li key={chapter.id}>
                                                 <Link
-                                                    href={`/chapter/${chapter.id}`}
+                                                    href={`/semi/${chapter.id}`}
                                                     className={`block px-3 py-2 text-sm rounded-lg transition-all duration-200 ${isActive
                                                         ? 'bg-cyan-500/10 text-cyan-400 font-medium border border-cyan-500/20'
                                                         : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
