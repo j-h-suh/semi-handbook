@@ -44,7 +44,7 @@ export default function SearchModal({ searchData }: Props) {
         if (!query.trim() || query.trim().length < 2) return [];
         const q = query.trim().toLowerCase();
 
-        const matches: { chapterId: string; chapterTitle: string; snippet: string }[] = [];
+        const matches: { chapterId: string; chapterTitle: string; snippet: string; book: string }[] = [];
         const seenChapters = new Set<string>();
 
         for (const entry of searchData) {
@@ -67,6 +67,7 @@ export default function SearchModal({ searchData }: Props) {
                 chapterId: entry.chapterId,
                 chapterTitle: entry.chapterTitle,
                 snippet,
+                book: 'book' in entry ? (entry as any).book : 'semi',
             });
 
             if (matches.length >= 100) break;
@@ -82,9 +83,9 @@ export default function SearchModal({ searchData }: Props) {
     // Reset page when query changes
     useEffect(() => { setPage(0); }, [query]);
 
-    const navigate = useCallback((chapterId: string) => {
+    const navigate = useCallback((book: string, chapterId: string) => {
         setOpen(false);
-        router.push(`/semi/${chapterId}`);
+        router.push(`/${book}/${chapterId}`);
     }, [router]);
 
     if (!open) return null;
@@ -125,7 +126,7 @@ export default function SearchModal({ searchData }: Props) {
                     {pagedResults.map((r, i) => (
                         <button
                             key={i}
-                            onClick={() => navigate(r.chapterId)}
+                            onClick={() => navigate(r.book, r.chapterId)}
                             className="w-full text-left px-5 py-3 hover:bg-white/5 transition-colors border-b border-white/3 cursor-pointer"
                         >
                             <div className="text-xs text-cyan-500 font-medium mb-1">{r.chapterTitle}</div>
