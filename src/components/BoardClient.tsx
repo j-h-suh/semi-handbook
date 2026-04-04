@@ -6,6 +6,8 @@ import { MessageSquarePlus, X, Send, Clock, Tag, Pencil, Trash2, MessageCircle, 
 
 const CATEGORIES = ['전체', '질문', '수정요청', '자유'] as const;
 const WRITE_CATEGORIES = ['질문', '수정요청', '자유'] as const;
+const BOOKS = ['전체', '반도체', '통계학', '공통'] as const;
+const WRITE_BOOKS = ['반도체', '통계학', '공통'] as const;
 
 // Simple SHA-256 hash
 async function hashPassword(pw: string): Promise<string> {
@@ -20,11 +22,12 @@ export default function BoardClient() {
     const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
     const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState<string>('전체');
+    const [activeBook, setActiveBook] = useState<string>('전체');
     const [showWrite, setShowWrite] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
     // Write/Edit form
-    const [form, setForm] = useState({ nickname: '', category: '자유', title: '', content: '', password: '' });
+    const [form, setForm] = useState({ nickname: '', category: '자유', book: '반도체', title: '', content: '', password: '' });
     const [submitting, setSubmitting] = useState(false);
     const [editingPost, setEditingPost] = useState<Post | null>(null);
 
@@ -57,6 +60,9 @@ export default function BoardClient() {
         if (activeCategory !== '전체') {
             query = query.eq('category', activeCategory);
         }
+        if (activeBook !== '전체') {
+            query = query.eq('book', activeBook);
+        }
         const { data } = await query;
         setPosts(data ?? []);
 
@@ -85,7 +91,7 @@ export default function BoardClient() {
             setCommentCounts(countMap);
         }
         setLoading(false);
-    }, [activeCategory]);
+    }, [activeCategory, activeBook]);
 
     useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
@@ -106,6 +112,7 @@ export default function BoardClient() {
             await supabase.from('posts').update({
                 nickname: form.nickname.trim() || '익명',
                 category: form.category,
+                book: form.book,
                 title: form.title.trim(),
                 content: form.content.trim(),
             }).eq('id', editingPost.id).eq('password_hash', pw_hash);
@@ -114,13 +121,14 @@ export default function BoardClient() {
             await supabase.from('posts').insert({
                 nickname: form.nickname.trim() || '익명',
                 category: form.category,
+                book: form.book,
                 title: form.title.trim(),
                 content: form.content.trim(),
                 password_hash: pw_hash,
                 status: (form.category === '질문' || form.category === '수정요청') ? '대기' : null,
             });
         }
-        setForm({ nickname: '', category: '자유', title: '', content: '', password: '' });
+        setForm({ nickname: '', category: '자유', book: '반도체', title: '', content: '', password: '' });
         setShowWrite(false);
         setEditingPost(null);
         setSubmitting(false);
@@ -145,6 +153,7 @@ export default function BoardClient() {
             setForm({
                 nickname: pwPrompt.post.nickname,
                 category: pwPrompt.post.category,
+                book: pwPrompt.post.book || '반도체',
                 title: pwPrompt.post.title,
                 content: pwPrompt.post.content,
                 password: pwInput,
@@ -237,7 +246,7 @@ export default function BoardClient() {
                         </p>
                     </div>
                     <button
-                        onClick={() => { setEditingPost(null); setForm({ nickname: '', category: '자유', title: '', content: '', password: '' }); setShowWrite(true); }}
+                        onClick={() => { setEditingPost(null); setForm({ nickname: '', category: '자유', book: '반도체', title: '', content: '', password: '' }); setShowWrite(true); }}
                         className="flex items-center gap-2 px-4 py-2.5 bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-sm font-medium rounded-xl hover:bg-cyan-500/25 transition-colors cursor-pointer"
                     >
                         <MessageSquarePlus size={16} />
@@ -246,21 +255,42 @@ export default function BoardClient() {
                 </div>
             </header>
 
-            {/* Category filter */}
-            <div className="flex gap-2 mb-6 flex-wrap">
-                {CATEGORIES.map(cat => (
-                    <button
-                        key={cat}
-                        onClick={() => setActiveCategory(cat)}
-                        className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
-                            activeCategory === cat
-                                ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
-                                : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
-                        }`}
-                    >
-                        {cat}{(categoryCounts[cat] ?? 0) > 0 && <span className="ml-1 opacity-60">({categoryCounts[cat]})</span>}
-                    </button>
-                ))}
+            {/* Filters */}
+            <div className="space-y-3 mb-6">
+                {/* Book filter */}
+                <div className="flex gap-2 flex-wrap">
+                    {BOOKS.map(book => (
+                        <button
+                            key={book}
+                            onClick={() => setActiveBook(book)}
+                            className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
+                                activeBook === book
+                                    ? book === '통계학'
+                                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-medium'
+                                        : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
+                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
+                            }`}
+                        >
+                            {book}
+                        </button>
+                    ))}
+                </div>
+                {/* Category filter */}
+                <div className="flex gap-2 flex-wrap">
+                    {CATEGORIES.map(cat => (
+                        <button
+                            key={cat}
+                            onClick={() => setActiveCategory(cat)}
+                            className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
+                                activeCategory === cat
+                                    ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
+                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
+                            }`}
+                        >
+                            {cat}{(categoryCounts[cat] ?? 0) > 0 && <span className="ml-1 opacity-60">({categoryCounts[cat]})</span>}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Posts list */}
@@ -279,6 +309,15 @@ export default function BoardClient() {
                             className="w-full text-left px-5 py-4 rounded-xl border border-white/5 hover:border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all cursor-pointer"
                         >
                             <div className="flex items-center gap-2 mb-1.5">
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium ${
+                                    post.book === '통계학'
+                                        ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                                        : post.book === '공통'
+                                            ? 'text-violet-400 bg-violet-500/10 border-violet-500/20'
+                                            : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
+                                }`}>
+                                    {post.book || '반도체'}
+                                </span>
                                 <span className={`text-[11px] px-2 py-0.5 rounded-md border ${categoryColor(post.category)}`}>
                                     {post.category}
                                 </span>
@@ -597,20 +636,41 @@ export default function BoardClient() {
                                 onChange={e => setForm(f => ({ ...f, nickname: e.target.value }))}
                                 className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40"
                             />
-                            <div className="flex gap-2">
-                                {WRITE_CATEGORIES.map(cat => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => setForm(f => ({ ...f, category: cat }))}
-                                        className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
-                                            form.category === cat
-                                                ? categoryColor(cat) + ' font-medium'
-                                                : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300'
-                                        }`}
-                                    >
-                                        <Tag size={11} />{cat}
-                                    </button>
-                                ))}
+                            <div className="space-y-2">
+                                <div className="flex gap-2">
+                                    {WRITE_BOOKS.map(book => (
+                                        <button
+                                            key={book}
+                                            onClick={() => setForm(f => ({ ...f, book }))}
+                                            className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
+                                                form.book === book
+                                                    ? book === '통계학'
+                                                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-medium'
+                                                        : book === '공통'
+                                                            ? 'bg-violet-500/15 border-violet-500/30 text-violet-400 font-medium'
+                                                            : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
+                                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300'
+                                            }`}
+                                        >
+                                            {book}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="flex gap-2">
+                                    {WRITE_CATEGORIES.map(cat => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => setForm(f => ({ ...f, category: cat }))}
+                                            className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
+                                                form.category === cat
+                                                    ? categoryColor(cat) + ' font-medium'
+                                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300'
+                                            }`}
+                                        >
+                                            <Tag size={11} />{cat}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                             <input
                                 type="text"

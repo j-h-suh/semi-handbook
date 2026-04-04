@@ -9,6 +9,7 @@ export interface Post {
     id: number;
     nickname: string;
     category: string;
+    book: string;
     title: string;
     content: string;
     chapter_id: string | null;
