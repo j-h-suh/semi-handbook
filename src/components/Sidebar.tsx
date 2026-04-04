@@ -1,21 +1,47 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown } from 'lucide-react';
+import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp } from 'lucide-react';
 import type { ChapterMeta } from '@/lib/markdown';
 
-export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
+type BookTab = 'semi' | 'stats';
+
+const BOOK_META: Record<BookTab, { label: string; icon: typeof Cpu; color: string; activeColor: string; route: string }> = {
+    semi: { label: '반도체', icon: Cpu, color: 'text-slate-500', activeColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20', route: '/semi' },
+    stats: { label: '통계학', icon: TrendingUp, color: 'text-slate-500', activeColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20', route: '/stats' },
+};
+
+interface Props {
+    semiChapters: ChapterMeta[];
+    statsChapters: ChapterMeta[];
+}
+
+export default function Sidebar({ semiChapters, statsChapters }: Props) {
     const pathname = usePathname();
     const decodedPathname = decodeURIComponent(pathname);
 
+    // Detect current book from URL
+    const detectedBook: BookTab | null = useMemo(() => {
+        if (decodedPathname.startsWith('/semi/')) return 'semi';
+        if (decodedPathname.startsWith('/stats/')) return 'stats';
+        return null;
+    }, [decodedPathname]);
+
+    const [activeBook, setActiveBook] = useState<BookTab>(detectedBook ?? 'semi');
+
+    // Sync book tab when URL changes
+    if (detectedBook && detectedBook !== activeBook) {
+        setActiveBook(detectedBook);
+    }
+
+    const chapters = activeBook === 'semi' ? semiChapters : statsChapters;
+    const routePrefix = activeBook === 'semi' ? '/semi' : '/stats';
+
     // Group chapters by Part
     const groupedChapters = chapters.reduce((acc, chapter) => {
-        if (!acc[chapter.part]) {
-            acc[chapter.part] = [];
-        }
+        if (!acc[chapter.part]) acc[chapter.part] = [];
         acc[chapter.part].push(chapter);
         return acc;
     }, {} as Record<string, ChapterMeta[]>);
@@ -23,10 +49,10 @@ export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
     // Auto-expand the Part that contains the active chapter
     const activePart = useMemo(() => {
         for (const [part, chs] of Object.entries(groupedChapters)) {
-            if (chs.some(ch => decodedPathname === `/semi/${ch.id}`)) return part;
+            if (chs.some(ch => decodedPathname === `${routePrefix}/${ch.id}`)) return part;
         }
         return null;
-    }, [pathname, groupedChapters]);
+    }, [decodedPathname, groupedChapters, routePrefix]);
 
     const [openParts, setOpenParts] = useState<Set<string>>(
         new Set(activePart ? [activePart] : [Object.keys(groupedChapters)[0]])
@@ -54,10 +80,41 @@ export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
                 </div>
                 <div>
                     <h1 className="text-sm font-bold text-slate-200 tracking-tight whitespace-normal leading-tight">
-                        반도체를 여행하는<br />세미에이아이를 위한 안내서
+                        세미에이아이<br />핸드북 시리즈
                     </h1>
                 </div>
             </Link>
+
+            {/* Book Tabs */}
+            <div className="flex border-b border-slate-800">
+                {(Object.keys(BOOK_META) as BookTab[]).map(book => {
+                    const meta = BOOK_META[book];
+                    const Icon = meta.icon;
+                    const isActive = activeBook === book;
+                    return (
+                        <button
+                            key={book}
+                            onClick={() => {
+                                setActiveBook(book);
+                                // Reset open parts to first part of new book
+                                const newChapters = book === 'semi' ? semiChapters : statsChapters;
+                                const firstPart = newChapters[0]?.part;
+                                if (firstPart) setOpenParts(new Set([firstPart]));
+                            }}
+                            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-medium transition-colors cursor-pointer border-b-2 ${
+                                isActive
+                                    ? book === 'semi'
+                                        ? 'text-cyan-400 border-cyan-400'
+                                        : 'text-emerald-400 border-emerald-400'
+                                    : 'text-slate-500 border-transparent hover:text-slate-300'
+                            }`}
+                        >
+                            <Icon size={14} />
+                            {meta.label}
+                        </button>
+                    );
+                })}
+            </div>
 
             <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
                 {Object.entries(groupedChapters).map(([part, partChapters]) => {
@@ -74,13 +131,16 @@ export default function Sidebar({ chapters }: { chapters: ChapterMeta[] }) {
                             {isOpen && (
                                 <ul className="space-y-1 mt-1">
                                     {partChapters.map((chapter) => {
-                                        const isActive = decodedPathname === `/semi/${chapter.id}`;
+                                        const isActive = decodedPathname === `${routePrefix}/${chapter.id}`;
+                                        const accentColor = activeBook === 'semi'
+                                            ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
+                                            : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
                                         return (
                                             <li key={chapter.id}>
                                                 <Link
-                                                    href={`/semi/${chapter.id}`}
+                                                    href={`${routePrefix}/${chapter.id}`}
                                                     className={`block px-3 py-2 text-sm rounded-lg transition-all duration-200 ${isActive
-                                                        ? 'bg-cyan-500/10 text-cyan-400 font-medium border border-cyan-500/20'
+                                                        ? `${accentColor} font-medium border`
                                                         : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
                                                     }`}
                                                 >

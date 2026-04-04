@@ -11,13 +11,14 @@ import type { ChapterMeta } from '@/lib/markdown';
 interface Props {
     children: React.ReactNode;
     searchData: SearchEntry[];
-    chapters: ChapterMeta[];
+    semiChapters: ChapterMeta[];
+    statsChapters: ChapterMeta[];
 }
 
-export default function ClientLayout({ children, searchData, chapters }: Props) {
+export default function ClientLayout({ children, searchData, semiChapters, statsChapters }: Props) {
     return (
         <QnAPanelProvider>
-            <Sidebar chapters={chapters} />
+            <Sidebar semiChapters={semiChapters} statsChapters={statsChapters} />
             {children}
             <QnAPanel />
             <SettingsModal />
