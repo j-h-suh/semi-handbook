@@ -63,16 +63,21 @@ function StepBlock({ idx, ox }: { idx: number; ox: number }) {
                         fill="none" stroke="#f59e0b" strokeWidth={2} opacity={0.8} />
                 </g>
             );
-        case 4: // Electroplating — Cu fills trench and overflows
+        case 4: { // Electroplating — Cu fills trench with dome overflow
+            const overflowY = CROSS_Y - 8;
+            const domeTop = CROSS_Y - 18;
+            const leftEdge = ox + 4;
+            const rightEdge = ox + STEP_W - 4;
             return (
                 <g>
-                    <rect x={ox + 4} y={CROSS_Y} width={STEP_W - 8} height={CROSS_H} fill="#8b5cf6" opacity={0.4} rx={3} />
+                    <rect x={leftEdge} y={CROSS_Y} width={STEP_W - 8} height={CROSS_H} fill="#8b5cf6" opacity={0.4} rx={3} />
                     {/* Cu fills full trench */}
                     <rect x={trenchX} y={CROSS_Y} width={TRENCH_W} height={trenchD} fill="#f59e0b" opacity={0.7} rx={2} />
-                    {/* Cu overflow layer on top of ILD surface */}
-                    <rect x={ox + 4} y={CROSS_Y - 10} width={STEP_W - 8} height={10} fill="#f59e0b" opacity={0.7} rx={2} />
+                    {/* Cu overflow with dome shape over trench */}
+                    <path d={`M${leftEdge},${CROSS_Y} V${overflowY} H${trenchX - 6} Q${cx},${domeTop} ${trenchX + TRENCH_W + 6},${overflowY} H${rightEdge} V${CROSS_Y} Z`} fill="#f59e0b" opacity={0.7} />
                 </g>
             );
+        }
         case 5: // CMP — clean flat
             return (
                 <g>
