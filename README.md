@@ -35,6 +35,25 @@ sklearn은 쓸 줄 알지만 통계적 검증은 자신 없는 ML 엔지니어�
 | Part 5 | 베이지안 통계 | 4 |
 | Part 6 | 실전 응용 | 5 |
 
+### 📕 클로드 핸드북 (`/claude`)
+
+Claude Code의 내부 구조를 소스코드 레벨에서 해부하는 AI 코딩 에이전트 심층 분석서입니다.
+
+| Part | 내용 | 챕터 수 |
+|------|------|---------|
+| 들어가며 | 왜 이 책을 썼는가 | 2 |
+| Part 1 | 부트스트랩 | 2 |
+| Part 2 | 에이전트 루프 | 5 |
+| Part 3 | 도구 시스템 | 5 |
+| Part 4 | 슬래시 명령 | 3 |
+| Part 5 | 터미널 UI | 3 |
+| Part 6 | 권한과 설정 | 3 |
+| Part 7 | 외부 연결 | 3 |
+| Part 8 | 멀티 에이전트 | 4 |
+| Part 9 | 미니 Claude Code | 5 |
+| Part 10 | 확장하기 | 3 |
+| 에필로그 | 마무리 | 2 |
+
 ## 기술 스택
 
 - **프레임워크**: Next.js 16 (Turbopack)
@@ -57,41 +76,61 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000) 에서 확인할 수 있습니다.
 
+## 콘텐츠 디렉토리 구조
+
+```
+content/
+├── semi/                        # 반도체 핸드북
+│   ├── *.md                     #   챕터 마크다운
+│   ├── handbook-review.md       #   리뷰 메타
+│   └── 반도체_...pdf            #   원본 PDF
+├── stats/                       # 통계학 핸드북
+│   └── *.md                     #   챕터 마크다운
+└── claude_code/                 # 클로드 핸드북
+    ├── *.md                     #   챕터 마크다운
+    └── code_repository/         #   QnA 참조용 소스코드
+
+public/content/
+└── semi/
+    └── images/                  # 반도체 챕터 이미지 (정적 서빙)
+        ├── 01_01/
+        ├── 01_02/
+        └── ...
+```
+
+각 핸드북의 이미지는 `public/content/{book}/images/` 에 위치하며, `markdown.ts`의 `imageRewrite` 설정으로 마크다운 내 상대 경로가 절대 경로로 변환됩니다.
+
 ## 프로젝트 구조
 
 ```
-semi-handbook/
-├── content/
-│   ├── semi/                 # 반도체 핸드북 마크다운
-│   └── stats/                # 통계학 핸드북 마크다운
-├── src/
-│   ├── app/
-│   │   ├── page.tsx          # 허브 랜딩 (책 선택)
-│   │   ├── semi/[slug]/      # 반도체 챕터 페이지
-│   │   ├── stats/[slug]/     # 통계 챕터 페이지
-│   │   ├── board/            # 통합 게시판
-│   │   └── glossary/         # 용어 사전
-│   ├── components/
-│   │   ├── diagrams/
-│   │   │   ├── semi/         # 반도체 다이어그램
-│   │   │   └── stats/        # 통계 다이어그램
-│   │   ├── MarkdownViewer.tsx
-│   │   ├── QnAPanel.tsx      # AI 사이드바 (공유)
-│   │   └── Sidebar.tsx       # 책별 독립 TOC
-│   └── lib/
-│       └── markdown.ts       # 마크다운 파싱 (책별 분기)
-└── public/
-    └── content/images/       # 정적 이미지
+src/
+├── app/
+│   ├── page.tsx              # 허브 랜딩 (책 선택)
+│   ├── semi/[id]/            # 반도체 챕터 페이지
+│   ├── stats/[id]/           # 통계 챕터 페이지
+│   ├── claude/[id]/          # 클로드 챕터 페이지
+│   ├── board/                # 통합 게시판
+│   └── glossary/             # 용어 사전
+├── components/
+│   ├── diagrams/
+│   │   ├── semi/             # 반도체 다이어그램
+│   │   └── stats/            # 통계 다이어그램
+│   ├── MarkdownViewer.tsx
+│   ├── QnAPanel.tsx          # AI 사이드바 (공유)
+│   └── Sidebar.tsx           # 책별 독립 TOC
+└── lib/
+    └── markdown.ts           # 마크다운 파싱 (책별 분기)
 ```
 
 ## 아키텍처 결정 사항
 
-- **멀티북 라우팅**: `/semi/[slug]`, `/stats/[slug]` 형태로 책별 독립 URL
+- **멀티북 라우팅**: `/semi/[id]`, `/stats/[id]`, `/claude/[id]` 형태로 책별 독립 URL
 - **랜딩 페이지**: `/`에서 책 선택 허브, 각 책의 카드에 소개/진행률 표시
-- **사이드바**: 현재 보고 있는 책의 TOC만 표시, 상단에 책 전환 링크
+- **사이드바**: 현재 보고 있는 책의 TOC만 표시, 상단에 책 전환 탭 (반도체/통계학/클로드)
 - **컴포넌트 공유**: MarkdownViewer, QnAPanel, Sidebar, SearchModal은 공유. 다이어그램 레지스트리와 파트 매핑은 책별 분리
 - **게시판**: 통합 유지 + 책별 카테고리 태그
-- **검색 (⌘K)**: 현재 보고 있는 책 범위 내에서만 검색
+- **검색 (⌘K)**: 전체 핸드북 범위에서 검색, 결과에 책별 배지 표시
+- **콘텐츠 디렉토리**: 각 핸드북은 `content/{book}/` 아래에 독립적으로 관리. 이미지는 `public/content/{book}/images/`에서 정적 서빙
 
 ## 라이선스
 

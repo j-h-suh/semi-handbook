@@ -17,8 +17,8 @@ interface BookConfig {
 const BOOK_CONFIGS: Record<Book, BookConfig> = {
   semi: {
     contentDir: path.join(process.cwd(), 'content', 'semi'),
-    imageRewrite: '/content/images/',
-    excludePattern: (f) => f === 'handbook-toc.md',
+    imageRewrite: '/content/semi/images/',
+    excludePattern: (f) => f === 'handbook-toc.md' || f === 'handbook-review.md',
     getPartFromId: (id) => {
       if (id.startsWith('00_')) return '들어가며';
       if (id.startsWith('01_')) return 'Part 1: 반도체 제조 기초';
