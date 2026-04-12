@@ -172,7 +172,7 @@ const description =
       ? " (user's private project instructions, not checked in)"
       : file.type === 'AutoMem'
         ? " (user's auto-memory, persists across conversations)"
-        : " (user's private global instructions for all projects)"  // ← 기본 = User
+        : " (user's private global instructions for all projects)"  // ← 기본 = User 및 Managed
 
 memories.push(`Contents of ${file.path}${description}:\n\n${content}`)
 ```
@@ -352,7 +352,7 @@ final_messages = prepend_user_context(
 
 진짜 Claude Code는 여기에 **git status**, 현재 날짜, **managed rules**, **.claude/rules/** 디렉토리, **nested CLAUDE.md**, **@-include 직접 지시문** 등이 더해진 게 1,480줄이다. 본질은 위 50줄.
 
-> 💡 **`<system-reminder>` 태그가 우리도 쓰는 패턴.** 이 책을 쓰는 지금 — 당신이 본 메시지에 `<system-reminder>` 태그가 종종 있는 것을 봤을 것이다. **Task tools 알림**, 현재 디렉토리, 시간 변경, **MEMORY.md 내용** 등. 정확히 같은 메커니즘이다. 코드가 사용자 역할로 끼워넣은 메시지. CLAUDE.md만 그런 게 아니라 — **클라이언트가 LLM에게 상황을 알리는 모든 것**이 이 패턴을 쓴다. `src/` 안에 `<system-reminder>` 를 쓰는 파일이 **17개** — `BashTool` 응답, `FileReadTool`, `AgentTool/prompt.ts`, `attachments.ts`, `messages.ts`, `sideQuestion.ts`, `brief.ts`, `ultraplan.tsx`, `memdir/memoryAge.ts`, `constants/prompts.ts` 등. **하나의 메커니즘이 시스템 지시문, 컨텍스트 알림, 메모리 주입, 도구 결과 메타데이터를 다 처리한다**.
+> 💡 **`<system-reminder>` 태그가 우리도 쓰는 패턴.** 이 책을 쓰는 지금 — 당신이 본 메시지에 `<system-reminder>` 태그가 종종 있는 것을 봤을 것이다. **Task tools 알림**, 현재 디렉토리, 시간 변경, **MEMORY.md 내용** 등. 정확히 같은 메커니즘이다. 코드가 사용자 역할로 끼워넣은 메시지. CLAUDE.md만 그런 게 아니라 — **클라이언트가 LLM에게 상황을 알리는 모든 것**이 이 패턴을 쓴다. `src/` 안에 `<system-reminder>` 를 쓰는 파일이 **22개** — `FileReadTool`, `AgentTool/prompt.ts`, `attachments.ts`, `messages.ts`, `sideQuestion.ts`, `brief.ts`, `ultraplan.tsx`, `memdir/memoryAge.ts`, `constants/prompts.ts` 등. **하나의 메커니즘이 시스템 지시문, 컨텍스트 알림, 메모리 주입, 도구 결과 메타데이터를 다 처리한다**.
 
 ---
 

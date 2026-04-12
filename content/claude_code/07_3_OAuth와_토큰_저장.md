@@ -114,7 +114,7 @@ MCP SDK는 자기가 OAuth를 처리하기 위한 추상 인터페이스를 갖�
 ```typescript
 // (축약: 생성자, clientMetadata, clientInformation, codeVerifier,
 //  redirectToAuthorization, invalidateCredentials, xaaRefresh 등 다수 메서드 생략.
-//  실제 클래스는 1376-2466 라인에 걸쳐 있음 — 거의 1100 줄)
+//  실제 클래스는 1376-2360 라인에 걸쳐 있음 — 약 984 줄. 2362-2466 은 클래스 밖 독립 함수들)
 export class ClaudeAuthProvider implements OAuthClientProvider {
   // …
 
@@ -364,8 +364,8 @@ class ClaudeAuthProvider:
 - **CLI가 OAuth를 받는 법**: **수 초간 자기가 HTTP 서버**가 된다. 기본은 랜덤 포트(49152-65535)를 잡고 `http://localhost:{port}/callback` 를 redirect URI로 사용. RFC 8252 §7.3 **Native App OAuth** 표준.
 - 랜덤 포트는 기본값이고 보안 결정 — 다른 프로세스가 **fishing 서버**로 인증 코드를 가로채는 걸 막는다. 단 **고정 포트 escape hatch** 가 두 개 (`serverConfig.oauth?.callbackPort` + `MCP_OAUTH_CALLBACK_PORT` env var). `server.listen` 은 **명시적으로 `127.0.0.1`** — IPv6/LAN 노출 회피.
 - **저장소는 추상 인터페이스 + 플랫폼별 구현**. macOS Keychain → `.credentials.json` (`chmod 0o600`) fallback. 플레인텍스트로 떨어지면 warning 객체를 발행하지만 — **MCP saveTokens 는 그 warning 을 버린다** + main login 은 telemetry 로만 보낸다. 즉 사용자에게는 조용히 떨어진다. 인터페이스의 좋은 의도가 호출자 쪽에서 무력화된 사례.
-- **`ClaudeAuthProvider implements OAuthClientProvider`**: MCP SDK의 추상 인터페이스(**"토큰 어디서 읽지/저장하지?"**)에 Claude Code 저장소가 어댑터로 답한다. SDK와 저장소는 직접 만나지 않는다. 클래스 자체는 1376-2466 라인에 걸쳐 거의 1100 줄.
-- 프로덕션 단단함 **6 조각** — (1) **민감 파라미터 redaction** (state/nonce/code/code_challenge/code_verifier 5개), (2) **stale-while-error** 캐시 (transient 키체인 실패가 깜빡 로그아웃 안 되도록), (3) **4096B stdin 버퍼 회피** (#30337의 사연), (4) **Slack의 비표준 에러 정규화** (3개 alias → `invalid_grant`), (5) **`keychainPrefetch.ts` — startup 65ms → 0ms** (모듈 평가와 **parallel** 로 두 개의 `security` spawn), (6) **`tokens()` 캐시 — 7.2% CPU 회수** (MCP SDK `_commonHeaders` 의 30-40 회/초 호출). 2466 줄이 그냥 있는 게 아니다.
+- **`ClaudeAuthProvider implements OAuthClientProvider`**: MCP SDK의 추상 인터페이스(**"토큰 어디서 읽지/저장하지?"**)에 Claude Code 저장소가 어댑터로 답한다. SDK와 저장소는 직접 만나지 않는다. 클래스 자체는 1376-2360 라인에 걸쳐 약 984 줄 (2362-2466 은 클래스 밖 독립 함수들).
+- 프로덕션 단단함 **6 조각** — (1) **민감 파라미터 redaction** (state/nonce/code/code_challenge/code_verifier 5개), (2) **stale-while-error** 캐시 (transient 키체인 실패가 깜빡 로그아웃 안 되도록), (3) **4096B stdin 버퍼 회피** (#30337의 사연), (4) **Slack의 비표준 에러 정규화** (3개 alias → `invalid_grant`), (5) **`keychainPrefetch.ts` — startup 65ms → 0ms** (모듈 평가와 **parallel** 로 두 개의 `security` spawn), (6) **`tokens()` 캐시 — 7.2% CPU 회수** (MCP SDK `_commonHeaders` 의 30-40 회/초 호출). 2466 줄(클래스 984줄 + 독립 함수 106줄)이 그냥 있는 게 아니다.
 - **CSRF 보호**: `randomBytes(32).toString('base64url')` 로 OAuth state 생성. Python에서는 `secrets.token_urlsafe(32)`. **`random` 쓰면 안 된다** — 예측 가능.
 
 ---

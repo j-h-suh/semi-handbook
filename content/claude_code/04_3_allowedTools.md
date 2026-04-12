@@ -71,7 +71,7 @@ const command = {
 
 ### 어디서 적용되는가 — `QueryEngine.ts:483`
 
-진짜 코드는 어디 있나? `QueryEngine.ts:478-486` 의 setAppState 블록. 핵심은 line 483 (`command: allowedTools`).
+진짜 코드는 어디 있나? `QueryEngine.ts:477-486` 의 setAppState 블록. 핵심은 line 483 (`command: allowedTools`).
 
 ```typescript
 // processSlashCommand가 명령의 allowedTools를 추출해서 넘겨준다

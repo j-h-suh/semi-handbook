@@ -29,7 +29,7 @@
 `src/state/AppStateStore.ts:89`에 진짜 타입이 있다.
 
 ```typescript
-// (축약: 실제 ~85개 top-level 필드 중 12개만 발췌. DeepImmutable 안 ~37개 + & 뒤 ~48개)
+// (축약: 실제 ~86개 top-level 필드 중 12개만 발췌. DeepImmutable 안 ~32개 + & 뒤 ~54개)
 export type AppState = DeepImmutable<{
   settings: SettingsJson
   verbose: boolean

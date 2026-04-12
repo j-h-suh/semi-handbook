@@ -141,7 +141,7 @@ export function getBuiltInAgents(): AgentDefinition[] {
 `built-in/exploreAgent.ts` — 일부러 모델한테 조심성을 주는 패턴이 가득.
 
 ```typescript
-// exploreAgent.ts:24-36 (verbatim)
+// exploreAgent.ts:26-36 (verbatim)
 === CRITICAL: READ-ONLY MODE - NO FILE MODIFICATIONS ===
 This is a READ-ONLY exploration task. You are STRICTLY PROHIBITED from:
 - Creating new files (no Write, touch, or file creation of any kind)

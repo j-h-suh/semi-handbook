@@ -97,7 +97,7 @@ async preparePermissionMatcher({ command }) {
 
 ### Fail-safe — 알아먹지 못하면 묻는다
 
-위 코드 453줄.
+위 코드 452줄.
 
 ```typescript
 if (parsed.kind !== 'simple') {
