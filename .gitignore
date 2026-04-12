@@ -37,6 +37,9 @@ yarn-error.log*
 .claude/.mcp.json
 .mcp.json
 
+# QnA 참조용 소스코드 (대용량)
+content/claude_code/code_repository/
+
 # vercel
 .vercel
 
