@@ -6,8 +6,8 @@ import { MessageSquarePlus, X, Send, Clock, Tag, Pencil, Trash2, MessageCircle, 
 
 const CATEGORIES = ['전체', '질문', '수정요청', '자유'] as const;
 const WRITE_CATEGORIES = ['질문', '수정요청', '자유'] as const;
-const BOOKS = ['전체', '반도체', '통계학', '공통'] as const;
-const WRITE_BOOKS = ['반도체', '통계학', '공통'] as const;
+const BOOKS = ['전체', '반도체', '통계학', 'Claude Code', '공통'] as const;
+const WRITE_BOOKS = ['반도체', '통계학', 'Claude Code', '공통'] as const;
 
 // Simple SHA-256 hash
 async function hashPassword(pw: string): Promise<string> {
@@ -267,7 +267,11 @@ export default function BoardClient() {
                                 activeBook === book
                                     ? book === '통계학'
                                         ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-medium'
-                                        : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
+                                        : book === 'Claude Code'
+                                            ? 'bg-violet-500/15 border-violet-500/30 text-violet-400 font-medium'
+                                            : book === '공통'
+                                                ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400 font-medium'
+                                                : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
                                     : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
                             }`}
                         >
@@ -312,9 +316,11 @@ export default function BoardClient() {
                                 <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium ${
                                     post.book === '통계학'
                                         ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-                                        : post.book === '공통'
+                                        : post.book === 'Claude Code'
                                             ? 'text-violet-400 bg-violet-500/10 border-violet-500/20'
-                                            : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
+                                            : post.book === '공통'
+                                                ? 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20'
+                                                : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
                                 }`}>
                                     {post.book || '반도체'}
                                 </span>
@@ -646,9 +652,11 @@ export default function BoardClient() {
                                                 form.book === book
                                                     ? book === '통계학'
                                                         ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-medium'
-                                                        : book === '공통'
+                                                        : book === 'Claude Code'
                                                             ? 'bg-violet-500/15 border-violet-500/30 text-violet-400 font-medium'
-                                                            : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
+                                                            : book === '공통'
+                                                                ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400 font-medium'
+                                                                : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
                                                     : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300'
                                             }`}
                                         >

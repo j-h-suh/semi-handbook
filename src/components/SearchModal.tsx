@@ -133,9 +133,11 @@ export default function SearchModal({ searchData }: Props) {
                                 <span className={`text-[9px] px-1.5 py-0.5 rounded border font-medium ${
                                     r.book === 'stats'
                                         ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-                                        : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
+                                        : r.book === 'claude'
+                                            ? 'text-violet-400 bg-violet-500/10 border-violet-500/20'
+                                            : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
                                 }`}>
-                                    {r.book === 'stats' ? '통계' : '반도체'}
+                                    {r.book === 'stats' ? '통계' : r.book === 'claude' ? 'Claude Code' : '반도체'}
                                 </span>
                                 <span className="text-xs text-cyan-500 font-medium">{r.chapterTitle}</span>
                             </div>

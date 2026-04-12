@@ -13,12 +13,13 @@ interface Props {
     searchData: SearchEntry[];
     semiChapters: ChapterMeta[];
     statsChapters: ChapterMeta[];
+    claudeChapters: ChapterMeta[];
 }
 
-export default function ClientLayout({ children, searchData, semiChapters, statsChapters }: Props) {
+export default function ClientLayout({ children, searchData, semiChapters, statsChapters, claudeChapters }: Props) {
     return (
         <QnAPanelProvider>
-            <Sidebar semiChapters={semiChapters} statsChapters={statsChapters} />
+            <Sidebar semiChapters={semiChapters} statsChapters={statsChapters} claudeChapters={claudeChapters} />
             {children}
             <QnAPanel />
             <SettingsModal />

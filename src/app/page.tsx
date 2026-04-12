@@ -5,7 +5,7 @@ import { execSync } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 
-function getRecentChapters(book: 'semi' | 'stats', contentSubdir: string) {
+function getRecentChapters(book: 'semi' | 'stats' | 'claude', contentSubdir: string) {
     const chapters = getSortedChapters(book);
     const contentDir = path.join(process.cwd(), 'content', contentSubdir);
     return chapters.map(ch => {
@@ -24,6 +24,7 @@ function getRecentChapters(book: 'semi' | 'stats', contentSubdir: string) {
 export default function Home() {
     const semiChapters = getSortedChapters('semi');
     const statsChapters = getSortedChapters('stats');
+    const claudeChapters = getSortedChapters('claude');
 
     const totalTerms = glossary.length;
 
@@ -46,16 +47,19 @@ export default function Home() {
 
     const recentSemiChapters = getRecentChapters('semi', 'semi');
     const recentStatsChapters = getRecentChapters('stats', 'stats');
+    const recentClaudeChapters = getRecentChapters('claude', 'claude_code');
 
     return (
         <main className="flex-1 w-full flex overflow-hidden relative">
             <HomeClient
                 semiChapterCount={semiChapters.length}
                 statsChapterCount={statsChapters.length}
+                claudeChapterCount={claudeChapters.length}
                 totalTerms={totalTerms}
                 totalDiagrams={totalDiagrams}
                 recentSemiChapters={recentSemiChapters}
                 recentStatsChapters={recentStatsChapters}
+                recentClaudeChapters={recentClaudeChapters}
             />
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />

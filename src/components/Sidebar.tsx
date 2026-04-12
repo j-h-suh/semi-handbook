@@ -3,50 +3,50 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp } from 'lucide-react';
+import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal } from 'lucide-react';
 import type { ChapterMeta } from '@/lib/markdown';
 
-type BookTab = 'semi' | 'stats';
+type BookTab = 'semi' | 'stats' | 'claude';
 
-const BOOK_META: Record<BookTab, { label: string; icon: typeof Cpu; color: string; activeColor: string; route: string }> = {
-    semi: { label: '반도체', icon: Cpu, color: 'text-slate-500', activeColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20', route: '/semi' },
-    stats: { label: '통계학', icon: TrendingUp, color: 'text-slate-500', activeColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20', route: '/stats' },
+const BOOK_META: Record<BookTab, { label: string; icon: typeof Cpu; color: string; tabColor: string; chapterColor: string; route: string }> = {
+    semi: { label: '반도체', icon: Cpu, color: 'text-slate-500', tabColor: 'text-cyan-400 border-cyan-400', chapterColor: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', route: '/semi' },
+    stats: { label: '통계학', icon: TrendingUp, color: 'text-slate-500', tabColor: 'text-emerald-400 border-emerald-400', chapterColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', route: '/stats' },
+    claude: { label: '클로드', icon: Terminal, color: 'text-slate-500', tabColor: 'text-violet-400 border-violet-400', chapterColor: 'bg-violet-500/10 text-violet-400 border-violet-500/20', route: '/claude' },
 };
 
 interface Props {
     semiChapters: ChapterMeta[];
     statsChapters: ChapterMeta[];
+    claudeChapters: ChapterMeta[];
 }
 
-export default function Sidebar({ semiChapters, statsChapters }: Props) {
+export default function Sidebar({ semiChapters, statsChapters, claudeChapters }: Props) {
     const pathname = usePathname();
     const decodedPathname = decodeURIComponent(pathname);
 
-    // Detect current book from URL
     const detectedBook: BookTab | null = useMemo(() => {
         if (decodedPathname.startsWith('/semi/')) return 'semi';
         if (decodedPathname.startsWith('/stats/')) return 'stats';
+        if (decodedPathname.startsWith('/claude/')) return 'claude';
         return null;
     }, [decodedPathname]);
 
     const [activeBook, setActiveBook] = useState<BookTab>(detectedBook ?? 'semi');
 
-    // Sync book tab when URL changes
     if (detectedBook && detectedBook !== activeBook) {
         setActiveBook(detectedBook);
     }
 
-    const chapters = activeBook === 'semi' ? semiChapters : statsChapters;
-    const routePrefix = activeBook === 'semi' ? '/semi' : '/stats';
+    const chaptersMap: Record<BookTab, ChapterMeta[]> = { semi: semiChapters, stats: statsChapters, claude: claudeChapters };
+    const chapters = chaptersMap[activeBook];
+    const routePrefix = BOOK_META[activeBook].route;
 
-    // Group chapters by Part
     const groupedChapters = chapters.reduce((acc, chapter) => {
         if (!acc[chapter.part]) acc[chapter.part] = [];
         acc[chapter.part].push(chapter);
         return acc;
     }, {} as Record<string, ChapterMeta[]>);
 
-    // Auto-expand the Part that contains the active chapter
     const activePart = useMemo(() => {
         for (const [part, chs] of Object.entries(groupedChapters)) {
             if (chs.some(ch => decodedPathname === `${routePrefix}/${ch.id}`)) return part;
@@ -58,7 +58,6 @@ export default function Sidebar({ semiChapters, statsChapters }: Props) {
         new Set(activePart ? [activePart] : [Object.keys(groupedChapters)[0]])
     );
 
-    // Keep active part open when navigating
     if (activePart && !openParts.has(activePart)) {
         setOpenParts(prev => new Set([...prev, activePart]));
     }
@@ -96,16 +95,13 @@ export default function Sidebar({ semiChapters, statsChapters }: Props) {
                             key={book}
                             onClick={() => {
                                 setActiveBook(book);
-                                // Reset open parts to first part of new book
-                                const newChapters = book === 'semi' ? semiChapters : statsChapters;
+                                const newChapters = chaptersMap[book];
                                 const firstPart = newChapters[0]?.part;
                                 if (firstPart) setOpenParts(new Set([firstPart]));
                             }}
                             className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-medium transition-colors cursor-pointer border-b-2 ${
                                 isActive
-                                    ? book === 'semi'
-                                        ? 'text-cyan-400 border-cyan-400'
-                                        : 'text-emerald-400 border-emerald-400'
+                                    ? BOOK_META[book].tabColor
                                     : 'text-slate-500 border-transparent hover:text-slate-300'
                             }`}
                         >
@@ -132,9 +128,7 @@ export default function Sidebar({ semiChapters, statsChapters }: Props) {
                                 <ul className="space-y-1 mt-1">
                                     {partChapters.map((chapter) => {
                                         const isActive = decodedPathname === `${routePrefix}/${chapter.id}`;
-                                        const accentColor = activeBook === 'semi'
-                                            ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
-                                            : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                                        const accentColor = BOOK_META[activeBook].chapterColor;
                                         return (
                                             <li key={chapter.id}>
                                                 <Link
@@ -156,7 +150,6 @@ export default function Sidebar({ semiChapters, statsChapters }: Props) {
                 })}
             </div>
 
-            {/* Search + Glossary + Settings at the bottom */}
             <div className="p-4 border-t border-slate-800 space-y-1">
                 <button
                     onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}

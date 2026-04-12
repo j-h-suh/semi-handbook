@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, MessageSquare, Clock, BookText, BarChart3, ArrowRight, Cpu, TrendingUp } from 'lucide-react';
+import { BookOpen, MessageSquare, Clock, BookText, BarChart3, ArrowRight, Cpu, TrendingUp, Terminal } from 'lucide-react';
 import { supabase, type Post } from '@/lib/supabase';
 
 interface RecentChapter {
@@ -14,15 +14,17 @@ interface RecentChapter {
 interface Props {
     semiChapterCount: number;
     statsChapterCount: number;
+    claudeChapterCount: number;
     totalTerms: number;
     totalDiagrams: number;
     recentSemiChapters: RecentChapter[];
     recentStatsChapters: RecentChapter[];
+    recentClaudeChapters: RecentChapter[];
 }
 
 export default function HomeClient({
-    semiChapterCount, statsChapterCount, totalTerms, totalDiagrams,
-    recentSemiChapters, recentStatsChapters,
+    semiChapterCount, statsChapterCount, claudeChapterCount, totalTerms, totalDiagrams,
+    recentSemiChapters, recentStatsChapters, recentClaudeChapters,
 }: Props) {
     const [recentPosts, setRecentPosts] = useState<Post[]>([]);
 
@@ -60,12 +62,12 @@ export default function HomeClient({
                         </span>
                     </h1>
                     <p className="text-lg text-slate-500 max-w-xl mx-auto">
-                        반도체 포토리소그래피와 AI/ML 엔지니어를 위한 체계적 핸드북
+                        반도체, 통계학, Claude Code — AI/ML 엔지니어를 위한 체계적 핸드북 시리즈
                     </p>
                 </div>
 
                 {/* Book Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     {/* Semi Handbook */}
                     <Link
                         href="/semi/00_00_들어가며"
@@ -115,12 +117,37 @@ export default function HomeClient({
                             </span>
                         </div>
                     </Link>
+
+                    {/* Claude Code Handbook */}
+                    <Link
+                        href="/claude/00_0_왜_이_책을_썼는가"
+                        className="group p-6 rounded-2xl border border-violet-500/10 bg-violet-500/[0.03] hover:bg-violet-500/[0.06] hover:border-violet-500/25 transition-all"
+                    >
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
+                                <Terminal size={24} />
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-bold text-white">클로드 핸드북</h2>
+                                <p className="text-xs text-slate-500">AI 코딩 에이전트 심층 분석</p>
+                            </div>
+                        </div>
+                        <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                            부트스트랩부터 멀티 에이전트까지 — Claude Code의 내부 구조를 해부하는 기술 핸드북
+                        </p>
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs text-slate-600">{claudeChapterCount}개 챕터</span>
+                            <span className="text-sm text-violet-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                                읽기 <ArrowRight size={14} />
+                            </span>
+                        </div>
+                    </Link>
                 </div>
 
                 {/* Stats Summary */}
                 <div className="grid grid-cols-4 gap-3 mb-12">
                     <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">{semiChapterCount + statsChapterCount}</div>
+                        <div className="text-2xl font-bold text-white mb-1">{semiChapterCount + statsChapterCount + claudeChapterCount}</div>
                         <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
                             <BookOpen size={12} /> 총 챕터
                         </div>
@@ -138,7 +165,7 @@ export default function HomeClient({
                         </div>
                     </div>
                     <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">2</div>
+                        <div className="text-2xl font-bold text-white mb-1">3</div>
                         <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
                             <BookOpen size={12} /> 시리즈
                         </div>
@@ -146,7 +173,7 @@ export default function HomeClient({
                 </div>
 
                 {/* Recent Updates + Board */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                     {/* Recent Semi Updates */}
                     <div>
@@ -177,6 +204,25 @@ export default function HomeClient({
                                 <Link
                                     key={ch.id}
                                     href={`/stats/${ch.id}`}
+                                    className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
+                                >
+                                    <div className="text-xs font-medium text-slate-200 line-clamp-1 mb-0.5">{ch.title}</div>
+                                    <div className="text-[10px] text-slate-600">{formatDate(ch.lastUpdated)}</div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Recent Claude Updates */}
+                    <div>
+                        <h2 className="flex items-center gap-2 text-xs font-bold text-violet-500/70 mb-3">
+                            <Clock size={13} /> Claude Code 최근 업데이트
+                        </h2>
+                        <div className="space-y-1.5">
+                            {recentClaudeChapters.map(ch => (
+                                <Link
+                                    key={ch.id}
+                                    href={`/claude/${ch.id}`}
                                     className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
                                 >
                                     <div className="text-xs font-medium text-slate-200 line-clamp-1 mb-0.5">{ch.title}</div>

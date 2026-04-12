@@ -64,5 +64,6 @@ export function buildSearchData(): SearchEntry[] {
     return [
         ...buildBookSearchData('semi'),
         ...buildBookSearchData('stats'),
+        ...buildBookSearchData('claude'),
     ];
 }

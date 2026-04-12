@@ -20,13 +20,14 @@ export default function RootLayout({
 }) {
   const semiChapters = getSortedChapters('semi');
   const statsChapters = getSortedChapters('stats');
+  const claudeChapters = getSortedChapters('claude');
 
   return (
     <html lang="ko" className="dark">
       <body className={`${inter.className} bg-slate-950 text-slate-200 antialiased overflow-hidden selection:bg-cyan-500/30`}>
         {/* Main Application Container */}
         <div className="flex h-screen w-screen overflow-hidden">
-          <ClientLayout searchData={buildSearchData()} semiChapters={semiChapters} statsChapters={statsChapters}>
+          <ClientLayout searchData={buildSearchData()} semiChapters={semiChapters} statsChapters={statsChapters} claudeChapters={claudeChapters}>
             {children}
           </ClientLayout>
         </div>
