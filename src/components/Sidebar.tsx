@@ -79,7 +79,7 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
                 </div>
                 <div>
                     <h1 className="text-sm font-bold text-slate-200 tracking-tight whitespace-normal leading-tight">
-                        세미에이아이<br />핸드북 시리즈
+                        반도체를 여행하는<br />세미에이아이를 위한<br />핸드북 시리즈
                     </h1>
                 </div>
             </Link>

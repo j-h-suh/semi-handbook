@@ -9,7 +9,7 @@ import { getSortedChapters } from '@/lib/markdown';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: '세미에이아이 핸드북 시리즈',
+  title: '반도체를 여행하는 세미에이아이를 위한 핸드북 시리즈',
   description: 'Semiconductor & Statistics Handbook for AI/ML Engineers',
 };
 

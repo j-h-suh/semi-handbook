@@ -56,7 +56,8 @@ export default function HomeClient({
                         <BookOpen size={36} />
                     </div>
                     <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl mb-4">
-                        세미에이아이<br />
+                        반도체를 여행하는<br />
+                        세미에이아이를 위한<br />
                         <span className="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">
                             핸드북 시리즈
                         </span>
