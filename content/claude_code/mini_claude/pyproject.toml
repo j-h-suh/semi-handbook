@@ -1,0 +1,11 @@
+[project]
+name = "mini-claude"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.96.0",
+    "pydantic>=2.13.3",
+    "rich>=15.0.0",
+]
