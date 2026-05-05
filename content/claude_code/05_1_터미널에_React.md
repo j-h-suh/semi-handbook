@@ -90,6 +90,25 @@ React 팀이 공식적으로 제공하는 패키지다. 새 렌더러를 만들 
 }
 ```
 
+```python
+# Python 등가 — Textual의 위젯 트리도 같은 구조
+# Textual은 자체 "reconciler" 없이 위젯 트리를 직접 관리한다.
+# 하지만 개념은 같다: 트리 변경 → 변경된 부분만 다시 그리기.
+
+from textual.widget import Widget
+
+class MyWidget(Widget):
+    def compose(self):          # ≈ createInstance + appendChild
+        yield Static("hello")
+        yield Button("click")
+
+    def on_mount(self):         # ≈ React의 useEffect (마운트 시)
+        self.set_interval(1.0, self.refresh)
+
+    def render(self) -> str:    # ≈ commitUpdate (상태→화면)
+        return f"Count: {self.count}"
+```
+
 각 함수는 **Ink의 자료구조**(yoga 레이아웃 노드 + 셀 버퍼)를 조작한다. React는 "이 노드를 갱신해라"만 호출하고, 어떻게 갱신되는지는 모른다.
 
 ### 진짜 컴포넌트는 어떻게 생겼나
@@ -164,6 +183,20 @@ return options => {
   // ... yoga 레이아웃 → renderNodeToOutput 으로 backScreen 칠하기
   // ... prevFrameContaminated 검사 후 prevScreen 대비 셀 단위 blit
 }
+```
+
+```python
+# Python 등가 — 프레임 diff의 개념 (Textual의 내부도 비슷)
+def render_diff(prev_screen: list[list[str]], new_screen: list[list[str]]) -> str:
+    """바뀐 셀만 ANSI escape로 stdout에 쓴다."""
+    output = []
+    for row in range(len(new_screen)):
+        for col in range(len(new_screen[row])):
+            if prev_screen[row][col] != new_screen[row][col]:
+                # 커서를 해당 위치로 이동 + 새 문자 출력
+                output.append(f"\x1b[{row+1};{col+1}H{new_screen[row][col]}")
+    return "".join(output)
+    # 안 바뀐 셀은 건드리지 않는다 → 깜빡임 없음
 ```
 
 번역하면 — **이전 프레임의 Screen과 새 프레임의 Screen을 셀 단위로 비교**해서, 바뀐 셀만 `\x1b[...m...` 같은 ANSI escape sequence로 stdout에 쓴다. 안 바뀐 셀은 건드리지 않는다.

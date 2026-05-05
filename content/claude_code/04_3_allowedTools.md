@@ -87,6 +87,25 @@ setAppState(prev => ({
 }))
 ```
 
+```python
+# Python 등가 — 명령의 allowedTools를 권한 시스템에 주입
+class PermissionEngine:
+    def __init__(self):
+        self.always_allow_rules = {
+            "user": [],       # 사용자가 "항상 허용" 누른 것
+            "settings": [],   # settings.json에 적힌 것
+            "command": [],    # ⭐ 슬래시 명령이 동봉한 것 (한 턴만 산다)
+        }
+
+    def inject_command_tools(self, allowed_tools: list[str]):
+        """명령 시작 시 호출 — command 슬롯에 주입."""
+        self.always_allow_rules["command"] = allowed_tools
+
+    def clear_command_tools(self):
+        """턴 끝나면 호출 — command 슬롯 리셋."""
+        self.always_allow_rules["command"] = []
+```
+
 "항상 허용 룰의 command 슬롯에 `allowedTools`를 대입한다."
 
 여기서 두 가지가 중요하다.

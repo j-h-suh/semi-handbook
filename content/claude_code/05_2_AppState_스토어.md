@@ -78,6 +78,36 @@ export function createStore<T>(
 }
 ```
 
+```python
+# Python 등가 — 옵저버 패턴의 가장 작은 형태
+from dataclasses import dataclass, field
+from typing import Callable, TypeVar, Generic
+
+T = TypeVar("T")
+
+@dataclass
+class Store(Generic[T]):
+    """35줄짜리 store.ts의 Python 등가."""
+    _state: T
+    _listeners: set[Callable] = field(default_factory=set)
+
+    def get_state(self) -> T:
+        return self._state
+
+    def set_state(self, updater: Callable[[T], T]) -> None:
+        prev = self._state
+        next_state = updater(prev)
+        if next_state is prev:  # ← Object.is 등가 — 같은 객체면 no-op
+            return
+        self._state = next_state
+        for listener in self._listeners:
+            listener()  # 모두에게 알림
+
+    def subscribe(self, listener: Callable) -> Callable:
+        self._listeners.add(listener)
+        return lambda: self._listeners.discard(listener)
+```
+
 이게 전부다. 진짜로. 다른 파일은 안 본다. 
 
 세 가지 메서드, 한 줄짜리 조기 종료(early-out), 한 줄짜리 알림 루프. **옵저버 패턴의 가장 작은 형태**다.
@@ -115,6 +145,21 @@ export function useAppState(selector) {
   
   return useSyncExternalStore(store.subscribe, get, get)
 }
+```
+
+```python
+# Python 등가 — Textual의 reactive가 같은 역할을 한다
+from textual.reactive import reactive
+
+class MyWidget(Widget):
+    # reactive 속성 — 값이 바뀌면 자동으로 위젯이 다시 그려진다
+    model: reactive[str] = reactive("opus")
+    verbose: reactive[bool] = reactive(False)
+
+    def watch_model(self, new_value: str) -> None:
+        """model이 바뀔 때만 호출된다 (selector + 자동 구독)."""
+        self.update(f"Model: {new_value}")
+    # verbose가 바뀌어도 이 위젯은 영향 안 받음 — 부분 구독
 ```
 
 핵심은 **`useSyncExternalStore`** — React 18에 들어온 훅. "외부 스토어를 React에 안전하게 연결한다"라는 한 줄짜리 목적의 훅이다. 세 가지 인자를 받는다.
