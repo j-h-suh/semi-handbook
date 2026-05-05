@@ -42,6 +42,14 @@ export function createSubagentContext(
 ): ToolUseContext
 ```
 
+```python
+# Python 등가 — 시그니처가 전체 계약
+def create_subagent_context(
+    parent_context: ToolUseContext,
+    overrides: SubagentContextOverrides | None = None,
+) -> ToolUseContext: ...
+```
+
 부모 컨텍스트를 받고 — 자식 컨텍스트를 만든다. 둘 다 같은 `ToolUseContext` 타입. 자식이 자기가 자식인지도 모른다 — 그저 평범한 컨텍스트. 8.1의 재귀가 가능한 이유가 바로 이것. **자식 query 루프는 자기가 부모와 무엇을 공유하는지 알 필요가 없다**.
 
 핵심 원리는 한 줄로 요약된다 — **함수 docstring에 그대로** 들어 있다.
@@ -90,6 +98,29 @@ return {
       : undefined),
 ```
 
+```python
+# Python 등가 — 변경 가능한 상태는 클론, Set은 fresh
+read_file_state = clone_file_state_cache(
+    (overrides.read_file_state if overrides else None)
+    or parent_context.read_file_state
+)
+# Set들은 fresh — 자식의 트리거가 부모와 섞이면 텔레메트리 망가짐
+nested_memory_attachment_triggers: set[str] = set()
+loaded_nested_memory_paths: set[str] = set()
+dynamic_skill_dir_triggers: set[str] = set()
+discovered_skill_names: set[str] = set()
+tool_decisions = None
+
+# contentReplacementState는 fresh가 아닌 clone — cache hit 때문!
+content_replacement_state = (
+    (overrides.content_replacement_state if overrides else None)
+    or (
+        clone_content_replacement_state(parent_context.content_replacement_state)
+        if parent_context.content_replacement_state else None
+    )
+)
+```
+
 `readFileState` 가 클론 되는 게 흥미롭다. 자식은 **부모가 fork 시점까지 읽은 파일들을** 그대로 본다. 그런데 자식이 새로 읽는 파일들은 부모한테 안 흘러간다. **부모는 fork 시점의 스냅샷을 자식한테 준다, 그 후로는 분리**. `cloneFileStateCache` (`fileStateCache.ts:122-126`) 의 본문은 진짜 분리 — `createFileStateCacheWithSizeLimit(cache.max, cache.maxSize)` 로 **size limit 까지 함께 보존**하고 (자식이 부모와 **동일한 LRU policy**: 부모가 1000 슬롯이면 자식도 1000 슬롯), `cloned.load(cache.dump())` 로 **전체 dump → 새 LRUCache 로 load**. **얕은 복사가 아닌 진짜 분리**.
 
 다른 Set들은 **fresh**. 자식의 메모리 트리거, 스킬 발견 같은 건 부모와 섞이면 안 된다. 텔레메트리가 망가짐.
@@ -104,6 +135,16 @@ const abortController =
   (overrides?.shareAbortController
     ? parentContext.abortController       // ← opt-in: 같은 컨트롤러
     : createChildAbortController(parentContext.abortController))
+```
+
+```python
+# Python 등가 — 3가지 분기: override / opt-in 공유 / 링크된 자식 (기본)
+if overrides and overrides.abort_event:
+    abort_event = overrides.abort_event
+elif overrides and overrides.share_abort_controller:
+    abort_event = parent_context.abort_event   # opt-in: 같은 이벤트
+else:
+    abort_event = create_child_abort_event(parent_context.abort_event)
 ```
 
 `createChildAbortController` 는 진짜 멋지다. 새 컨트롤러를 만들지만 — **부모의 abort가 자식한테 전파**되도록 리스너를 단다.
@@ -136,6 +177,31 @@ export function createChildAbortController(parent: AbortController): AbortContro
 }
 ```
 
+```python
+# Python 등가 — 새 이벤트 + 부모 abort 단방향 전파 (WeakRef로 GC 안전)
+import asyncio
+import weakref
+
+def create_child_abort_event(parent: asyncio.Event) -> asyncio.Event:
+    child = asyncio.Event()
+
+    if parent.is_set():
+        child.set()  # 이미 멈췄으면 즉시
+        return child
+
+    # WeakRef — 양방향 어느 쪽도 강참조 만들지 않음
+    weak_child = weakref.ref(child)
+
+    async def propagate() -> None:
+        await parent.wait()
+        if (c := weak_child()) is not None:
+            c.set()
+
+    asyncio.create_task(propagate())
+    return child
+    # 부모 → 자식 단방향. 자식이 멈춰도 부모는 안 멈춤
+```
+
 단방향 전파다. **부모가 멈추면 자식도 멈춘다. 자식이 멈춰도 부모는 안 멈춘다**. 사용자가 Ctrl+C를 부모한테 누르면 — 모든 자식이 연쇄적으로 멈춘다. Explore 에이전트가 자기 일이 끝나서 자기를 abort해도 — 부모는 신경 안 쓴다. 그리고 abort 되면 단순한 **abort 신호**가 아니라 **`parent.signal.reason` 까지 propagate** — 왜 멈췄는지의 이유가 함께 흐른다 (사용자 Ctrl+C / 타임아웃 / 권한 거부).
 
 `WeakRef` 가 두 곳에 깔끔하게 적용됐다. **양방향**: (a) `weakChild` — 부모가 자식을 강하게 들고 있으면 자식이 GC 안 됨, (b) `weakParent` — handler closure 가 부모를 강하게 들고 있으면 부모가 자식 죽기 전에는 GC 안 됨. **양쪽 다 weak** 라서 어느 쪽이 먼저 사라져도 다른 쪽이 안 잡혀 있다. 그리고 자식이 abort 되면 **auto-cleanup** listener 가 발동해서 **부모의 listener 도 제거** — long-running 부모에 **dead handler 가 누적**되지 않게.
@@ -152,6 +218,15 @@ setAppState: overrides?.shareSetAppState
   : () => {},
 ```
 
+```python
+# Python 등가 — 기본 no-op, opt-in으로만 공유
+set_app_state = (
+    parent_context.set_app_state
+    if overrides and overrides.share_set_app_state
+    else lambda _: None
+)
+```
+
 자식이 부모의 React 상태를 건드릴 일이 거의 없다. 그래서 기본은 빈 함수. 하지만 **in-process teammate** 같은 인터랙티브 자식은 부모와 같은 화면을 공유한다 — 그 경우 `shareSetAppState: true` 로 명시적으로 공유.
 
 > ⚙️ **`updateAttributionState` 는 항상 공유 — 유일한 예외** (`forkedAgent.ts:432-435`). 다른 mutation 콜백 5개는 다 no-op 인데 이 하나만 **always shared**. 코멘트 verbatim: **"Attribution is scoped and functional (prev => next) — safe to share even when setAppState is stubbed. Concurrent calls compose via React's state queue."** **함수형 업데이트는 race-free** — `prev => next` 형태라서 동시 호출이 React 의 state queue 로 자연스럽게 합쳐진다. **fail-safe defaults** 의 예외 케이스 디자인 — 예외가 있으면 그 사연을 코드에 적는다는 정신.
@@ -164,6 +239,14 @@ setAppState: overrides?.shareSetAppState
 // are never registered and never killed (PPID=1 zombie).
 setAppStateForTasks:
   parentContext.setAppStateForTasks ?? parentContext.setAppState,
+```
+
+```python
+# Python 등가 — task 등록은 항상 root에 도달해야 함 (PPID=1 좀비 방지)
+set_app_state_for_tasks = (
+    parent_context.set_app_state_for_tasks or parent_context.set_app_state
+)
+# setAppState가 no-op이어도 — bash 작업 추적/킬은 root만 가능
 ```
 
 **심지어 setAppState가 no-op이어도** — `setAppStateForTasks` 는 항상 root store에 도달해야 한다. 왜? 자식 에이전트가 백그라운드 bash 작업을 띄웠다고 하자. 자식이 끝나면 그 bash 작업의 PPID는 **init(1)** 이 된다 — 고아 프로세스. 누가 추적하고 죽이지? **root AppState**다. 그래서 어떤 경우에도 task 등록만은 root에 도달해야 한다. 안 그러면 — **PPID=1 좀비**. 이 코멘트 한 줄이 과거에 누가 디버깅 며칠 했다는 사연이다.
@@ -190,6 +273,21 @@ queryTracking: {
   chainId: randomUUID(),
   depth: (parentContext.queryTracking?.depth ?? -1) + 1,
 },
+```
+
+```python
+# Python 등가 — ID는 항상 새로, depth는 +1 (무한 재귀 방지)
+import uuid
+
+agent_id = (overrides.agent_id if overrides else None) or create_agent_id()
+parent_depth = (
+    parent_context.query_tracking.get("depth", -1)
+    if parent_context.query_tracking else -1
+)
+query_tracking = {
+    "chain_id": str(uuid.uuid4()),
+    "depth": parent_depth + 1,
+}
 ```
 
 각 자식은 **자기만의 ID**. 그리고 깊이 카운터 — 부모의 depth + 1. 텔레메트리가 얼마나 깊이 들어갔는지 추적할 수 있다. 자식이 자식을 부르면 depth가 2, 그게 또 자식을 부르면 3 — 무한 재귀를 막는 안전장치.
@@ -267,6 +365,40 @@ export async function runForkedAgent({
     initialMessages.length = 0
   }
 }
+```
+
+```python
+# Python 등가 — 5형제는 부모 그대로, 컨텍스트만 격리
+async def run_forked_agent(
+    *,
+    prompt_messages: list[dict],
+    cache_safe_params: CacheSafeParams,
+    overrides: SubagentContextOverrides | None = None,
+):
+    # 격리된 컨텍스트 (부모 상태 변경 방지)
+    isolated_ctx = create_subagent_context(
+        cache_safe_params.tool_use_context, overrides
+    )
+
+    # 부모 메시지 접두사 + 새 프롬프트
+    initial_messages = [
+        *cache_safe_params.fork_context_messages,
+        *prompt_messages,
+    ]
+
+    try:
+        async for message in query(
+            messages=initial_messages,
+            system_prompt=cache_safe_params.system_prompt,    # 부모 그대로
+            user_context=cache_safe_params.user_context,      # 부모 그대로
+            system_context=cache_safe_params.system_context,  # 부모 그대로
+            tool_use_context=isolated_ctx,                    # 격리됨
+        ):
+            ...  # cache hit!
+    finally:
+        # 클론 즉시 정리 — N개 클론이 동시에 살아있지 않게
+        isolated_ctx.read_file_state.clear()
+        initial_messages.clear()
 ```
 
 우아하다. **공유는 cache-key 정체성을 위해, 격리는 상태 안전성을 위해**. 두 목적이 한 함수에서 만난다.

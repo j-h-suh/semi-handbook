@@ -78,6 +78,24 @@ export async function* runAgent({...}): AsyncGenerator<Message, void> {
 }
 ```
 
+```python
+# Python 등가 — runAgent의 핵심: query()를 자기 자신으로 부른다
+async def run_agent(**kwargs) -> AsyncGenerator[dict, None]:
+    # ... ~500줄의 setup (createSubagentContext는 8.2에서) ...
+
+    async for message in query(  # ← 2.1의 에이전트 루프!
+        messages=initial_messages,
+        system_prompt=agent_system_prompt,
+        user_context=resolved_user_context,
+        system_context=resolved_system_context,
+        canusetool=canusetool,
+        tool_use_context=agent_tool_use_context,
+        max_turns=max_turns or agent_definition.max_turns,
+    ):
+        yield message
+    # 부모의 도구 호출 한 번 = 자식 Claude의 전체 세션
+```
+
 **그렇다. `query()` 가 다시 불린다**. 2.1의 에이전트 루프가 자기 자신을 호출한다. 부모 Claude의 한 도구 호출이 **자식 Claude의 전체 세션**을 그 도구의 응답으로 만들어낸다. Tool result로 돌아오는 텍스트가 — 자식 Claude의 최종 발화.
 
 이게 왜 강력하지?
@@ -117,6 +135,28 @@ export function getBuiltInAgents(): AgentDefinition[] {
   
   return agents
 }
+```
+
+```python
+# Python 등가 — feature gate에 따라 빌드별로 다른 에이전트 리스트
+def get_built_in_agents() -> list[AgentDefinition]:
+    # … env/feature 게이트 …
+
+    agents = [
+        GENERAL_PURPOSE_AGENT,       # 만능 — 항상
+        STATUSLINE_SETUP_AGENT,      # 설정 도우미 — 항상
+    ]
+
+    if are_explore_plan_agents_enabled():  # tengu_amber_stoat (default True)
+        agents.extend([EXPLORE_AGENT, PLAN_AGENT])
+
+    if is_non_sdk_entrypoint:  # 비-SDK 진입점만
+        agents.append(CLAUDE_CODE_GUIDE_AGENT)
+
+    if feature("VERIFICATION_AGENT"):  # ant-only (사실상)
+        agents.append(VERIFICATION_AGENT)
+
+    return agents
 ```
 
 즉 **외부 CLI 표준 빌드는 5개** (`general-purpose`, `statusline-setup`, `Explore`, `Plan`, `claude-code-guide`). `verification` 은 두 게이트가 모두 켜져야 들어오기 때문에 사실상 **ant-only**.
@@ -173,6 +213,22 @@ export const EXPLORE_AGENT: BuiltInAgentDefinition = {
 }
 ```
 
+```python
+# Python 등가 — Explore 에이전트 정의
+EXPLORE_AGENT = AgentDefinition(
+    agent_type="Explore",
+    disallowed_tools=[
+        AGENT_TOOL_NAME,           # 자식이 또 자식을 부르는 거 막음
+        EXIT_PLAN_MODE_TOOL_NAME,
+        FILE_EDIT_TOOL_NAME,       # 진짜 차단
+        FILE_WRITE_TOOL_NAME,
+        NOTEBOOK_EDIT_TOOL_NAME,
+    ],
+    model="inherit" if os.environ.get("USER_TYPE") == "ant" else "haiku",
+    omit_claude_md=True,
+)
+```
+
 **`disallowedTools` 는 프롬프트 방어가 아니라 진짜 차단**. `availableTools` 어셈블 단계에서 이 도구들이 애초에 모델한테 안 보인다. 모델이 유혹받을 일조차 없다. 시스템 프롬프트의 강한 어조는 이중 방어 — 모델이 어떻게든 시도해도 (Bash로 redirect 같은 것) 거기서도 막힐 수 있게.
 
 > ⚙️ **`verification` 은 3중 방어** (`verificationAgent.ts:139-151`). `disallowedTools` (진짜 차단) + 시스템 프롬프트 (이중 방어) + **별도의 `criticalSystemReminder_EXPERIMENTAL` 필드** (삼중 방어). 그 reminder verbatim: **"CRITICAL: This is a VERIFICATION-ONLY task. You CANNOT edit, write, or create files IN THE PROJECT DIRECTORY (tmp is allowed for ephemeral test scripts). You MUST end with VERDICT: PASS, VERDICT: FAIL, or VERDICT: PARTIAL."** — 역할과 출력 형식을 동시에 못박는다. 단일 system reminder 가 별도의 필드로 분리된 사실은 — 일반 시스템 프롬프트와 다른 우선순위로 주입할 수 있게 디자인된 것.
@@ -191,6 +247,16 @@ const shouldOmitClaudeMd =
   getFeatureValue_CACHED_MAY_BE_STALE('tengu_slim_subagent_claudemd', true)
 ```
 
+```python
+# Python 등가 — 읽기 전용 에이전트는 CLAUDE.md 생략 (주당 5-15 Gtok 절약)
+should_omit_claude_md = (
+    agent_definition.omit_claude_md
+    and not (override and override.get("user_context"))
+    and get_feature_value_cached_may_be_stale("tengu_slim_subagent_claudemd", True)
+)
+# kill-switch가 같이 박혀 있다 — 언제든 fallback 가능
+```
+
 **주당 5-15 Giga-token 절약**. Explore 에이전트가 주당 3,400만 번 띄워진다는 사실이 코멘트에 들어 있다. 한 번에 CLAUDE.md(보통 2-5KB)를 생략하는 것만으로 — **Gtok 단위**의 토큰이 떨어진다. **그런데 kill-switch가 같이 박혀 있다** — `tengu_slim_subagent_claudemd` GrowthBook 게이트가 **기본 true** 지만, **언제든 flip 해서 fallback 할 수 있게** 무장. 5-15 Gtok/week 절약은 기본값에 의존. 프로덕션이 언제든 되돌릴 수 있게 디자인된 모범 사례.
 
 같은 정신이 **gitStatus**에도 적용된다.
@@ -207,6 +273,19 @@ const resolvedSystemContext =
   agentDefinition.agentType === 'Plan'
     ? systemContextNoGit
     : baseSystemContext
+```
+
+```python
+# Python 등가 — Explore/Plan은 40KB gitStatus도 생략 (주당 1-3 Gtok 절약)
+system_context_no_git = {
+    k: v for k, v in base_system_context.items() if k != "git_status"
+}
+resolved_system_context = (
+    system_context_no_git
+    if agent_definition.agent_type in ("Explore", "Plan")
+    else base_system_context
+)
+# CLAUDE.md drop은 플래그 기반, gitStatus는 타입 화이트리스트 — 다른 게이트
 ```
 
 40KB의 `gitStatus` 가 — 읽기 전용 에이전트한테는 죽은 데이터. 필요하면 자기가 `git status` 부르면 된다. **주당 1-3 Gtok 추가 절약**. **단, 이건 `omitClaudeMd: true` 모든 에이전트가 아니라 명시적 화이트리스트** — `agentType === 'Explore' || agentType === 'Plan'` 두 에이전트에만 적용. CLAUDE.md 드롭은 더 일반적인 플래그 기반, gitStatus 드롭은 타입 화이트리스트 — 서로 다른 게이트 메커니즘이 우연이 아니라 안전 장치.

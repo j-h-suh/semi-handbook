@@ -97,6 +97,36 @@ export async function findAvailableIDE(): Promise<DetectedIDEInfo | null> {
 }
 ```
 
+```python
+# Python 등가 — module-level abort + 30초 폴링 (1초 간격)
+import asyncio
+import time
+
+_current_ide_search: asyncio.Event | None = None   # module-level
+
+async def find_available_ide() -> dict | None:
+    global _current_ide_search
+    # 재호출 시 이전 폴링 abort — 동시에 두 폴링 안 돔
+    if _current_ide_search is not None:
+        _current_ide_search.set()
+    _current_ide_search = asyncio.Event()
+    abort = _current_ide_search
+
+    # cleanup은 폴링 진입 전 한 번 — 폴링 도중엔 다시 안 부름
+    await cleanup_stale_ide_lockfiles()
+
+    start_time = time.monotonic()
+    while time.monotonic() - start_time < 30 and not abort.is_set():
+        if get_is_scroll_draining():
+            await asyncio.sleep(1)  # 스크롤 드레인 중엔 양보
+            continue
+        ides = await detect_ides(use_cache=False)
+        if len(ides) == 1:  # 정확히 하나
+            return ides[0]
+        await asyncio.sleep(1)
+    return None
+```
+
 30초동안 1초 간격으로 폴링. 왜 30초? — 확장이 느리게 시작할 수도 있고, 사용자가 `claude` 를 먼저 띄우고 나중에 VS Code를 열 수도 있다. 그래서 여유를 둔다. 30초 뒤에도 못 찾으면 포기.
 
 **`ides.length === 1` 조건이 엄격하다**. 정확히 하나여야 매칭. 여러 개면 사용자가 `/ide` 로 직접 선택. 잘못 매칭하면 — **다른 IDE의 컨텍스트**로 넘어간다 (예: 두 개의 VS Code 윈도우가 같은 프로젝트를 열어 놓은 경우).
@@ -138,6 +168,19 @@ isValid = lockfileInfo.workspaceFolders.some(idePath => {
 })
 ```
 
+```python
+# Python 등가 — workspace 매칭 (NFC 정규화 필수)
+import os
+import unicodedata
+from pathlib import Path
+
+is_valid = any(
+    cwd == (resolved := unicodedata.normalize("NFC", str(Path(local_path).resolve())))
+    or cwd.startswith(resolved + os.sep)
+    for local_path in lockfile_info["workspace_folders"]
+)
+```
+
 현재 `cwd` 가 IDE의 `workspaceFolders` 중 하나 안에 있는지. 이게 기본 매칭. 그런데 **`.normalize('NFC')` 가 결정적**이다.
 
 **매크로 OS 사고** — 코멘트가 설명한다:
@@ -147,6 +190,14 @@ isValid = lockfileInfo.workspaceFolders.some(idePath => {
 // VS Code report NFC paths (composed Unicode). Without normalization,
 // paths containing accented/CJK characters fail to match.
 const cwd = getOriginalCwd().normalize('NFC')
+```
+
+```python
+# Python 등가 — macOS NFD ↔ IDE NFC 정규화
+import unicodedata
+
+cwd = unicodedata.normalize("NFC", str(get_original_cwd()))
+# 한 줄로 한글/중국어/일본어/아랍어 프로젝트의 IDE 매칭이 살아난다
 ```
 
 macOS 파일시스템(HFS+)은 유니코드를 분해 형식(NFD)으로 저장. "김"은 ㄱ + ㅣ + ㅁ 세 개의 코드포인트. VS Code는 결합 형식(NFC)로 경로를 보고한다 — "김" 한 개의 코드포인트. **같은 한글이지만 바이트가 다르다**. 정규화 없으면 한글/중국어/일본어/아랍어 프로젝트에서 IDE 매칭이 영원히 실패. 한 줄 `.normalize('NFC')` 가 **전 세계 비영어권 사용자의 IDE 통합을 살렸다**.
@@ -168,6 +219,17 @@ if (needsAncestryCheck) {
     }
   }
 }
+```
+
+```python
+# Python 등가 — 조상 PID 체인 검증 (지원 터미널 + 비-WSL 한정)
+needs_ancestry_check = get_platform() != "wsl" and is_supported_terminal()
+# ... workspace 매칭 통과 후 ...
+if needs_ancestry_check:
+    if os.getppid() != lockfile_info["pid"]:
+        ancestors = await get_ancestors()
+        if lockfile_info["pid"] not in ancestors:
+            continue  # 내 조상이 아닌 IDE — skip
 ```
 
 `getAncestors()` 는 `ps` 를 최대 10번 반복해서 부모의 부모의 부모의… PID들을 수집. Claude Code 터미널의 조상 체인 안에 **IDE의 PID가 있어야 내 IDE**. 없으면 — 다른 IDE 윈도우의 로크파일이다. 무시. **WSL 에서는 PID 조상 체크 자체를 안 함** — WSL 안의 `ps` 는 Windows 측 IDE 프로세스를 못 보고 PPID 도 **커널 boundary** 를 못 건넌다.
@@ -208,6 +270,37 @@ setDynamicMcpConfig(prev => {
 })
 ```
 
+```python
+# Python 등가 — IDE를 MCP 서버 설정으로 변환
+auto_connect_enabled = (
+    global_config.auto_connect_ide
+    or auto_connect_ide_flag
+    or is_supported_terminal()
+    or os.environ.get("CLAUDE_CODE_SSE_PORT")  # tmux/screen 우회
+    or ide_to_install_extension
+    or is_env_truthy(os.environ.get("CLAUDE_CODE_AUTO_CONNECT_IDE"))
+) and not is_env_defined_falsy(os.environ.get("CLAUDE_CODE_AUTO_CONNECT_IDE"))
+if not auto_connect_enabled:
+    return
+
+def update(prev: dict | None) -> dict:
+    if prev and prev.get("ide"):
+        return prev  # 이미 있으면 덮어쓰지 않음 (사용자 수동 선택 보호)
+    return {
+        **(prev or {}),
+        "ide": {
+            "type": "ws-ide" if ide.url.startswith("ws:") else "sse-ide",  # 7.2!
+            "url": ide.url,
+            "ide_name": ide.name,
+            "auth_token": ide.auth_token,
+            "ide_running_in_windows": ide.ide_running_in_windows,
+            "scope": "dynamic",
+        },
+    }
+
+set_dynamic_mcp_config(update)
+```
+
 **이게 전부다**. 발견된 IDE를 **MCP 서버 설정으로 변환**. `type: 'sse-ide'` 또는 `'ws-ide'` — 7.2에서 본 8가지 전송 방식 중 두 개. 그 다음부터는 **7.2의 MCP 클라이언트 코드가 알아서 한다**.
 
 숨은 디테일 도 흥미롭다. `CLAUDE_CODE_SSE_PORT` 환경 변수 분기는 **tmux/screen 우회용** — 터미널 멀티플렉서가 `TERM_PROGRAM` 을 덮어 써서 터미널 검출이 깨지지만 IDE 확장의 포트 환경 변수는 상속되어 살아남는다. 그리고 `prev?.ide` 가 이미 있으면 덮어쓰지 않음 — 사용자가 `/ide` 로 수동 선택한 것을 자동 발견이 침범 못 하도록.
@@ -223,6 +316,18 @@ function isIncludedMcpTool(tool: Tool): boolean {
     !tool.name.startsWith('mcp__ide__') || ALLOWED_IDE_TOOLS.includes(tool.name)
   )
 }
+```
+
+```python
+# Python 등가 — IDE 도구는 2개만 하드 화이트리스트
+ALLOWED_IDE_TOOLS = {"mcp__ide__executeCode", "mcp__ide__getDiagnostics"}
+
+def is_included_mcp_tool(tool) -> bool:
+    """IDE 확장이 수십 개를 노출해도 이 둘만 받아들인다."""
+    return (
+        not tool.name.startswith("mcp__ide__")
+        or tool.name in ALLOWED_IDE_TOOLS
+    )
 ```
 
 **IDE 도구는 2개만 하드 화이트리스트**:
