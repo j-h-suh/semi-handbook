@@ -54,6 +54,28 @@ export const BashTool = buildTool({
 })
 ```
 
+```python
+# Python 등가 — BashTool의 골격. FileRead와 다른 점: 동적 속성
+class BashInput(BaseModel):
+    command: str
+    timeout: int | None = None
+
+class BashTool(ToolBase):
+    name = "Bash"
+    input_model = BashInput
+
+    def is_read_only(self, args: dict) -> bool:
+        # ⭐ 동적 — 입력 명령에 따라 달라진다 (유일한 케이스)
+        return is_read_only_command(args["command"])
+
+    def is_concurrency_safe(self, args: dict) -> bool:
+        return self.is_read_only(args)  # 읽기면 동시 OK
+
+    async def validate_input(self, args, ctx): ...
+    async def check_permissions(self, args, ctx): ...
+    async def call(self, args, ctx): ...
+```
+
 3단계 패턴은 그대로다. 차이는 — 각 단계 안의 코드가 비교할 수 없이 복잡하다. 그리고 새로 등장한 게 하나 있다: **`preparePermissionMatcher`**. 이게 셸 인젝션 방어의 중심이다.
 
 ### `preparePermissionMatcher` — 합성 명령을 쪼개는 일
@@ -83,6 +105,27 @@ async preparePermissionMatcher({ command }) {
     })
   }
 }
+```
+
+```python
+# Python 등가 — 합성 명령을 쪼개서 권한 룰과 매칭하는 로직
+import shlex
+from fnmatch import fnmatch
+
+def prepare_permission_matcher(command: str):
+    """셸 명령을 파싱해서 권한 룰 매칭 함수를 반환한다."""
+    try:
+        # 진짜 코드는 tree-sitter 파서 사용. 여기선 shlex로 단순화.
+        subcommands = parse_subcommands(command)
+    except ValueError:
+        # 파싱 실패 → fail-safe: "모든 룰에 매칭" → 사용자에게 묻기
+        return lambda pattern: True
+
+    def matcher(pattern: str) -> bool:
+        """어느 하위 명령이라도 패턴에 매칭되면 True."""
+        return any(fnmatch(cmd, pattern) for cmd in subcommands)
+
+    return matcher
 ```
 
 읽어보면 — 세 가지 결정이 깔려 있다.
@@ -137,6 +180,20 @@ isReadOnly(input) {
   const result = checkReadOnlyConstraints(input, compoundCommandHasCd)
   return result.behavior === 'allow'
 }
+```
+
+```python
+# Python 등가 — 입력에 따라 읽기/쓰기를 동적으로 판단
+WRITE_COMMANDS = {"rm", "mv", "cp", "mkdir", "chmod", "chown", "dd", "tee"}
+
+def is_read_only_command(command: str) -> bool:
+    """명령이 읽기 전용인지 판단. 하나라도 쓰기면 False."""
+    subcommands = parse_subcommands(command)
+    return all(
+        shlex.split(cmd)[0] not in WRITE_COMMANDS
+        for cmd in subcommands
+        if cmd.strip()
+    )
 ```
 
 입력을 보고 결정한다. `ls`면 `true`. `rm`이면 `false`. `ls && rm`이면 — `false` (둘 중 하나라도 쓰기면 전체가 쓰기). 

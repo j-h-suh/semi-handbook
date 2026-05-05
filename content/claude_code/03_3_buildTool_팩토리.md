@@ -31,6 +31,25 @@ export const myTool = buildTool({
 })
 ```
 
+```python
+# Python 등가 — 도구 작성자가 쓰는 코드
+from pydantic import BaseModel
+
+class MyToolInput(BaseModel):
+    x: int
+
+class MyTool(ToolBase):
+    name = "MyTool"
+    input_model = MyToolInput
+
+    def description(self) -> str:
+        return "Does something useful"
+
+    async def call(self, args: dict, context) -> str:
+        return f"Got {args['x']}"
+    # 나머지 42개는 ToolBase의 기본값이 채운다
+```
+
 5개만 썼다. 그런데 `myTool`을 출력해보면 — `isEnabled`, `isReadOnly`, `checkPermissions`, ... 가 다 들어 있다. 마법이다. 이 마법이 바로 `buildTool`의 일이다.
 
 ---
@@ -49,6 +68,20 @@ export function buildTool<D extends AnyToolDef>(def: D): BuiltTool<D> {
     ...def,
   } as BuiltTool<D>
 }
+```
+
+```python
+# Python 등가 — dict 병합으로 같은 일을 한다
+TOOL_DEFAULTS = {
+    "is_enabled": lambda: True,
+    "is_read_only": lambda: False,        # fail-closed
+    "is_concurrency_safe": lambda: False,  # fail-closed
+    "is_destructive": lambda: False,
+}
+
+def build_tool(user_def: dict) -> dict:
+    return {**TOOL_DEFAULTS, "user_facing_name": user_def["name"], **user_def}
+    # Python 3.9+: TOOL_DEFAULTS | {"user_facing_name": ...} | user_def
 ```
 
 진짜로 **한 줄짜리 spread**다. JavaScript의 `...` 연산자로 두 객체를 합친다. Python의 `{**dict1, **dict2}`와 같다.
@@ -78,6 +111,20 @@ const TOOL_DEFAULTS = {
   toAutoClassifierInput: (_input?: unknown) => '',
   userFacingName: (_input?: unknown) => '',
 }
+```
+
+```python
+# Python 등가 — ToolBase 클래스의 기본 메서드들
+class ToolBase(ABC):
+    """47개 중 7개는 기본값을 가진다. 나머지는 도구마다 달라야 한다."""
+
+    def is_enabled(self) -> bool: return True
+    def is_concurrency_safe(self) -> bool: return False   # fail-closed
+    def is_read_only(self) -> bool: return False          # fail-closed
+    def is_destructive(self) -> bool: return False
+    async def check_permissions(self, args): return "allow"
+    def to_auto_classifier_input(self, args) -> str: return ""
+    def user_facing_name(self) -> str: return self.name
 ```
 
 7개. 47개 중에 7개만 기본값을 가진다는 게 이상해 보일 수 있는데, 나머지 40개는 진짜로 도구마다 달라야 하는 것들이다. `name`, `description`, `inputSchema`, `call` 같은 핵심 5개는 기본값을 줄 수가 없다 — 도구의 정체성 자체니까. 그리고 렌더링 메서드 15개는 별도의 다른 시스템이 더 똑똑한 기본값을 가지고 있다 (Part 5에서 본다).

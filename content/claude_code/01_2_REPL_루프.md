@@ -76,6 +76,39 @@ export function REPL({
 }
 ```
 
+```python
+# Python 등가 — Textual로 같은 구조를 표현하면
+from textual.app import App, ComposeResult
+from textual.widgets import Static, Input, Footer
+from textual.reactive import reactive
+from textual.containers import VerticalScroll
+
+
+class REPL(App):
+    """Claude Code의 REPL.tsx에 대응하는 Textual 앱."""
+
+    # 지역 UI 상태 — React의 useState에 해당
+    messages: reactive[list[str]] = reactive(list)
+    stream_mode: reactive[str] = reactive("idle")
+
+    # 글로벌 세션 상태 — React의 useAppState에 해당
+    # Textual에서는 App 레벨 속성 또는 별도 store로 관리
+    tool_permission_context: dict = {}
+    mcp_connections: list = []
+
+    def compose(self) -> ComposeResult:
+        """React의 return JSX에 해당 — UI 트리를 선언한다."""
+        yield VerticalScroll(Static(id="messages"))  # 스크롤 가능한 메시지 영역
+        yield Input(placeholder="> ")                # 하단 입력창
+        yield Footer()                               # 키바인딩 안내
+
+    async def on_input_submitted(self, event: Input.Submitted) -> None:
+        """React의 handleSubmit에 해당."""
+        self.messages = [*self.messages, f"User: {event.value}"]
+        # LLM API 호출 시작 → 스트리밍 응답 처리
+        await self.query_engine.submit(event.value)
+```
+
 처음 보면 "잠깐, 이거 웹 페이지 만드는 코드 아니야?" 싶다. `<Box>`, `<Text>`, `useState`, `useEffect` — 다 React 문법 그대로다. 그런데 화면에 뜨는 건 브라우저의 DOM이 아니라 **터미널의 박스와 글자**다.
 
 > 💡 **두 가지 디테일을 미리 짚어둔다:**

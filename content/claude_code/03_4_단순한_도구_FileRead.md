@@ -50,6 +50,28 @@ export const FileReadTool = buildTool({
 })
 ```
 
+```python
+# Python 등가 — FileRead 도구의 전체 골격
+class ReadInput(BaseModel):
+    file_path: str
+    offset: int | None = None
+    limit: int | None = None
+
+class FileReadTool(ToolBase):
+    name = "Read"
+    input_model = ReadInput
+
+    def is_concurrency_safe(self) -> bool: return True  # 기본값 override
+    def is_read_only(self) -> bool: return True         # 기본값 override
+
+    def description(self) -> str:
+        return "Read a file from disk"
+
+    async def validate_input(self, args, ctx) -> tuple[bool, str]: ...   # 1단계
+    async def check_permissions(self, args, ctx) -> str: ...             # 2단계
+    async def call(self, args, ctx) -> str: ...                          # 3단계
+```
+
 3.3에서 본 `buildTool`이 여기서 일한다. 도구 작성자가 명시한 메서드는 그대로 두고, 안 쓴 메서드는 기본값으로 채운다.
 
 여기서 눈에 띄는 덮어쓰기 두 줄:
@@ -92,6 +114,32 @@ async validateInput({ file_path, pages }, ctx) {
 }
 ```
 
+```python
+# Python 등가 — validateInput: 디스크를 만지지 않는 순수 문자열 검증
+async def validate_input(self, args: dict, ctx) -> tuple[bool, str]:
+    file_path = args["file_path"]
+
+    # (1) 경로 정규화 (~ 확장 등) — 문자열 처리만
+    full_path = Path(file_path).expanduser().resolve()
+
+    # (2) deny 룰 매칭 — 문자열 패턴 비교만
+    if ctx.permissions.is_denied(str(full_path)):
+        return False, "denied by permission settings"
+
+    # (3) 바이너리 확장자 체크 — 확장자 문자열만 봄
+    binary_exts = {".exe", ".bin", ".so", ".dll", ".pyc"}
+    if full_path.suffix in binary_exts:
+        return False, "cannot read binary files"
+
+    # (4) 차단 디바이스 파일
+    blocked = {"/dev/random", "/dev/urandom", "/dev/zero"}
+    if str(full_path) in blocked:
+        return False, "device file"
+
+    return True, ""
+    # 핵심: fs.stat()도, open()도 안 했다. 보안상 I/O 금지.
+```
+
 5가지 검사. **공통점은 — 다섯 개 다 디스크를 만지지 않는다.** 문자열 검사뿐이다. `parsePDFPageRange`도 문자열 파싱, `expandPath`도 문자열 처리, `hasBinaryExtension`도 확장자 문자열만 본다.
 
 왜 이렇게까지 철저하게 I/O를 피하는가?
@@ -128,6 +176,14 @@ async checkPermissions(input, context): Promise<PermissionDecision> {
 }
 ```
 
+```python
+# Python 등가 — 권한 시스템에 위임만 한다
+async def check_permissions(self, args: dict, ctx) -> str:
+    return ctx.permissions.check_read(args["file_path"])
+    # 진짜 판단은 permissions 모듈이 한다.
+    # 도구는 "나는 read 권한이 필요하다"만 선언.
+```
+
 짧다. 진짜 권한 로직은 `checkReadPermissionForTool`에 있다 (`utils/permissions/filesystem.ts`, Part 6에서 본다). 여기서는 그냥 위임한다. 도구는 "내가 어떤 종류의 권한을 원하는가"만 선언하고 (이 경우 **read**), 결정은 권한 시스템이 한다. 6장에서 본격적으로 다룬다.
 
 이 위임의 의미는 — **권한 정책이 도구별로 흩어지지 않는다**. `Read`, `Glob`, `Grep`, `LSP` 같은 모든 읽기 도구가 같은 함수 한 곳을 호출한다. 정책을 바꾸려면 한 곳만 고치면 된다.
@@ -146,6 +202,19 @@ async call({ file_path, offset, limit, pages }, context) {
   // 진짜 fs.readFile()
   // ...
 }
+```
+
+```python
+# Python 등가 — 드디어 디스크를 만진다 (권한 통과 후에만 도달)
+async def call(self, args: dict, ctx) -> str:
+    path = Path(args["file_path"]).expanduser().resolve()
+    offset = args.get("offset", 0)
+    limit = args.get("limit", 2000)
+
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    sliced = lines[offset:offset + limit]
+    return "\n".join(f"{i + offset + 1}\t{line}" for i, line in enumerate(sliced))
 ```
 
 여기는 복잡하다. 약 690줄 된다 (line 496에서 시작해서 파일 끝 1184까지). 텍스트 디코딩, 이미지 base64, PDF 페이지 추출, 토큰 예산, 중복 읽기 dedup. 근데 이 복잡함은 **Read의 본질이 다양한 파일 타입을 다루는 것**이라서 어쩔 수 없다. **본질적인 복잡성**과 **구조의 단순함**은 다르다. 3단계 라이프사이클이 단순한 거고, 각 단계 내부는 그 도구가 하는 일만큼 복잡할 수 있다.
