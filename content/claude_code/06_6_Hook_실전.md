@@ -92,6 +92,46 @@ export function getAllHooks(appState: AppState): IndividualHookConfig[] {
 }
 ```
 
+```python
+# Python 등가 — 여러 설정 파일에서 Hook을 수집
+import json
+from pathlib import Path
+from dataclasses import dataclass
+
+@dataclass
+class HookConfig:
+    event: str            # "PreToolUse", "PostToolUse", ...
+    command: list[str]    # 실행할 명령
+    matcher: str | None   # 도구 이름 매칭 패턴 (None이면 전체)
+    source: str           # 어디서 온 설정인지
+
+def get_all_hooks(settings_files: list[Path]) -> list[HookConfig]:
+    """여러 설정 파일에서 Hook을 수집한다."""
+    hooks = []
+    seen_files: set[str] = set()  # 같은 파일 두 번 안 읽기
+
+    for file in settings_files:
+        resolved = str(file.resolve())
+        if resolved in seen_files:
+            continue
+        seen_files.add(resolved)
+
+        if not file.exists():
+            continue
+        settings = json.loads(file.read_text(encoding="utf-8"))
+
+        for event, matchers in settings.get("hooks", {}).items():
+            for m in matchers:
+                for cmd in m.get("hooks", []):
+                    hooks.append(HookConfig(
+                        event=event,
+                        command=cmd["command"],
+                        matcher=m.get("matcher"),
+                        source=str(file),
+                    ))
+    return hooks
+```
+
 여기서 눈에 띄는 것 세 가지.
 
 **첫째, `seenFiles` 중복 방지.** 홈 디렉토리에서 Claude Code를 실행하면 `userSettings`와 `projectSettings`가 같은 파일(`~/.claude/settings.json`)을 가리킨다. 이걸 두 번 읽으면 같은 Hook이 두 번 등록된다. `resolve(filePath)`로 물리 경로를 비교해서 방지. 6.4의 권한 룰 수집에서도 같은 패턴이 쓰인다.

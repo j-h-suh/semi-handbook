@@ -54,6 +54,22 @@ export const getUserContext = memoize(
 )
 ```
 
+```python
+# Python 등가 — CLAUDE.md를 읽어서 키-값 dict로 돌려주기
+from pathlib import Path
+from datetime import date
+
+async def get_user_context(cwd: Path) -> dict[str, str]:
+    """CLAUDE.md + 현재 날짜를 사용자 컨텍스트로 조합한다."""
+    context = {"currentDate": f"Today's date is {date.today().isoformat()}."}
+
+    claude_md = cwd / "CLAUDE.md"
+    if claude_md.exists():
+        context["claudeMd"] = claude_md.read_text(encoding="utf-8")
+
+    return context
+```
+
 "사용자 컨텍스트"라는 이름이다. 시스템 컨텍스트가 아니다. 이 이름이 모든 것을 말해준다. CLAUDE.md는 사용자 쪽 정보로 분류된다.
 
 함수가 돌려주는 건 단순한 **키-값 dict**다 — `{ claudeMd: "...전체 내용...", currentDate: "Today's date is 2026-04-07." }`. 누가 이 dict를 받아서 **진짜로 LLM에 보낼지**를 추적해보자.
@@ -88,6 +104,26 @@ ${Object.entries(context)
     ...messages,
   ]
 }
+```
+
+```python
+# Python 등가 — CLAUDE.md 내용을 user 메시지로 주입
+def prepend_user_context(messages: list[dict], context: dict[str, str]) -> list[dict]:
+    """컨텍스트를 <system-reminder> 태그로 감싸서 첫 user 메시지로 삽입."""
+    if not context:
+        return messages
+
+    sections = "\n".join(f"# {key}\n{value}" for key, value in context.items())
+    reminder = f"""<system-reminder>
+As you answer the user's questions, you can use the following context:
+{sections}
+
+IMPORTANT: this context may or may not be relevant to your tasks.
+</system-reminder>"""
+
+    meta_message = {"role": "user", "content": reminder, "is_meta": True}
+    return [meta_message, *messages]
+    # ⭐ system role이 아니라 user role로 들어간다!
 ```
 
 세 줄에 걸쳐 충격이 있다.

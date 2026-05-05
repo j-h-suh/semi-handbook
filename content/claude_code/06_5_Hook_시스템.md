@@ -82,6 +82,41 @@ export async function* executePreToolHooks<ToolInput>(
 }
 ```
 
+```python
+# Python 등가 — PreToolUse Hook 실행
+import subprocess, json
+from typing import AsyncIterator
+
+async def execute_pre_tool_hooks(
+    tool_name: str,
+    tool_input: dict,
+    hooks: list[dict],
+) -> AsyncIterator[dict]:
+    """도구 실행 직전에 등록된 Hook 스크립트를 실행한다."""
+    # 성능 가드: Hook 설정 없으면 즉시 리턴
+    matching = [h for h in hooks if matches(h.get("matcher"), tool_name)]
+    if not matching:
+        return
+
+    # stdin으로 보낼 JSON
+    hook_input = {
+        "hook_event_name": "PreToolUse",
+        "tool_name": tool_name,
+        "tool_input": tool_input,
+    }
+
+    for hook in matching:
+        result = subprocess.run(
+            hook["command"],
+            input=json.dumps(hook_input),
+            capture_output=True, text=True, timeout=10,
+        )
+        yield {
+            "exit_code": result.returncode,  # 0=통과, 2=차단
+            "stdout": result.stdout,
+        }
+```
+
 눈에 띄는 것 세 가지.
 
 **첫째, async generator다.** `async function*` — `yield*`로 결과를 흘려보낸다. 2.2에서 본 비동기 제너레이터 파이프라인과 같은 패턴이다. Hook 결과가 도구 실행 판단에 실시간으로 반영된다.

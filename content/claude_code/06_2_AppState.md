@@ -48,6 +48,32 @@ export type AppState = DeepImmutable<{
 }
 ```
 
+```python
+# Python 등가 — AppState를 dataclass로 표현하면
+from dataclasses import dataclass, field
+
+@dataclass
+class AppState:
+    """전체 세션 상태 — 약 85개 필드를 5개 카테고리로."""
+    # 1️⃣ 설정/모델
+    settings: dict = field(default_factory=dict)
+    verbose: bool = False
+    main_loop_model: str = "claude-opus-4-6"
+
+    # 2️⃣ 도구/플러그인
+    mcp_tools: list = field(default_factory=list)
+    plugins: dict = field(default_factory=dict)
+
+    # 3️⃣ 권한/안전
+    tool_permission_context: dict = field(default_factory=dict)
+
+    # 4️⃣ 실행 상태
+    tasks: dict = field(default_factory=dict)
+
+    # 5️⃣ UI 상태 (Textual에서는 reactive로 처리)
+    # ...
+```
+
 **약 85개** top-level 필드. 다 외울 필요 없다. **5개 카테고리**로 묶으면 머릿속에 들어온다.
 
 ```
