@@ -214,6 +214,27 @@ export function getDefaultAppState(): AppState {
 }
 ```
 
+```python
+# Python 등가 — 시작 모양: 거의 모든 게 빈 값
+def get_default_app_state() -> AppState:
+    initial_mode = (
+        "plan"
+        if teammate_utils.is_teammate() and teammate_utils.is_plan_mode_required()
+        else "default"
+    )
+    return AppState(
+        settings=get_initial_settings(),  # settings.json 읽음
+        tasks={},
+        agent_name_registry={},
+        verbose=False,
+        main_loop_model=None,
+        tool_permission_context=ToolPermissionContext(mode=initial_mode),
+        mcp=MCPState(),
+        plugins=PluginState(),
+        # ... 약 60개 더 다 빈 값 — 부트스트랩이 비동기로 채운다
+    )
+```
+
 거의 모든 게 빈 값. 시작 시점엔 — 아무것도 없다. 부트스트랩(1.1)이 진행되면서 하나씩 채워진다. 사용자가 첫 명령을 칠 때쯤이면 — 100개 필드가 대부분 채워져 있다. 
 
 이 점진적 채움이 1장에서 본 **부트스트랩의 30ms**가 가능한 이유 중 하나다. **시작 시점엔 빈 객체 하나**, 그 위에 다른 시스템이 비동기로 자기 부분을 채운다. 어느 시스템이 늦어도 — 다른 시스템의 시작을 막지 않는다. 빈 값으로 기다린다.

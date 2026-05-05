@@ -62,6 +62,33 @@ export async function findAvailablePort(): Promise<number> {
 }
 ```
 
+```python
+# Python 등가 — 랜덤 임시 포트 잡기 (포트 fishing 방지)
+import random
+import socket
+import sys
+
+# Windows의 49152-65535는 OS 예약 — 충돌 회피
+REDIRECT_PORT_RANGE = (
+    (39152, 49151) if sys.platform == "win32"
+    else (49152, 65535)
+)
+REDIRECT_PORT_FALLBACK = 3118
+
+def find_available_port() -> int:
+    """다른 프로세스의 fishing 서버가 인증 코드 가로채는 걸 막는다."""
+    min_port, max_port = REDIRECT_PORT_RANGE
+    for _ in range(100):
+        port = random.randint(min_port, max_port)
+        with socket.socket() as test_socket:
+            try:
+                test_socket.bind(("127.0.0.1", port))
+                return port
+            except OSError:
+                continue
+    return REDIRECT_PORT_FALLBACK  # 모든 포트가 막혔을 때 마지막 수단
+```
+
 세 가지 디테일이 우연이 아니다.
 
 1. **랜덤 포트 선택**. 고정 포트가 아니라 매번 다른 포트. 이유: 다른 프로세스가 같은 포트에 **fishing 서버**를 띄워서 인증 코드를 가로채는 걸 막기 위해. 49152-65535는 OS가 정한 임시 포트 범위.
@@ -86,6 +113,23 @@ export function getSecureStorage(): SecureStorage {
   // TODO: add libsecret support for Linux
   return plainTextStorage
 }
+```
+
+```python
+# Python 등가 — 플랫폼별 토큰 저장소 분기
+import platform
+from pathlib import Path
+
+def get_secure_storage():
+    """OS에 따라 적절한 토큰 저장소를 반환한다."""
+    if platform.system() == "Darwin":
+        try:
+            import keyring  # macOS Keychain 접근
+            return KeyringStorage()
+        except ImportError:
+            pass
+    # Linux/Windows 또는 keyring 없음 → 평문 파일 fallback
+    return PlainTextStorage(Path.home() / ".claude" / "credentials.json")
 ```
 
 세 가지 구현이 같은 인터페이스(`SecureStorage`)를 만족한다.
@@ -156,6 +200,48 @@ export class ClaudeAuthProvider implements OAuthClientProvider {
     storage.update(updatedData)  // ← 반환값 버림 (warning capture 안 됨, 위 단락 참고)
   }
 }
+```
+
+```python
+# Python 등가 — MCP SDK ↔ secure storage 어댑터
+import secrets
+import time
+
+class ClaudeAuthProvider:
+    """SDK가 묻고("토큰 어디서?") 우리가 답한다 — 어댑터 패턴."""
+
+    def __init__(self, server_name: str, server_config: dict) -> None:
+        self.server_name = server_name
+        self.server_config = server_config
+        self._state: str | None = None
+
+    def state(self) -> str:
+        if self._state is None:
+            self._state = secrets.token_urlsafe(32)  # CSRF 방지
+        return self._state
+
+    def tokens(self) -> dict | None:
+        storage = get_secure_storage()
+        # (실제는 XAA silent refresh 분기, 30초 TTL 캐시 — auth.ts:1540-1700)
+        ...
+
+    def save_tokens(self, tokens: dict) -> None:
+        storage = get_secure_storage()
+        existing = storage.read() or {}
+        server_key = get_server_key(self.server_name, self.server_config)
+
+        mcp_oauth = existing.setdefault("mcp_oauth", {})
+        mcp_oauth[server_key] = {
+            **mcp_oauth.get(server_key, {}),  # 기존 필드 보존 (client_id 등)
+            "server_name": self.server_name,
+            "server_url": self.server_config["url"],
+            "access_token": tokens["access_token"],
+            "refresh_token": tokens.get("refresh_token"),
+            "expires_at": int(time.time() * 1000)
+            + tokens.get("expires_in", 3600) * 1000,
+            "scope": tokens.get("scope"),
+        }
+        storage.update(existing)  # 반환값 버림 — warning capture 안 됨
 ```
 
 이게 어댑터 패턴의 교과서적 사용이다. MCP SDK는 **OAuth 표준 흐름**을 알고, Claude Code는 플랫폼별 저장소를 알고. 둘이 직접 만날 일이 없다 — `ClaudeAuthProvider`가 통역한다.

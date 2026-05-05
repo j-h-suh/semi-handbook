@@ -155,6 +155,24 @@ export function createBaseHookInput(
 }
 ```
 
+```python
+# Python 등가 — Hook stdin JSON 공통 필드
+def create_base_hook_input(
+    permission_mode: str | None = None,
+    session_id: str | None = None,
+    agent_info: dict | None = None,
+) -> dict:
+    resolved_session_id = session_id or get_session_id()
+    return {
+        "session_id": resolved_session_id,
+        "transcript_path": get_transcript_path_for_session(resolved_session_id),
+        "cwd": get_cwd(),
+        "permission_mode": permission_mode,
+        "agent_id": agent_info.get("agent_id") if agent_info else None,
+        "agent_type": agent_info.get("agent_type") if agent_info else None,
+    }
+```
+
 이게 공통 필드다. PreToolUse에서는 여기에 `tool_name`, `tool_input`, `tool_use_id`가 추가된다. **Hook 스크립트가 `transcript_path`를 받는다**는 점이 강력하다 — 대화 전체를 읽어서 판단에 활용할 수 있다는 뜻이다.
 
 ### `getMatchingHooks` — 매칭의 핵심 로직
@@ -202,6 +220,39 @@ export async function getMatchingHooks(
 }
 ```
 
+```python
+# Python 등가 — 이벤트마다 매칭 축이 다르다
+async def get_matching_hooks(
+    app_state: AppState | None,
+    session_id: str,
+    hook_event: HookEvent,
+    hook_input: dict,
+    tools: Tools | None = None,
+) -> list[MatchedHook]:
+    hook_matchers = get_hooks_config(app_state, session_id, hook_event)
+
+    match hook_input["hook_event_name"]:
+        case "PreToolUse" | "PostToolUse" | "PostToolUseFailure" \
+             | "PermissionRequest" | "PermissionDenied":
+            match_query = hook_input["tool_name"]   # 도구 이름으로 매칭
+        case "SessionStart":
+            match_query = hook_input["source"]      # 소스로 매칭
+        case "Notification":
+            match_query = hook_input["notification_type"]
+        case "FileChanged":
+            match_query = Path(hook_input["file_path"]).name  # 파일명으로 매칭
+        case _:
+            match_query = None
+
+    return [
+        m for m in hook_matchers
+        if not match_query
+        or not m.matcher
+        or matches_pattern(match_query, m.matcher)
+    ]
+    # matcher 생략 = 글로벌 Hook (모든 발생에 반응)
+```
+
 여기서 핵심 패턴이 보인다. **`matcher`가 없으면 무조건 통과**(`!matcher.matcher`). 이게 글로벌 Hook이다 — matcher를 생략하면 해당 이벤트의 모든 발생에 반응한다.
 
 그리고 이벤트별로 `matchQuery`가 다르다. PreToolUse에서는 도구 이름, FileChanged에서는 파일명, Notification에서는 알림 타입. **이벤트마다 "무엇에 대한 것인가"의 축이 다르다.**
@@ -244,6 +295,38 @@ async function prepareIfConditionMatcher(
     return patternMatcher ? patternMatcher(parsed.ruleContent) : false
   }
 }
+```
+
+```python
+# Python 등가 — Hook의 if 조건은 6.4의 권한 룰 코드를 100% 재활용
+async def prepare_if_condition_matcher(
+    hook_input: dict,
+    tools: Tools | None,
+):
+    # 도구 관련 이벤트만 if 조건 지원
+    if hook_input["hook_event_name"] not in (
+        "PreToolUse", "PostToolUse", "PostToolUseFailure", "PermissionRequest",
+    ):
+        return None
+
+    tool_name = normalize_legacy_tool_name(hook_input["tool_name"])
+    tool = find_tool_by_name(tools, hook_input["tool_name"]) if tools else None
+    parsed = tool.input_schema.safe_parse(hook_input["tool_input"]) if tool else None
+    pattern_matcher = (
+        await tool.prepare_permission_matcher(parsed.data)
+        if parsed and parsed.success and tool and tool.prepare_permission_matcher
+        else None
+    )
+
+    def matcher(if_condition: str) -> bool:
+        rule = permission_rule_value_from_string(if_condition)  # 6.4의 함수!
+        if normalize_legacy_tool_name(rule.tool_name) != tool_name:
+            return False
+        if not rule.rule_content:
+            return True
+        return pattern_matcher(rule.rule_content) if pattern_matcher else False
+
+    return matcher
 ```
 
 **여기가 이 챕터의 보석이다.** `permissionRuleValueFromString`은 6.4에서 본 바로 그 함수다. `"Bash(git *)"` 같은 권한 룰 문법을 파싱해서 도구 이름과 패턴을 분리하는 함수. 그리고 `tool.preparePermissionMatcher`도 6.4에서 BashTool이 `git *` 와일드카드를 정규식으로 변환하던 바로 그 메서드다.
@@ -440,6 +523,32 @@ async function execCommandHook(
 }
 ```
 
+```python
+# Python 등가 — 셸 명령 실행 + stdin/stdout JSON 프로토콜
+async def exec_command_hook(
+    hook: dict,                # type='command'
+    hook_event: HookEvent,
+    hook_name: str,
+    json_input: str,           # stdin으로 파이프됨
+    signal,
+):
+    shell_type = hook.get("shell", DEFAULT_HOOK_SHELL)  # 'bash' 기본
+    is_powershell = shell_type == "powershell"
+
+    # Windows에서는 경로를 POSIX로 변환 (Git Bash 호환)
+    to_hook_path = (
+        windows_path_to_posix_path
+        if is_windows and not is_powershell
+        else lambda p: p
+    )
+
+    command = hook["command"]
+    # ${CLAUDE_PLUGIN_ROOT}, ${user_config.X} 치환
+    # 환경 변수: CLAUDE_SESSION_ID, CLAUDE_CWD, CLAUDE_PROJECT_DIR 설정
+
+    # 실행: stdin에 json_input 파이프, stdout/stderr 수집 (asyncio.create_subprocess_exec)
+```
+
 **Hook 스크립트는 stdin으로 JSON을 받고, stdout으로 JSON을 뱉는다.** 이 단순한 프로토콜이 전부다. 어떤 언어로든 구현할 수 있다 — Python, Node, Go, 심지어 `jq` 한 줄로도. Unix 철학: 텍스트 스트림이 인터페이스.
 
 ---
@@ -465,6 +574,22 @@ if (shouldSkipHookDueToTrust()) {
   )
   return
 }
+```
+
+```python
+# Python 등가 — Hook 실행 전 3단계 보안 가드
+if should_disable_all_hooks_including_managed():
+    return  # 정책으로 완전 비활성화
+
+if is_env_truthy(os.environ.get("CLAUDE_CODE_SIMPLE")):
+    return  # 단순 모드에서는 Hook 무시
+
+# SECURITY: 모든 Hook은 workspace trust 필요 (interactive mode)
+if should_skip_hook_due_to_trust():
+    log_for_debugging(
+        f"Skipping {hook_name} hook execution - workspace trust not accepted"
+    )
+    return
 ```
 
 주석이 직접 말한다: **"ALL hooks require workspace trust"**. 프로젝트를 처음 열었을 때 "이 workspace를 신뢰합니까?" 대화상자에서 수락하지 않으면 — `.claude/settings.json`에 Hook이 있어도 실행되지 않는다. **악의적인 프로젝트를 clone했을 때 Hook이 자동으로 실행되는 걸 막는 장치.**

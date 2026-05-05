@@ -175,6 +175,21 @@ const uniqueCommandHooks = Array.from(
 // prompt, agent, http에도 각각 같은 패턴...
 ```
 
+```python
+# Python 등가 — dict 키 충돌로 마지막 값만 남기는 dedup 트릭
+unique_command_hooks = list({
+    hook_dedup_key(
+        m,
+        f"{m.hook.shell or DEFAULT_HOOK_SHELL}\x00"
+        f"{m.hook.command}\x00"
+        f"{get_if_condition(m.hook)}",
+    ): m
+    for m in matched_hooks
+    if m.hook.type == "command"
+}.values())
+# settings 3곳(user/project/local)의 같은 명령은 하나로 — plugin/skill은 보존
+```
+
 **Map의 키 충돌로 마지막 값만 남기는 트릭.** 같은 command + shell + if 조건이면 하나만 남긴다.
 
 왜 이게 필요할까? `userSettings`와 `projectSettings`에 같은 Hook이 중복 정의될 수 있다. 예를 들어 팀 `.claude/settings.json`에 포맷터 Hook이 있는데, 개인 `~/.claude/settings.json`에도 같은 걸 넣었다면 — dedup 없으면 포맷터가 두 번 돈다. 코드 코멘트가 설명한다: **"Settings-file hooks share the '' prefix so the same command defined in user/project/local still collapses to one"** (`hooks.ts:1447`).
@@ -234,6 +249,48 @@ function processHookJSONOutput({ json, command, hookName, ... }): Partial<HookRe
 
   return result
 }
+```
+
+```python
+# Python 등가 — Hook stdout JSON을 권한 판단으로 변환
+def process_hook_json_output(json: dict, command: str, hook_name: str) -> dict:
+    result: dict = {}
+
+    # continue: False → 턴 전체 중단
+    if json.get("continue") is False:
+        result["prevent_continuation"] = True
+        if "stopReason" in json:
+            result["stop_reason"] = json["stopReason"]
+
+    # decision 필드 → 권한 판단으로 변환
+    match json.get("decision"):
+        case "approve":
+            result["permission_behavior"] = "allow"
+        case "block":
+            result["permission_behavior"] = "deny"
+            result["blocking_error"] = {
+                "blocking_error": json.get("reason", "Blocked by hook"),
+                "command": command,
+            }
+
+    # hookSpecificOutput.permissionDecision → 더 정밀한 제어 (PreToolUse 전용)
+    hso = json.get("hookSpecificOutput", {})
+    if hso.get("hookEventName") == "PreToolUse" and hso.get("permissionDecision"):
+        match hso["permissionDecision"]:
+            case "allow":
+                result["permission_behavior"] = "allow"
+            case "deny":
+                result["permission_behavior"] = "deny"
+                result["blocking_error"] = {"blocking_error": "...", "command": command}
+            case "ask":
+                result["permission_behavior"] = "ask"
+
+    # updatedInput → 도구 입력 수정
+    if "updatedInput" in hso:
+        result["updated_input"] = hso["updatedInput"]
+
+    return result
+    # hookSpecificOutput이 decision을 덮어씀 (나중에 처리됨)
 ```
 
 여기서 중요한 설계 선택이 보인다.

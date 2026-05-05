@@ -148,6 +148,12 @@ if (parsed.kind !== 'simple') {
 }
 ```
 
+```python
+# Python 등가 — 알아먹지 못하면 모두 매칭된다고 가정
+if parsed.kind != "simple":
+    return lambda: True  # → ask 발동, fail-safe
+```
+
 파서가 너무 복잡한 입력을 만나면? 예를 들어 50개가 넘는 하위 명령으로 쪼개지는 케이스. `bashPermissions.ts:103`에 제한이 있다.
 
 ```typescript
@@ -164,6 +170,12 @@ export const MAX_SUBCOMMANDS_FOR_SECURITY_CHECK = 50
 if (astSubcommands === null && subcommands.length > MAX_SUBCOMMANDS_FOR_SECURITY_CHECK) {
   // ... → returning ask
 }
+```
+
+```python
+# Python 등가 — 50개 넘는 하위 명령은 ask로 fall back
+if ast_subcommands is None and len(subcommands) > MAX_SUBCOMMANDS_FOR_SECURITY_CHECK:
+    return "ask"  # tree-sitter 폭주로 REPL이 100% CPU 멈추던 사고
 ```
 
 **알아먹지 못하면 묻는다**. 모든 안전 결정이 덜 위험한 쪽으로 향한다. 3.3에서 본 fail-closed 철학이 여기서 더 큰 형태로 다시 나온다.
@@ -208,6 +220,13 @@ isConcurrencySafe(input) {
 }
 ```
 
+```python
+# Python 등가 — concurrency_safe는 read_only에 위임
+def is_concurrency_safe(self, input: dict) -> bool:
+    """읽기면 동시에, 쓰기면 직렬로 — 일관성을 한 곳에서 보장."""
+    return self.is_read_only(input) if hasattr(self, "is_read_only") else False
+```
+
 **`isConcurrencySafe`가 `isReadOnly`에 위임한다.** 영리하다. 읽기 작업이면 동시에 돌려도 안전, 쓰기 작업이면 직렬로. 두 메서드가 연결되어 있다. 일관성도 한 곳에서 보장된다.
 
 ### 1단계 `validateInput`: 또 다른 사고를 막는 자리
@@ -222,6 +241,17 @@ async validateInput(input) {
   }
   return { result: true }
 }
+```
+
+```python
+# Python 등가 — blocking sleep 거부 (행동 교정)
+async def validate_input(self, input: dict) -> dict:
+    if feature("MONITOR_TOOL") and not input.get("run_in_background"):
+        sleep_pattern = detect_blocked_sleep_pattern(input["command"])
+        if sleep_pattern is not None:
+            return {"result": False, "message": f"Blocked: {sleep_pattern}. ..."}
+    return {"result": True}
+    # 2초 이상 sleep 거부 — REPL이 멈추는 사고를 막는다
 ```
 
 `sleep 5 && check`처럼 **blocking sleep**을 거른다. LLM이 "5초 기다렸다가 결과 보자" 같은 폴링을 짜면, 그 5초 동안 모든 게 멈춘다. 다른 도구도 못 돈다. 사용자도 못 친다. 그래서 **2초 이상 sleep은 거부**하고 "Monitor 도구를 쓰라"고 메시지를 돌려준다.

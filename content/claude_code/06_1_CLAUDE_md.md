@@ -213,6 +213,21 @@ const description =
 memories.push(`Contents of ${file.path}${description}:\n\n${content}`)
 ```
 
+```python
+# Python 등가 — 파일 종류별 설명 라벨링
+match file.type:
+    case "Project":
+        description = " (project instructions, checked into the codebase)"
+    case "Local":
+        description = " (user's private project instructions, not checked in)"
+    case "AutoMem":
+        description = " (user's auto-memory, persists across conversations)"
+    case _:  # 기본 = User 및 Managed
+        description = " (user's private global instructions for all projects)"
+
+memories.append(f"Contents of {file.path}{description}:\n\n{content}")
+```
+
 각 파일이 경로 + 종류 설명과 함께 들어간다. LLM이 "이건 어떤 파일인가"를 알 수 있도록.
 
 ```
