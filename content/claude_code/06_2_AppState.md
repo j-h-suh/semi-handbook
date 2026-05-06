@@ -28,6 +28,8 @@
 
 `src/state/AppStateStore.ts:89`에 진짜 타입이 있다.
 
+:::tabs
+
 ```typescript
 // (축약: 실제 ~86개 top-level 필드 중 12개만 발췌. DeepImmutable 안 ~32개 + & 뒤 ~54개)
 export type AppState = DeepImmutable<{
@@ -73,6 +75,8 @@ class AppState:
     # 5️⃣ UI 상태 (Textual에서는 reactive로 처리)
     # ...
 ```
+
+:::
 
 **약 85개** top-level 필드. 다 외울 필요 없다. **5개 카테고리**로 묶으면 머릿속에 들어온다.
 
@@ -136,6 +140,8 @@ grep "^\s*messages:" src/state/AppStateStore.ts
 세 개 다 대화 메시지가 아니다. 53줄은 speculation의 결과 타입, 352줄은 **팀원 inbox**(다른 시스템). **AppState에 사용자-LLM 대화 메시지를 담는 필드가 없다.**
 
 그러면 어디에? `REPL.tsx:1182-1183`에 답이 있다.
+
+:::tabs
 
 ```typescript
 const [messages, rawSetMessages] = useState<MessageType[]>(initialMessages ?? [])
@@ -234,6 +240,8 @@ def get_default_app_state() -> AppState:
         # ... 약 60개 더 다 빈 값 — 부트스트랩이 비동기로 채운다
     )
 ```
+
+:::
 
 거의 모든 게 빈 값. 시작 시점엔 — 아무것도 없다. 부트스트랩(1.1)이 진행되면서 하나씩 채워진다. 사용자가 첫 명령을 칠 때쯤이면 — 100개 필드가 대부분 채워져 있다. 
 
@@ -360,6 +368,3 @@ for token in stream_llm_response():
 - "Single source of truth"의 진짜 의미는 한 객체가 아니라 명확하게 책임이 분리된 곳. 변경 빈도가 극단으로 다르면 분리하는 게 옳다.
 - 다음 챕터(6.3): AppState 안의 `toolPermissionContext.mode` — **외부 권한 모드 5가지** (`acceptEdits` / `bypassPermissions` / `default` / `dontAsk` / `plan`). 내부 모드 (`auto`, `bubble`) 까지 합치면 7가지. (`types/permissions.ts:16-28`)
 
----
-
-*다음 챕터: 6.3 권한 모드 5가지 — default / acceptEdits / plan / bypassPermissions / (+ ant-only auto)*

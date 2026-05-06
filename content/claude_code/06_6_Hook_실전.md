@@ -39,6 +39,8 @@ Claude Code에서 `Bash(git push --force)`를 호출하려 한다. 다음이 일
 
 Hook이 어디에서 오는지부터 보자. `src/utils/hooks/hooksSettings.ts:92`:
 
+:::tabs
+
 ```typescript
 // src/utils/hooks/hooksSettings.ts:92 (축약)
 export function getAllHooks(appState: AppState): IndividualHookConfig[] {
@@ -132,6 +134,8 @@ def get_all_hooks(settings_files: list[Path]) -> list[HookConfig]:
     return hooks
 ```
 
+:::
+
 여기서 눈에 띄는 것 세 가지.
 
 **첫째, `seenFiles` 중복 방지.** 홈 디렉토리에서 Claude Code를 실행하면 `userSettings`와 `projectSettings`가 같은 파일(`~/.claude/settings.json`)을 가리킨다. 이걸 두 번 읽으면 같은 Hook이 두 번 등록된다. `resolve(filePath)`로 물리 경로를 비교해서 방지. 6.4의 권한 룰 수집에서도 같은 패턴이 쓰인다.
@@ -159,6 +163,8 @@ Bash 호출 시: 훅A, 훅B, 훅D가 실행된다 (matcher "Bash" + 글로벌). 
 ### 중복 제거 — 왜 필요한가
 
 `getMatchingHooks`(`hooks.ts:1735-1798`)에는 이상할 정도로 긴 dedup 로직이 있다.
+
+:::tabs
 
 ```typescript
 // src/utils/hooks.ts:1735 (축약)
@@ -190,6 +196,8 @@ unique_command_hooks = list({
 # settings 3곳(user/project/local)의 같은 명령은 하나로 — plugin/skill은 보존
 ```
 
+:::
+
 **Map의 키 충돌로 마지막 값만 남기는 트릭.** 같은 command + shell + if 조건이면 하나만 남긴다.
 
 왜 이게 필요할까? `userSettings`와 `projectSettings`에 같은 Hook이 중복 정의될 수 있다. 예를 들어 팀 `.claude/settings.json`에 포맷터 Hook이 있는데, 개인 `~/.claude/settings.json`에도 같은 걸 넣었다면 — dedup 없으면 포맷터가 두 번 돈다. 코드 코멘트가 설명한다: **"Settings-file hooks share the '' prefix so the same command defined in user/project/local still collapses to one"** (`hooks.ts:1447`).
@@ -201,6 +209,8 @@ unique_command_hooks = list({
 ### `processHookJSONOutput` — stdout를 권한 판단으로 변환
 
 Hook 실행이 끝나면 stdout JSON을 해석한다. `hooks.ts:489`:
+
+:::tabs
 
 ```typescript
 // src/utils/hooks.ts:489 (축약)
@@ -292,6 +302,8 @@ def process_hook_json_output(json: dict, command: str, hook_name: str) -> dict:
     return result
     # hookSpecificOutput이 decision을 덮어씀 (나중에 처리됨)
 ```
+
+:::
 
 여기서 중요한 설계 선택이 보인다.
 
@@ -459,6 +471,3 @@ Hook이 의도대로 안 돌 때 볼 곳들.
 - **디버깅**: `--verbose`로 매칭 로그 확인. JSON 앞에 비-JSON 출력이 있으면 파싱 실패 — Hook 스크립트는 stdout에 JSON만 출력할 것.
 - **Part 6 끝.** 컨텍스트(6.1) + 컨테이너(6.2) + 모드(6.3) + 룰(6.4) + Hook(6.5/6.6). 정적 룰에서 사용자 코드 실행까지, Claude Code의 권한 + 확장 레이어 전체를 봤다.
 
----
-
-*다음 챕터: 7.1 API 클라이언트 — Anthropic / Bedrock / Vertex 추상화*

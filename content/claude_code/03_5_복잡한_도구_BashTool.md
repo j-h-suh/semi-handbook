@@ -36,6 +36,8 @@ git push origin main    ← 원격에 푸시 (위험)
 
 `src/tools/BashTool/BashTool.tsx` 420줄에 `buildTool({...})`이 있다. 골격은 `FileRead`와 똑같다.
 
+:::tabs
+
 ```typescript
 export const BashTool = buildTool({
   name: 'Bash',
@@ -76,11 +78,15 @@ class BashTool(ToolBase):
     async def call(self, args, ctx): ...
 ```
 
+:::
+
 3단계 패턴은 그대로다. 차이는 — 각 단계 안의 코드가 비교할 수 없이 복잡하다. 그리고 새로 등장한 게 하나 있다: **`preparePermissionMatcher`**. 이게 셸 인젝션 방어의 중심이다.
 
 ### `preparePermissionMatcher` — 합성 명령을 쪼개는 일
 
 `BashTool.tsx` 445줄.
+
+:::tabs
 
 ```typescript
 async preparePermissionMatcher({ command }) {
@@ -128,6 +134,8 @@ def prepare_permission_matcher(command: str):
     return matcher
 ```
 
+:::
+
 읽어보면 — 세 가지 결정이 깔려 있다.
 
 **(1) 입력 문자열을 AST로 파싱한다.** 정규식이 아니라 진짜 셸 파서를 쓴다. `parseForSecurity`는 tree-sitter 기반인데, 추측이 아니라 같은 모듈 안의 코멘트가 직접 증명한다 (`bashPermissions.ts:97`): "Each subcommand then runs tree-sitter parse + ~20 validators". 정규식으로 셸을 파싱하면 백 가지 우회를 놓친다. `git$IFS\$9push`, `g\it push`, `$(echo git) push` 같은 변형들. 진짜 파서가 필요하다.
@@ -142,6 +150,8 @@ def prepare_permission_matcher(command: str):
 
 위 코드 452줄.
 
+:::tabs
+
 ```typescript
 if (parsed.kind !== 'simple') {
   return () => true   // 모든 룰에 매칭된다고 본다 → 권한 묻기 발동
@@ -154,7 +164,11 @@ if parsed.kind != "simple":
     return lambda: True  # → ask 발동, fail-safe
 ```
 
+:::
+
 파서가 너무 복잡한 입력을 만나면? 예를 들어 50개가 넘는 하위 명령으로 쪼개지는 케이스. `bashPermissions.ts:103`에 제한이 있다.
+
+:::tabs
 
 ```typescript
 export const MAX_SUBCOMMANDS_FOR_SECURITY_CHECK = 50
@@ -178,6 +192,8 @@ if ast_subcommands is None and len(subcommands) > MAX_SUBCOMMANDS_FOR_SECURITY_C
     return "ask"  # tree-sitter 폭주로 REPL이 100% CPU 멈추던 사고
 ```
 
+:::
+
 **알아먹지 못하면 묻는다**. 모든 안전 결정이 덜 위험한 쪽으로 향한다. 3.3에서 본 fail-closed 철학이 여기서 더 큰 형태로 다시 나온다.
 
 ### `isReadOnly`가 동적이다 — 유일한 케이스
@@ -185,6 +201,8 @@ if ast_subcommands is None and len(subcommands) > MAX_SUBCOMMANDS_FOR_SECURITY_C
 3.4에서 `FileRead.isReadOnly: () => true` 였다. 항상 `true`. 입력과 무관.
 
 `Bash`는 다르다.
+
+:::tabs
 
 ```typescript
 isReadOnly(input) {
@@ -208,11 +226,15 @@ def is_read_only_command(command: str) -> bool:
     )
 ```
 
+:::
+
 입력을 보고 결정한다. `ls`면 `true`. `rm`이면 `false`. `ls && rm`이면 — `false` (둘 중 하나라도 쓰기면 전체가 쓰기). 
 
 이게 유일한 케이스다. `Read`, `Glob`, `Grep`, `LSP` 같은 다른 도구는 고정으로 read-only다. **Bash만이 입력에 따라 자기 정체를 바꾼다**. 셸이라는 게 본질적으로 임의 코드 실행이라서 — 도구 자체가 읽기인지 쓰기인지를 미리 말할 수 없다.
 
 그리고 그 다음 줄.
+
+:::tabs
 
 ```typescript
 isConcurrencySafe(input) {
@@ -227,9 +249,13 @@ def is_concurrency_safe(self, input: dict) -> bool:
     return self.is_read_only(input) if hasattr(self, "is_read_only") else False
 ```
 
+:::
+
 **`isConcurrencySafe`가 `isReadOnly`에 위임한다.** 영리하다. 읽기 작업이면 동시에 돌려도 안전, 쓰기 작업이면 직렬로. 두 메서드가 연결되어 있다. 일관성도 한 곳에서 보장된다.
 
 ### 1단계 `validateInput`: 또 다른 사고를 막는 자리
+
+:::tabs
 
 ```typescript
 async validateInput(input) {
@@ -253,6 +279,8 @@ async def validate_input(self, input: dict) -> dict:
     return {"result": True}
     # 2초 이상 sleep 거부 — REPL이 멈추는 사고를 막는다
 ```
+
+:::
 
 `sleep 5 && check`처럼 **blocking sleep**을 거른다. LLM이 "5초 기다렸다가 결과 보자" 같은 폴링을 짜면, 그 5초 동안 모든 게 멈춘다. 다른 도구도 못 돈다. 사용자도 못 친다. 그래서 **2초 이상 sleep은 거부**하고 "Monitor 도구를 쓰라"고 메시지를 돌려준다.
 
@@ -372,6 +400,3 @@ print(matcher_broken("anything"))  # True  ← fail-safe로 권한 묻기
 - **`isReadOnly`가 동적인 유일한 도구**. `ls`면 `true`, `rm`이면 `false`. 그리고 `isConcurrencySafe`가 `isReadOnly`에 위임 — **읽기는 동시에 OK, 쓰기는 직렬**.
 - 같은 인터페이스가 친절한 입력(`Read`)과 적대적 입력(`Bash`)을 둘 다 담는다. 이게 47개 필드짜리 Tool 인터페이스가 정당화되는 이유. **Part 3 끝.**
 
----
-
-*다음 챕터: 4.1 슬래시 명령은 일반 채팅과 어떻게 다른가 — 같은 입력창, 다른 길*

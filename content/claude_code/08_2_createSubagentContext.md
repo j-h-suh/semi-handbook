@@ -35,6 +35,8 @@
 
 `utils/forkedAgent.ts:345` 에 있는 함수 한 개. 시그니처가 전체 계약이다.
 
+:::tabs
+
 ```typescript
 export function createSubagentContext(
   parentContext: ToolUseContext,
@@ -50,9 +52,13 @@ def create_subagent_context(
 ) -> ToolUseContext: ...
 ```
 
+:::
+
 부모 컨텍스트를 받고 — 자식 컨텍스트를 만든다. 둘 다 같은 `ToolUseContext` 타입. 자식이 자기가 자식인지도 모른다 — 그저 평범한 컨텍스트. 8.1의 재귀가 가능한 이유가 바로 이것. **자식 query 루프는 자기가 부모와 무엇을 공유하는지 알 필요가 없다**.
 
 핵심 원리는 한 줄로 요약된다 — **함수 docstring에 그대로** 들어 있다.
+
+:::tabs
 
 ```typescript
 /**
@@ -121,6 +127,8 @@ content_replacement_state = (
 )
 ```
 
+:::
+
 `readFileState` 가 클론 되는 게 흥미롭다. 자식은 **부모가 fork 시점까지 읽은 파일들을** 그대로 본다. 그런데 자식이 새로 읽는 파일들은 부모한테 안 흘러간다. **부모는 fork 시점의 스냅샷을 자식한테 준다, 그 후로는 분리**. `cloneFileStateCache` (`fileStateCache.ts:122-126`) 의 본문은 진짜 분리 — `createFileStateCacheWithSizeLimit(cache.max, cache.maxSize)` 로 **size limit 까지 함께 보존**하고 (자식이 부모와 **동일한 LRU policy**: 부모가 1000 슬롯이면 자식도 1000 슬롯), `cloned.load(cache.dump())` 로 **전체 dump → 새 LRUCache 로 load**. **얕은 복사가 아닌 진짜 분리**.
 
 다른 Set들은 **fresh**. 자식의 메모리 트리거, 스킬 발견 같은 건 부모와 섞이면 안 된다. 텔레메트리가 망가짐.
@@ -128,6 +136,8 @@ content_replacement_state = (
 > ⚙️ **`contentReplacementState` 는 fresh 가 아니라 clone — 왜?** 코멘트 verbatim (`forkedAgent.ts:388-403`): **"Clone by default (not fresh): cache-sharing forks process parent messages containing parent tool_use_ids. A fresh state would see them as unseen and make divergent replacement decisions → wire prefix differs → cache miss. A clone makes identical decisions → cache hit. For non-forking subagents the parent UUIDs never match — clone is a harmless no-op."** **fresh 가 아니라 clone 인 이유가 cache hit 때문**. 자식이 **부모와 동일한 replacement 결정**을 내려야 wire prefix 가 같고, 그래야 **prompt cache 가 맞는다**. 7.4 의 cache 공유 정신과 같은 뿌리 — **격리와 cache 공유가 같은 메커니즘으로 만난다**.
 
 **2. AbortController — 링크된 자식**
+
+:::tabs
 
 ```typescript
 const abortController =
@@ -147,7 +157,11 @@ else:
     abort_event = create_child_abort_event(parent_context.abort_event)
 ```
 
+:::
+
 `createChildAbortController` 는 진짜 멋지다. 새 컨트롤러를 만들지만 — **부모의 abort가 자식한테 전파**되도록 리스너를 단다.
+
+:::tabs
 
 ```typescript
 // abortController.ts:68 (축약)
@@ -202,11 +216,15 @@ def create_child_abort_event(parent: asyncio.Event) -> asyncio.Event:
     # 부모 → 자식 단방향. 자식이 멈춰도 부모는 안 멈춤
 ```
 
+:::
+
 단방향 전파다. **부모가 멈추면 자식도 멈춘다. 자식이 멈춰도 부모는 안 멈춘다**. 사용자가 Ctrl+C를 부모한테 누르면 — 모든 자식이 연쇄적으로 멈춘다. Explore 에이전트가 자기 일이 끝나서 자기를 abort해도 — 부모는 신경 안 쓴다. 그리고 abort 되면 단순한 **abort 신호**가 아니라 **`parent.signal.reason` 까지 propagate** — 왜 멈췄는지의 이유가 함께 흐른다 (사용자 Ctrl+C / 타임아웃 / 권한 거부).
 
 `WeakRef` 가 두 곳에 깔끔하게 적용됐다. **양방향**: (a) `weakChild` — 부모가 자식을 강하게 들고 있으면 자식이 GC 안 됨, (b) `weakParent` — handler closure 가 부모를 강하게 들고 있으면 부모가 자식 죽기 전에는 GC 안 됨. **양쪽 다 weak** 라서 어느 쪽이 먼저 사라져도 다른 쪽이 안 잡혀 있다. 그리고 자식이 abort 되면 **auto-cleanup** listener 가 발동해서 **부모의 listener 도 제거** — long-running 부모에 **dead handler 가 누적**되지 않게.
 
 **3. setAppState 외 5개의 mutation 콜백 — 기본은 no-op, opt-in으로 공유**
+
+:::tabs
 
 ```typescript
 // (축약: 실제는 setAppState 외에도 setInProgressToolUseIDs, setResponseLength,
@@ -227,11 +245,15 @@ set_app_state = (
 )
 ```
 
+:::
+
 자식이 부모의 React 상태를 건드릴 일이 거의 없다. 그래서 기본은 빈 함수. 하지만 **in-process teammate** 같은 인터랙티브 자식은 부모와 같은 화면을 공유한다 — 그 경우 `shareSetAppState: true` 로 명시적으로 공유.
 
 > ⚙️ **`updateAttributionState` 는 항상 공유 — 유일한 예외** (`forkedAgent.ts:432-435`). 다른 mutation 콜백 5개는 다 no-op 인데 이 하나만 **always shared**. 코멘트 verbatim: **"Attribution is scoped and functional (prev => next) — safe to share even when setAppState is stubbed. Concurrent calls compose via React's state queue."** **함수형 업데이트는 race-free** — `prev => next` 형태라서 동시 호출이 React 의 state queue 로 자연스럽게 합쳐진다. **fail-safe defaults** 의 예외 케이스 디자인 — 예외가 있으면 그 사연을 코드에 적는다는 정신.
 
 여기서 **놀라운 디테일**이 나온다.
+
+:::tabs
 
 ```typescript
 // Task registration/kill must always reach the root store, even when
@@ -249,9 +271,13 @@ set_app_state_for_tasks = (
 # setAppState가 no-op이어도 — bash 작업 추적/킬은 root만 가능
 ```
 
+:::
+
 **심지어 setAppState가 no-op이어도** — `setAppStateForTasks` 는 항상 root store에 도달해야 한다. 왜? 자식 에이전트가 백그라운드 bash 작업을 띄웠다고 하자. 자식이 끝나면 그 bash 작업의 PPID는 **init(1)** 이 된다 — 고아 프로세스. 누가 추적하고 죽이지? **root AppState**다. 그래서 어떤 경우에도 task 등록만은 root에 도달해야 한다. 안 그러면 — **PPID=1 좀비**. 이 코멘트 한 줄이 과거에 누가 디버깅 며칠 했다는 사연이다.
 
 **4. UI 콜백 — 모두 undefined**
+
+:::tabs
 
 ```typescript
 addNotification: undefined,
@@ -290,6 +316,8 @@ query_tracking = {
 }
 ```
 
+:::
+
 각 자식은 **자기만의 ID**. 그리고 깊이 카운터 — 부모의 depth + 1. 텔레메트리가 얼마나 깊이 들어갔는지 추적할 수 있다. 자식이 자식을 부르면 depth가 2, 그게 또 자식을 부르면 3 — 무한 재귀를 막는 안전장치.
 
 ### 캐시 공유 — `CacheSafeParams` 5형제
@@ -299,6 +327,8 @@ query_tracking = {
 답: **프롬프트 캐시 공유**. Anthropic API의 **prompt cache**는 접두사가 같으면 그 부분을 캐시에서 읽는다. 가격이 1/10 이하. 자식이 부모와 접두사가 같은 요청을 보내면 — 부모가 만든 캐시를 자식이 무료로 쓴다.
 
 근데 **"접두사가 같다"** 가 까다롭다. **5가지가 정확히 같아야** 캐시가 맞는다.
+
+:::tabs
 
 ```typescript
 // forkedAgent.ts:57
@@ -400,6 +430,8 @@ async def run_forked_agent(
         isolated_ctx.read_file_state.clear()
         initial_messages.clear()
 ```
+
+:::
 
 우아하다. **공유는 cache-key 정체성을 위해, 격리는 상태 안전성을 위해**. 두 목적이 한 함수에서 만난다.
 
@@ -591,6 +623,3 @@ async def run_forked_agent(
 - 함정: `maxOutputTokens` 를 바꾸면 **thinking budget**도 같이 바뀌어 캐시 키 깨짐. 컴팩션(7.4)은 캐시 공유가 목표가 아니라서 OK. 성능 fork는 절대 건드리지 말 것.
 - **두 가지 fork 패턴**: **`runAgent`** (새 에이전트, 자기 시스템 프롬프트, 캐시 안 공유 — 8.1) vs **`runForkedAgent`** (부모 대화 이어서, 캐시 공유 — 컴팩션/세션 메모리/post-turn). 8.3의 Coordinator Mode가 둘을 오케스트레이션.
 
----
-
-*다음 챕터: 8.3 Coordinator Mode — 메인이 여러 워커를 fork-join으로 조율*

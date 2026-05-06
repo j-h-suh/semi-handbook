@@ -38,6 +38,8 @@
 
 `tools/AgentTool/AgentTool.tsx` — **1,398줄짜리 Tool 정의**. 다른 도구처럼 `buildTool({...})` 로 만들어진다. 같은 인터페이스, 같은 47개 필드 (3.2). 모델이 보기에는 그냥 평범한 도구. 입력 스키마는:
 
+:::tabs
+
 ```typescript
 // (축약: 실제 inputSchema 는 baseInputSchema 위에 multi-agent params (name, team_name, mode)
 //        + isolation + cwd 를 더한 fullInputSchema. KAIROS feature 에 따라 cwd omit,
@@ -96,6 +98,8 @@ async def run_agent(**kwargs) -> AsyncGenerator[dict, None]:
     # 부모의 도구 호출 한 번 = 자식 Claude의 전체 세션
 ```
 
+:::
+
 **그렇다. `query()` 가 다시 불린다**. 2.1의 에이전트 루프가 자기 자신을 호출한다. 부모 Claude의 한 도구 호출이 **자식 Claude의 전체 세션**을 그 도구의 응답으로 만들어낸다. Tool result로 돌아오는 텍스트가 — 자식 Claude의 최종 발화.
 
 이게 왜 강력하지?
@@ -109,6 +113,8 @@ async def run_agent(**kwargs) -> AsyncGenerator[dict, None]:
 ### 5(+1)개의 내장 에이전트
 
 `builtInAgents.ts:22`. 플래그 게이트로 빌드별로 다르게 들어가는 에이전트 정의들.
+
+:::tabs
 
 ```typescript
 // (축약: CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS env var 분기 — SDK 사용자가 빈
@@ -159,6 +165,8 @@ def get_built_in_agents() -> list[AgentDefinition]:
     return agents
 ```
 
+:::
+
 즉 **외부 CLI 표준 빌드는 5개** (`general-purpose`, `statusline-setup`, `Explore`, `Plan`, `claude-code-guide`). `verification` 은 두 게이트가 모두 켜져야 들어오기 때문에 사실상 **ant-only**.
 
 각 정의가 5가지 차원에서 다르다 — 시스템 프롬프트 / 도구 / 모델 / CLAUDE.md / 권한 모드.
@@ -179,6 +187,8 @@ def get_built_in_agents() -> list[AgentDefinition]:
 ### 읽기 전용 에이전트의 컨텍스트 다이어트
 
 `built-in/exploreAgent.ts` — 일부러 모델한테 조심성을 주는 패턴이 가득.
+
+:::tabs
 
 ```typescript
 // exploreAgent.ts:26-36 (verbatim)
@@ -229,11 +239,15 @@ EXPLORE_AGENT = AgentDefinition(
 )
 ```
 
+:::
+
 **`disallowedTools` 는 프롬프트 방어가 아니라 진짜 차단**. `availableTools` 어셈블 단계에서 이 도구들이 애초에 모델한테 안 보인다. 모델이 유혹받을 일조차 없다. 시스템 프롬프트의 강한 어조는 이중 방어 — 모델이 어떻게든 시도해도 (Bash로 redirect 같은 것) 거기서도 막힐 수 있게.
 
 > ⚙️ **`verification` 은 3중 방어** (`verificationAgent.ts:139-151`). `disallowedTools` (진짜 차단) + 시스템 프롬프트 (이중 방어) + **별도의 `criticalSystemReminder_EXPERIMENTAL` 필드** (삼중 방어). 그 reminder verbatim: **"CRITICAL: This is a VERIFICATION-ONLY task. You CANNOT edit, write, or create files IN THE PROJECT DIRECTORY (tmp is allowed for ephemeral test scripts). You MUST end with VERDICT: PASS, VERDICT: FAIL, or VERDICT: PARTIAL."** — 역할과 출력 형식을 동시에 못박는다. 단일 system reminder 가 별도의 필드로 분리된 사실은 — 일반 시스템 프롬프트와 다른 우선순위로 주입할 수 있게 디자인된 것.
 
 가장 깊은 디테일은 `runAgent.ts:385-393` 의 코멘트:
+
+:::tabs
 
 ```typescript
 // Read-only agents (Explore, Plan) don't act on commit/PR/lint rules from
@@ -257,9 +271,13 @@ should_omit_claude_md = (
 # kill-switch가 같이 박혀 있다 — 언제든 fallback 가능
 ```
 
+:::
+
 **주당 5-15 Giga-token 절약**. Explore 에이전트가 주당 3,400만 번 띄워진다는 사실이 코멘트에 들어 있다. 한 번에 CLAUDE.md(보통 2-5KB)를 생략하는 것만으로 — **Gtok 단위**의 토큰이 떨어진다. **그런데 kill-switch가 같이 박혀 있다** — `tengu_slim_subagent_claudemd` GrowthBook 게이트가 **기본 true** 지만, **언제든 flip 해서 fallback 할 수 있게** 무장. 5-15 Gtok/week 절약은 기본값에 의존. 프로덕션이 언제든 되돌릴 수 있게 디자인된 모범 사례.
 
 같은 정신이 **gitStatus**에도 적용된다.
+
+:::tabs
 
 ```typescript
 // runAgent.ts:400-410
@@ -287,6 +305,8 @@ resolved_system_context = (
 )
 # CLAUDE.md drop은 플래그 기반, gitStatus는 타입 화이트리스트 — 다른 게이트
 ```
+
+:::
 
 40KB의 `gitStatus` 가 — 읽기 전용 에이전트한테는 죽은 데이터. 필요하면 자기가 `git status` 부르면 된다. **주당 1-3 Gtok 추가 절약**. **단, 이건 `omitClaudeMd: true` 모든 에이전트가 아니라 명시적 화이트리스트** — `agentType === 'Explore' || agentType === 'Plan'` 두 에이전트에만 적용. CLAUDE.md 드롭은 더 일반적인 플래그 기반, gitStatus 드롭은 타입 화이트리스트 — 서로 다른 게이트 메커니즘이 우연이 아니라 안전 장치.
 
@@ -510,6 +530,3 @@ EXPLORE = AgentDefinition(
 - 프롬프트 작성 가이드가 모델한테 멘탈 모델을 준다 — **"Brief the agent like a smart colleague who just walked into the room"**. 추상적 규칙 대신 구체적 비유. **"Never delegate understanding"** — 결정은 부모가 해야 한다.
 - 다음(8.2)에서 **`createSubagentContext`** — 부모의 어떤 상태가 자식한테 흘러가고, 어떤 게 격리되는지. 그리고 prompt cache 공유를 통해 자식 띄우는 비용을 극적으로 줄이는 트릭.
 
----
-
-*다음 챕터: 8.2 createSubagentContext — 자식 에이전트의 격리와 캐시 공유*

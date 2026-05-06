@@ -68,6 +68,8 @@ IDE 확장 쪽에서 먼저 이렇게 한다 (VS Code 확장이 설치되면 자
 
 `utils/ide.ts:626` — `findAvailableIDE`.
 
+:::tabs
+
 ```typescript
 let currentIDESearch: AbortController | null = null    // ← module-level
 
@@ -127,6 +129,8 @@ async def find_available_ide() -> dict | None:
     return None
 ```
 
+:::
+
 30초동안 1초 간격으로 폴링. 왜 30초? — 확장이 느리게 시작할 수도 있고, 사용자가 `claude` 를 먼저 띄우고 나중에 VS Code를 열 수도 있다. 그래서 여유를 둔다. 30초 뒤에도 못 찾으면 포기.
 
 **`ides.length === 1` 조건이 엄격하다**. 정확히 하나여야 매칭. 여러 개면 사용자가 `/ide` 로 직접 선택. 잘못 매칭하면 — **다른 IDE의 컨텍스트**로 넘어간다 (예: 두 개의 VS Code 윈도우가 같은 프로젝트를 열어 놓은 경우).
@@ -159,6 +163,8 @@ findAvailableIDE() {
 폴링 진입 전 한 번. **죽은 PID** (`isProcessRunning` 으로 검사) 또는 (WSL/no-PID 케이스에서) 응답 없는 포트 (`checkIdeConnection`, 500ms TCP 연결 — `ide.ts:402`) 의 로크파일을 삭제. IDE 가 크래시 해서 로크파일을 못 지운 경우 쌓이는 걸 막는다. 가비지 컬렉션의 파일시스템 버전. 폴링 도중에는 다시 안 부름 — 30초 동안 새로 들어온 좀비는 다음 `findAvailableIDE` 호출에서 정리.
 
 **1단계: Workspace 매칭** (`ide.ts:704`, 축약)
+:::tabs
+
 ```typescript
 // ide.ts:704 (축약 — WSL distro/path 변환 + Windows 드라이브 문자 정규화 ~50줄 생략)
 isValid = lockfileInfo.workspaceFolders.some(idePath => {
@@ -181,9 +187,13 @@ is_valid = any(
 )
 ```
 
+:::
+
 현재 `cwd` 가 IDE의 `workspaceFolders` 중 하나 안에 있는지. 이게 기본 매칭. 그런데 **`.normalize('NFC')` 가 결정적**이다.
 
 **매크로 OS 사고** — 코멘트가 설명한다:
+
+:::tabs
 
 ```typescript
 // macOS returns NFD paths (decomposed Unicode), while IDEs like 
@@ -200,6 +210,8 @@ cwd = unicodedata.normalize("NFC", str(get_original_cwd()))
 # 한 줄로 한글/중국어/일본어/아랍어 프로젝트의 IDE 매칭이 살아난다
 ```
 
+:::
+
 macOS 파일시스템(HFS+)은 유니코드를 분해 형식(NFD)으로 저장. "김"은 ㄱ + ㅣ + ㅁ 세 개의 코드포인트. VS Code는 결합 형식(NFC)로 경로를 보고한다 — "김" 한 개의 코드포인트. **같은 한글이지만 바이트가 다르다**. 정규화 없으면 한글/중국어/일본어/아랍어 프로젝트에서 IDE 매칭이 영원히 실패. 한 줄 `.normalize('NFC')` 가 **전 세계 비영어권 사용자의 IDE 통합을 살렸다**.
 
 **2단계: PID 조상 걷기** (`ide.ts:770`, **지원 터미널 + 비-WSL 한정**)
@@ -207,6 +219,8 @@ macOS 파일시스템(HFS+)은 유니코드를 분해 형식(NFD)으로 저장. 
 워크스페이스가 매칭되어도 — **그게 내가 있는 IDE인지** 확신할 수 없다. **두 개의 VS Code 윈도우**가 같은 프로젝트를 열어 놓으면 둘 다 매칭된다. 그럼 내 터미널은 어느 윈도우에 속하지?
 
 답: 내 프로세스의 조상 체인에 IDE의 PID가 있어야 한다.
+
+:::tabs
 
 ```typescript
 const needsAncestryCheck = getPlatform() !== 'wsl' && isSupportedTerminal()
@@ -232,6 +246,8 @@ if needs_ancestry_check:
             continue  # 내 조상이 아닌 IDE — skip
 ```
 
+:::
+
 `getAncestors()` 는 `ps` 를 최대 10번 반복해서 부모의 부모의 부모의… PID들을 수집. Claude Code 터미널의 조상 체인 안에 **IDE의 PID가 있어야 내 IDE**. 없으면 — 다른 IDE 윈도우의 로크파일이다. 무시. **WSL 에서는 PID 조상 체크 자체를 안 함** — WSL 안의 `ps` 는 Windows 측 IDE 프로세스를 못 보고 PPID 도 **커널 boundary** 를 못 건넌다.
 
 이게 진짜 잘 짠 부분: 워크스페이스 매칭이 통과한 후에만 `ps` 호출. 이전에는 모든 로크파일에 대해 `ps` 를 돌렸는데 — **CPU 프로파일**에서 `findAvailableIDE` 폴링이 부하 주범으로 떴다. 순서를 뒤집어서 **대부분의 로크파일은 workspace 필터에서 탈락**해 `ps` 까지 안 온다.
@@ -241,6 +257,8 @@ if needs_ancestry_check:
 ### 일단 찾으면 — **그냥 MCP 서버**
 
 2단계 필터를 통과한 `DetectedIDEInfo` 가 어떻게 쓰이는지가 가장 흥미롭다. `useIDEIntegration.tsx`:
+
+:::tabs
 
 ```typescript
 // useIDEIntegration.tsx (축약 — autoConnectEnabled 6중 분기 + prev?.ide 가드 생략)
@@ -301,6 +319,8 @@ def update(prev: dict | None) -> dict:
 set_dynamic_mcp_config(update)
 ```
 
+:::
+
 **이게 전부다**. 발견된 IDE를 **MCP 서버 설정으로 변환**. `type: 'sse-ide'` 또는 `'ws-ide'` — 7.2에서 본 8가지 전송 방식 중 두 개. 그 다음부터는 **7.2의 MCP 클라이언트 코드가 알아서 한다**.
 
 숨은 디테일 도 흥미롭다. `CLAUDE_CODE_SSE_PORT` 환경 변수 분기는 **tmux/screen 우회용** — 터미널 멀티플렉서가 `TERM_PROGRAM` 을 덮어 써서 터미널 검출이 깨지지만 IDE 확장의 포트 환경 변수는 상속되어 살아남는다. 그리고 `prev?.ide` 가 이미 있으면 덮어쓰지 않음 — 사용자가 `/ide` 로 수동 선택한 것을 자동 발견이 침범 못 하도록.
@@ -308,6 +328,8 @@ set_dynamic_mcp_config(update)
 - `connectToServer` 가 SSE/WS 채널 연다 (`authToken` 헤더 같이)
 - `fetchToolsForClient` 가 `tools/list` MCP 요청 보낸다
 - IDE 확장이 자기 도구들을 **Claude Code Tool 형식**으로 반환 — 그런데 모두 받아들이지는 않는다. `services/mcp/client.ts:568`:
+
+:::tabs
 
 ```typescript
 const ALLOWED_IDE_TOOLS = ['mcp__ide__executeCode', 'mcp__ide__getDiagnostics']
@@ -329,6 +351,8 @@ def is_included_mcp_tool(tool) -> bool:
         or tool.name in ALLOWED_IDE_TOOLS
     )
 ```
+
+:::
 
 **IDE 도구는 2개만 하드 화이트리스트**:
   - `mcp__ide__getDiagnostics` — VS Code 의 LSP 타입 에러 / 진단 가져오기
@@ -511,6 +535,3 @@ def ide_to_mcp_config(ide: IdeLockfileInfo) -> dict:
 - **일단 찾으면** — `DetectedIDEInfo → MCP 서버 설정` 변환만 하면 끝. 7.2의 `connectToServer` → `fetchToolsForClient` 가 이미 존재하는 파이프라인에서 자동. **그런데 IDE 도구는 2개만 하드 화이트리스트** (`ALLOWED_IDE_TOOLS = ['mcp__ide__executeCode', 'mcp__ide__getDiagnostics']`) — IDE 확장이 더 노출해도 필터 탈락. **권한 표면 안정성**. **추상화의 힘** — "외부 도구는 MCP 서버" 가 한 번 정해지면 **IDE 도 그저 MCP 서버**, 다만 그 도구 집합만 좁게 고정.
 - **Part 8 (멀티 에이전트와 IDE 브리지) 완료**. 8.1 재귀, 8.2 격리, 8.3 조율, 8.4 발견. 모두 같은 원리: **새 추상을 발명하지 말고 있는 추상을 재사용**. AgentTool은 `query()` 재귀. CoordinatorMode는 프롬프트 변경. IDE Bridge는 로크파일 + MCP. **승부처는 기존 조각의 조합**이다.
 
----
-
-*다음 챕터: 9.1 설계 — 미니 에이전트의 골격 한 장 그리기*

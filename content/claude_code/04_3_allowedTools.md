@@ -48,6 +48,8 @@
 
 4.1에서 본 `commit.ts`를 다시 펼치자.
 
+:::tabs
+
 ```typescript
 const ALLOWED_TOOLS = [
   'Bash(git add:*)',
@@ -105,6 +107,8 @@ class PermissionEngine:
         """턴 끝나면 호출 — command 슬롯 리셋."""
         self.always_allow_rules["command"] = []
 ```
+
+:::
 
 "항상 허용 룰의 command 슬롯에 `allowedTools`를 대입한다."
 
@@ -296,6 +300,3 @@ ctx.command_rules = []  # 자동으로 비워짐
 - Skill도 같은 패턴 — 마크다운 frontmatter의 `allowed-tools` 필드. 명령과 skill이 같은 슬롯을 쓴다.
 - **4장 통합**: 슬래시 명령 = 프롬프트 + 종류 + 권한의 번들. 셋을 한 곳에 묶은 게 본질. 6장에서 권한 시스템 전체가, 10장에서 직접 만들기가 이 통찰을 회수한다.
 
----
-
-*다음 챕터: 5.1 "터미널에 React?" — Ink가 정확히 무엇을 해주는가*

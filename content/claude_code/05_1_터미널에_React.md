@@ -30,6 +30,8 @@
 
 근데 뒷마당을 들춰보면 더 이상하다. `src/commands/config/config.tsx`.
 
+:::tabs
+
 ```typescript
 export const call: LocalJSXCommandCall = async (onDone, context) => {
   return <Settings onClose={onDone} context={context} defaultTab="Config" />
@@ -109,11 +111,15 @@ class MyWidget(Widget):
         return f"Count: {self.count}"
 ```
 
+:::
+
 각 함수는 **Ink의 자료구조**(yoga 레이아웃 노드 + 셀 버퍼)를 조작한다. React는 "이 노드를 갱신해라"만 호출하고, 어떻게 갱신되는지는 모른다.
 
 ### 진짜 컴포넌트는 어떻게 생겼나
 
 `commands/install.tsx`에서 한 조각 가져와 보자 (단순화).
+
+:::tabs
 
 ```tsx
 import { Box, Text, useState } from '../ink.js'
@@ -198,6 +204,8 @@ def render_diff(prev_screen: list[list[str]], new_screen: list[list[str]]) -> st
     return "".join(output)
     # 안 바뀐 셀은 건드리지 않는다 → 깜빡임 없음
 ```
+
+:::
 
 번역하면 — **이전 프레임의 Screen과 새 프레임의 Screen을 셀 단위로 비교**해서, 바뀐 셀만 `\x1b[...m...` 같은 ANSI escape sequence로 stdout에 쓴다. 안 바뀐 셀은 건드리지 않는다.
 
@@ -335,6 +343,3 @@ if __name__ == "__main__":
 - **왜 굳이 React인가**: 명령형 ncurses는 "내가 직접 그린다", Ink는 "이렇게 생겨야 한다고 선언만 한다". 복잡해질수록 후자의 이득이 커진다. Claude Code 같은 수많은 동시 패널이 가능한 이유.
 - 다음 챕터(5.2): 그 컴포넌트들이 공유하는 상태는 어떻게 관리하는가. **AppState 스토어** — Redux 없이 만든 단순 옵저버.
 
----
-
-*다음 챕터: 5.2 AppState 스토어 — Redux 없이 만든 단순 옵저버*

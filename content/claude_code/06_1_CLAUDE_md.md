@@ -38,6 +38,8 @@
 
 `src/context.ts`의 155줄.
 
+:::tabs
+
 ```typescript
 // (축약: 진단 로깅, setCachedClaudeMdContent, --bare 모드 분기 등 생략)
 export const getUserContext = memoize(
@@ -70,6 +72,8 @@ async def get_user_context(cwd: Path) -> dict[str, str]:
     return context
 ```
 
+:::
+
 "사용자 컨텍스트"라는 이름이다. 시스템 컨텍스트가 아니다. 이 이름이 모든 것을 말해준다. CLAUDE.md는 사용자 쪽 정보로 분류된다.
 
 함수가 돌려주는 건 단순한 **키-값 dict**다 — `{ claudeMd: "...전체 내용...", currentDate: "Today's date is 2026-04-07." }`. 누가 이 dict를 받아서 **진짜로 LLM에 보낼지**를 추적해보자.
@@ -77,6 +81,8 @@ async def get_user_context(cwd: Path) -> dict[str, str]:
 ### 놀라움: `prependUserContext` — 유저 메시지로 들어간다
 
 `src/utils/api.ts` 449줄.
+
+:::tabs
 
 ```typescript
 // (축약: NODE_ENV='test' early-return 생략. content 의 \n 을 가독성 위해 줄바꿈으로 표현)
@@ -125,6 +131,8 @@ IMPORTANT: this context may or may not be relevant to your tasks.
     return [meta_message, *messages]
     # ⭐ system role이 아니라 user role로 들어간다!
 ```
+
+:::
 
 세 줄에 걸쳐 충격이 있다.
 
@@ -199,6 +207,8 @@ CWD가 `/home/user/projects/api`라면 — 세 파일이 다 합쳐진다.
 
 `getClaudeMds()` (1153줄) 가 이 파일들을 어떤 형식으로 합치는지 보자.
 
+:::tabs
+
 ```typescript
 // (축약: feature('TEAMMEM') 분기 생략 — flag 뒤에서 TeamMem 케이스가 추가됨)
 const description =
@@ -227,6 +237,8 @@ match file.type:
 
 memories.append(f"Contents of {file.path}{description}:\n\n{content}")
 ```
+
+:::
 
 각 파일이 경로 + 종류 설명과 함께 들어간다. LLM이 "이건 어떤 파일인가"를 알 수 있도록.
 
@@ -417,6 +429,3 @@ final_messages = prepend_user_context(
 - `<system-reminder>` 태그는 CLAUDE.md만 쓰는 게 아니라 **클라이언트가 LLM에게 상황을 알리는 모든 것**에 쓰이는 일반 패턴. 5장의 메시지 시스템과 6장의 컨텍스트 주입의 접점.
 - 다음 챕터(6.2): 메타 메시지가 어디 사는지 — **AppState** 안의 메시지 배열. 5.2에서 본 그 store에 모든 게 다 모인다.
 
----
-
-*다음 챕터: 6.2 AppState — 세션의 모든 것을 담는 그릇 — 단, 메시지는 빼고*

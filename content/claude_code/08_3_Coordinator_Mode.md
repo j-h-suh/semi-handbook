@@ -54,6 +54,8 @@ You: Found the bug — null pointer in validate.ts:42.
 
 `coordinator/coordinatorMode.ts:36` — 모드 진입의 모든 조건.
 
+:::tabs
+
 ```typescript
 export function isCoordinatorMode(): boolean {
   if (feature('COORDINATOR_MODE')) {
@@ -71,11 +73,15 @@ def is_coordinator_mode() -> bool:
     return False
 ```
 
+:::
+
 환경 변수 한 줄. 7.1의 4-SDK 추상화와 같은 정신 — 외부 토글, 내부는 아무것도 안 바뀜. 같은 query 루프, 같은 메시지 형식, 같은 도구 인터페이스. 그런데 모델한테 보이는 시스템 프롬프트와 도구 세트가 완전히 달라진다.
 
 그리고 토글이 한 층 더 있다. `CLAUDE_CODE_SIMPLE=1` 을 같이 켜면 — 워커가 가질 수 있는 도구가 **Bash, Read, Edit 셋**으로 줄어든다. 풀 모드는 `ASYNC_AGENT_ALLOWED_TOOLS` 의 표준 셋 + MCP + 스킬. 단순 모드는 최소 셋. **2단계 dimming** — 코디네이터로 갈지 + 워커한테 얼마나 많이 줄지 두 노브를 따로 돌릴 수 있다.
 
 Resume 케이스도 친절하다.
+
+:::tabs
 
 ```typescript
 // matchSessionMode — 재개 시 모드 일치 강제 (축약)
@@ -128,6 +134,8 @@ def match_session_mode(
         else "Exited coordinator mode to match resumed session."
     )
 ```
+
+:::
 
 세션이 코디네이터로 시작했으면 재개도 코디네이터로. 모드를 섞으면 메시지 형식이 호환 안 됨 — `<task-notification>` 메시지를 일반 모드 모델이 보면 사용자 메시지로 오해한다. `isCoordinatorMode()` 가 캐시 없이 라이브로 환경 변수를 읽기 때문에 — 플립 한 줄로 즉시 모드가 바뀐다.
 
@@ -201,6 +209,8 @@ multiple tool calls in a single message.**
 
 비동기 워커가 끝나면 — 어떻게 코디네이터한테 알리지? 답: **user-role 메시지의 모습으로**. `LocalAgentTask.tsx:252` (실제 코드는 `${TASK_NOTIFICATION_TAG}` 등 상수를 쓰지만, 렌더링 결과를 보여주면):
 
+:::tabs
+
 ```typescript
 const message = `<task-notification>
 <task-id>${taskId}</task-id>${toolUseIdLine}    // <tool-use-id>...</tool-use-id> (옵션)
@@ -231,6 +241,8 @@ message = (
 
 enqueue_pending_notification({"value": message, "mode": "task-notification"})
 ```
+
+:::
 
 **XML로 포장된 user 메시지**. 코디네이터의 다음 턴이 시작될 때 — `messageQueueManager` 의 통합 `commandQueue` 에서 빠져 코디네이터의 컨텍스트에 **user 메시지로** 들어간다. 작은 디테일이 디자인을 살린다 — `enqueuePendingNotification` 은 priority **`'later'`** 로 enqueue한다. 사용자 입력은 `'next'`, 워커 알림은 `'later'`. **사용자 인풋과 워커 알림이 같은 큐에 있지만 사용자가 항상 우선**. 알림이 사용자를 방해하지 않는 디자인.
 
@@ -472,6 +484,3 @@ async def coordinator_loop(user_request: str) -> None:
 - **`Never delegate understanding`** — 코디네이터의 유일한 책임이 합성. 워커한테 **"based on your findings, fix it"** 같은 말 금지. 이해가 워커들한테 흩어지면 코디네이터는 라우터로 전락. 의미가 사라진다.
 - **Fork-join 패턴**의 LLM 버전 — Fork는 `Agent` 병렬 호출, Join은 **다음 턴의 user 메시지**. 비동기라 코디네이터는 기다리는 동안 사용자와도 대화 가능.
 
----
-
-*다음 챕터: 8.4 IDE Bridge — VS Code 확장과 파일시스템 랑데부로 통신*

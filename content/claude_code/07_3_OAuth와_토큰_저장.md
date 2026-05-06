@@ -34,6 +34,8 @@ Run /mcp auth github to authorize.
 
 답: **CLI가 잠깐 HTTP 서버가 된다**. RFC 8252 §7.3 — **Native Apps 용 OAuth**는 루프백 리다이렉션을 허용한다 (실제 출처: `oauthPort.ts:18` JSDoc **"loopback redirect URIs match any port as long as the path matches"**). `oauthPort.ts`:
 
+:::tabs
+
 ```typescript
 // Windows dynamic port range 49152-65535 is reserved
 const REDIRECT_PORT_RANGE =
@@ -89,6 +91,8 @@ def find_available_port() -> int:
     return REDIRECT_PORT_FALLBACK  # 모든 포트가 막혔을 때 마지막 수단
 ```
 
+:::
+
 세 가지 디테일이 우연이 아니다.
 
 1. **랜덤 포트 선택**. 고정 포트가 아니라 매번 다른 포트. 이유: 다른 프로세스가 같은 포트에 **fishing 서버**를 띄워서 인증 코드를 가로채는 걸 막기 위해. 49152-65535는 OS가 정한 임시 포트 범위.
@@ -104,6 +108,8 @@ def find_available_port() -> int:
 ### 문제 2 — 토큰 저장
 
 저장소 인터페이스가 한 줄이다 (`secureStorage/index.ts:9-17` verbatim):
+
+:::tabs
 
 ```typescript
 export function getSecureStorage(): SecureStorage {
@@ -132,6 +138,8 @@ def get_secure_storage():
     return PlainTextStorage(Path.home() / ".claude" / "credentials.json")
 ```
 
+:::
+
 세 가지 구현이 같은 인터페이스(`SecureStorage`)를 만족한다.
 
 | 구현 | 어디 저장 | 보안 |
@@ -141,6 +149,8 @@ def get_secure_storage():
 | `createFallbackStorage(primary, secondary)` | 1순위 시도, 실패 시 2순위 | 컴포지트 |
 
 플레인텍스트 저장소가 사용될 때 — 경고를 동반한다:
+
+:::tabs
 
 ```typescript
 return {
@@ -243,6 +253,8 @@ class ClaudeAuthProvider:
         }
         storage.update(existing)  # 반환값 버림 — warning capture 안 됨
 ```
+
+:::
 
 이게 어댑터 패턴의 교과서적 사용이다. MCP SDK는 **OAuth 표준 흐름**을 알고, Claude Code는 플랫폼별 저장소를 알고. 둘이 직접 만날 일이 없다 — `ClaudeAuthProvider`가 통역한다.
 
@@ -454,6 +466,3 @@ class ClaudeAuthProvider:
 - 프로덕션 단단함 **6 조각** — (1) **민감 파라미터 redaction** (state/nonce/code/code_challenge/code_verifier 5개), (2) **stale-while-error** 캐시 (transient 키체인 실패가 깜빡 로그아웃 안 되도록), (3) **4096B stdin 버퍼 회피** (#30337의 사연), (4) **Slack의 비표준 에러 정규화** (3개 alias → `invalid_grant`), (5) **`keychainPrefetch.ts` — startup 65ms → 0ms** (모듈 평가와 **parallel** 로 두 개의 `security` spawn), (6) **`tokens()` 캐시 — 7.2% CPU 회수** (MCP SDK `_commonHeaders` 의 30-40 회/초 호출). 2466 줄(클래스 984줄 + 독립 함수 106줄)이 그냥 있는 게 아니다.
 - **CSRF 보호**: `randomBytes(32).toString('base64url')` 로 OAuth state 생성. Python에서는 `secrets.token_urlsafe(32)`. **`random` 쓰면 안 된다** — 예측 가능.
 
----
-
-*다음 챕터: 7.4 컨텍스트 압축 — 한 세션이 영원할 수 있는 이유*

@@ -21,6 +21,8 @@
 
 답: **`buildTool` 팩토리**가 채운다.
 
+:::tabs
+
 ```typescript
 // 도구 작성자가 쓰는 코드
 export const myTool = buildTool({
@@ -50,6 +52,8 @@ class MyTool(ToolBase):
     # 나머지 42개는 ToolBase의 기본값이 채운다
 ```
 
+:::
+
 5개만 썼다. 그런데 `myTool`을 출력해보면 — `isEnabled`, `isReadOnly`, `checkPermissions`, ... 가 다 들어 있다. 마법이다. 이 마법이 바로 `buildTool`의 일이다.
 
 ---
@@ -59,6 +63,8 @@ class MyTool(ToolBase):
 ### `buildTool`은 한 줄짜리 함수다
 
 `Tool.ts`를 783줄로 스크롤하면 진짜 구현이 있다.
+
+:::tabs
 
 ```typescript
 export function buildTool<D extends AnyToolDef>(def: D): BuiltTool<D> {
@@ -84,6 +90,8 @@ def build_tool(user_def: dict) -> dict:
     # Python 3.9+: TOOL_DEFAULTS | {"user_facing_name": ...} | user_def
 ```
 
+:::
+
 진짜로 **한 줄짜리 spread**다. JavaScript의 `...` 연산자로 두 객체를 합친다. Python의 `{**dict1, **dict2}`와 같다.
 
 순서가 중요하다.
@@ -99,6 +107,8 @@ def build_tool(user_def: dict) -> dict:
 ### `TOOL_DEFAULTS` — 일곱 개의 기본값
 
 이제 기본값 자체를 보자. `Tool.ts` 757줄.
+
+:::tabs
 
 ```typescript
 const TOOL_DEFAULTS = {
@@ -126,6 +136,8 @@ class ToolBase(ABC):
     def to_auto_classifier_input(self, args) -> str: return ""
     def user_facing_name(self) -> str: return self.name
 ```
+
+:::
 
 7개. 47개 중에 7개만 기본값을 가진다는 게 이상해 보일 수 있는데, 나머지 40개는 진짜로 도구마다 달라야 하는 것들이다. `name`, `description`, `inputSchema`, `call` 같은 핵심 5개는 기본값을 줄 수가 없다 — 도구의 정체성 자체니까. 그리고 렌더링 메서드 15개는 별도의 다른 시스템이 더 똑똑한 기본값을 가지고 있다 (Part 5에서 본다).
 
@@ -283,6 +295,3 @@ read_tool = build_tool(
 - `toAutoClassifierInput`는 옵트인. 보안 관련 도구는 명시적으로 켜야 한다. 잊으면 기능이 안 켜진다 — 잘못된 입력이 분류기를 망치는 사고가 안 난다.
 - 47개짜리 인터페이스가 5개 작성으로 줄어드는 비밀: **호출자는 항상 완전한 객체를 본다** + **기본값은 한 곳에 산다**. 이 패턴이 6장(권한 시스템)에서 더 큰 스케일로 다시 나온다.
 
----
-
-*다음 챕터: 3.4 단순한 도구 FileRead — 검증 → 권한 → 실행 3단계*

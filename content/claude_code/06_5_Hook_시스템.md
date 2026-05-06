@@ -45,6 +45,8 @@
 
 도구가 실행되기 직전, Claude Code는 이 함수를 부른다.
 
+:::tabs
+
 ```typescript
 // src/utils/hooks.ts:3394
 export async function* executePreToolHooks<ToolInput>(
@@ -117,6 +119,8 @@ async def execute_pre_tool_hooks(
         }
 ```
 
+:::
+
 눈에 띄는 것 세 가지.
 
 **첫째, async generator다.** `async function*` — `yield*`로 결과를 흘려보낸다. 2.2에서 본 비동기 제너레이터 파이프라인과 같은 패턴이다. Hook 결과가 도구 실행 판단에 실시간으로 반영된다.
@@ -128,6 +132,8 @@ async def execute_pre_tool_hooks(
 ### `createBaseHookInput` — stdin JSON의 정체
 
 Hook 스크립트의 stdin으로 들어가는 JSON은 `createBaseHookInput`(`hooks.ts:301`)이 만든다.
+
+:::tabs
 
 ```typescript
 // src/utils/hooks.ts:301
@@ -173,11 +179,15 @@ def create_base_hook_input(
     }
 ```
 
+:::
+
 이게 공통 필드다. PreToolUse에서는 여기에 `tool_name`, `tool_input`, `tool_use_id`가 추가된다. **Hook 스크립트가 `transcript_path`를 받는다**는 점이 강력하다 — 대화 전체를 읽어서 판단에 활용할 수 있다는 뜻이다.
 
 ### `getMatchingHooks` — 매칭의 핵심 로직
 
 `executeHooks`(`hooks.ts:1952`) 안에서 가장 먼저 하는 일이 매칭이다. `getMatchingHooks`(`hooks.ts:1603`)를 보자.
+
+:::tabs
 
 ```typescript
 // src/utils/hooks.ts:1603 (축약)
@@ -253,6 +263,8 @@ async def get_matching_hooks(
     # matcher 생략 = 글로벌 Hook (모든 발생에 반응)
 ```
 
+:::
+
 여기서 핵심 패턴이 보인다. **`matcher`가 없으면 무조건 통과**(`!matcher.matcher`). 이게 글로벌 Hook이다 — matcher를 생략하면 해당 이벤트의 모든 발생에 반응한다.
 
 그리고 이벤트별로 `matchQuery`가 다르다. PreToolUse에서는 도구 이름, FileChanged에서는 파일명, Notification에서는 알림 타입. **이벤트마다 "무엇에 대한 것인가"의 축이 다르다.**
@@ -260,6 +272,8 @@ async def get_matching_hooks(
 ### 놀라움 — `if` 조건은 6.4의 코드를 재활용한다
 
 `getMatchingHooks` 뒤에 2차 필터링이 있다. `prepareIfConditionMatcher`(`hooks.ts:1390`):
+
+:::tabs
 
 ```typescript
 // src/utils/hooks.ts:1390
@@ -329,6 +343,8 @@ async def prepare_if_condition_matcher(
     return matcher
 ```
 
+:::
+
 **여기가 이 챕터의 보석이다.** `permissionRuleValueFromString`은 6.4에서 본 바로 그 함수다. `"Bash(git *)"` 같은 권한 룰 문법을 파싱해서 도구 이름과 패턴을 분리하는 함수. 그리고 `tool.preparePermissionMatcher`도 6.4에서 BashTool이 `git *` 와일드카드를 정규식으로 변환하던 바로 그 메서드다.
 
 **Hook의 `if` 조건은 권한 룰 매칭 코드를 100% 재활용한다.** 같은 패턴 문법, 같은 변환 로직, 같은 와일드카드 규칙. 6.4에서 `Bash(git *)` 룰이 `git` 단독도 매칭하도록 트레일링 옵셔널화를 하던 그 7단계 변환이 — Hook의 `if` 조건에서도 그대로 작동한다.
@@ -340,6 +356,8 @@ async def prepare_if_condition_matcher(
 ### 이벤트 목록 — `HOOK_EVENTS`
 
 이벤트의 전체 목록은 `src/entrypoints/sdk/coreTypes.ts:25`에 있다.
+
+:::tabs
 
 ```typescript
 // src/entrypoints/sdk/coreTypes.ts:25
@@ -549,6 +567,8 @@ async def exec_command_hook(
     # 실행: stdin에 json_input 파이프, stdout/stderr 수집 (asyncio.create_subprocess_exec)
 ```
 
+:::
+
 **Hook 스크립트는 stdin으로 JSON을 받고, stdout으로 JSON을 뱉는다.** 이 단순한 프로토콜이 전부다. 어떤 언어로든 구현할 수 있다 — Python, Node, Go, 심지어 `jq` 한 줄로도. Unix 철학: 텍스트 스트림이 인터페이스.
 
 ---
@@ -556,6 +576,8 @@ async def exec_command_hook(
 ### 보안 가드 — 신뢰 검사
 
 `executeHooks`(`hooks.ts:1952`)의 가장 윗부분에 보안 검사가 두 개 있다:
+
+:::tabs
 
 ```typescript
 // src/utils/hooks.ts:1978-1998
@@ -592,6 +614,8 @@ if should_skip_hook_due_to_trust():
     return
 ```
 
+:::
+
 주석이 직접 말한다: **"ALL hooks require workspace trust"**. 프로젝트를 처음 열었을 때 "이 workspace를 신뢰합니까?" 대화상자에서 수락하지 않으면 — `.claude/settings.json`에 Hook이 있어도 실행되지 않는다. **악의적인 프로젝트를 clone했을 때 Hook이 자동으로 실행되는 걸 막는 장치.**
 
 ---
@@ -605,6 +629,3 @@ if should_skip_hook_due_to_trust():
 - **`updatedInput`으로 도구 입력을 수정**할 수 있다. 단순 차단이 아니라 입력 변조(sanitization)가 가능.
 - **보안**: workspace trust 미수락 시 모든 Hook이 무시된다. `CLAUDE_CODE_SIMPLE` 환경변수로도 전체 비활성화 가능.
 
----
-
-*다음 챕터: 6.6 Hook 실전 — 설정 구조, 실행 흐름, 사용 사례*

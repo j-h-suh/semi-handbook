@@ -33,6 +33,8 @@ Claude가 "파일 좀 읽어볼게요" 하고 spinner가 도는 그 순간. 사�
 
 `src/tools/FileReadTool/FileReadTool.ts`는 1,184줄짜리 파일이다. 압도적인 숫자처럼 보이지만, **대부분이 PDF 파싱, 이미지 디코딩, 토큰 예산 계산** 같은 부속품이다. 진짜 골격은 337줄에서 시작하는 `buildTool({...})` 호출 하나다.
 
+:::tabs
+
 ```typescript
 export const FileReadTool = buildTool({
   name: 'Read',
@@ -72,6 +74,8 @@ class FileReadTool(ToolBase):
     async def call(self, args, ctx) -> str: ...                          # 3단계
 ```
 
+:::
+
 3.3에서 본 `buildTool`이 여기서 일한다. 도구 작성자가 명시한 메서드는 그대로 두고, 안 쓴 메서드는 기본값으로 채운다.
 
 여기서 눈에 띄는 덮어쓰기 두 줄:
@@ -84,6 +88,8 @@ class FileReadTool(ToolBase):
 ### 1단계: `validateInput` — 디스크를 만지지 않고 입력 검증
 
 이 챕터의 진짜 주제다. `validateInput` 함수는 순수 검증만 한다. 코드를 좀 줄여서 보자.
+
+:::tabs
 
 ```typescript
 async validateInput({ file_path, pages }, ctx) {
@@ -140,6 +146,8 @@ async def validate_input(self, args: dict, ctx) -> tuple[bool, str]:
     # 핵심: fs.stat()도, open()도 안 했다. 보안상 I/O 금지.
 ```
 
+:::
+
 5가지 검사. **공통점은 — 다섯 개 다 디스크를 만지지 않는다.** 문자열 검사뿐이다. `parsePDFPageRange`도 문자열 파싱, `expandPath`도 문자열 처리, `hasBinaryExtension`도 확장자 문자열만 본다.
 
 왜 이렇게까지 철저하게 I/O를 피하는가?
@@ -147,6 +155,8 @@ async def validate_input(self, args: dict, ctx) -> tuple[bool, str]:
 ### 진짜 이유: NTLM 자격증명 유출
 
 코드 461줄에 이런 주석이 달려 있다.
+
+:::tabs
 
 ```typescript
 // SECURITY: UNC path check (no I/O) — defer filesystem operations
@@ -184,6 +194,8 @@ async def check_permissions(self, args: dict, ctx) -> str:
     # 도구는 "나는 read 권한이 필요하다"만 선언.
 ```
 
+:::
+
 짧다. 진짜 권한 로직은 `checkReadPermissionForTool`에 있다 (`utils/permissions/filesystem.ts`, Part 6에서 본다). 여기서는 그냥 위임한다. 도구는 "내가 어떤 종류의 권한을 원하는가"만 선언하고 (이 경우 **read**), 결정은 권한 시스템이 한다. 6장에서 본격적으로 다룬다.
 
 이 위임의 의미는 — **권한 정책이 도구별로 흩어지지 않는다**. `Read`, `Glob`, `Grep`, `LSP` 같은 모든 읽기 도구가 같은 함수 한 곳을 호출한다. 정책을 바꾸려면 한 곳만 고치면 된다.
@@ -191,6 +203,8 @@ async def check_permissions(self, args: dict, ctx) -> str:
 ### 3단계: `call` — 드디어 디스크
 
 권한이 통과했다면 — 그 다음에 진짜 일이 시작된다.
+
+:::tabs
 
 ```typescript
 async call({ file_path, offset, limit, pages }, context) {
@@ -216,6 +230,8 @@ async def call(self, args: dict, ctx) -> str:
     sliced = lines[offset:offset + limit]
     return "\n".join(f"{i + offset + 1}\t{line}" for i, line in enumerate(sliced))
 ```
+
+:::
 
 여기는 복잡하다. 약 690줄 된다 (line 496에서 시작해서 파일 끝 1184까지). 텍스트 디코딩, 이미지 base64, PDF 페이지 추출, 토큰 예산, 중복 읽기 dedup. 근데 이 복잡함은 **Read의 본질이 다양한 파일 타입을 다루는 것**이라서 어쩔 수 없다. **본질적인 복잡성**과 **구조의 단순함**은 다르다. 3단계 라이프사이클이 단순한 거고, 각 단계 내부는 그 도구가 하는 일만큼 복잡할 수 있다.
 
@@ -319,6 +335,3 @@ async def execute_read(input: ReadInput, app_state) -> str:
 - **3단계(`call`)는 본질적으로 복잡할 수 있다.** Read는 텍스트/이미지/PDF/노트북을 다루느라 약 690줄. 본질적인 복잡성은 어쩔 수 없지만, 구조의 단순함은 유지된다.
 - "단순한 도구"의 단순함은 코드 줄 수가 아니라 **책임 분리**다. 다음 챕터(3.5)에서 복잡한 도구 BashTool이 같은 3단계를 어떻게 더 어렵게 만드는지 본다 — 셸 인젝션이라는 적과 싸우면서.
 
----
-
-*다음 챕터: 3.5 복잡한 도구 BashTool — 셸 인젝션과 싸우는 법*

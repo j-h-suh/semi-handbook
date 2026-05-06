@@ -41,6 +41,8 @@
 
 `src/state/store.ts` 파일을 통째로 가져와도 35줄이다.
 
+:::tabs
+
 ```typescript
 type Listener = () => void
 type OnChange<T> = (args: { newState: T; oldState: T }) => void
@@ -108,6 +110,8 @@ class Store(Generic[T]):
         return lambda: self._listeners.discard(listener)
 ```
 
+:::
+
 이게 전부다. 진짜로. 다른 파일은 안 본다. 
 
 세 가지 메서드, 한 줄짜리 조기 종료(early-out), 한 줄짜리 알림 루프. **옵저버 패턴의 가장 작은 형태**다.
@@ -117,6 +121,8 @@ class Store(Generic[T]):
 ### `Object.is` 조기 종료가 본질적인 이유
 
 23줄을 다시 보자.
+
+:::tabs
 
 ```typescript
 if (Object.is(next, prev)) return
@@ -161,6 +167,8 @@ class MyWidget(Widget):
         self.update(f"Model: {new_value}")
     # verbose가 바뀌어도 이 위젯은 영향 안 받음 — 부분 구독
 ```
+
+:::
 
 핵심은 **`useSyncExternalStore`** — React 18에 들어온 훅. "외부 스토어를 React에 안전하게 연결한다"라는 한 줄짜리 목적의 훅이다. 세 가지 인자를 받는다.
 
@@ -351,6 +359,3 @@ store.set_state(lambda s: s)
 - **Redux 안 쓴 이유**: 35줄로 충분했기 때문. 작은 도구 + 좋은 패턴이 큰 도구의 기능을 대부분 대체. "필요한 만큼만"의 본보기.
 - 다음 챕터(5.3): 컴포넌트가 수만 개의 메시지를 어떻게 100줄로 그리는가 — **가상 스크롤**.
 
----
-
-*다음 챕터: 5.3 메시지 렌더링과 가상 스크롤 — 1만 개 메시지를 100줄로 그리기*

@@ -44,6 +44,8 @@
 
 `src/screens/REPL.tsx`. **약 5,000줄짜리 거대한 파일**. 이 한 파일 안에 거의 모든 대화 관련 로직이 들어 있다. 그리고 이 파일은 **React 함수형 컴포넌트**다.
 
+:::tabs
+
 ```typescript
 // REPL.tsx 5,006 줄을 한 화면에 보여주려고 심하게 단순화한 모형
 export function REPL({
@@ -108,6 +110,8 @@ class REPL(App):
         # LLM API 호출 시작 → 스트리밍 응답 처리
         await self.query_engine.submit(event.value)
 ```
+
+:::
 
 처음 보면 "잠깐, 이거 웹 페이지 만드는 코드 아니야?" 싶다. `<Box>`, `<Text>`, `useState`, `useEffect` — 다 React 문법 그대로다. 그런데 화면에 뜨는 건 브라우저의 DOM이 아니라 **터미널의 박스와 글자**다.
 
@@ -238,6 +242,3 @@ class ClaudeCodeREPL(App):
 - Python으로 비슷한 걸 만들면 **Textual**이 가장 가깝다. 다만 Textual은 자체 컴포넌트 시스템, Ink는 React 위에 얹힌다는 차이가 있다.
 - **자세한 건 Part 5에서.** 여기서는 "REPL은 5,000줄짜리 React 컴포넌트구나"라는 충격(?)을 가지고 다음으로 가면 된다.
 
----
-
-다음 챕터: 2.1 에이전트 루프 한 장 — Claude Code의 본질을 한 그림으로
