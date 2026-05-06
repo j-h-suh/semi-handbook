@@ -5,11 +5,15 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import remarkUnwrapImages from 'remark-unwrap-images';
+import remarkDirective from 'remark-directive';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
 import mermaid from 'mermaid';
 import { diagramRegistry } from './diagrams/diagramRegistry';
 import { FONT } from './diagrams/diagramTokens';
+import { CodeBlock } from './CodeBlock';
+import { Tabs } from './Tabs';
+import { remarkTabs } from '@/lib/remarkTabs';
 import type { GitCommit } from '@/lib/markdown';
 import 'katex/dist/katex.min.css';
 
@@ -89,7 +93,7 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
 
             <div className="prose prose-slate prose-invert max-w-none">
                 <ReactMarkdown
-                    remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath, remarkUnwrapImages]}
+                    remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath, remarkUnwrapImages, remarkDirective, remarkTabs]}
                     rehypePlugins={[rehypeRaw, rehypeKatex]}
                     components={{
                         // 1. Intercept <img> to render custom diagram components
@@ -108,25 +112,46 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
                             return <img src={imgSrc} alt={alt} className="mx-auto block" {...props} />;
                         },
 
-                        // 2. Intercept <code> to render mermaid blocks
-                        code({ className, children, ...props }) {
-                            const match = /language-(\w+)/.exec(className || '');
-                            const isMermaid = match && match[1] === 'mermaid';
+                        // 2a. Intercept <pre> to render fenced code blocks via Shiki
+                        // (mermaid blocks are also fenced and handled here)
+                        pre({ children, ...props }) {
+                            const child = Array.isArray(children) ? children[0] : children;
+                            if (child && typeof child === 'object' && 'props' in child) {
+                                const codeProps = (child as React.ReactElement<{ className?: string; children?: React.ReactNode }>).props;
+                                const className = codeProps.className || '';
+                                const match = /language-(\w+)/.exec(className);
+                                const codeText = String(codeProps.children ?? '').replace(/\n$/, '');
 
-                            if (isMermaid) {
-                                return (
-                                    <code className="mermaid flex justify-center py-8 w-full overflow-x-auto text-sm block">
-                                        {String(children).replace(/\n$/, '')}
-                                    </code>
-                                );
+                                if (match && match[1] === 'mermaid') {
+                                    return (
+                                        <code className="mermaid flex justify-center py-8 w-full overflow-x-auto text-sm block">
+                                            {codeText}
+                                        </code>
+                                    );
+                                }
+
+                                const lang = match ? match[1] : 'text';
+                                return <CodeBlock code={codeText} lang={lang} />;
                             }
+                            return <pre {...props}>{children}</pre>;
+                        },
 
-                            // Let regular code blocks use default rendering
+                        // 2b. Inline code passes through (fenced blocks handled by `pre`)
+                        code({ className, children, ...props }) {
                             return (
                                 <code className={className} {...props}>
                                     {children}
                                 </code>
                             );
+                        },
+
+                        // 2c. `:::tabs` directive (via remarkTabs plugin → <div class="tabs-directive">)
+                        div({ className, children, ...props }) {
+                            const cn = typeof className === 'string' ? className : Array.isArray(className) ? className.join(' ') : '';
+                            if (cn.includes('tabs-directive')) {
+                                return <Tabs>{children}</Tabs>;
+                            }
+                            return <div className={className} {...props}>{children}</div>;
                         },
 
                         // 3. Intercept <p> to prevent invalid HTML nesting

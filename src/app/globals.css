@@ -163,6 +163,82 @@ body {
   background-color: rgba(255, 255, 255, 0.015);
 }
 
+/* Shiki code block styling */
+.shiki-wrapper pre.shiki {
+  padding: 1rem 0;
+  margin: 0;
+  background-color: transparent !important;
+  font-size: 1rem;
+  line-height: 1.65;
+  font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+}
+
+.shiki-wrapper pre.shiki code {
+  display: block;
+  padding: 0;
+}
+
+.shiki-wrapper .line {
+  display: inline-block;
+  width: 100%;
+  padding: 0 1rem;
+  position: relative;
+}
+
+/* Highlighted lines (// [!code highlight]) */
+.shiki-wrapper .line.highlighted {
+  background-color: rgba(101, 117, 133, 0.18);
+  box-shadow: inset 2px 0 0 rgba(125, 211, 252, 0.6);
+}
+
+/* Diff add (// [!code ++]) */
+.shiki-wrapper .line.diff.add {
+  background-color: rgba(46, 160, 67, 0.15);
+  box-shadow: inset 2px 0 0 rgba(46, 160, 67, 0.7);
+}
+.shiki-wrapper .line.diff.add::before {
+  content: '+';
+  position: absolute;
+  left: 0.35rem;
+  color: rgba(46, 160, 67, 0.85);
+  font-weight: bold;
+}
+
+/* Diff remove (// [!code --]) */
+.shiki-wrapper .line.diff.remove {
+  background-color: rgba(248, 81, 73, 0.15);
+  box-shadow: inset 2px 0 0 rgba(248, 81, 73, 0.7);
+  opacity: 0.75;
+}
+.shiki-wrapper .line.diff.remove::before {
+  content: '-';
+  position: absolute;
+  left: 0.35rem;
+  color: rgba(248, 81, 73, 0.85);
+  font-weight: bold;
+}
+
+/* Focus mode (// [!code focus]) */
+.shiki-wrapper .has-focused .line:not(.focused) {
+  filter: blur(0.095rem);
+  opacity: 0.55;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+.shiki-wrapper .has-focused:hover .line:not(.focused) {
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* Error / warning levels (// [!code error] / [!code warning]) */
+.shiki-wrapper .line.highlighted.error {
+  background-color: rgba(248, 81, 73, 0.18);
+  box-shadow: inset 2px 0 0 rgba(248, 81, 73, 0.7);
+}
+.shiki-wrapper .line.highlighted.warning {
+  background-color: rgba(187, 128, 9, 0.18);
+  box-shadow: inset 2px 0 0 rgba(187, 128, 9, 0.7);
+}
+
 /* Thinking dots animation */
 @keyframes ellipsis {
   0% {
