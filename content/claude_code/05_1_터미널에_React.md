@@ -338,7 +338,7 @@ if __name__ == "__main__":
 - React는 **DOM 라이브러리가 아니다**. 트리를 효율적으로 조정해주는 라이브러리. 렌더러를 바꾸면 다른 매체에 그릴 수 있다.
 - **Ink는 터미널용 React 렌더러**다. `react-reconciler` 패키지를 받아서 "트리의 노드 = 터미널 셀"이라고 알려준 결과물.
 - `<Box>`, `<Text>`는 `<div>`, `<span>`의 터미널 버전. **flexbox 같은 props**를 그대로 쓴다 — 안에서 **Yoga 엔진**이 셀 위치를 계산한다.
-- 4단계 파이프라인: **Reconcile → Layout(Yoga) → Paint(Screen) → Diff & flush(ANSI)**. 마지막 단계의 **셀 단위 diff**가 깜빡임 없는 UI의 비결.
+- 4단계 파이프라인: **Reconcile → Layout(Yoga) → Paint(Screen) → Diff & `flush(ANSI)`**. 마지막 단계의 **셀 단위 diff**가 깜빡임 없는 UI의 비결.
 - `useInput`/`useStdin`/`useApp` 같은 훅으로 입력을 받는다. 상태가 바뀌면 React가 자동으로 다시 그린다. **상태 → UI 단방향 흐름**이 터미널에서도 그대로 작동.
 - **왜 굳이 React인가**: 명령형 ncurses는 "내가 직접 그린다", Ink는 "이렇게 생겨야 한다고 선언만 한다". 복잡해질수록 후자의 이득이 커진다. Claude Code 같은 수많은 동시 패널이 가능한 이유.
 - 다음 챕터(5.2): 그 컴포넌트들이 공유하는 상태는 어떻게 관리하는가. **AppState 스토어** — Redux 없이 만든 단순 옵저버.

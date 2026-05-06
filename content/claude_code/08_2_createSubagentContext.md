@@ -273,7 +273,7 @@ set_app_state_for_tasks = (
 
 :::
 
-**심지어 setAppState가 no-op이어도** — `setAppStateForTasks` 는 항상 root store에 도달해야 한다. 왜? 자식 에이전트가 백그라운드 bash 작업을 띄웠다고 하자. 자식이 끝나면 그 bash 작업의 PPID는 **init(1)** 이 된다 — 고아 프로세스. 누가 추적하고 죽이지? **root AppState**다. 그래서 어떤 경우에도 task 등록만은 root에 도달해야 한다. 안 그러면 — **PPID=1 좀비**. 이 코멘트 한 줄이 과거에 누가 디버깅 며칠 했다는 사연이다.
+**심지어 setAppState가 no-op이어도** — `setAppStateForTasks` 는 항상 root store에 도달해야 한다. 왜? 자식 에이전트가 백그라운드 bash 작업을 띄웠다고 하자. 자식이 끝나면 그 bash 작업의 PPID는 **`init(1)`** 이 된다 — 고아 프로세스. 누가 추적하고 죽이지? **root AppState**다. 그래서 어떤 경우에도 task 등록만은 root에 도달해야 한다. 안 그러면 — **PPID=1 좀비**. 이 코멘트 한 줄이 과거에 누가 디버깅 며칠 했다는 사연이다.
 
 **4. UI 콜백 — 모두 undefined**
 

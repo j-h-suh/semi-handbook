@@ -147,7 +147,7 @@ Ink는 한 문장으로 설명하면 이렇다.
 
 > 💡 **Python 비유:** Python에는 [`Textual`](https://textual.textualize.io/)이라는 비슷한 라이브러리가 있다. Rich의 자매 프로젝트. Textual도 컴포넌트, reactive 상태, 키 이벤트, CSS 스타일링을 한다. Ink와의 큰 차이점은 — Textual은 자체 컴포넌트 시스템인데, Ink는 React 위에 얹힌다는 것. React 생태계 전체를 그대로 쓸 수 있는 게 Ink의 강점이다.
 
-### 그러면 REPL.tsx 안에는 뭐가 들어 있나
+### 그러면 `REPL.tsx` 안에는 뭐가 들어 있나
 
 5,000줄짜리 거대한 파일이다. 카테고리만 훑어보자.
 

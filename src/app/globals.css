@@ -64,6 +64,12 @@ body {
   font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
 }
 
+/* Tailwind Typography 의 디폴트로 인라인 코드 앞뒤에 backtick 이 붙는데, 가독성 저해되므로 제거. */
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
 /* Override block code center alignment since we use inline code above */
 .prose pre code {
   background-color: transparent;

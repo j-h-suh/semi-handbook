@@ -166,9 +166,9 @@ IMPORTANT: this context may or may not be relevant to your tasks.
 
 근데 캐시는 바이트 단위로 일치해야 한다. 시스템 프롬프트가 조금이라도 바뀌면 — 캐시 미스. 풀 비용. 
 
-여기서 **CLAUDE.md**의 문제가 보인다.
+여기서 **`CLAUDE.md`**의 문제가 보인다.
 
-| | 시스템 프롬프트 | CLAUDE.md |
+| | 시스템 프롬프트 | `CLAUDE.md` |
 |---|---|---|
 | 수명 | 거의 변하지 않음 (도구 정의, 지침) | 프로젝트마다, 디렉토리마다 다름 |
 | 캐시 친화성 | ✅ 매우 친화적 | ❌ 자주 바뀐다 |
@@ -193,7 +193,7 @@ CLAUDE.md는 한 파일이 아니다. 4가지 종류의 파일을 합쳐서 만�
 
 위에서 아래로 겹쳐서 적용된다. Managed → User → Project → Local 순. Managed는 항상 먼저, Local은 마지막. 같은 디렉토리에서는 — 부모 → 자식 순으로 **루트부터 CWD까지 전부** 합친다.
 
-> 💡 **AutoMem / TeamMem 은 별도 시스템.** 위 4단계는 **지시문(Instructions)** 분류이고, `claudemd.ts:1077-1086` 의 `isInstructionsMemoryType` 함수가 정확히 이 4종류 (`User, Project, Local, Managed`) 만 인정한다. 추가로 두 종류가 더 있다 — **AutoMem** (사용자 자동 메모리, 대화 사이에 지속) 과 **TeamMem** (팀 공유 메모리, feature flag 뒤). `claudemd.ts:1043-1045` 의 코멘트가 직접 명시: **"AutoMem/TeamMem are intentionally excluded — they're a separate memory system, not 'instructions' in the CLAUDE.md/rules sense."** 둘 다 같은 메시지 배열로 prepend되지만 지시문이 아니라 메모리. 이 챕터는 4단계 지시문에만 집중한다.
+> 💡 **AutoMem / TeamMem 은 별도 시스템.** 위 4단계는 **지시문(Instructions)** 분류이고, `claudemd.ts:1077-1086` 의 `isInstructionsMemoryType` 함수가 정확히 이 4종류 (`User, Project, Local, Managed`) 만 인정한다. 추가로 두 종류가 더 있다 — **AutoMem** (사용자 자동 메모리, 대화 사이에 지속) 과 **TeamMem** (팀 공유 메모리, feature flag 뒤). `claudemd.ts:1043-1045` 의 코멘트가 직접 명시: **"AutoMem/TeamMem are intentionally excluded — they're a separate memory system, not 'instructions' in the `CLAUDE.md`/rules sense."** 둘 다 같은 메시지 배열로 prepend되지만 지시문이 아니라 메모리. 이 챕터는 4단계 지시문에만 집중한다.
 
 ```
 /home/user/CLAUDE.md            ← User 글로벌
@@ -413,9 +413,9 @@ final_messages = prepend_user_context(
 2. **`get_claude_mds`** — 경로 + 설명 annotation 붙여서 한 문자열로.
 3. **`prepend_user_context`** — 사용자 역할에 `<system-reminder>` 태그로 감싸서 메시지 배열 맨 앞에.
 
-진짜 Claude Code는 여기에 **git status**, 현재 날짜, **managed rules**, **.claude/rules/** 디렉토리, **nested CLAUDE.md**, **@-include 직접 지시문** 등이 더해진 게 1,480줄이다. 본질은 위 50줄.
+진짜 Claude Code는 여기에 **git status**, 현재 날짜, **managed rules**, **.claude/rules/** 디렉토리, **nested `CLAUDE.md`**, **@-include 직접 지시문** 등이 더해진 게 1,480줄이다. 본질은 위 50줄.
 
-> 💡 **`<system-reminder>` 태그가 우리도 쓰는 패턴.** 이 책을 쓰는 지금 — 당신이 본 메시지에 `<system-reminder>` 태그가 종종 있는 것을 봤을 것이다. **Task tools 알림**, 현재 디렉토리, 시간 변경, **MEMORY.md 내용** 등. 정확히 같은 메커니즘이다. 코드가 사용자 역할로 끼워넣은 메시지. CLAUDE.md만 그런 게 아니라 — **클라이언트가 LLM에게 상황을 알리는 모든 것**이 이 패턴을 쓴다. `src/` 안에 `<system-reminder>` 를 쓰는 파일이 **22개** — `FileReadTool`, `AgentTool/prompt.ts`, `attachments.ts`, `messages.ts`, `sideQuestion.ts`, `brief.ts`, `ultraplan.tsx`, `memdir/memoryAge.ts`, `constants/prompts.ts` 등. **하나의 메커니즘이 시스템 지시문, 컨텍스트 알림, 메모리 주입, 도구 결과 메타데이터를 다 처리한다**.
+> 💡 **`<system-reminder>` 태그가 우리도 쓰는 패턴.** 이 책을 쓰는 지금 — 당신이 본 메시지에 `<system-reminder>` 태그가 종종 있는 것을 봤을 것이다. **Task tools 알림**, 현재 디렉토리, 시간 변경, **`MEMORY.md` 내용** 등. 정확히 같은 메커니즘이다. 코드가 사용자 역할로 끼워넣은 메시지. CLAUDE.md만 그런 게 아니라 — **클라이언트가 LLM에게 상황을 알리는 모든 것**이 이 패턴을 쓴다. `src/` 안에 `<system-reminder>` 를 쓰는 파일이 **22개** — `FileReadTool`, `AgentTool/prompt.ts`, `attachments.ts`, `messages.ts`, `sideQuestion.ts`, `brief.ts`, `ultraplan.tsx`, `memdir/memoryAge.ts`, `constants/prompts.ts` 등. **하나의 메커니즘이 시스템 지시문, 컨텍스트 알림, 메모리 주입, 도구 결과 메타데이터를 다 처리한다**.
 
 ---
 
@@ -423,7 +423,7 @@ final_messages = prepend_user_context(
 
 - **CLAUDE.md는 시스템 프롬프트가 아니다.** 메타 사용자 메시지로 변환되어 메시지 배열의 맨 앞에 prepend된다 — `<system-reminder>` 태그로 감싸고 `isMeta: true` 플래그.
 - 왜 시스템 프롬프트에 안 넣었나: **prompt caching**. 시스템 프롬프트는 바이트 단위로 같아야 캐시가 적용된다. CLAUDE.md는 자주 바뀌므로 — 시스템 프롬프트에 넣으면 캐시가 깨져 수만 토큰이 풀 가격. 메시지 영역에 두면 큰 시스템 프롬프트 캐시가 깨지지 않는다.
-- 4단계 계층: **Managed → User → Project → Local**. 위에서 아래로 겹쳐서 적용. CWD에서 루트까지 **모든 디렉토리의 CLAUDE.md**가 합쳐진다.
+- 4단계 계층: **Managed → User → Project → Local**. 위에서 아래로 겹쳐서 적용. CWD에서 루트까지 **모든 디렉토리의 `CLAUDE.md`**가 합쳐진다.
 - 각 파일은 경로 + 종류 설명과 함께 박힌다 (`"(project instructions, checked into the codebase)"` 식). LLM이 어떤 종류의 지침인지 구분할 수 있도록.
 - 합쳐진 메시지의 첫 줄은 **`MEMORY_INSTRUCTION_PROMPT`** — **"This OVERRIDES any default behavior and you MUST follow them"**. 시스템 프롬프트의 일반 지침과 충돌하면 CLAUDE.md가 이긴다.
 - `<system-reminder>` 태그는 CLAUDE.md만 쓰는 게 아니라 **클라이언트가 LLM에게 상황을 알리는 모든 것**에 쓰이는 일반 패턴. 5장의 메시지 시스템과 6장의 컨텍스트 주입의 접점.

@@ -252,7 +252,7 @@ if needs_ancestry_check:
 
 이게 진짜 잘 짠 부분: 워크스페이스 매칭이 통과한 후에만 `ps` 호출. 이전에는 모든 로크파일에 대해 `ps` 를 돌렸는데 — **CPU 프로파일**에서 `findAvailableIDE` 폴링이 부하 주범으로 떴다. 순서를 뒤집어서 **대부분의 로크파일은 workspace 필터에서 탈락**해 `ps` 까지 안 온다.
 
-> ⚙️ **CPU 프로파일이 만든 두 최적화** (`ide.ts:681-689`). 같은 함수 안에 측정 기반 최적화 둘. (a) **parallel readlock**: `Promise.all(lockfiles.map(readIdeLockfile))` — 코멘트 verbatim **"findAvailableIDE() polls this every 1s for up to 30s; serial I/O here was showing up as ~500ms self-time in CPU profiles."** 직렬 I/O 가 **500ms self-time** 으로 잡혀서 병렬화. (b) **lazy + once-per-call memoize**: `getAncestors = makeAncestorPidLookup()` — **closure 만 만들고 즉시 실행 안 함**. workspace 매칭이 통과한 **첫 번째 lockfile** 에서야 `ps` 한 번, 결과를 **`detectIDEs` 한 호출의 끝까지 메모이즈**. 정상 케이스 (모든 lockfile 이 workspace 에서 탈락) → `ps` **0번**. 매칭 통과 시 → `ps` 최대 10번, 같은 호출 안의 다음 lockfile 은 재계산 안 함. 코멘트: **"with the workspace-check-first ordering below, this often never fires at all"**.
+> ⚙️ **CPU 프로파일이 만든 두 최적화** (`ide.ts:681-689`). 같은 함수 안에 측정 기반 최적화 둘. (a) **parallel readlock**: `Promise.all(lockfiles.map(readIdeLockfile))` — 코멘트 verbatim **"`findAvailableIDE()` polls this every 1s for up to 30s; serial I/O here was showing up as ~500ms self-time in CPU profiles."** 직렬 I/O 가 **500ms self-time** 으로 잡혀서 병렬화. (b) **lazy + once-per-call memoize**: `getAncestors = makeAncestorPidLookup()` — **closure 만 만들고 즉시 실행 안 함**. workspace 매칭이 통과한 **첫 번째 lockfile** 에서야 `ps` 한 번, 결과를 **`detectIDEs` 한 호출의 끝까지 메모이즈**. 정상 케이스 (모든 lockfile 이 workspace 에서 탈락) → `ps` **0번**. 매칭 통과 시 → `ps` 최대 10번, 같은 호출 안의 다음 lockfile 은 재계산 안 함. 코멘트: **"with the workspace-check-first ordering below, this often never fires at all"**.
 
 ### 일단 찾으면 — **그냥 MCP 서버**
 

@@ -140,7 +140,7 @@ class PermissionEngine:
 
 이게 **capability-based security**의 작은 형태다. 권한이 주어진 자리, 주어진 시간에만 산다. 다른 곳으로 흘러나가지 않는다. 사용자는 한 명령에 권한을 위임했고, 그 명령이 끝나면 권한도 같이 끝난다.
 
-> ⚙️ **턴 스코프뿐만이 아니라 forked agent 까지 격리 (8장 떡밥).** 위 코멘트에는 더 큰 디테일이 이어진다. **"Must run before the !shouldQuery gate: forked commands return shouldQuery=false, and createGetAppStateWithAllowedTools in forkedAgent.ts reads this field, so stale skill tools would otherwise leak into forked agent permissions."** 즉 권한 슬롯이 비워지는 자리가 조심스럽게 골라져 있다 — 너무 늦으면 서브 에이전트 (8장의 AgentTool) 가 직전 명령의 권한을 물려받을 수 있기 때문. **capability-based security**가 부모-자식 에이전트 경계까지 닿는다는 뜻. 8장에서 본다.
+> ⚙️ **턴 스코프뿐만이 아니라 forked agent 까지 격리 (8장 떡밥).** 위 코멘트에는 더 큰 디테일이 이어진다. **"Must run before the !shouldQuery gate: forked commands return shouldQuery=false, and createGetAppStateWithAllowedTools in `forkedAgent.ts` reads this field, so stale skill tools would otherwise leak into forked agent permissions."** 즉 권한 슬롯이 비워지는 자리가 조심스럽게 골라져 있다 — 너무 늦으면 서브 에이전트 (8장의 AgentTool) 가 직전 명령의 권한을 물려받을 수 있기 때문. **capability-based security**가 부모-자식 에이전트 경계까지 닿는다는 뜻. 8장에서 본다.
 
 > 💡 **왜 `command:` 슬롯이라는 이름인가.** 6.4에서 보겠지만 권한 시스템에는 영구 룰과 임시 룰이 둘 다 있다. 영구 룰은 settings.json에 저장돼서 세션 간에 유지된다. 임시 룰은 현재 세션에만 산다 — 그 중 하나가 명령 스코프다. "이번 명령 동안만 통하는 룰"이라는 뜻으로 `command:` 슬롯이라는 이름이 붙었다.
 

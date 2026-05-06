@@ -466,7 +466,7 @@ Hook이 의도대로 안 돌 때 볼 곳들.
 
 - **Hook 설정은 3곳**(user/project/local settings)에서 수집되어 합산된다. `seenFiles`로 물리 파일 중복 방지. `allowManagedHooksOnly` 정책으로 전체 잠금 가능.
 - **중복 제거**: 같은 command+shell+if 조건이면 하나만 실행. 단, 서로 다른 plugin/skill 소스의 동일 명령은 dedup하지 않는다 (네임스페이스 분리).
-- **`processHookJSONOutput`**이 stdout JSON을 `HookResult`로 변환. `decision: "block"` → deny, `hookSpecificOutput.permissionDecision` → 더 정밀한 3-way(allow/deny/ask). 후자가 전자를 덮어쓴다.
+- **`processHookJSONOutput`**이 stdout JSON을 `HookResult`로 변환. `decision: "block"` → deny, `hookSpecificOutput.permissionDecision` → 더 정밀한 3-`way(allow/deny/ask)`. 후자가 전자를 덮어쓴다.
 - **실전 패턴 3가지**: 보안 차단(PreToolUse + if 조건), 자동화(PostToolUse + suppressOutput), 컨텍스트 주입(UserPromptSubmit + additionalContext).
 - **디버깅**: `--verbose`로 매칭 로그 확인. JSON 앞에 비-JSON 출력이 있으면 파싱 실패 — Hook 스크립트는 stdout에 JSON만 출력할 것.
 - **Part 6 끝.** 컨텍스트(6.1) + 컨테이너(6.2) + 모드(6.3) + 룰(6.4) + Hook(6.5/6.6). 정적 룰에서 사용자 코드 실행까지, Claude Code의 권한 + 확장 레이어 전체를 봤다.

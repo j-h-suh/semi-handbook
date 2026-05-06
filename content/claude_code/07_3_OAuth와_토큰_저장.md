@@ -299,7 +299,7 @@ const NONSTANDARD_INVALID_GRANT_ALIASES = new Set([
 표준이 있어도 모든 서버가 안 따른다. Claude Code가 **Slack의 3가지 사투리** 를 외워서 RFC 6749 의 표준 `invalid_grant` 으로 정규화한다 — 그래야 SDK 의 `OAUTH_ERRORS['invalid_grant'] → InvalidGrantError` 매핑이 발동하고 토큰 무효화가 정상 작동.
 
 **5. 키체인 prefetch — 시작 시간 65ms → 0ms** (`keychainPrefetch.ts`):
-이건 7.3 의 진짜 보석이다. macOS startup 에서 두 개의 키체인 항목 (`Claude Code-credentials` + `Claude Code` legacy API key) 를 sequential 로 읽으면 ~65ms (각 spawn 32-33ms). `keychainPrefetch.ts` 가 main.tsx 모듈 평가 맨 위에서 두 spawn 을 **parallel** 로 띄운다. main.tsx import 평가가 끝날 때쯤이면 — 둘 다 이미 캐시. **65ms → 거의 0ms**. **왜 여기에 저렇게 import 가 적은지**까지 67줄짜리 docstring 으로 적혀 있다 — execa 한 번 import 하면 cross-spawn 체인 ~58ms 가 추가로 사라지기 때문. 프로덕션 단단함의 정점 — 모든 줄이 측정에서 나왔다.
+이건 7.3 의 진짜 보석이다. macOS startup 에서 두 개의 키체인 항목 (`Claude Code-credentials` + `Claude Code` legacy API key) 를 sequential 로 읽으면 ~65ms (각 spawn 32-33ms). `keychainPrefetch.ts` 가 `main.tsx` 모듈 평가 맨 위에서 두 spawn 을 **parallel** 로 띄운다. `main.tsx` import 평가가 끝날 때쯤이면 — 둘 다 이미 캐시. **65ms → 거의 0ms**. **왜 여기에 저렇게 import 가 적은지**까지 67줄짜리 docstring 으로 적혀 있다 — execa 한 번 import 하면 cross-spawn 체인 ~58ms 가 추가로 사라지기 때문. 프로덕션 단단함의 정점 — 모든 줄이 측정에서 나왔다.
 
 **6. `tokens()` 가 7.2% CPU 를 잡아먹은 사연** (`auth.ts:1541-1547` 코멘트):
 **"spawnSync was 7.2% of total CPU after PR #19436"**. MCP SDK 의 `_commonHeaders` 가 매 요청마다 `tokens()` 를 부른다 — 30-40 회/초. 캐시 없이 매번 `security find-generic-password` 를 spawn 하면 — 전체 CPU 의 7.2% 가 그 한 줄에서 사라진다. 30초 TTL 캐시가 추가되면서 해결. 문서가 그 자리에서 사연을 기록한다. 두 번째 정점.

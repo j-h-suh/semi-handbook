@@ -169,9 +169,9 @@ def get_built_in_agents() -> list[AgentDefinition]:
 
 즉 **외부 CLI 표준 빌드는 5개** (`general-purpose`, `statusline-setup`, `Explore`, `Plan`, `claude-code-guide`). `verification` 은 두 게이트가 모두 켜져야 들어오기 때문에 사실상 **ant-only**.
 
-각 정의가 5가지 차원에서 다르다 — 시스템 프롬프트 / 도구 / 모델 / CLAUDE.md / 권한 모드.
+각 정의가 5가지 차원에서 다르다 — 시스템 프롬프트 / 도구 / 모델 / `CLAUDE.md` / 권한 모드.
 
-| 에이전트 | 시스템 프롬프트 | 도구 | 모델 | CLAUDE.md | 권한 모드 |
+| 에이전트 | 시스템 프롬프트 | 도구 | 모델 | `CLAUDE.md` | 권한 모드 |
 |---|---|---|---|---|---|
 | `general-purpose` | 만능 (코드 탐색/분석) | allowlist `['*']` (literal "`*`") | (intentionally omitted — `getDefaultSubagentModel()`) | 포함 | 부모 상속 |
 | `Explore` | 읽기 전용 빠른 탐색 | `disallowedTools: [Agent, ExitPlanMode, Edit, Write, NotebookEdit]` | ant: `'inherit'` / 외부: **`'haiku'`** | 생략 | 부모 상속 |
@@ -273,7 +273,7 @@ should_omit_claude_md = (
 
 :::
 
-**주당 5-15 Giga-token 절약**. Explore 에이전트가 주당 3,400만 번 띄워진다는 사실이 코멘트에 들어 있다. 한 번에 CLAUDE.md(보통 2-5KB)를 생략하는 것만으로 — **Gtok 단위**의 토큰이 떨어진다. **그런데 kill-switch가 같이 박혀 있다** — `tengu_slim_subagent_claudemd` GrowthBook 게이트가 **기본 true** 지만, **언제든 flip 해서 fallback 할 수 있게** 무장. 5-15 Gtok/week 절약은 기본값에 의존. 프로덕션이 언제든 되돌릴 수 있게 디자인된 모범 사례.
+**주당 5-15 Giga-token 절약**. Explore 에이전트가 주당 3,400만 번 띄워진다는 사실이 코멘트에 들어 있다. 한 번에 `CLAUDE.md`(보통 2-5KB)를 생략하는 것만으로 — **Gtok 단위**의 토큰이 떨어진다. **그런데 kill-switch가 같이 박혀 있다** — `tengu_slim_subagent_claudemd` GrowthBook 게이트가 **기본 true** 지만, **언제든 flip 해서 fallback 할 수 있게** 무장. 5-15 Gtok/week 절약은 기본값에 의존. 프로덕션이 언제든 되돌릴 수 있게 디자인된 모범 사례.
 
 같은 정신이 **gitStatus**에도 적용된다.
 
@@ -308,11 +308,11 @@ resolved_system_context = (
 
 :::
 
-40KB의 `gitStatus` 가 — 읽기 전용 에이전트한테는 죽은 데이터. 필요하면 자기가 `git status` 부르면 된다. **주당 1-3 Gtok 추가 절약**. **단, 이건 `omitClaudeMd: true` 모든 에이전트가 아니라 명시적 화이트리스트** — `agentType === 'Explore' || agentType === 'Plan'` 두 에이전트에만 적용. CLAUDE.md 드롭은 더 일반적인 플래그 기반, gitStatus 드롭은 타입 화이트리스트 — 서로 다른 게이트 메커니즘이 우연이 아니라 안전 장치.
+40KB의 `gitStatus` 가 — 읽기 전용 에이전트한테는 죽은 데이터. 필요하면 자기가 `git status` 부르면 된다. **주당 1-3 Gtok 추가 절약**. **단, 이건 `omitClaudeMd: true` 모든 에이전트가 아니라 명시적 화이트리스트** — `agentType === 'Explore' || agentType === 'Plan'` 두 에이전트에만 적용. `CLAUDE.md` 드롭은 더 일반적인 플래그 기반, gitStatus 드롭은 타입 화이트리스트 — 서로 다른 게이트 메커니즘이 우연이 아니라 안전 장치.
 
 핵심 교훈: **에이전트는 자기에 맞는 컨텍스트만 받아야 한다**. 모든 자식이 부모의 풀 컨텍스트를 받으면 — **모든 비용이 N배**가 된다. 작은 에이전트는 작게 띄운다.
 
-> 💡 **Plan 의 완전 차단이 아닌 CLAUDE.md 처리** (`planAgent.ts:88-89`). Plan 의 `omitClaudeMd: true` 옆 코멘트가 솔직: **"Plan is read-only and can Read CLAUDE.md directly if it needs conventions. Dropping it from context saves tokens without blocking access."** — 즉 완전 차단이 아니라 기본 컨텍스트에서 빼는 것. 모델이 필요하면 **Read tool 로 직접** 가져올 수 있음. **비용 절약과 접근성의 트레이드오프** — 기본은 빠지지만 의지가 있으면 접근 가능. 좋은 fallback 디자인.
+> 💡 **Plan 의 완전 차단이 아닌 `CLAUDE.md` 처리** (`planAgent.ts:88-89`). Plan 의 `omitClaudeMd: true` 옆 코멘트가 솔직: **"Plan is read-only and can Read `CLAUDE.md` directly if it needs conventions. Dropping it from context saves tokens without blocking access."** — 즉 완전 차단이 아니라 기본 컨텍스트에서 빼는 것. 모델이 필요하면 **Read tool 로 직접** 가져올 수 있음. **비용 절약과 접근성의 트레이드오프** — 기본은 빠지지만 의지가 있으면 접근 가능. 좋은 fallback 디자인.
 
 ### 모델한테 도구를 어떻게 설명하는가
 
@@ -524,7 +524,7 @@ EXPLORE = AgentDefinition(
 
 - **AgentTool은 도구의 모습을 한 LLM 호출**. 다른 모든 도구처럼 `buildTool({...})` 로 만들어지고 같은 47개 필드를 갖지만, `call()` 안에서 **2.1의 `query()` 를 자기 자신으로 부른다**. **이게 멀티 에이전트의 전부** — 그 외엔 다 디테일.
 - 모델한테 자연스럽다 — **"도구를 부른다"** 는 학습된 개념을 그대로 쓴다. **"다른 LLM을 부른다"** 는 새 패러다임이 아님.
-- **5(+1)개의 내장 에이전트**가 5차원으로 다르다 — 시스템 프롬프트, 도구 화이트/블랙리스트, 모델, CLAUDE.md 포함 여부, 권한 모드. **외부 CLI 표준 빌드**: `general-purpose` (만능, 모델 omit), `statusline-setup` (설정만, **`['Read', 'Edit']`** 단 2개 도구, sonnet), `Explore` (빠른 탐색, 외부 **haiku**), `Plan` (아키텍트, **inherit**), `claude-code-guide` (사용법, **haiku**, `dontAsk` 권한 모드). +ant-only `verification` (검증, **inherit**, 3중 방어).
+- **5(+1)개의 내장 에이전트**가 5차원으로 다르다 — 시스템 프롬프트, 도구 화이트/블랙리스트, 모델, `CLAUDE.md` 포함 여부, 권한 모드. **외부 CLI 표준 빌드**: `general-purpose` (만능, 모델 omit), `statusline-setup` (설정만, **`['Read', 'Edit']`** 단 2개 도구, sonnet), `Explore` (빠른 탐색, 외부 **haiku**), `Plan` (아키텍트, **inherit**), `claude-code-guide` (사용법, **haiku**, `dontAsk` 권한 모드). +ant-only `verification` (검증, **inherit**, 3중 방어).
 - 읽기 전용 에이전트의 컨텍스트 다이어트: Explore/Plan은 `omit_claude_md: true` 로 CLAUDE.md를 생략. **주당 5-15 Gtok 절약** (Explore는 주당 3,400만 번 띄워짐). gitStatus(40KB)도 **추가 1-3 Gtok 절약**. **에이전트는 자기에 맞는 컨텍스트만** — 모든 자식이 풀 컨텍스트면 비용이 N배.
 - **`disallowedTools` 는 프롬프트 방어가 아니라 진짜 차단**. `availableTools` 어셈블 단계에서 빠진다. 모델이 유혹받을 일조차 없다. 시스템 프롬프트의 **대문자 CRITICAL**은 이중 방어.
 - 프롬프트 작성 가이드가 모델한테 멘탈 모델을 준다 — **"Brief the agent like a smart colleague who just walked into the room"**. 추상적 규칙 대신 구체적 비유. **"Never delegate understanding"** — 결정은 부모가 해야 한다.
