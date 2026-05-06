@@ -55,7 +55,7 @@ export default function HomeClient({
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 mb-6">
                         <BookOpen size={36} />
                     </div>
-                    <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl mb-4">
+                    <h1 className="text-5xl font-extrabold text-white sm:text-6xl mb-6 leading-snug">
                         반도체를 여행하는<br />
                         세미에이아이를 위한<br />
                         <span className="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">
@@ -63,7 +63,7 @@ export default function HomeClient({
                         </span>
                     </h1>
                     <p className="text-lg text-slate-500 max-w-xl mx-auto">
-                        반도체, 통계학, Claude Code — AI/ML 엔지니어를 위한 체계적 핸드북 시리즈
+                        기술과 제품을 만드는 모두를 위한 핸드북 시리즈
                     </p>
                 </div>
 
@@ -105,7 +105,7 @@ export default function HomeClient({
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold text-white">통계학 핸드북</h2>
-                                <p className="text-xs text-slate-500">AI/ML 엔지니어를 위한 통계</p>
+                                <p className="text-xs text-slate-500">데이터로 일하는 모두를 위한 통계</p>
                             </div>
                         </div>
                         <p className="text-sm text-slate-400 mb-4 leading-relaxed">

@@ -53,13 +53,14 @@ body {
 }
 
 
-/* Accent for inline code */
+/* Accent for inline code (Option B: Cyan accent) */
 .prose code {
-  color: #eb5757;
-  background: rgba(135, 131, 120, 0.15);
-  font-size: 85%;
-  padding: 0.2em 0.4em;
-  border-radius: 3px;
+  color: #67e8f9;
+  background: rgba(103, 232, 249, 0.08);
+  font-weight: 500;
+  font-size: 88%;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
   font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
 }
 

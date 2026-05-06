@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal } from 'lucide-react';
@@ -31,11 +31,13 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
         return null;
     }, [decodedPathname]);
 
-    const [activeBook, setActiveBook] = useState<BookTab>(detectedBook ?? 'semi');
-
-    if (detectedBook && detectedBook !== activeBook) {
-        setActiveBook(detectedBook);
-    }
+    // 사용자가 명시적으로 탭을 클릭한 경우의 override.
+    // URL 이동(pathname 변경) 시 자동 초기화 → 챕터 페이지 진입 시 그 책 탭으로 자연 동기화.
+    const [userOverride, setUserOverride] = useState<BookTab | null>(null);
+    useEffect(() => {
+        setUserOverride(null);
+    }, [pathname]);
+    const activeBook: BookTab = userOverride ?? detectedBook ?? 'semi';
 
     const chaptersMap: Record<BookTab, ChapterMeta[]> = { semi: semiChapters, stats: statsChapters, claude: claudeChapters };
     const chapters = chaptersMap[activeBook];
@@ -78,7 +80,7 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
                     <BookOpen size={20} />
                 </div>
                 <div>
-                    <h1 className="text-sm font-bold text-slate-200 tracking-tight whitespace-normal leading-tight">
+                    <h1 className="text-sm font-bold text-slate-200 whitespace-normal leading-snug">
                         반도체를 여행하는<br />세미에이아이를 위한<br />핸드북 시리즈
                     </h1>
                 </div>
@@ -94,7 +96,7 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
                         <button
                             key={book}
                             onClick={() => {
-                                setActiveBook(book);
+                                setUserOverride(book);
                                 const newChapters = chaptersMap[book];
                                 const firstPart = newChapters[0]?.part;
                                 if (firstPart) setOpenParts(new Set([firstPart]));
@@ -138,7 +140,7 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
                                                         : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
                                                     }`}
                                                 >
-                                                    {chapter.title}
+                                                    {chapter.title.split('—')[0].trim()}
                                                 </Link>
                                             </li>
                                         );
