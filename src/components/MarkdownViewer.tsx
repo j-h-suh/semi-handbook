@@ -155,8 +155,7 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
 
                         // 2c. `:::tabs` directive (via remarkTabs plugin → <div class="tabs-directive">)
                         div({ className, children, ...props }) {
-                            const cn = typeof className === 'string' ? className : Array.isArray(className) ? className.join(' ') : '';
-                            if (cn.includes('tabs-directive')) {
+                            if (typeof className === 'string' && className.includes('tabs-directive')) {
                                 return <Tabs>{children}</Tabs>;
                             }
                             return <div className={className} {...props}>{children}</div>;
