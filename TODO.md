@@ -494,3 +494,45 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
   - `***` 세 별표 연속 → `**` 정리 (123건)
   - nested bold, unmatched `**`, 조사 분리(`한다 고` → `한다고`) 수작업 교정
   - 스크립트(`/tmp/italic_fix.py`) 일괄 변환 + 서브에이전트 5팀 병렬 검수
+
+> 참고: 3-1의 "다음 챕터 푸터 추가"는 이후 커밋 `1439101`에서 의도적으로 제거됨. 현재 챕터 푸터 정책은 "푸터 없음".
+
+---
+
+## Phase 3.5: mini_claude 코드–핸드북 갭
+
+`mini_claude` 실행 중 발견되어 코드는 수정했으나 9.1/9.2 핸드북 본문에는 아직 반영되지 않은 항목들. (구 `content/claude_code/_revisions.md` 통합)
+
+### 9.1 설계 — 미니 에이전트의 골격
+
+- [ ] **`pyproject.toml`에 `[build-system]` 섹션 추가**
+  - 현상: `[build-system]`이 없으면 uv가 프로젝트 본체를 설치하지 않아 `[project.scripts]` entry point가 `.venv/bin/`에 생성되지 않음 → `uv run mini-claude` 실행 실패
+  - 반영 위치: 9.1 `pyproject.toml` 예시(현재 172~186줄)에 `[build-system] requires = ["hatchling"], build-backend = "hatchling.build"` 블록 추가
+
+- [ ] **`tools/__init__.py` 예시에 `default_tool_pool` stub 포함**
+  - 현상: `main.py`가 `from .tools import default_tool_pool`를 import. 스캐폴드 단계에 stub이 없으면 `ImportError`
+  - 반영 위치: 9.1 "Python으로 옮기면" 섹션에 `tools/__init__.py` 예시 추가 — `def default_tool_pool() -> list[Tool]: return []`
+
+- [ ] **`main.py` API 키 미설정 에러 메시지 친절화**
+  - 현상: 기존 메시지("ANTHROPIC_API_KEY 환경 변수가 필요해.")는 해결 방법 미제공
+  - 반영 위치: 9.1 `main.py` 예시(현재 337~338줄)의 SystemExit 메시지에 `export ANTHROPIC_API_KEY=sk-ant-... 후 다시 실행.` 안내 한 줄 추가
+
+- [ ] **`agent.py` stub에 unreachable `yield` 추가**
+  - 현상: `async def query(...) -> AsyncGenerator[str, None]`에 `yield`가 없으면 Python이 coroutine으로 인식 → `async for`에서 `TypeError`
+  - 반영 위치: 9.1 `agent.py` stub(현재 303~316줄)의 `raise NotImplementedError` 다음 줄에 `yield  # async generator로 인식시키기 위한 unreachable yield`
+
+### 9.2 핵심 루프
+
+- [ ] **"첫 실행" 단락 추가 (API 키 설정 안내)**
+  - 현상: "안녕" 입력 예시로 시작하나, 실제로는 `ANTHROPIC_API_KEY` 미설정으로 SystemExit → 첫 실행에서 막힘
+  - 반영 위치: 9.2의 "안녕" 예시(현재 442~444줄) **직전**에 단락 추가 — 환경 변수 설정(`export ANTHROPIC_API_KEY=...`), 실행 명령(`uv run mini-claude`), 첫 프롬프트 예시(`> 안녕`)
+  - 비채택 대안: `.env` 지원(의존성 증가), 별도 "환경 준비" 섹션(흐름 단절)
+
+---
+
+## Phase 4: 메타 노트 통합
+
+- [x] `content/claude_code/_handbook_revisions.md` 삭제 (4개 항목 모두 [done], TODO.md Phase 3에 큰 줄기 보존)
+- [x] `content/claude_code/_revisions.md` 삭제 (살아있는 5건은 위 Phase 3.5로 이전)
+- [x] `content/claude_code/_terminology_pending.md` 삭제 (빈 placeholder, 항목 발생 시 TODO.md에 직접 추가)
+- [x] H1·구조 일관성 검토 — `00_0`의 콜론 H1과 `11_에필로그`의 `# 11.` 형식·5단 구조 부재는 모두 **의도된 예외**(도입부 / 에필로그 인사)로 확인. 패턴 일치 강제하지 않음.
