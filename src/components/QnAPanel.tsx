@@ -198,7 +198,7 @@ export default function QnAPanel() {
 
     if (!isOpen) {
         return (
-            <div className="absolute top-6 right-6 z-50">
+            <div className="fixed bottom-4 right-4 md:top-6 md:right-6 md:bottom-auto z-50">
                 <button
                     onClick={() => setIsOpen(true)}
                     className="flex items-center gap-2 px-4 py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-2xl shadow-xl hover:bg-cyan-500/20 transition-all backdrop-blur-md"

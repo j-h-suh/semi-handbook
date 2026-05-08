@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal } from 'lucide-react';
+import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal, X } from 'lucide-react';
 import type { ChapterMeta } from '@/lib/markdown';
 
 type BookTab = 'semi' | 'stats' | 'claude';
@@ -18,9 +18,11 @@ interface Props {
     semiChapters: ChapterMeta[];
     statsChapters: ChapterMeta[];
     claudeChapters: ChapterMeta[];
+    isOpen?: boolean;       // 모바일 드로어 열림 상태
+    onClose?: () => void;   // 모바일 드로어 닫기
 }
 
-export default function Sidebar({ semiChapters, statsChapters, claudeChapters }: Props) {
+export default function Sidebar({ semiChapters, statsChapters, claudeChapters, isOpen = false, onClose }: Props) {
     const pathname = usePathname();
     const decodedPathname = decodeURIComponent(pathname);
 
@@ -36,7 +38,8 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
     const [userOverride, setUserOverride] = useState<BookTab | null>(null);
     useEffect(() => {
         setUserOverride(null);
-    }, [pathname]);
+        onClose?.();
+    }, [pathname, onClose]);
     const activeBook: BookTab = userOverride ?? detectedBook ?? 'semi';
 
     const chaptersMap: Record<BookTab, ChapterMeta[]> = { semi: semiChapters, stats: statsChapters, claude: claudeChapters };
@@ -74,17 +77,34 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
     };
 
     return (
-        <aside className="w-72 h-full flex flex-col border-r border-slate-800 glass-panel shrink-0">
-            <Link href="/" className="p-6 border-b border-slate-800 flex items-center gap-3 hover:bg-white/[0.02] transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
-                    <BookOpen size={20} />
-                </div>
-                <div>
-                    <h1 className="text-sm font-bold text-slate-200 whitespace-normal leading-snug">
-                        반도체를 여행하는<br />세미에이아이를 위한<br />핸드북 시리즈
-                    </h1>
-                </div>
-            </Link>
+        <aside
+            className={`w-72 h-full flex flex-col border-r border-slate-800 glass-panel md:shrink-0 md:static fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+                }`}
+        >
+            <div className="relative">
+                <Link
+                    href="/"
+                    onClick={onClose}
+                    className="p-6 border-b border-slate-800 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
+                >
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+                        <BookOpen size={20} />
+                    </div>
+                    <div>
+                        <h1 className="text-sm font-bold text-slate-200 whitespace-normal leading-snug">
+                            반도체를 여행하는<br />세미에이아이를 위한<br />핸드북 시리즈
+                        </h1>
+                    </div>
+                </Link>
+                {/* 모바일 닫기 버튼 */}
+                <button
+                    onClick={onClose}
+                    className="md:hidden absolute top-3 right-3 p-2 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800/50 transition-colors"
+                    aria-label="메뉴 닫기"
+                >
+                    <X size={18} />
+                </button>
+            </div>
 
             {/* Book Tabs */}
             <div className="flex border-b border-slate-800">
@@ -135,6 +155,7 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters }:
                                             <li key={chapter.id}>
                                                 <Link
                                                     href={`${routePrefix}/${chapter.id}`}
+                                                    onClick={onClose}
                                                     className={`block px-3 py-2 text-sm rounded-lg transition-all duration-200 ${isActive
                                                         ? `${accentColor} font-medium border`
                                                         : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'

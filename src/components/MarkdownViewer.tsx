@@ -64,9 +64,9 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
     const subtitle = subtitleParts.join('—').trim();
 
     return (
-        <article className="max-w-4xl mx-auto w-full px-8 py-12 lg:px-12" ref={mermaidRef}>
-            <header className="mb-12">
-                <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+        <article className="max-w-4xl mx-auto w-full px-4 py-8 md:px-8 md:py-12 lg:px-12" ref={mermaidRef}>
+            <header className="mb-10 md:mb-12">
+                <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
                     {mainTitle.trim()}
                 </h1>
                 {subtitle && (

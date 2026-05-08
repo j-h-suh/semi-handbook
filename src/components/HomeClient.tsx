@@ -48,14 +48,14 @@ export default function HomeClient({
 
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 w-full">
-            <div className="max-w-4xl mx-auto w-full px-8 py-16 lg:px-12">
+            <div className="max-w-4xl mx-auto w-full px-4 py-8 md:px-8 md:py-16 lg:px-12">
 
                 {/* Hero */}
-                <div className="text-center mb-16">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 mb-6">
-                        <BookOpen size={36} />
+                <div className="text-center mb-12 md:mb-16">
+                    <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 mb-6">
+                        <BookOpen size={32} className="md:w-9 md:h-9" />
                     </div>
-                    <h1 className="text-5xl font-extrabold text-white sm:text-6xl mb-6 leading-snug">
+                    <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl mb-6 leading-snug">
                         반도체를 여행하는<br />
                         세미에이아이를 위한<br />
                         <span className="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">
