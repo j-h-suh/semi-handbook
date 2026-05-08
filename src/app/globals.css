@@ -123,6 +123,17 @@ body {
   margin-bottom: 2em;
 }
 
+/* Blockquote: 인용문/콜아웃 모두 명시적 마커(""나 💡/⚠️)로 표현하므로
+   Tailwind Typography 의 자동 이탤릭·자동 따옴표는 제거. 좌측 보더만 유지. */
+.prose blockquote {
+  font-style: normal;
+  font-weight: normal;
+}
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: none;
+}
+
 /* Center images by default */
 .prose img {
   display: block !important;
