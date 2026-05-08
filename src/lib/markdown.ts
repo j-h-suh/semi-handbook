@@ -55,7 +55,7 @@ const BOOK_CONFIGS: Record<Book, BookConfig> = {
       if (id.startsWith('03_')) return 'Part 3: 도구 시스템';
       if (id.startsWith('04_')) return 'Part 4: 슬래시 명령';
       if (id.startsWith('05_')) return 'Part 5: 터미널 UI';
-      if (id.startsWith('06_')) return 'Part 6: 권한과 설정';
+      if (id.startsWith('06_')) return 'Part 6: 설정·권한·Hook';
       if (id.startsWith('07_')) return 'Part 7: 외부 연결';
       if (id.startsWith('08_')) return 'Part 8: 멀티 에이전트';
       if (id.startsWith('09_')) return 'Part 9: 미니 Claude Code';
