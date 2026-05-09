@@ -499,9 +499,18 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
-## Phase 3.5: mini_claude 코드–핸드북 갭
+## Phase 4: 메타 노트 통합
 
-`mini_claude` 실행 중 발견되어 코드는 수정했으나 9.1/9.2 핸드북 본문에는 아직 반영되지 않은 항목들. (구 `content/claude_code/_revisions.md` 통합)
+- [x] `content/claude_code/_handbook_revisions.md` 삭제 (4개 항목 모두 [done], TODO.md Phase 3에 큰 줄기 보존)
+- [x] `content/claude_code/_revisions.md` 삭제 (살아있는 5건은 위 Phase 3.5로 이전)
+- [x] `content/claude_code/_terminology_pending.md` 삭제 (빈 placeholder, 항목 발생 시 TODO.md에 직접 추가)
+- [x] H1·구조 일관성 검토 — `00_0`의 콜론 H1과 `11_에필로그`의 `# 11.` 형식·5단 구조 부재는 모두 **의도된 예외**(도입부 / 에필로그 인사)로 확인. 패턴 일치 강제하지 않음.
+
+---
+
+## Phase 5: mini_claude 코드–핸드북 갭
+
+`mini_claude` 실행 중 발견된 코드/문서 갭. 코드 수정분은 roll-back되어 다시 적용해야 하며, 9.1/9.2 핸드북 본문에도 반영해야 합니다. (구 `content/claude_code/_revisions.md` 통합)
 
 ### 9.1 설계 — 미니 에이전트의 골격
 
@@ -527,12 +536,3 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
   - 현상: "안녕" 입력 예시로 시작하나, 실제로는 `ANTHROPIC_API_KEY` 미설정으로 SystemExit → 첫 실행에서 막힘
   - 반영 위치: 9.2의 "안녕" 예시(현재 442~444줄) **직전**에 단락 추가 — 환경 변수 설정(`export ANTHROPIC_API_KEY=...`), 실행 명령(`uv run mini-claude`), 첫 프롬프트 예시(`> 안녕`)
   - 비채택 대안: `.env` 지원(의존성 증가), 별도 "환경 준비" 섹션(흐름 단절)
-
----
-
-## Phase 4: 메타 노트 통합
-
-- [x] `content/claude_code/_handbook_revisions.md` 삭제 (4개 항목 모두 [done], TODO.md Phase 3에 큰 줄기 보존)
-- [x] `content/claude_code/_revisions.md` 삭제 (살아있는 5건은 위 Phase 3.5로 이전)
-- [x] `content/claude_code/_terminology_pending.md` 삭제 (빈 placeholder, 항목 발생 시 TODO.md에 직접 추가)
-- [x] H1·구조 일관성 검토 — `00_0`의 콜론 H1과 `11_에필로그`의 `# 11.` 형식·5단 구조 부재는 모두 **의도된 예외**(도입부 / 에필로그 인사)로 확인. 패턴 일치 강제하지 않음.
