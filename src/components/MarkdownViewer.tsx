@@ -24,6 +24,18 @@ interface MarkdownViewerProps {
     commitHistory?: GitCommit[];
 }
 
+function extractTextFromChildren(node: React.ReactNode): string {
+    if (node === null || node === undefined || typeof node === 'boolean') return '';
+    if (typeof node === 'string') return node;
+    if (typeof node === 'number') return String(node);
+    if (Array.isArray(node)) return node.map(extractTextFromChildren).join('');
+    if (typeof node === 'object' && 'props' in node) {
+        const props = (node as React.ReactElement<{ children?: React.ReactNode }>).props;
+        return extractTextFromChildren(props.children);
+    }
+    return '';
+}
+
 export default function MarkdownViewer({ title, content, lastUpdated, commitHistory }: MarkdownViewerProps) {
     const [showHistory, setShowHistory] = useState(false);
     const mermaidRef = useRef<HTMLDivElement>(null);
@@ -128,7 +140,7 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
                                 const codeProps = (child as React.ReactElement<{ className?: string; children?: React.ReactNode }>).props;
                                 const className = codeProps.className || '';
                                 const match = /language-(\w+)/.exec(className);
-                                const codeText = String(codeProps.children ?? '').replace(/\n$/, '');
+                                const codeText = extractTextFromChildren(codeProps.children).replace(/\n$/, '');
 
                                 if (match && match[1] === 'mermaid') {
                                     return (
@@ -144,11 +156,13 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
                             return <pre {...props}>{children}</pre>;
                         },
 
-                        // 2b. Inline code passes through (fenced blocks handled by `pre`)
+                        // 2b. Inline code — extract text to flatten any rogue elements
+                        // (rehype-raw + GFM may convert ** in inline code to <strong>; flatten back to text)
                         code({ className, children, ...props }) {
+                            const text = extractTextFromChildren(children);
                             return (
                                 <code className={className} {...props}>
-                                    {children}
+                                    {text}
                                 </code>
                             );
                         },
