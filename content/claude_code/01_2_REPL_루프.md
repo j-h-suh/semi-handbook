@@ -54,12 +54,12 @@ export function REPL({
   systemPrompt,
   // ... 20+ 개의 prop
 }: Props): React.ReactNode {
-  // 지역 UI 상태는 useState
+  // 지역 상태 — useState (이 컴포넌트 안에만, unmount 시 사라짐)
   const [messages, setMessages] = useState<MessageType[]>(initialMessages ?? [])
   const [streamMode, setStreamMode] = useState<SpinnerMode>('responding')
   // ... 수십 개의 useState, useEffect, useCallback
 
-  // 글로벌 세션 상태는 useAppState (Zustand 같은 store) — Part 5.2 의 주제
+  // 앱 전역 상태 — useAppState (외부 store에 보관, 여러 컴포넌트가 공유) — Part 5.2 의 주제
   const toolPermissionContext = useAppState(s => s.toolPermissionContext)
   const mcp = useAppState(s => s.mcp)
   const tasks = useAppState(s => s.tasks)
@@ -89,11 +89,11 @@ from textual.containers import VerticalScroll
 class REPL(App):
     """Claude Code의 REPL.tsx에 대응하는 Textual 앱."""
 
-    # 지역 UI 상태 — React의 useState에 해당
+    # 지역 상태 — React의 useState에 해당 (이 컴포넌트 안에만)
     messages: reactive[list[str]] = reactive(list)
     stream_mode: reactive[str] = reactive("idle")
 
-    # 글로벌 세션 상태 — React의 useAppState에 해당
+    # 앱 전역 상태 — React의 useAppState에 해당 (여러 컴포넌트가 공유)
     # Textual에서는 App 레벨 속성 또는 별도 store로 관리
     tool_permission_context: dict = {}
     mcp_connections: list = []
@@ -116,7 +116,9 @@ class REPL(App):
 처음 보면 "잠깐, 이거 웹 페이지 만드는 코드 아니야?" 싶다. `<Box>`, `<Text>`, `useState`, `useEffect` — 다 React 문법 그대로다. 그런데 화면에 뜨는 건 브라우저의 DOM이 아니라 **터미널의 박스와 글자**다.
 
 > 💡 **두 가지 디테일을 미리 짚어둔다:**
-> 1. 상태가 두 종류로 나뉜다 — `useState` (지역 UI) vs `useAppState` (글로벌 세션). 후자는 **Part 5.2**에서 본격적으로 다룬다.
+> 1. 상태가 두 종류로 나뉜다.
+>    - **`useState`** — 이 컴포넌트(REPL) 안에서만 쓰이고 밖으로 공유되지 않는 상태. 컴포넌트가 unmount 되면 사라진다. 예: 메시지 리스트, 현재 스트리밍 모드.
+>    - **`useAppState`** — 여러 컴포넌트가 함께 보는 앱 전역 상태. 세션이 살아 있는 동안 외부 store(Zustand 같은) 에 유지된다. 예: 권한 컨텍스트, MCP 연결, task 리스트. **Part 5.2** 에서 본격적으로 다룬다.
 > 2. return JSX가 `<KeybindingSetup>`, `<FullscreenLayout>`, `<AlternateScreen>` 같은 wrapper들로 여러 겹 감싸여 있다. 키 입력 라우팅, 대체 화면 버퍼, 가상 스크롤 — 모두 React 컴포넌트로 표현되어 있다. **Part 5**에서 풀어본다.
 
 이게 가능한 건 [**Ink**](https://github.com/vadimdemedes/ink)라는 라이브러리 덕분이다.
@@ -130,16 +132,20 @@ Ink는 한 문장으로 설명하면 이렇다.
 내부적으로는 세 단계를 거친다.
 
 ```
-[JSX 트리]
+[JSX 트리]                       ← React 가 반환 (= 가상 DOM)
    ↓
-[Yoga 레이아웃 엔진]    ← React Native와 같은 엔진
+[Yoga 로 레이아웃 계산]           ← Ink 가 호출 (Yoga = React Native와 같은 layout 엔진)
    ↓
-[2D 셀 배열 (문자 + ANSI 색)]
+[2D 셀 배열 (문자 + ANSI 색)]     ← Ink 가 만듦
    ↓
-[stdout에 ANSI 코드 출력]
+[ANSI 코드로 stdout 출력]         ← Ink 가 출력
    ↓
-[터미널 에뮬레이터가 그려줌]
+[터미널 에뮬레이터가 화면에 그림]  ← OS / 터미널의 일
 ```
+
+여기서 [JSX 트리] 는 0.3 에서 본 **가상 DOM** — 컴포넌트 함수가 반환한 객체 트리다 (JSX 가 빌드 타임에 `React.createElement(...)` 호출로 변환되어 평가된 결과).
+
+**Ink 가 책임지는 범위는 [JSX 트리] 다음부터 [터미널 에뮬레이터] 직전까지** — Yoga 호출 → 셀 배열 생성 → ANSI 출력 세 단계가 모두 Ink 안에서 일어난다. Yoga 는 별도 라이브러리(Meta 의 cross-platform layout 엔진) 지만 Ink 가 의존성으로 가져와 안에서 쓰는 도구다.
 
 `<Box flexDirection="column" padding={1}>` 같은 코드를 쓰면, Yoga가 "이 박스는 가로 80, 세로 5칸 차지하고, 안의 자식들을 세로로 정렬" 같은 좌표를 계산한다. 그 계산 결과를 ANSI 이스케이프 코드(`\x1b[31m` 같은 것)로 변환해서 stdout에 쓰면, 터미널 에뮬레이터가 그걸 보고 화면을 그린다.
 
@@ -183,7 +189,13 @@ QueryEngine.submitMessage(...)         ← LLM API 호출 시작
 [다음 입력 대기]
 ```
 
-여기서 핵심 관찰이 있다. **LLM 응답이 흐르는 동안 setState가 계속 호출된다.** 그때마다 React가 컴포넌트를 다시 렌더링하고, Ink가 변경된 부분만 ANSI로 다시 그린다. 매 토큰마다 화면 전체를 다시 그리는 게 아니라 **변경분만 diff해서 그린다.** 이 덕분에 1만 줄짜리 대화도 깜빡이지 않는다.
+다이어그램에 등장하는 함수들의 역할을 한 줄씩 짚어두자.
+
+- **`onSubmit`** — `PromptInput` 컴포넌트가 받는 콜백 prop. 사용자가 엔터를 누르면 호출됨.
+- **`handleSubmit`** — REPL 이 그 콜백으로 등록한 함수. React 관례상 이벤트 핸들러는 `handle*` 접두사를 붙인다.
+- **`setMessages` / `setStreamingText`** — `useState` 의 setter (0.3 에서 본 것). 호출하면 상태가 갱신되고 React 가 자동으로 컴포넌트를 다시 호출해 화면을 다시 그린다.
+
+여기서 핵심 관찰이 있다. **LLM 응답이 흐르는 동안 set 함수가 계속 호출된다 — `setStreamingText` 가 매 토큰마다, `setMessages` 가 응답 종료 시.** 그때마다 React가 컴포넌트를 다시 렌더링하고, Ink가 변경된 부분만 ANSI로 다시 그린다. 매 토큰마다 화면 전체를 다시 그리는 게 아니라 **변경분만 diff해서 그린다.** 이 덕분에 1만 줄짜리 대화도 깜빡이지 않는다.
 
 이 부분 업데이트 메커니즘은 Part 5.4에서 본격적으로 본다. 지금은 "React가 알아서 잘 한다" 정도로 받아들이고 가자.
 
@@ -237,7 +249,7 @@ class ClaudeCodeREPL(App):
 - 부트스트랩이 끝나면 마운트되는 "REPL"은 사실 **`src/screens/REPL.tsx`라는 React 함수형 컴포넌트**다. 단순한 input/output 루프가 아니다.
 - React가 터미널에서 돌아가는 건 **Ink** 라이브러리 덕분. Ink의 역할 한 줄: "JSX 트리 → Yoga 레이아웃 → ANSI 코드 → stdout".
 - REPL.tsx는 **약 5,000줄**의 거대한 파일이다 (`src/` 안에서 가장 큰 파일 중 하나). 메시지 상태, 키 입력, LLM 쿼리 트리거, 권한 다이얼로그, 스트리밍 업데이트, 검색, 가상 스크롤, 멀티 에이전트 view가 다 들어 있다. 한 컴포넌트에 책임이 집중된 건 의도적인 트레이드오프다.
-- 상태가 두 종류로 나뉜다 — `useState` (지역 UI) vs `useAppState` (글로벌 세션, Zustand-like store). 후자는 Part 5.2의 주제.
+- 상태가 두 종류로 나뉜다 — `useState` (한 컴포넌트만의 상태) vs `useAppState` (여러 컴포넌트가 공유하는 앱 전역 store). 후자는 Part 5.2의 주제.
 - LLM 응답이 흐르는 동안 매 토큰마다 `setState`가 호출되고, React + Ink가 변경분만 다시 그린다. 깜빡임 없이 부드러운 스트리밍 표시가 가능한 이유.
 - Python으로 비슷한 걸 만들면 **Textual**이 가장 가깝다. 다만 Textual은 자체 컴포넌트 시스템, Ink는 React 위에 얹힌다는 차이가 있다.
 - **자세한 건 Part 5에서.** 여기서는 "REPL은 5,000줄짜리 React 컴포넌트구나"라는 충격(?)을 가지고 다음으로 가면 된다.
