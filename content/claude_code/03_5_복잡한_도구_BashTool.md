@@ -62,16 +62,16 @@ class BashInput(BaseModel):
     command: str
     timeout: int | None = None
 
-class BashTool(ToolBase):
+class BashTool(ToolBase[BashInput]):
     name = "Bash"
     input_model = BashInput
 
-    def is_read_only(self, args: dict) -> bool:
+    def is_read_only(self, input: BashInput) -> bool:
         # ⭐ 동적 — 입력 명령에 따라 달라진다 (유일한 케이스)
-        return is_read_only_command(args["command"])
+        return is_read_only_command(input.command)
 
-    def is_concurrency_safe(self, args: dict) -> bool:
-        return self.is_read_only(args)  # 읽기면 동시 OK
+    def is_concurrency_safe(self, input: BashInput) -> bool:
+        return self.is_read_only(input)  # 읽기면 동시 OK
 
     async def validate_input(self, args, ctx): ...
     async def check_permissions(self, args, ctx): ...
