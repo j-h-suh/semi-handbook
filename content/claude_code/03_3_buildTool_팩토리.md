@@ -13,13 +13,13 @@
 
 ## 사용자 경험에서 출발
 
-3.2에서 **47개 필드짜리 Tool 인터페이스**를 봤다. 그리고 핵심 5개만 채우면 된다고 했다. 근데 좀 이상하다.
+3.2에서 **47개 필드짜리 Tool 인터페이스**를 봤다. 그리고 핵심 5개만 채우면 된다고 했다 — 단, 그 중 `checkPermissions` 는 사실 기본값 (`"allow"`) 이 있어 진짜 mandatory 는 4개. 근데 좀 이상하다.
 
-> "5개만 채워도 도구가 완성된다고? 나머지 42개는 어디서 오는데? TypeScript가 컴파일 시점에 채워주는 게 아니잖아."
+> "4개만 채워도 도구가 완성된다고? 나머지 43개는 어디서 오는데? TypeScript가 컴파일 시점에 채워주는 게 아니잖아."
 
 맞다. TypeScript는 타입을 검사할 뿐이다. 런타임에 객체에 메서드가 진짜로 있어야 도구가 동작한다. 그럼 누가 채우는가?
 
-답: **`buildTool` 팩토리**가 채운다.
+답: **`buildTool` 팩토리**가 채운다. 정확히는 — 43개 중 7개는 안전한 기본값을 채우고 (`TOOL_DEFAULTS`, `checkPermissions` 포함), 15개는 렌더링 시스템이 따로 기본값을 가지고 있고 (Part 5), 나머지 21개는 옵셔널이라 비워둬도 됨. 즉 *진짜 기본값이 있는 건 7개*, 나머지는 "안 써도 OK" 일 뿐.
 
 :::tabs
 
@@ -34,27 +34,31 @@ export const myTool = buildTool({
 ```
 
 ```python
-# Python 등가 — 도구 작성자가 쓰는 코드
+# Python 등가 — 도구 작성자가 쓰는 코드 (dict 팩토리 스타일)
 from pydantic import BaseModel
 
 class MyToolInput(BaseModel):
     x: int
 
-class MyTool(ToolBase):
-    name = "MyTool"
-    input_model = MyToolInput
+async def my_tool_call(input: MyToolInput) -> str:
+    return f"Got {input.x}"
 
-    def description(self) -> str:
-        return "Does something useful"
-
-    async def call(self, args: dict, context) -> str:
-        return f"Got {args['x']}"
-    # 나머지 42개는 ToolBase의 기본값이 채운다
+my_tool = build_tool(
+    name="MyTool",
+    description=lambda: "Does something useful",
+    input_schema=MyToolInput,
+    call=my_tool_call,
+)
+# 나머지 43개는 사용자가 안 써도 됨 (7개는 TOOL_DEFAULTS, 15개는 렌더링 시스템, 21개는 옵셔널)
 ```
 
 :::
 
-5개만 썼다. 그런데 `myTool`을 출력해보면 — `isEnabled`, `isReadOnly`, `checkPermissions`, ... 가 다 들어 있다. 마법이다. 이 마법이 바로 `buildTool`의 일이다.
+4개만 썼다 (5번째 핵심인 `checkPermissions` 도 default `"allow"` 가 있어 생략 가능). 그런데 `myTool`을 출력해보면 — `isEnabled`, `isReadOnly`, `checkPermissions`, ... 가 다 들어 있다. 마법이다. 이 마법이 바로 `buildTool`의 일이다.
+
+> 💡 **잠깐 — 3.2 와 무엇이 다른가? (Python 표현 차이)** 3.2 도 3.3 도 **같은 TypeScript 코드** (`buildTool({...})`) 를 *Python 으로 옮긴 표현*. 둘은 Tool 자체가 다른 게 아니라 **Python 표현 방식의 선택** 이 다름. 3.2 는 `ToolBase` 추상 클래스 + 자식 상속 패턴, 3.3 은 `Tool` dataclass + 팩토리 함수 패턴. **결과는 둘 다 같다** — 47개 메서드가 다 채워진 완성된 도구 객체.
+>
+> 왜 두 가지 표현? Python 에는 TypeScript 의 객체 리터럴 + 매핑 타입 트릭이 없어서, 같은 발상을 옮기는 데 두 가지 자연스러운 방법이 있음. 이 챕터가 dict 팩토리 패턴을 쓰는 이유는 — TypeScript 의 spread 메커니즘 (`{...TOOL_DEFAULTS, ...def}`) 과 직접 대응시키기 위해서. **어느 Python 표현이 production 에 더 적합한지에 대한 권장은 챕터 끝에서.**
 
 ---
 
@@ -86,13 +90,13 @@ TOOL_DEFAULTS = {
 }
 
 def build_tool(user_def: dict) -> dict:
-    return {**TOOL_DEFAULTS, "user_facing_name": user_def["name"], **user_def}
-    # Python 3.9+: TOOL_DEFAULTS | {"user_facing_name": ...} | user_def
+    return TOOL_DEFAULTS | {"user_facing_name": user_def["name"]} | user_def
+    # Python 3.9+ 의 dict 병합 연산자 — JS 의 spread (...) 와 같음
 ```
 
 :::
 
-진짜로 **한 줄짜리 spread**다. JavaScript의 `...` 연산자로 두 객체를 합친다. Python의 `{**dict1, **dict2}`와 같다.
+진짜로 **한 줄짜리 spread**다. JavaScript의 `...` 연산자로 두 객체를 합친다. Python의 `dict1 | dict2` 와 같다 (3.9+).
 
 순서가 중요하다.
 
@@ -102,7 +106,7 @@ def build_tool(user_def: dict) -> dict:
 
 **나중에 펼친 게 이긴다.** 그래서 사용자가 작성한 메서드는 그대로 유지되고, 작성하지 않은 메서드는 기본값으로 채워진다. 겨우 이 정도가 마법의 정체다.
 
-> 💡 **Python 비유:** `{**TOOL_DEFAULTS, **user_def}`와 같다. dict 병합의 마지막이 이긴다는 규칙. Python 3.9+에서는 `TOOL_DEFAULTS | user_def`로도 같은 일을 한다.
+> 💡 **Python 비유:** `TOOL_DEFAULTS | user_def` (Python 3.9+) 와 같다. dict 병합의 마지막이 이긴다는 규칙.
 
 ### `TOOL_DEFAULTS` — 일곱 개의 기본값
 
@@ -124,22 +128,27 @@ const TOOL_DEFAULTS = {
 ```
 
 ```python
-# Python 등가 — ToolBase 클래스의 기본 메서드들
-class ToolBase(ABC):
-    """47개 중 7개는 기본값을 가진다. 나머지는 도구마다 달라야 한다."""
+# Python 등가 — TOOL_DEFAULTS dict 자체
+# 47개 중 7개만 기본값. 나머지는 도구마다 달라야 한다.
 
-    def is_enabled(self) -> bool: return True
-    def is_concurrency_safe(self) -> bool: return False   # fail-closed
-    def is_read_only(self) -> bool: return False          # fail-closed
-    def is_destructive(self) -> bool: return False
-    async def check_permissions(self, args): return "allow"
-    def to_auto_classifier_input(self, args) -> str: return ""
-    def user_facing_name(self) -> str: return self.name
+TOOL_DEFAULTS = {
+    "is_enabled": lambda: True,
+    "is_concurrency_safe": lambda _input=None: False,   # fail-closed
+    "is_read_only": lambda _input=None: False,          # fail-closed
+    "is_destructive": lambda _input=None: False,
+    "check_permissions": lambda input, _ctx=None: {"behavior": "allow", "updated_input": input},
+    "to_auto_classifier_input": lambda _input=None: "",
+    "user_facing_name": lambda _input=None: "",
+}
 ```
 
 :::
 
-7개. 47개 중에 7개만 기본값을 가진다는 게 이상해 보일 수 있는데, 나머지 40개는 진짜로 도구마다 달라야 하는 것들이다. `name`, `description`, `inputSchema`, `call` 같은 핵심 5개는 기본값을 줄 수가 없다 — 도구의 정체성 자체니까. 그리고 렌더링 메서드 15개는 별도의 다른 시스템이 더 똑똑한 기본값을 가지고 있다 (Part 5에서 본다).
+7개. 47개 중에 7개만 기본값을 가진다는 게 이상해 보일 수 있는데, 나머지 40개는 다음 셋 중 하나로 처리된다:
+
+- **4개 mandatory** (도구 정체성): `name`, `description`, `inputSchema`, `call` — 도구마다 정말 달라야 해서 기본값을 줄 수 없음. (`checkPermissions` 도 핵심이지만 보수적 default `"allow"` 가 7개 안에 들어 있음.)
+- **15개 렌더링**: 별도의 다른 시스템이 더 똑똑한 기본값을 가지고 있음 (Part 5에서 본다).
+- **21개 옵셔널** (`?` 마크): 안 채우면 `undefined`. 호출자가 옵셔널 체이닝으로 처리.
 
 7개 각각의 의미:
 
@@ -149,9 +158,15 @@ class ToolBase(ABC):
 | `isConcurrencySafe` | `false` | **보수적** — 동시 실행 불가로 가정 |
 | `isReadOnly` | `false` | **보수적** — 쓰기로 가정 |
 | `isDestructive` | `false` | 비파괴로 가정 |
-| `checkPermissions` | `allow` | 일반 권한 시스템에 위임 |
+| `checkPermissions` | `allow` | **사용자에게 안 묻고 자동 허용** (위험 도구는 `'ask'` 로 옵트인) |
 | `toAutoClassifierInput` | `''` (빈 문자열) | 분류기 건너뜀 |
 | `userFacingName` | `name` (위에서 덮어씀) | 도구 이름 그대로 |
+
+> 💡 **왜 boolean 이 아니라 함수인가?** 위 표의 기본값들이 `true`/`false` 같은 단순 boolean 이 아니라 `() => true`, `(_input) => false` 같은 **함수** 인 게 처음엔 의아할 수 있다. 세 가지 이유:
+>
+> 1. **입력 컨텍스트 의존** — 대부분 `input` 을 받는다 (`isReadOnly(input)`, `isConcurrencySafe(input)`, `isDestructive(input)`). 같은 `Bash` 도구라도 `Bash.isReadOnly("ls -la")` 는 `true`, `Bash.isReadOnly("rm -rf /")` 는 `false`. 입력이 결정.
+> 2. **시스템 컨텍스트 의존** — input 을 안 받는 `isEnabled()` 도 feature flag, API provider, 현재 모델 등 시스템 상태에 따라 달라짐. 실제 `WebSearchTool.isEnabled()` 는 `getAPIProvider()`, `getMainLoopModel()` 을 확인. boolean 이면 정의 시점의 값으로 고정되어 동적 반응 불가.
+> 3. **다형성 + lazy evaluation** — 각 도구가 자기 로직으로 override (polymorphism). 함수라 호출 시점에만 평가 — 안 쓰는 도구의 `isEnabled` 검사는 비용 0. 또 stale state 도 안 생김 (boolean 으로 미리 계산해두면 feature flag 바뀐 뒤에도 옛날 값 들고 있음).
 
 ### "fail-closed where it matters" — 진짜 의미
 
@@ -167,6 +182,8 @@ class ToolBase(ABC):
 > ⚠️ **함정:** `isDestructive = false`는 fail-closed가 아니다. 깜빡 잊으면 "파괴적이지 않다"로 취급된다. 왜 이렇게 했을까? 대부분의 도구는 진짜로 파괴적이지 않기 때문이다 (`Read`, `Glob`, `Grep` 등). 파괴적인 도구는 명시적으로 옵트인해야 한다. 자주 발생하는 케이스를 기본값으로 잡고, 드문 케이스는 작성자에게 강제로 표시하게 만드는 트레이드오프.
 
 ### `toAutoClassifierInput`은 옵트인
+
+**자동 분류기** = Claude Code 의 `auto` permission mode (`--permission-mode auto`) 에서 매 도구 호출을 **LLM 이 transcript 보고 allow/deny 자동 결정** 하는 시스템 (`yoloClassifier.ts`). 매번 사용자에게 권한 묻지 않으려는 모드. 이 LLM 은 **로컬 모델이 아니라 Anthropic API 호출** (`sideQuery` 경유) — 도구 호출 1회마다 분류기 API 호출 1회가 추가로 든다.
 
 흥미로운 케이스는 `toAutoClassifierInput`이다. 기본값이 빈 문자열 — 즉 "자동 분류기는 이 도구를 건너뛴다". 도구 작성자가 명시하지 않으면 분류기가 보지도 않는다.
 
@@ -211,6 +228,13 @@ export const fileReadTool = {
 
 Python에는 `Tool` 같은 거대한 인터페이스가 없으니 — `dataclass`와 dict 병합으로 같은 패턴을 만든다.
 
+> 💡 **위 코드의 Python 문법 — 최소한:**
+>
+> - **`@dataclass`**: 필드 선언만 적으면 `__init__`/`__repr__` 등이 자동 생성. 아래 `Tool` 클래스가 짧은 이유.
+> - **`Callable[[args], return]`**: 함수를 값으로 다룰 때의 타입 힌트. `Callable[[], str]` = "인자 없이 str 반환", `Callable[..., Awaitable[str]]` = "임의 인자 → 비동기 str". 메서드를 dict 로 모아 합치는 패턴이라 메서드가 *값처럼* 다뤄짐 — 그래서 Callable 로 명시.
+>
+> (`from __future__ import annotations`, `field()` 함정, `dataclass vs Pydantic`, 타입 힌트 일반론은 코드 *아래* 에서 풀어 본다.)
+
 ```python
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -250,11 +274,11 @@ class Tool:
 
 def build_tool(**def_: Any) -> Tool:
     """부분 정의를 받아 안전 기본값으로 채워서 완성된 Tool을 돌려준다."""
-    merged = {
-        **TOOL_DEFAULTS,
-        "user_facing_name": lambda _input=None: def_["name"],
-        **def_,
-    }
+    merged = (
+        TOOL_DEFAULTS
+        | {"user_facing_name": lambda _input=None: def_["name"]}
+        | def_
+    )
     return Tool(**merged)
 
 
@@ -283,7 +307,61 @@ read_tool = build_tool(
 
 **핵심은 `build_tool` 함수의 dict 병합 한 줄이다.** TypeScript의 `{...TOOL_DEFAULTS, ...def}`와 정확히 대응한다. 나중에 펼친 게 이긴다는 규칙이 두 언어에서 똑같이 동작한다.
 
+> 💡 **위 코드의 Python 디테일 — 더 풀어보기:**
+>
+> **`from __future__ import annotations`**
+>
+> 모든 타입 힌트를 즉시 평가하지 않고 **문자열로 저장** (PEP 563). 두 가지 효과:
+> - **자기 참조 가능**: `class Node: next: Node` 처럼 정의 중인 클래스가 자기 자신을 참조할 수 있음. 어노테이션이 즉시 평가되면 `Node` 가 아직 정의 중이라 에러, 문자열이면 OK.
+> - **런타임 비용 감소**: 타입 표현식을 즉시 객체로 만들지 않아 import 가 빠름.
+>
+> **`field(default_factory=...)` — mutable default 함정**
+>
+> mutable default (list, dict) 는 `field(default_factory=...)` 로 써야 함:
+>
+> ```python
+> @dataclass
+> class Bad:
+>     items: list = []                          # ✗ 모든 인스턴스가 같은 list 공유
+>
+> @dataclass
+> class Good:
+>     items: list = field(default_factory=list)  # ✓ 인스턴스마다 새 list
+> ```
+>
+> 위 코드의 import 에 `field` 가 들어 있는 건 이 함정에 대비해서 (현재 코드에선 mutable default 가 없어 직접 안 쓰지만).
+>
+> **`dataclass` vs `pydantic.BaseModel`**
+>
+> 둘 다 "필드 선언 → `__init__` 자동 생성" 도구. **차이는 검증**.
+>
+> | | dataclass | Pydantic BaseModel |
+> |---|---|---|
+> | 런타임 타입 검증 | ✗ 없음 | ✓ 있음 |
+> | 직렬화/역직렬화 | 수동 (`asdict` 등) | 자동 (`model_dump`, `model_validate`) |
+> | 용도 | 내부 단순 struct | 외부 입력 검증, API 모델 |
+>
+> 위 코드는 두 개를 같이 씀: `Tool` 은 시스템 내부 객체라 검증 불필요 → dataclass. `input_schema` 는 LLM 이 생성한 인자를 받아 검증해야 함 → Pydantic.
+>
+> **Python 타입 힌트 일반론 — 왜 동적 언어에 타입을?**
+>
+> Python 의 타입 힌트는 런타임 동작을 직접 바꾸지 않음 (CPython 은 무시). 그럼 왜 쓰나? 4가지 용도:
+>
+> - **정적 체커** (mypy, pyright): 코드 실행 전에 타입 오류 발견. CI 에서 돌리면 PR 머지 전에 잡힘.
+> - **IDE 자동완성**: VSCode/PyCharm 이 타입 정보로 더 정확한 제안. 객체에 점 찍으면 메서드 목록.
+> - **런타임 검증** (Pydantic, FastAPI): 어노테이션을 *런타임에 읽어* 검증/직렬화. Pydantic 의 `BaseModel` 이 대표.
+> - **사람/협업**: 함수 시그니처를 보고 무엇을 받고 무엇을 반환하는지 즉시 이해. 사실상 inline 문서.
+
 > 💡 **dataclass 대신 dict로?** 그래도 된다. TypeScript의 `Tool` 객체는 본질적으로 **키가 정해진 dict**다. Python에서도 `Tool = dict[str, Any]`로 두고 그냥 dict로 다루면 더 단순하다. 단, IDE 자동완성과 타입 체크의 도움을 받으려면 `dataclass`나 `TypedDict`가 낫다.
+
+> 💡 **두 패턴 중 어느 쪽이 production 에 더 맞나? — 권장**
+>
+> - **3.2 의 ABC + 상속**: Pythonic OOP 의 정통. `@abstractmethod` 가 인스턴스화 시 강제 검증 → 5개 핵심을 빠뜨리면 즉시 발견. IDE 자동완성/타입 체크 가장 강함. **LangChain `BaseTool` 같은 실제 production LLM 도구 라이브러리** 가 이 패턴을 채택.
+> - **3.3 의 dict + 팩토리**: TypeScript spread 메커니즘과 직접 대응. 단순, 데이터/동작 분리 명확. 단, 5개 핵심을 빠뜨려도 인스턴스화 시 검증 안 됨 — 호출 시점에 `KeyError`/`AttributeError` 로 발견.
+>
+> **Python production 코드에서는 3.2 패턴 (ABC + 상속) 우선 권장.** 강제 검증과 IDE 지원이 협업에 도움. 3.3 의 dict 팩토리는 TypeScript 코드를 읽을 때 spread 메커니즘을 이해하기 위한 학습 도구로 활용.
+>
+> **단, 3.2 의 ToolBase 는 `is_*` 메서드들도 input 을 받게** 정의해야 진짜 production 형태 — 위 "왜 boolean 이 아니라 함수인가" 콜아웃에서 본 input 컨텍스트 의존성 때문. 즉 production = (ABC + 상속 + Generic[Input]) + (`is_read_only(self, input: I)`, `is_concurrency_safe(self, input: I)` 등 input-aware 메서드). 3.2 본문도 이 형태로 업데이트되어 있음.
 
 ---
 
