@@ -138,7 +138,7 @@ def prepare_permission_matcher(command: str):
 
 읽어보면 — 세 가지 결정이 깔려 있다.
 
-**(1) 입력 문자열을 AST로 파싱한다.** 정규식이 아니라 진짜 셸 파서를 쓴다. `parseForSecurity`는 tree-sitter 기반인데, 추측이 아니라 같은 모듈 안의 코멘트가 직접 증명한다 (`bashPermissions.ts:97`): "Each subcommand then runs tree-sitter parse + ~20 validators". 정규식으로 셸을 파싱하면 백 가지 우회를 놓친다. `git$IFS\$9push`, `g\it push`, `$(echo git) push` 같은 변형들. 진짜 파서가 필요하다.
+**(1) 입력 문자열을 AST 로 파싱한다.** **AST(Abstract Syntax Tree, 추상 구문 트리)** 는 코드를 *텍스트가 아니라 트리 구조* 로 본 결과 — 문법 단위 (명령/인자/연산자) 가 노드가 되고, 부모-자식 관계로 의미가 담긴다. 예: `ls && git push` → `[and: [ls], [git push]]` 같은 트리. 정규식이 아니라 진짜 셸 파서를 쓴다. `parseForSecurity`는 tree-sitter 기반인데, 추측이 아니라 같은 모듈 안의 코멘트가 직접 증명한다 (`bashPermissions.ts:97`): "Each subcommand then runs tree-sitter parse + ~20 validators". 정규식으로 셸을 파싱하면 백 가지 우회를 놓친다. `git$IFS\$9push`, `g\it push`, `$(echo git) push` 같은 변형들. 진짜 파서가 필요하다.
 
 **(2) 각 하위 명령에 대해 룰 매칭을 OR로 묶는다.** `subcommands.some(...)`. 즉 어느 하나라도 매칭되면 그 룰이 적용된다. `ls && git push`에서 `git push` 부분이 `Bash(git *)`에 매칭되면, 전체 명령이 그 룰의 영향권에 들어온다. 첫 챕터의 사고가 여기서 막힌다.
 
@@ -168,8 +168,6 @@ if parsed.kind != "simple":
 
 파서가 너무 복잡한 입력을 만나면? 예를 들어 50개가 넘는 하위 명령으로 쪼개지는 케이스. `bashPermissions.ts:103`에 제한이 있다.
 
-:::tabs
-
 ```typescript
 export const MAX_SUBCOMMANDS_FOR_SECURITY_CHECK = 50
 ```
@@ -179,6 +177,8 @@ export const MAX_SUBCOMMANDS_FOR_SECURITY_CHECK = 50
 > "On complex compound commands, `splitCommand_DEPRECATED` can produce a very large subcommands array (possible exponential growth; #21405's ReDoS fix may have been incomplete). Each subcommand then runs tree-sitter parse + ~20 validators + logEvent ... starves the event loop — REPL freeze at 100% CPU, strace showed /proc/self/stat reads at ~127Hz with no epoll_wait."
 
 쪼개기가 지수적으로 폭발하는 케이스가 있었다. REPL이 100% CPU로 멈췄다. 사고 분석 후 — "50개 넘으면 ask로 fall back". 그 fall-back이 발동되는 조건문은 같은 파일 line 2162-2164:
+
+:::tabs
 
 ```typescript
 if (astSubcommands === null && subcommands.length > MAX_SUBCOMMANDS_FOR_SECURITY_CHECK) {
@@ -385,6 +385,38 @@ print(matcher_broken("anything"))  # True  ← fail-safe로 권한 묻기
 1. **합성 명령을 하위 명령으로 쪼갠다** (`parse_for_security`).
 2. **환경 변수 prefix를 떼어 정규화한다** (`strip_env_prefix`).
 3. **파싱 실패면 fail-safe로 항상 매칭한다** → 권한 묻기 발동.
+
+> 🔬 **Deep Dive — `strip_env_prefix` 동작 추적.** 위 코드의 `strip_env_prefix` 가 어떻게 환경 변수 prefix 를 떼어내는지 한 줄씩 본다.
+>
+> ```python
+> def strip_env_prefix(argv: list[str]) -> list[str]:
+>     i = 0
+>     while i < len(argv) and "=" in argv[i] and argv[i].split("=", 1)[0].isidentifier():
+>         i += 1
+>     return argv[i:]
+> ```
+>
+> **핵심 — `.isidentifier()`** 는 Python 문자열 메서드로, 그 문자열이 **valid Python identifier 형식** (letter/underscore 로 시작, 나머지 letter/digit/underscore) 인지 판정. 환경 변수 이름 (`FOO`, `MY_VAR`) 은 모두 이 규칙을 따르므로, `=` 앞 부분이 identifier 면 "env var prefix" 로 인정.
+>
+> ```python
+> "FOO".isidentifier()         # True
+> "_PRIVATE".isidentifier()    # True
+> "FOO123".isidentifier()      # True
+> "123foo".isidentifier()      # False (숫자로 시작)
+> "foo-bar".isidentifier()     # False (하이픈)
+> ```
+>
+> **트레이스 — `argv = ["FOO=bar", "Baz=gux", "git", "push"]` (len = 4):**
+>
+> | iter | `i` | `argv[i]` | `i < 4` | `"=" in argv[i]` | `split("=",1)[0]` | `.isidentifier()` | 결과 |
+> |---|---|---|---|---|---|---|---|
+> | 1 | 0 | `"FOO=bar"` | ✓ | ✓ | `"FOO"` | ✓ | `i=1` |
+> | 2 | 1 | `"Baz=gux"` | ✓ | ✓ | `"Baz"` | ✓ | `i=2` |
+> | 3 | 2 | `"git"` | ✓ | ✗ | (skip) | (skip) | **종료** |
+>
+> → `return argv[2:]` = `["git", "push"]`. env prefix 두 개 떼고 진짜 명령만 남음.
+>
+> **참고 — short-circuit 평가:** `while a and b and c` 에서 `a` 가 False 면 `b`, `c` 는 평가 안 됨. iteration 3 에서 `"=" in "git"` 이 False 가 나오자마자 `.split(...).isidentifier()` 는 호출 안 됨 — `=` 없는 명령에서 `KeyError` 같은 부작용 없음.
 
 진짜 BashTool은 여기에 진짜 셸 파서, **tree-sitter**, 50개 검증기, 분류기, 샌드박스 결정, 백그라운드 작업, **sed 시뮬레이션**까지 더해진 게 1,144줄이다. 본질은 위 50줄. **나머지는 같은 본질의 더 정교한 적용**일 뿐이다.
 
