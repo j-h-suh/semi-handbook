@@ -171,7 +171,7 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
     return (
         <div className="not-prose my-4 rounded-lg overflow-hidden border border-slate-800 bg-[#0d1117]">
             {label && (
-                <div className="flex items-center justify-between px-4 py-1.5 text-xs font-mono bg-slate-900/60 border-b border-slate-800">
+                <div className="flex items-center justify-between px-5 py-3 text-sm font-mono bg-slate-900/60 border-b border-slate-800">
                     <span className="text-slate-400">{label}</span>
                 </div>
             )}
