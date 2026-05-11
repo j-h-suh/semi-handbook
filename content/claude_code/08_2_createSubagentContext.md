@@ -58,8 +58,6 @@ def create_subagent_context(
 
 핵심 원리는 한 줄로 요약된다 — **함수 docstring에 그대로** 들어 있다.
 
-:::tabs
-
 ```typescript
 /**
  * By default, ALL mutable state is isolated to prevent interference:
@@ -84,6 +82,8 @@ def create_subagent_context(
 함수의 본문이 조용하고 단호하다. 필드별로 정확히 어떻게 결정하는지 보자.
 
 **1. 변경 가능한 상태 — 기본은 클론**
+
+:::tabs
 
 ```typescript
 return {
@@ -277,8 +277,6 @@ set_app_state_for_tasks = (
 
 **4. UI 콜백 — 모두 undefined**
 
-:::tabs
-
 ```typescript
 addNotification: undefined,
 setToolJSX: undefined,
@@ -292,6 +290,8 @@ openMessageSelector: undefined,
 > ⚙️ **`getAppState` 가 wrap 되어 `shouldAvoidPermissionPrompts: true` 자동 주입** (`forkedAgent.ts:358-374`). 자식이 비-인터랙티브면 (즉 `shareAbortController: false` — 기본값) — `getAppState()` 호출이 자동으로 `shouldAvoidPermissionPrompts: true` 를 주입한 state 를 반환한다. **자식이 권한 prompt 를 띄울 수 없음** (UI가 없으니까). 권한 검사기가 **prompt 대신 거절 (deny)** 하도록 강제. 단 `shareAbortController: true` 면 (**인터랙티브 in-process teammate**) wrapping 안 함 — 그 경우는 부모와 같은 화면을 공유하니까 prompt 가능. **자식이 말 없이 거절될 수 있게 하는 안전 장치** — 멀티 에이전트가 대기 상태로 멈춰 있지 않게. UI 콜백이 모두 undefined 인 것과 짝을 이룬다.
 
 **5. agentId — 항상 새로 + depth 카운터**
+
+:::tabs
 
 ```typescript
 agentId: overrides?.agentId ?? createAgentId(),
@@ -328,8 +328,6 @@ query_tracking = {
 
 근데 **"접두사가 같다"** 가 까다롭다. **5가지가 정확히 같아야** 캐시가 맞는다.
 
-:::tabs
-
 ```typescript
 // forkedAgent.ts:57
 export type CacheSafeParams = {
@@ -359,6 +357,8 @@ maxOutputTokens?: number
 **"max_tokens를 바꾸면 thinking budget도 같이 바뀌고, 그러면 캐시 키가 깨진다"**. 컴팩션(7.4)은 캐시 공유가 목표가 아니라서 괜찮지만, **성능 fork**는 절대 건드리면 안 된다.
 
 `runForkedAgent` 가 이 5형제를 그대로 받아서 `query()` 에 넘긴다.
+
+:::tabs
 
 ```typescript
 // forkedAgent.ts:489 (축약: 11 파라미터 중 핵심 2개만 발췌. 실제는 sidechain

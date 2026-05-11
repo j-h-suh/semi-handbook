@@ -30,8 +30,6 @@
 
 근데 뒷마당을 들춰보면 더 이상하다. `src/commands/config/config.tsx`.
 
-:::tabs
-
 ```typescript
 export const call: LocalJSXCommandCall = async (onDone, context) => {
   return <Settings onClose={onDone} context={context} defaultTab="Config" />
@@ -82,6 +80,8 @@ React 팀이 공식적으로 제공하는 패키지다. 새 렌더러를 만들 
 
 `reconciler.ts`에 정의된 동작들.
 
+:::tabs
+
 ```typescript
 {
   createInstance,         // <Box> 같은 노드를 만들어라
@@ -118,8 +118,6 @@ class MyWidget(Widget):
 ### 진짜 컴포넌트는 어떻게 생겼나
 
 `commands/install.tsx`에서 한 조각 가져와 보자 (단순화).
-
-:::tabs
 
 ```tsx
 import { Box, Text, useState } from '../ink.js'
@@ -179,6 +177,8 @@ React가 "이 트리"를 만들었다. Ink가 그걸 받아서 — 어떻게 화
 ### 4단계 중 가장 영리한 곳 — Diff & flush
 
 진짜 frame diff 는 `renderer.ts:38-130` 의 `createRenderer` 함수에 있다. **front frame** (이전에 화면에 찍혀 있는 것) 과 **back frame** (새로 그릴 것) 두 buffer 를 비교한다.
+
+:::tabs
 
 ```typescript
 // renderer.ts (단순화)

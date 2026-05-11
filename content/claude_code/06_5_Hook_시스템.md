@@ -357,8 +357,6 @@ async def prepare_if_condition_matcher(
 
 이벤트의 전체 목록은 `src/entrypoints/sdk/coreTypes.ts:25`에 있다.
 
-:::tabs
-
 ```typescript
 // src/entrypoints/sdk/coreTypes.ts:25
 export const HOOK_EVENTS = [
@@ -513,6 +511,8 @@ export const hookJSONOutputSchema = lazySchema(() => {
 ### 실행 — `execCommandHook`에서 실제로 일어나는 일
 
 `hooks.ts:747`의 `execCommandHook`이 셸 명령을 진짜 실행하는 곳이다. 요점만:
+
+:::tabs
 
 ```typescript
 // src/utils/hooks.ts:747 (축약)

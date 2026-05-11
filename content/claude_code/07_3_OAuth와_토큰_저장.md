@@ -150,8 +150,6 @@ def get_secure_storage():
 
 플레인텍스트 저장소가 사용될 때 — 경고를 동반한다:
 
-:::tabs
-
 ```typescript
 return {
   success: true,
@@ -164,6 +162,8 @@ return {
 ### 어댑터 — `ClaudeAuthProvider`
 
 MCP SDK는 자기가 OAuth를 처리하기 위한 추상 인터페이스를 갖는다 — `OAuthClientProvider`. 이건 SDK가 호출자에게 묻는다: "**토큰을 어디서 읽지? 어디에 저장하지? state는 어떻게 만들지?**". `ClaudeAuthProvider` 가 그 질문들에 **Claude Code 식**으로 답한다 (`auth.ts:1376`).
+
+:::tabs
 
 ```typescript
 // (축약: 생성자, clientMetadata, clientInformation, codeVerifier,

@@ -48,8 +48,6 @@
 
 4.1에서 본 `commit.ts`를 다시 펼치자.
 
-:::tabs
-
 ```typescript
 const ALLOWED_TOOLS = [
   'Bash(git add:*)',
@@ -74,6 +72,8 @@ const command = {
 ### 어디서 적용되는가 — `QueryEngine.ts:483`
 
 진짜 코드는 어디 있나? `QueryEngine.ts:477-486` 의 setAppState 블록. 핵심은 line 483 (`command: allowedTools`).
+
+:::tabs
 
 ```typescript
 // processSlashCommand가 명령의 allowedTools를 추출해서 넘겨준다

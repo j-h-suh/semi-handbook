@@ -38,8 +38,6 @@
 
 `tools/AgentTool/AgentTool.tsx` — **1,398줄짜리 Tool 정의**. 다른 도구처럼 `buildTool({...})` 로 만들어진다. 같은 인터페이스, 같은 47개 필드 (3.2). 모델이 보기에는 그냥 평범한 도구. 입력 스키마는:
 
-:::tabs
-
 ```typescript
 // (축약: 실제 inputSchema 는 baseInputSchema 위에 multi-agent params (name, team_name, mode)
 //        + isolation + cwd 를 더한 fullInputSchema. KAIROS feature 에 따라 cwd omit,
@@ -56,6 +54,8 @@ const baseInputSchema = lazySchema(() => z.object({
 `description`, `prompt`, `subagent_type`. 모델은 **"어느 종류의 에이전트한테 무엇을 시킬지"** 만 말한다. 입력만 보면 완전히 평범한 함수 호출.
 
 근데 `call()` 안에서는…
+
+:::tabs
 
 ```typescript
 // runAgent.ts:248 — 함수 정의 시작
@@ -188,8 +188,6 @@ def get_built_in_agents() -> list[AgentDefinition]:
 
 `built-in/exploreAgent.ts` — 일부러 모델한테 조심성을 주는 패턴이 가득.
 
-:::tabs
-
 ```typescript
 // exploreAgent.ts:26-36 (verbatim)
 === CRITICAL: READ-ONLY MODE - NO FILE MODIFICATIONS ===
@@ -206,6 +204,8 @@ Your role is EXCLUSIVELY to search and analyze existing code. You do NOT have ac
 ```
 
 **대문자, CRITICAL, STRICTLY PROHIBITED**. **이걸 지키는 진짜 메커니즘은 그 다음에 있다**.
+
+:::tabs
 
 ```typescript
 export const EXPLORE_AGENT: BuiltInAgentDefinition = {

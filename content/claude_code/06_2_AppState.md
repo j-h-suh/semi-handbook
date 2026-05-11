@@ -141,8 +141,6 @@ grep "^\s*messages:" src/state/AppStateStore.ts
 
 그러면 어디에? `REPL.tsx:1182-1183`에 답이 있다.
 
-:::tabs
-
 ```typescript
 const [messages, rawSetMessages] = useState<MessageType[]>(initialMessages ?? [])
 const messagesRef = useRef(messages)
@@ -193,6 +191,8 @@ const messagesRef = useRef(messages)
 ### `getDefaultAppState()` — 시작 모양
 
 `AppStateStore.ts:456`. 새 세션이 시작될 때 **AppState의 초기값**. **약 114줄짜리 함수**.
+
+:::tabs
 
 ```typescript
 // (축약: 약 70개 필드 중 12개만 발췌. mcp/plugins 의 sub-필드도 일부 생략)

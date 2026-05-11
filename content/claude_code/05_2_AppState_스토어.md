@@ -122,8 +122,6 @@ class Store(Generic[T]):
 
 23줄을 다시 보자.
 
-:::tabs
-
 ```typescript
 if (Object.is(next, prev)) return
 ```
@@ -139,6 +137,8 @@ if (Object.is(next, prev)) return
 `store.ts`는 React에 대해 모른다. 함수 하나, generic 하나. **순수 TypeScript**다. 그럼 React 컴포넌트가 어떻게 이걸 구독하는가?
 
 `AppState.tsx`의 142줄.
+
+:::tabs
 
 ```typescript
 export function useAppState(selector) {
