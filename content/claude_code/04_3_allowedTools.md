@@ -140,9 +140,7 @@ class PermissionEngine:
 
 이게 **capability-based security**의 작은 형태다. 권한이 주어진 자리, 주어진 시간에만 산다. 다른 곳으로 흘러나가지 않는다. 사용자는 한 명령에 권한을 위임했고, 그 명령이 끝나면 권한도 같이 끝난다.
 
-> ⚙️ **턴 스코프뿐만이 아니라 forked agent 까지 격리 (8장 떡밥).** 위 코멘트에는 더 큰 디테일이 이어진다. **"Must run before the !shouldQuery gate: forked commands return shouldQuery=false, and createGetAppStateWithAllowedTools in `forkedAgent.ts` reads this field, so stale skill tools would otherwise leak into forked agent permissions."** 즉 권한 슬롯이 비워지는 자리가 조심스럽게 골라져 있다 — 너무 늦으면 서브 에이전트 (8장의 AgentTool) 가 직전 명령의 권한을 물려받을 수 있기 때문. **capability-based security**가 부모-자식 에이전트 경계까지 닿는다는 뜻. 8장에서 본다.
-
-> 💡 **왜 `command:` 슬롯이라는 이름인가.** 6.4에서 보겠지만 권한 시스템에는 영구 룰과 임시 룰이 둘 다 있다. 영구 룰은 settings.json에 저장돼서 세션 간에 유지된다. 임시 룰은 현재 세션에만 산다 — 그 중 하나가 명령 스코프다. "이번 명령 동안만 통하는 룰"이라는 뜻으로 `command:` 슬롯이라는 이름이 붙었다.
+> ⚙️ **턴 스코프뿐만 아니라 forked agent까지 격리한다 (8장 떡밥).** `command` 슬롯을 비우는 시점이 중요하다 — 서브 에이전트(8장의 AgentTool)가 시작될 때 자기 권한 컨텍스트에 부모 턴의 슬롯을 읽어들이기 때문에, 리셋이 너무 늦으면 부모의 권한이 그대로 누수된다. 그래서 슬롯 리셋은 forked agent의 권한 체크가 일어나기 *전*에 와야 한다. **capability-based security가 부모-자식 에이전트 경계까지 닿는다는 뜻**. 8장에서 본격적으로 본다.
 
 ### 더 큰 예시 — `commit-push-pr.ts`
 
@@ -172,7 +170,7 @@ const ALLOWED_TOOLS = [
 
 ### Skill도 같은 패턴 — frontmatter
 
-명령뿐만 아니라 **skill**도 같은 메커니즘을 쓴다. 빌트인 `security-review` 명령은 흥미로운 변종 — `.md` 파일이 아니라 `.ts` 안에 마크다운 문자열로 박혀 있다 (`security-review.ts:6-9`).
+명령뿐만 아니라 **skill**도 같은 메커니즘을 쓴다. 사용자가 만드는 skill은 `.md` 파일에 frontmatter 헤더 + 본문이 들어 있고, `allowed-tools`가 그 헤더에 적힌다. 빌트인 `security-review`는 흥미로운 변종 — `.md` 파일을 안 쓰고 **TS 코드 안에 같은 형식의 마크다운 문자열을 박아 둔다** (`security-review.ts:6-9`):
 
 ```typescript
 const SECURITY_REVIEW_MARKDOWN = `---
@@ -184,11 +182,11 @@ You are a senior security engineer conducting a focused security review...
 `
 ```
 
-YAML frontmatter에 `allowed-tools` 필드. 이게 `parseFrontmatter` + `parseSlashCommandToolsFromFrontmatter`로 파싱돼서 같은 `command` 슬롯에 들어간다. **마크다운 (또는 마크다운 문자열) 한 덩어리가 프롬프트 + 권한 패키지가 된다.**
+`.md` 파일이든 코드 안의 문자열이든 — **같은 파서**(`parseFrontmatter` + `parseSlashCommandToolsFromFrontmatter`)가 처리해서 같은 `command` 슬롯에 들어간다. 빌트인과 사용자 정의가 하나의 데이터 모델을 공유하는 것.
 
-빌트인은 이렇게 **.ts에 박힌** 변종이지만, 진짜 `.md` 파일로 된 사용자 정의 skill도 **같은 frontmatter 패턴**을 쓴다. 10.2에서 직접 SKILL.md를 만들 때 다시 본다.
+이 모델의 핵심은 — **한 덩어리의 마크다운에 프롬프트(본문) + 권한(`allowed-tools`) + 설명(`description`)이 응축돼 있다**는 것. `commit.ts`처럼 TS 코드 곳곳에 흩어져 있던 셋이 한 텍스트로 묶인 형태다. 10.2에서 직접 SKILL.md를 만들 때 이 응축을 손으로 다시 한다.
 
-> 🔬 **Deep Dive — `claude -p "..." --allowedTools`와의 차이.** Headless 모드 (`claude -p`)에도 `--allowedTools` 옵션이 있는데, 완전히 다르게 동작한다. headless에서는 진짜 화이트리스트다 — 그 목록에 없는 도구는 아예 사용 불가. 슬래시 명령의 `allowedTools`는 추가 자동 허용에 가깝다 — 거기 있으면 다이얼로그가 안 뜨고, 없는 도구도 (권한이 있다면) 여전히 쓸 수 있다. 같은 이름이 두 의미를 가진다. 헷갈리는 부분이지만 — **실행 환경(headless vs interactive)**과 **적용 자리(CLI flag vs slash command field)** 가 다르다는 걸 알면 정리된다.
+> 🔬 **Deep Dive — `claude -p ... --allowedTools`와는 정반대다.** Headless 모드(`claude -p`)의 `--allowedTools`는 **화이트리스트 필터**다 — 목록에 없는 도구는 아예 사용 불가. 슬래시 명령의 `allowedTools`는 반대로 **자동 허용 목록**이다 — 거기 있으면 다이얼로그를 건너뛰고, 없는 도구도 권한이 있다면 여전히 쓸 수 있다. 같은 키워드가 실행 환경(headless vs interactive)에 따라 정반대 방향으로 동작한다는 걸 알면 정리된다.
 
 ### 4장 통합 — 명령 = 번들
 
@@ -275,9 +273,10 @@ await dispatch_slash_command(commit_command, "", ctx)
 # 이 안에서 LLM이 "Bash(git status)" 호출 → ctx.is_always_allowed → True → 다이얼로그 없이 실행
 
 # 일반 채팅 턴 (다음 턴)
-ctx.command_rules = []  # 자동으로 비워짐
 # 이제 LLM이 "Bash(git push)" 호출 → ctx.is_always_allowed → False → 다이얼로그 뜸
 ```
+
+> 💡 **`fnmatch`는 셸 와일드카드로 문자열을 매칭한다.** Python 표준 라이브러리 모듈로, 정규식보다 단순하고 셸에서 익숙한 패턴을 그대로 쓴다 — `*`(임의 길이), `?`(한 글자), `[abc]`(문자 클래스). 위 코드에서는 `fnmatch.fnmatch("Bash(git status)", "Bash(git*)")`처럼 도구 호출 문자열을 룰 패턴에 매칭한다. 룰 자체가 셸 스타일로 적혀 있기 때문에(`Bash(git add:*)`, `mcp__slack__*` 등) `fnmatch`가 권한 룰 시스템에 자연스럽게 들어맞는다.
 
 핵심 세 줄.
 

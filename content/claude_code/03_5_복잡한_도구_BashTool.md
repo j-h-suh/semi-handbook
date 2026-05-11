@@ -311,6 +311,7 @@ Python으로 BashTool의 권한 매칭 핵심만 골라 옮기면 이렇게 생�
 from __future__ import annotations
 import shlex
 from dataclasses import dataclass
+from fnmatch import fnmatch
 
 
 # ─── 환경 변수 prefix 패턴 ────────────────
@@ -359,20 +360,17 @@ def prepare_permission_matcher(command: str):
     subcommands = [" ".join(sub.argv) for sub in parsed]
     
     def matcher(pattern: str) -> bool:
-        # 한 하위 명령이라도 패턴에 맞으면 True
-        return any(
-            cmd == pattern or cmd.startswith(f"{pattern.rstrip('*').rstrip()} ")
-            for cmd in subcommands
-        )
+        # 한 하위 명령이라도 패턴에 맞으면 True (셸 와일드카드 매칭)
+        return any(fnmatch(cmd, pattern) for cmd in subcommands)
     
     return matcher
 
 
 # ─── 사용 ────────────────
 matcher = prepare_permission_matcher("FOO=bar ls && git push origin main")
-print(matcher("git"))         # True  ← git push가 매칭
-print(matcher("ls"))          # True  ← ls도 매칭
-print(matcher("rm"))          # False
+print(matcher("git*"))        # True  ← git push가 매칭 (와일드카드)
+print(matcher("ls"))          # True  ← ls는 완전 일치
+print(matcher("rm*"))         # False
 print(matcher("docker"))      # False
 
 # 적대적 입력 — 파싱 실패
