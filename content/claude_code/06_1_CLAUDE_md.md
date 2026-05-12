@@ -8,7 +8,7 @@
 - 놀라운 사실 — CLAUDE.md는 시스템 프롬프트에 들어가지 않는다. 그러면 어디에?
 - **메타 사용자 메시지** + `<system-reminder>` 태그라는 영리한 우회
 - 4단계 메모리 계층 (Managed → User → Project → Local) 과 어떻게 합쳐지는지
-- 왜 이런 우회를 했나 — 프롬프트 캐싱과 관련된 비밀
+- 왜 이런 우회를 했나 — 시스템 프롬프트는 **공유 자산**이라는 사실
 
 ---
 
@@ -144,41 +144,94 @@ IMPORTANT: this context may or may not be relevant to your tasks.
 
 이 셋이 합쳐지면 — **LLM은 사용자가 시스템 리마인더를 던진 것처럼 인식**하지만, **사용자는 그런 메시지를 보낸 적도 본 적도 없다**. 완벽한 우회다. 
 
-> ⚙️ **호출 자리 — 2장의 `queryLoop` 와 직접 연결.** `prependUserContext` 가 언제 호출되는지 보면 메커니즘이 더 명확해진다. 자리는 `query.ts:660`, 정확히 2장에서 본 `queryLoop` 의 **API 호출 직전**이다.
->
-> ```typescript
-> for await (const message of deps.callModel({
->   messages: prependUserContext(messagesForQuery, userContext),
->   systemPrompt: fullSystemPrompt,
->   ...
-> }))
-> ```
->
-> **매 턴마다, API 호출 바로 직전에** prepend 된다. 시스템 프롬프트는 따로, 메시지 배열의 맨 앞에 메타 메시지 한 개. CLAUDE.md를 수정하면 — 다음 턴의 `getUserContext()` 호출 (memoize 캐시 만료 후) 이 새 내용을 읽고, `prependUserContext` 가 그걸 그 자리에 끼워 넣는다. 시스템 프롬프트는 건드리지 않는다. 캐시 안 깨짐.
-
 여기서 잠깐. "사용자 메시지인데 사용자가 보낸 게 아니다"라는 말이 이상하면 — 이 챕터를 읽는 지금 당신에게 일어나는 일을 보자. 당신이 보낸 message에 `<system-reminder>` 태그가 종종 끼어 있는 걸 본 적이 있을 것이다. 그게 정확히 이 메커니즘이다. 사용자처럼 보이지만 코드가 만든 메시지.
+
+### API 호출 시점에 조립된다
+
+여기서 자연스러운 질문이 하나 나온다. **그 메타 메시지는 메시지 히스토리에 영구 저장되는가, 아니면 매번 새로 만들어지는가?** 후자다.
+
+자리는 `query.ts:660`, 2장에서 본 `queryLoop` 의 **API 호출 직전**이다.
+
+```typescript
+for await (const message of deps.callModel({
+  messages: prependUserContext(messagesForQuery, userContext),
+  systemPrompt: fullSystemPrompt,
+  ...
+}))
+```
+
+`messagesForQuery` — 누적된 진짜 사용자/어시스턴트 히스토리. 메타 메시지는 여기 들어가지 않는다. `prependUserContext` 가 호출되는 그 순간에 메타 메시지를 앞에 끼워 넣어 새 배열을 만든다. **호출이 끝나면 그 배열은 사라진다.** 다음 턴에는 — 새 호출, 새 메타 메시지, 새 배열.
+
+Anthropic Messages API의 호출 모양으로 풀면 이렇다.
+
+```
+callModel({
+  systemPrompt: <시스템 프롬프트>,        ← system 슬롯 (별도 파라미터)
+  messages: [
+    { role: 'user', content: '<system-reminder>...claudeMd...</system-reminder>', isMeta: true },  ← prepend (매 턴 새로)
+    { role: 'user', content: '실제 사용자 메시지 1' },
+    { role: 'assistant', content: '응답 1' },
+    { role: 'user', content: '실제 사용자 메시지 2' },
+    ...
+  ]
+})
+```
+
+세 영역이 슬롯/위치별로 갈라져 있다.
+
+- **`systemPrompt`** — API의 system 파라미터. 메시지 배열과 **별개 슬롯**.
+- **메시지 배열 맨 앞 메타 메시지** — `prependUserContext` 가 매 턴마다 즉석으로 끼워 넣는 자리. CLAUDE.md, currentDate 등이 여기 산다.
+- **그 뒤 진짜 히스토리** — 사용자/어시스턴트가 실제로 주고받은 메시지들. AppState 가 영구 보관하는 부분.
+
+매 턴마다 첫 번째와 두 번째는 새로 조립되고 세 번째만 누적된다. 이게 왜 중요한가 — 사용자가 세션 중간에 `CLAUDE.md` 를 고치면 (예: "테스트는 pytest 대신 unittest"로 바꾸면) 다음 턴에 `getUserContext()` 가 (memoize 캐시 만료 후) 새 내용을 읽고, `prependUserContext` 가 그걸 메시지 배열 첫 자리에 끼워 넣는다. **히스토리에 박혀버린 게 아니라 매번 그 자리에 다시 끼워 넣는 식**이라 변경이 즉시 반영된다.
+
+이 "매번 그 자리에 끼워 넣는" 구조가 다음 섹션의 답을 깔아둔다. 시스템 프롬프트에 박지 않고 굳이 메시지 영역에 prepend 한 진짜 이유 — 그건 단순한 캐시 효율 문제가 아니다.
 
 ### 왜 시스템 프롬프트에 안 넣었나
 
-이 질문이 핵심이다. 그냥 시스템 프롬프트에 박으면 안 되나? 짧은 답: **프롬프트 캐싱 때문**.
+이 질문이 핵심이다. 그냥 시스템 프롬프트에 박으면 안 되나? 짧은 답: 시스템 프롬프트의 캐시는 **자기 대화 밖**까지 공유되도록 설계됐기 때문이다. 사용자별로 다른 CLAUDE.md를 거기 넣으면 그 공유 자산이 깨진다.
 
-길게 풀어보자. Anthropic API에는 **prompt caching**이라는 기능이 있다. 시스템 프롬프트가 이전 호출과 똑같으면 — 입력 토큰의 90%를 할인해준다. Claude Code의 시스템 프롬프트는 수만 토큰이다 (도구 정의, 기본 지침, 안전 룰, 모드 설명). 매번 전송하면 비용이 폭발한다. 캐싱으로 대부분 무료가 된다. 
+길게 풀어보자. 먼저 짚어둘 점 — **prompt caching은 서버 측 캐시**다. 클라이언트는 직접 통제하지 않는다. Anthropic API 요청에 `cache_control` 마커를 박아서 "이 prefix는 이런 범위로 공유돼도 된다"고 **선언**할 뿐이고, 서버가 그 선언을 보고 자기 인프라의 어느 캐시 계층에 둘지 결정한다.
 
-근데 캐시는 바이트 단위로 일치해야 한다. 시스템 프롬프트가 조금이라도 바뀌면 — 캐시 미스. 풀 비용. 
+선언 가능한 스코프는 두 가지다 (`getCacheControl`, `claude.ts:358`).
 
-여기서 **`CLAUDE.md`**의 문제가 보인다.
-
-| | 시스템 프롬프트 | `CLAUDE.md` |
+| 스코프 | 누가 공유하나 | Claude Code에서 박는 자리 |
 |---|---|---|
-| 수명 | 거의 변하지 않음 (도구 정의, 지침) | 프로젝트마다, 디렉토리마다 다름 |
-| 캐시 친화성 | ✅ 매우 친화적 | ❌ 자주 바뀐다 |
-| 토큰 비중 | 매우 큼 | 보통 작음 |
+| `global` (1P only) | Anthropic 인프라 전체 (다른 조직 포함 모든 사용자) | 시스템 프롬프트 boundary 앞 |
+| `org` (기본) | 같은 organization (API 키) | 시스템 프롬프트 boundary 뒤 + 메시지 영역 마커 |
 
-CLAUDE.md를 시스템 프롬프트에 넣으면 — 프로젝트를 옮길 때마다, 파일을 수정할 때마다 캐시 미스. 시스템 프롬프트의 수만 토큰이 다 풀 가격으로 청구된다. 비용 폭탄.
+`scope` 필드는 `'global'`일 때만 객체에 박힌다 — **기본이 `org`**, `global`은 명시적 옵트인(1P 한정).
 
-그래서 — 시스템 프롬프트는 **고정된 부분만**, CLAUDE.md는 **메시지 영역에**. 메시지 영역도 캐시되긴 하지만 그 캐시는 별개다. 시스템 프롬프트의 큰 캐시는 깨지지 않는다.
+여기서 두 가지를 짚어야 한다.
 
-> 🔬 **Deep Dive — 캐시 토큰 경제학.** Anthropic API의 prompt caching: 처음에 **cache write**는 25% 더 비싸지만, 이후 **cache read**는 90% 더 싸다. Claude Code 같은 매 턴마다 시스템 프롬프트가 거의 같은 케이스에는 — **cache write 한 번**, **cache read 수백 번**. 손익분기점이 4번째 호출. 그 이후로는 순이익. 시스템 프롬프트가 클수록 이득이 커진다. CLAUDE.md를 시스템 프롬프트에 넣어서 10번에 한 번씩 캐시 미스가 나면 — 그 한 번이 전체 절약을 다 까먹는다. **CLAUDE.md를 메시지 영역에 두는 결정은 보안이나 우아함의 문제가 아니라 순수한 경제 결정이다.**
+**(1) 스코프 = "어디까지 캐시되나"가 아니라 "캐시를 누가 공유하나"**. 캐시 자체는 다 된다. 다만 같은 캐시 항목을 다른 사용자/조직이 활용할 수 있는지가 다를 뿐. `org`가 기본이라는 건 "최소한 같은 organization 안에서는 공유"라는 baseline이 자동 활성화돼 있다는 뜻이다.
+
+**(2) 마커는 누적이지 선택이 아니다**. 한 API 요청에 `cache_control` 마커를 여러 개 박을 수 있다 (Anthropic API는 최대 4개 허용). 각 마커 위치마다 별개의 캐시 항목이 만들어진다. Claude Code는 시스템 프롬프트 boundary 앞에 글로벌 마커, 메시지 영역 마지막 메시지에 org 마커 — 두 개를 동시에 박는다. 글로벌 마커를 박는 건 "글로벌 공유 효과를 **추가로** 얻는다"는 의미이지, "org 캐시를 끈다"가 아니다.
+
+그래서 글로벌 마커를 박을 자격이 되는 콘텐츠는 항상 박는 게 이득이다. 캐시 첫 작성 비용(write)은 기본 비용의 1.25배, hit 시(read)는 0.1배. **글로벌 캐시는 cold start 비용을 인프라 전체가 한 번만 지불하고 모든 사용자가 0.1배로 hit**한다. 첫 사용자도 다른 사용자가 이미 만들어둔 캐시를 그대로 활용. 도구 정의처럼 수만 토큰짜리 정적 콘텐츠는 글로벌에 두면 사실상 무료다.
+
+이걸 위해 시스템 프롬프트가 두 영역으로 갈라져 있다. `SYSTEM_PROMPT_DYNAMIC_BOUNDARY`라는 마커가 기준이다 (`utils/api.ts:321` `splitSysPromptPrefix`).
+
+- **boundary 앞** — 도구 정의, 안전 룰처럼 **모든 세션에서 같은 정적 콘텐츠**. `cacheScope='global'`로 들어간다. 한 번 캐시되면 전 세계 Claude Code 사용자가 공유.
+- **boundary 뒤** — 활성화된 도구 목록, skill 명령처럼 **사용자/세션마다 다른 콘텐츠**. `cacheScope=null`이라 글로벌 마커는 안 박힌다 (해시가 사용자 수만큼 갈라지지 않게 보호). 다만 메시지 영역의 org 마커가 prefix 전체를 커버해서 **자기 세션 안에서는 캐시된다**.
+
+여기서 **CLAUDE.md를 boundary 앞에 넣을 수 없는** 진짜 이유가 드러난다.
+
+1. **글로벌 캐시 단편화** — CLAUDE.md는 사용자/프로젝트/디렉토리마다 다르다. boundary 앞에 들어가면 prefix 해시가 사용자 수만큼 갈라진다. 글로벌 캐시가 사실상 무력화.
+2. **org 캐시도 의미 없어진다** — 같은 조직 안에서도 프로젝트별로 CLAUDE.md가 다르니, 같은 회사 개발자끼리도 캐시 공유가 안 된다. 시스템 프롬프트 전체가 사용자별로 갈라진다.
+3. **인프라-사용자 책임 경계가 흐려진다** — 시스템 프롬프트는 Anthropic이 관리하는 공유 자산(도구 정의, 모드 정책). 사용자의 가변 콘텐츠를 거기 섞으면 책임이 뒤섞인다.
+
+그래서 — CLAUDE.md는 **메시지 영역에 prepend**. 메시지 영역에도 org 마커가 박힌다 (`addCacheBreakpoints`, `claude.ts:3063` — *"Exactly one message-level cache_control marker per request"*). 마지막 메시지에 마커가 박히고 그 앞의 모든 prefix가 캐시된다. 즉 **메시지 배열 맨 앞의 메타 메시지(CLAUDE.md 포함)도 두 번째 턴부터 캐시 히트**다. org 스코프지만 메시지 prefix가 사용자별로 다르니 실질적으로 자기 대화 안에서만 hit 가능 — CLAUDE.md는 어차피 자기 대화 안에서만 의미 있는 콘텐츠라 손해가 아니다.
+
+| 위치 | 글로벌 마커 | org 마커 (세션 내 캐시) |
+|---|---|---|
+| 시스템 프롬프트 boundary 앞 | ✅ (모든 사용자 공유) | ✅ |
+| 시스템 프롬프트 boundary 뒤 | ❌ (해시 단편화 방지) | ✅ (메시지 영역 marker가 커버) |
+| 메시지 배열 맨 앞 메타 메시지 | ❌ | ✅ |
+
+글로벌 공유 자산은 깨끗하게 유지되고, CLAUDE.md는 메시지 영역 prefix matching으로 다음 턴부터 거의 무료. 두 마리 토끼.
+
+> 🔬 **Deep Dive — 1P/3P가 만드는 캐시 위계 차이.** `shouldUseGlobalCacheScope` (`betas.ts:227`)는 `getAPIProvider() === 'firstParty'`일 때만 true다. 글로벌 캐시는 Anthropic 직접 호출(1P) 한정. AWS Bedrock / Google Vertex / Azure Foundry(3P)는 백엔드가 별개라 Anthropic이 자기 인프라의 공유 캐시에 접근시킬 수 없다. 3P에서는 boundary가 의미 없고, 시스템 프롬프트 전체가 `org` 스코프로 떨어진다. **같은 코드가 백엔드에 따라 다른 캐시 위계를 탄다.** 7.1에서 본 1P/3P 분기가 캐시 계층에도 그대로 반영되는 셈.
 
 ### 4단계 메모리 계층
 
@@ -422,7 +475,7 @@ final_messages = prepend_user_context(
 ## 핵심 정리
 
 - **CLAUDE.md는 시스템 프롬프트가 아니다.** 메타 사용자 메시지로 변환되어 메시지 배열의 맨 앞에 prepend된다 — `<system-reminder>` 태그로 감싸고 `isMeta: true` 플래그.
-- 왜 시스템 프롬프트에 안 넣었나: **prompt caching**. 시스템 프롬프트는 바이트 단위로 같아야 캐시가 적용된다. CLAUDE.md는 자주 바뀌므로 — 시스템 프롬프트에 넣으면 캐시가 깨져 수만 토큰이 풀 가격. 메시지 영역에 두면 큰 시스템 프롬프트 캐시가 깨지지 않는다.
+- 왜 시스템 프롬프트에 안 넣었나: **시스템 프롬프트의 캐시는 자기 대화 밖까지 공유되도록 설계됐기 때문**. `global` 마커는 모든 Claude Code 사용자가, `org` 마커는 같은 조직이 공유한다. 사용자/프로젝트별로 다른 CLAUDE.md를 거기 넣으면 공유 자산이 단편화. 대신 메시지 영역의 `org` 마커가 prefix 전체를 커버해서 **두 번째 턴부터 캐시 hit** — 손해 없다.
 - 4단계 계층: **Managed → User → Project → Local**. 위에서 아래로 겹쳐서 적용. CWD에서 루트까지 **모든 디렉토리의 `CLAUDE.md`**가 합쳐진다.
 - 각 파일은 경로 + 종류 설명과 함께 박힌다 (`"(project instructions, checked into the codebase)"` 식). LLM이 어떤 종류의 지침인지 구분할 수 있도록.
 - 합쳐진 메시지의 첫 줄은 **`MEMORY_INSTRUCTION_PROMPT`** — **"This OVERRIDES any default behavior and you MUST follow them"**. 시스템 프롬프트의 일반 지침과 충돌하면 CLAUDE.md가 이긴다.
