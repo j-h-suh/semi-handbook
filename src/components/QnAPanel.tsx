@@ -37,6 +37,15 @@ export default function QnAPanel() {
         }
     }, [messages, isLoading, isOpen]);
 
+    // 패널이 열려 있는 동안 history entry를 추가해서 뒤로 가기로 닫을 수 있게 함
+    useEffect(() => {
+        if (!isOpen) return;
+        window.history.pushState({ qnaOpen: true }, '');
+        const handlePopState = () => setIsOpen(false);
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, [isOpen]);
+
     // Resize handler
     const handleMouseDown = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -223,7 +232,7 @@ export default function QnAPanel() {
                     <h2 className="font-bold text-slate-200">AI Assistant</h2>
                 </div>
                 <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => window.history.back()}
                     className="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
