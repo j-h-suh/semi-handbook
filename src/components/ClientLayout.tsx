@@ -16,9 +16,10 @@ interface Props {
     semiChapters: ChapterMeta[];
     statsChapters: ChapterMeta[];
     claudeChapters: ChapterMeta[];
+    execChapters: ChapterMeta[];
 }
 
-export default function ClientLayout({ children, searchData, semiChapters, statsChapters, claudeChapters }: Props) {
+export default function ClientLayout({ children, searchData, semiChapters, statsChapters, claudeChapters, execChapters }: Props) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // useCallback 으로 참조 안정화 — 매 렌더마다 새 함수가 생성되면
@@ -54,6 +55,7 @@ export default function ClientLayout({ children, searchData, semiChapters, stats
                 semiChapters={semiChapters}
                 statsChapters={statsChapters}
                 claudeChapters={claudeChapters}
+                execChapters={execChapters}
                 isOpen={sidebarOpen}
                 onClose={closeSidebar}
             />
