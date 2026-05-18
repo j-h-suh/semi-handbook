@@ -152,6 +152,8 @@ IMPORTANT: this context may or may not be relevant to your tasks.
 
 자리는 `query.ts:660`, 2장에서 본 `queryLoop` 의 **API 호출 직전**이다.
 
+:::tabs
+
 ```typescript
 for await (const message of deps.callModel({
   messages: prependUserContext(messagesForQuery, userContext),
@@ -159,6 +161,18 @@ for await (const message of deps.callModel({
   ...
 }))
 ```
+
+```python
+# Python 등가 — queryLoop의 API 호출 직전, 매 턴마다 즉석 조립
+async for message in deps.call_model(
+    system_prompt=full_system_prompt,
+    messages=prepend_user_context(messages_for_query, user_context),
+    # ...
+):
+    ...  # 응답 메시지 처리
+```
+
+:::
 
 `messagesForQuery` — 누적된 진짜 사용자/어시스턴트 히스토리. 메타 메시지는 여기 들어가지 않는다. `prependUserContext` 가 호출되는 그 순간에 메타 메시지를 앞에 끼워 넣어 새 배열을 만든다. **호출이 끝나면 그 배열은 사라진다.** 다음 턴에는 — 새 호출, 새 메타 메시지, 새 배열.
 
@@ -189,47 +203,55 @@ callModel({
 
 ### 왜 시스템 프롬프트에 안 넣었나
 
-이 질문이 핵심이다. 그냥 시스템 프롬프트에 박으면 안 되나? 짧은 답: 시스템 프롬프트의 캐시는 **자기 대화 밖**까지 공유되도록 설계됐기 때문이다. 사용자별로 다른 CLAUDE.md를 거기 넣으면 그 공유 자산이 깨진다.
+짧은 답: **시스템 프롬프트는 인프라가 모든 사용자에게 공유하는 캐시 자산이기 때문**이다. 사용자별로 다른 CLAUDE.md를 거기 넣으면 그 공유가 깨진다.
 
-길게 풀어보자. 먼저 짚어둘 점 — **prompt caching은 서버 측 캐시**다. 클라이언트는 직접 통제하지 않는다. Anthropic API 요청에 `cache_control` 마커를 박아서 "이 prefix는 이런 범위로 공유돼도 된다"고 **선언**할 뿐이고, 서버가 그 선언을 보고 자기 인프라의 어느 캐시 계층에 둘지 결정한다.
+큰 그림으로 보면 시스템 프롬프트와 메시지 영역이 서로 다른 캐시 계층이다.
 
-선언 가능한 스코프는 두 가지다 (`getCacheControl`, `claude.ts:358`).
+```
+┌─ 시스템 프롬프트 (Anthropic이 관리하는 인프라 자산) ─┐
+│  ★ boundary 앞 → 전 세계 사용자 공유 캐시           │
+│  ☆ boundary 뒤 → 자기 세션 안에서만 캐시            │
+├─ 메시지 영역 (사용자의 대화) ────────────────────────┤
+│  ☆ 메타 메시지 (CLAUDE.md, 날짜 등)                 │
+│  ☆ 진짜 user/assistant 히스토리                    │
+└──────────────────────────────────────────────────────┘
+```
 
-| 스코프 | 누가 공유하나 | Claude Code에서 박는 자리 |
+별 ★ 자리가 핵심이다. **시스템 프롬프트 boundary 앞**의 캐시는 Anthropic 인프라 차원에서 *모든 사용자*가 공유한다. 누군가 한 번 만들면 다른 모든 사용자가 거의 무료(0.1배)로 hit — 도구 정의처럼 모두에게 같은 콘텐츠를 거기 두면 cold start 비용을 인프라가 한 번만 지불하고 끝. 도구 정의가 수만 토큰임을 생각하면 어마어마한 절약이다.
+
+반면 ☆ 자리는 한 organization 안에서만 캐시가 공유된다. 메시지 prefix가 사용자별로 다르니 실질적으로는 자기 대화 안에서만 hit.
+
+CLAUDE.md는 사용자/프로젝트별로 다르다. ★ 자리에 넣으면 사용자별로 prefix가 갈라져서 *공유 효과가 사라진다* — 인프라 차원의 자산이 사용자별로 단편화. 그래서 ☆ 자리(메시지 영역)에 prepend된다. 어차피 CLAUDE.md는 자기 대화 안에서만 의미 있는 콘텐츠라 손해 없다. **공유 자산은 깨끗하게, 사용자 콘텐츠는 자기 영역에**. 두 마리 토끼.
+
+여기까지가 큰 그림. 이제 어떻게 ★/☆가 구분되는지, 디테일을 보자.
+
+prompt caching은 Anthropic 서버에서 관리한다. 클라이언트는 API 요청에 `cache_control` 마커를 박아서 "이 prefix는 이런 범위로 공유돼도 된다"고 선언할 뿐이다 (`getCacheControl`, `claude.ts:358`). 선언 가능한 스코프는 두 가지.
+
+| 스코프 | 누가 공유하나 |
+|---|---|
+| `global` (1P only) | Anthropic 인프라 전체 (모든 사용자) — 위 ★ |
+| `org` (기본) | 같은 organization (API 키) — 위 ☆ |
+
+`scope` 필드는 `'global'`일 때만 박힌다. 기본이 `org`, `global`은 명시적 옵트인. 한 가지 주의 — **스코프는 "캐시되나/안 되나"가 아니라 "캐시를 누가 공유하나"**다. `org` 마커도 캐시는 한다, 다만 같은 organization 안에서만. 그리고 **마커는 누적**이다. 한 API 요청에 여러 개(최대 4개) 박을 수 있고, 각각 별개의 캐시 항목을 만든다. Claude Code는 시스템 프롬프트 boundary 앞에 `global` 마커, 메시지 영역 끝에 `org` 마커 — 두 개를 동시에 박는다.
+
+그러면 boundary는 어떻게 콘텐츠를 가르는가. `SYSTEM_PROMPT_DYNAMIC_BOUNDARY`라는 마커가 시스템 프롬프트를 두 영역으로 갈라낸다 (`utils/api.ts:321` `splitSysPromptPrefix`).
+
+- **boundary 앞** — 도구 정의, 안전 룰처럼 **모든 세션에서 같은 정적 콘텐츠**. `cacheScope='global'`로 박힌다(위 그림의 ★).
+- **boundary 뒤** — 활성화된 도구 목록, skill 명령처럼 **사용자/세션마다 다른 콘텐츠**. 글로벌 마커는 안 박힌다 — 사용자마다 다르면 해시가 갈라져서 글로벌 캐시가 무의미해지니까. 다만 메시지 영역 `org` 마커가 그 뒤에서 prefix 전체를 한 캐시 단위로 묶어서 자기 세션 안에서는 캐시된다.
+
+| 위치 | 글로벌 마커 ★ | org 마커 ☆ |
 |---|---|---|
-| `global` (1P only) | Anthropic 인프라 전체 (다른 조직 포함 모든 사용자) | 시스템 프롬프트 boundary 앞 |
-| `org` (기본) | 같은 organization (API 키) | 시스템 프롬프트 boundary 뒤 + 메시지 영역 마커 |
+| 시스템 프롬프트 boundary 앞 | ✅ | ✅ |
+| 시스템 프롬프트 boundary 뒤 | ❌ | ✅ |
+| 메시지 배열 맨 앞 메타 메시지 (CLAUDE.md) | ❌ | ✅ |
 
-`scope` 필드는 `'global'`일 때만 객체에 박힌다 — **기본이 `org`**, `global`은 명시적 옵트인(1P 한정).
+CLAUDE.md를 boundary 앞(★)에 못 넣는 이유는 큰 그림의 "사용자별로 단편화"를 코드 차원에서 풀어보면 세 가지로 정리된다.
 
-여기서 두 가지를 짚어야 한다.
+1. **글로벌 캐시 단편화** — CLAUDE.md가 사용자/프로젝트별로 다르니 prefix 해시가 사용자 수만큼 갈라진다. ★의 가치(전 세계 공유)가 사라진다.
+2. **org 캐시도 의미 없어진다** — 같은 조직 안에서도 프로젝트별로 다르니, 같은 회사 개발자끼리도 시스템 프롬프트 전체가 사용자별로 갈라져버린다.
+3. **인프라-사용자 책임 경계가 흐려진다** — 시스템 프롬프트는 Anthropic이 관리하는 공유 자산. 사용자의 가변 콘텐츠를 거기 섞으면 책임이 뒤섞인다.
 
-**(1) 스코프 = "어디까지 캐시되나"가 아니라 "캐시를 누가 공유하나"**. 캐시 자체는 다 된다. 다만 같은 캐시 항목을 다른 사용자/조직이 활용할 수 있는지가 다를 뿐. `org`가 기본이라는 건 "최소한 같은 organization 안에서는 공유"라는 baseline이 자동 활성화돼 있다는 뜻이다.
-
-**(2) 마커는 누적이지 선택이 아니다**. 한 API 요청에 `cache_control` 마커를 여러 개 박을 수 있다 (Anthropic API는 최대 4개 허용). 각 마커 위치마다 별개의 캐시 항목이 만들어진다. Claude Code는 시스템 프롬프트 boundary 앞에 글로벌 마커, 메시지 영역 마지막 메시지에 org 마커 — 두 개를 동시에 박는다. 글로벌 마커를 박는 건 "글로벌 공유 효과를 **추가로** 얻는다"는 의미이지, "org 캐시를 끈다"가 아니다.
-
-그래서 글로벌 마커를 박을 자격이 되는 콘텐츠는 항상 박는 게 이득이다. 캐시 첫 작성 비용(write)은 기본 비용의 1.25배, hit 시(read)는 0.1배. **글로벌 캐시는 cold start 비용을 인프라 전체가 한 번만 지불하고 모든 사용자가 0.1배로 hit**한다. 첫 사용자도 다른 사용자가 이미 만들어둔 캐시를 그대로 활용. 도구 정의처럼 수만 토큰짜리 정적 콘텐츠는 글로벌에 두면 사실상 무료다.
-
-이걸 위해 시스템 프롬프트가 두 영역으로 갈라져 있다. `SYSTEM_PROMPT_DYNAMIC_BOUNDARY`라는 마커가 기준이다 (`utils/api.ts:321` `splitSysPromptPrefix`).
-
-- **boundary 앞** — 도구 정의, 안전 룰처럼 **모든 세션에서 같은 정적 콘텐츠**. `cacheScope='global'`로 들어간다. 한 번 캐시되면 전 세계 Claude Code 사용자가 공유.
-- **boundary 뒤** — 활성화된 도구 목록, skill 명령처럼 **사용자/세션마다 다른 콘텐츠**. `cacheScope=null`이라 글로벌 마커는 안 박힌다 (해시가 사용자 수만큼 갈라지지 않게 보호). 다만 메시지 영역의 org 마커가 prefix 전체를 커버해서 **자기 세션 안에서는 캐시된다**.
-
-여기서 **CLAUDE.md를 boundary 앞에 넣을 수 없는** 진짜 이유가 드러난다.
-
-1. **글로벌 캐시 단편화** — CLAUDE.md는 사용자/프로젝트/디렉토리마다 다르다. boundary 앞에 들어가면 prefix 해시가 사용자 수만큼 갈라진다. 글로벌 캐시가 사실상 무력화.
-2. **org 캐시도 의미 없어진다** — 같은 조직 안에서도 프로젝트별로 CLAUDE.md가 다르니, 같은 회사 개발자끼리도 캐시 공유가 안 된다. 시스템 프롬프트 전체가 사용자별로 갈라진다.
-3. **인프라-사용자 책임 경계가 흐려진다** — 시스템 프롬프트는 Anthropic이 관리하는 공유 자산(도구 정의, 모드 정책). 사용자의 가변 콘텐츠를 거기 섞으면 책임이 뒤섞인다.
-
-그래서 — CLAUDE.md는 **메시지 영역에 prepend**. 메시지 영역에도 org 마커가 박힌다 (`addCacheBreakpoints`, `claude.ts:3063` — *"Exactly one message-level cache_control marker per request"*). 마지막 메시지에 마커가 박히고 그 앞의 모든 prefix가 캐시된다. 즉 **메시지 배열 맨 앞의 메타 메시지(CLAUDE.md 포함)도 두 번째 턴부터 캐시 히트**다. org 스코프지만 메시지 prefix가 사용자별로 다르니 실질적으로 자기 대화 안에서만 hit 가능 — CLAUDE.md는 어차피 자기 대화 안에서만 의미 있는 콘텐츠라 손해가 아니다.
-
-| 위치 | 글로벌 마커 | org 마커 (세션 내 캐시) |
-|---|---|---|
-| 시스템 프롬프트 boundary 앞 | ✅ (모든 사용자 공유) | ✅ |
-| 시스템 프롬프트 boundary 뒤 | ❌ (해시 단편화 방지) | ✅ (메시지 영역 marker가 커버) |
-| 메시지 배열 맨 앞 메타 메시지 | ❌ | ✅ |
-
-글로벌 공유 자산은 깨끗하게 유지되고, CLAUDE.md는 메시지 영역 prefix matching으로 다음 턴부터 거의 무료. 두 마리 토끼.
+대신 메시지 영역(☆)에 prepend된다. 메시지 영역 끝에 박힌 `org` 마커(`addCacheBreakpoints`, `claude.ts:3063` — *"Exactly one message-level cache_control marker per request"*)가 prefix 전체를 한 캐시 단위로 묶기 때문에, **메타 메시지(CLAUDE.md 포함)도 두 번째 턴부터 캐시 hit**. 손해가 없다.
 
 > 🔬 **Deep Dive — 1P/3P가 만드는 캐시 위계 차이.** `shouldUseGlobalCacheScope` (`betas.ts:227`)는 `getAPIProvider() === 'firstParty'`일 때만 true다. 글로벌 캐시는 Anthropic 직접 호출(1P) 한정. AWS Bedrock / Google Vertex / Azure Foundry(3P)는 백엔드가 별개라 Anthropic이 자기 인프라의 공유 캐시에 접근시킬 수 없다. 3P에서는 boundary가 의미 없고, 시스템 프롬프트 전체가 `org` 스코프로 떨어진다. **같은 코드가 백엔드에 따라 다른 캐시 위계를 탄다.** 7.1에서 본 1P/3P 분기가 캐시 계층에도 그대로 반영되는 셈.
 
