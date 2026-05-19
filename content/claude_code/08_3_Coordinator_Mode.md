@@ -483,4 +483,5 @@ async def coordinator_loop(user_request: str) -> None:
 - **Continue vs Spawn 의사 결정 표** — 6가지 상황, 결정 기준은 컨텍스트 오버랩. 검증은 **반드시 fresh** (확증 편향 회피). **"기본값은 없다"**.
 - **`Never delegate understanding`** — 코디네이터의 유일한 책임이 합성. 워커한테 **"based on your findings, fix it"** 같은 말 금지. 이해가 워커들한테 흩어지면 코디네이터는 라우터로 전락. 의미가 사라진다.
 - **Fork-join 패턴**의 LLM 버전 — Fork는 `Agent` 병렬 호출, Join은 **다음 턴의 user 메시지**. 비동기라 코디네이터는 기다리는 동안 사용자와도 대화 가능.
+- **Part 8 (멀티 에이전트) 끝**. 8.1 도구로 위장한 LLM (`AgentTool` 재귀) + 8.2 자식 에이전트 컨텍스트 분리 (격리와 캐시 공유) + 8.3 코디네이터 모드 (시스템 프롬프트로 정체성 전환). 부모-자식 에이전트의 모든 디자인 결정이 *재귀 안전성 + 캐시 공유 + 같은 query 루프 재사용* 세 축으로 수렴.
 

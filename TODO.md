@@ -560,12 +560,12 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [ ] 7.2 MCP 클라이언트
 - [ ] 7.3 OAuth와 토큰 저장
 - [ ] 7.4 컨텍스트 압축
+- [ ] 7.5 IDE Bridge
 
 ### Part 8: 멀티 에이전트
 - [ ] 8.1 AgentTool 재귀
 - [ ] 8.2 createSubagentContext
 - [ ] 8.3 Coordinator Mode
-- [ ] 8.4 IDE Bridge
 
 ### Part 9: 미니 Claude Code
 - [ ] 9.1 설계 — 미니 에이전트의 골격

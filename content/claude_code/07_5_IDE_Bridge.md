@@ -1,4 +1,4 @@
-# 8.4 IDE 다리 — VS Code 확장과 파일시스템 랑데부로 통신
+# 7.5 IDE 다리 — VS Code 확장과 파일시스템 랑데부로 통신
 
 ---
 
@@ -533,5 +533,5 @@ def ide_to_mcp_config(ide: IdeLockfileInfo) -> dict:
 - **NFC vs NFD 사고**: macOS 파일시스템은 NFD(분해 형식), VS Code는 NFC(결합 형식). `.normalize('NFC')` 한 줄이 **한글/중국어/일본어 프로젝트의 IDE 통합을 살렸다**. **유니코드는 무서운 영역**.
 - **PID 조상 걷기**: 두 개의 VS Code 윈도우가 같은 프로젝트를 열어도 — **내 터미널이 속한 IDE**를 정확히 찾기 위해 `process.ppid → ppid → ppid …` 10레벨까지 걸어 올라간다. `ps` 호출이 비싸서 워크스페이스 매칭이 통과한 후에만 실행.
 - **일단 찾으면** — `DetectedIDEInfo → MCP 서버 설정` 변환만 하면 끝. 7.2의 `connectToServer` → `fetchToolsForClient` 가 이미 존재하는 파이프라인에서 자동. **그런데 IDE 도구는 2개만 하드 화이트리스트** (`ALLOWED_IDE_TOOLS = ['mcp__ide__executeCode', 'mcp__ide__getDiagnostics']`) — IDE 확장이 더 노출해도 필터 탈락. **권한 표면 안정성**. **추상화의 힘** — "외부 도구는 MCP 서버" 가 한 번 정해지면 **IDE 도 그저 MCP 서버**, 다만 그 도구 집합만 좁게 고정.
-- **Part 8 (멀티 에이전트와 IDE 브리지) 완료**. 8.1 재귀, 8.2 격리, 8.3 조율, 8.4 발견. 모두 같은 원리: **새 추상을 발명하지 말고 있는 추상을 재사용**. AgentTool은 `query()` 재귀. CoordinatorMode는 프롬프트 변경. IDE Bridge는 로크파일 + MCP. **승부처는 기존 조각의 조합**이다.
+- **Part 7 (외부 연결) 완료**. 7.1 API 4-SDK 추상화, 7.2 MCP 발견과 8가지 transport, 7.3 OAuth + Keychain, 7.4 컨텍스트 압축 + prompt cache 공유, 7.5 IDE 다리 (로크파일 + MCP 재사용). 모두 같은 원리: **외부와의 연결을 가장 작은 인터페이스로 추상화하고, 새 추상 대신 있는 추상을 재사용**. IDE 도 *그저 MCP 서버*. **승부처는 기존 조각의 조합**이다.
 
