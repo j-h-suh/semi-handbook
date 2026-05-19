@@ -21,7 +21,8 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash",        // 1차 필터: 어떤 도구의 호출에 후보가 될지
+        "if": "Bash(rm *)",       // 2차 필터: 어떤 입력일 때만 발동할지 (선택)
         "hooks": [
           { "type": "command", "command": "python3 ~/.claude/guard.py" }
         ]
@@ -31,9 +32,9 @@
 }
 ```
 
-`PreToolUse`는 27개 **이벤트(event, ≈ 시점/상황)** 중 하나 — 도구 실행 직전을 가리킨다. 그 아래 배열이 그 이벤트에 매달린 **hook 목록**이다. 즉 **이벤트는 *언제*, hook은 *무엇을 할지***. 한 이벤트에 hook 여러 개를 매달 수 있고, hook은 정확히 한 이벤트에 매달린다. (전체 이벤트 목록은 바로 아래.)
+`PreToolUse`는 27개 **이벤트(event, ≈ 시점/상황)** 중 하나 — 도구 실행 직전을 가리킨다. 그 아래 배열이 그 이벤트에 매달린 **hook 목록**이다. 즉 **이벤트는 *언제*, hook은 *무엇을 할지***. 한 이벤트에 hook 여러 개를 매달 수 있고, hook은 정확히 한 이벤트에 매달린다. (전체 이벤트 목록은 바로 아래. `matcher`/`if` 두 필터의 자세한 의미는 본문 매칭 H3에서.)
 
-이제 Claude가 `Bash(rm -rf /tmp/test)`를 호출하려 하면 — 실행 직전에 `guard.py`가 먼저 돈다. 스크립트가 `{"decision": "block"}`을 출력하면 도구가 실행되지 않는다. 권한 모드가 뭐든 간에.
+이제 Claude가 `Bash(rm -rf /tmp/test)`를 호출하려 하면 — `matcher`(Bash 도구)와 `if`(rm 명령) 두 조건 모두 통과해 실행 직전에 `guard.py`가 먼저 돈다. 스크립트가 `{"decision": "block"}`을 출력하면 도구가 실행되지 않는다. 권한 모드가 뭐든 간에.
 
 6.3/6.4의 권한 시스템은 "이 도구를 써도 되나?"를 **정적 룰**로 판단했다. Hook은 같은 질문을 **사용자 코드 실행**으로 판단한다. 그리고 그 이상을 할 수 있다 — 도구 입력을 수정하거나, Claude에게 컨텍스트를 주입하거나, 외부 서비스에 알림을 보내거나.
 
@@ -50,33 +51,33 @@
 ```typescript
 // src/entrypoints/sdk/coreTypes.ts:25
 export const HOOK_EVENTS = [
-  'PreToolUse',
-  'PostToolUse',
-  'PostToolUseFailure',
-  'Notification',
-  'UserPromptSubmit',
-  'SessionStart',
-  'SessionEnd',
-  'Stop',
-  'StopFailure',
-  'SubagentStart',
-  'SubagentStop',
-  'PreCompact',
-  'PostCompact',
-  'PermissionRequest',
-  'PermissionDenied',
-  'Setup',
-  'TeammateIdle',
-  'TaskCreated',
-  'TaskCompleted',
-  'Elicitation',
-  'ElicitationResult',
-  'ConfigChange',
-  'WorktreeCreate',
-  'WorktreeRemove',
-  'InstructionsLoaded',
-  'CwdChanged',
-  'FileChanged',
+  'PreToolUse',           // 도구 실행 직전 — deny/allow/ask, updatedInput 가능
+  'PostToolUse',          // 도구 실행 직후 — 결과 관찰·후처리
+  'PostToolUseFailure',   // 도구 실행 실패 시 — 에러 후처리/재시도 결정
+  'Notification',         // Claude 의 알림 (사용자 입력 대기 등)
+  'UserPromptSubmit',     // 사용자 프롬프트 제출 시 — additionalContext 주입
+  'SessionStart',         // 세션 시작 — 초기 컨텍스트 주입
+  'SessionEnd',           // 세션 종료
+  'Stop',                 // Claude 응답 완료
+  'StopFailure',          // 응답 종료 실패
+  'SubagentStart',        // 서브에이전트 시작
+  'SubagentStop',         // 서브에이전트 종료
+  'PreCompact',           // 컨텍스트 압축 직전 (7.4) — 사용자 지시 주입 가능
+  'PostCompact',          // 컨텍스트 압축 직후
+  'PermissionRequest',    // 권한 요청 시 — 다이얼로그 자동 응답 가능
+  'PermissionDenied',     // 권한 거부 시 — 재시도 트리거 가능
+  'Setup',                // Claude Code 초기 셋업 단계
+  'TeammateIdle',         // Coordinator 팀메이트 유휴 (8.3)
+  'TaskCreated',          // Task 도구로 서브에이전트 생성 시
+  'TaskCompleted',        // Task 완료 시
+  'Elicitation',          // MCP 서버의 입력 요청 — auto-respond(accept/decline) 가능
+  'ElicitationResult',    // Elicitation 응답 후 — observe/override 가능
+  'ConfigChange',         // settings.json 변경 감지
+  'WorktreeCreate',       // Git worktree 생성
+  'WorktreeRemove',       // Git worktree 제거
+  'InstructionsLoaded',   // CLAUDE.md 로드 시
+  'CwdChanged',           // 작업 디렉토리 변경
+  'FileChanged',          // 파일 변경 (watch) — 파일명으로 매칭
 ] as const
 ```
 
@@ -128,6 +129,13 @@ const HttpHookSchema = z.object({
 ```
 
 **discriminated union** (`z.discriminatedUnion('type', [...])`) 으로 묶여 있다. `type` 필드가 어떤 스키마를 따르는지 결정한다. JSON 파싱 시 `type`을 먼저 보고 나머지 필드를 검증.
+
+4가지가 어떻게 다른가:
+
+- **`command`** — 셸 명령을 실행한다 (`python3 guard.py`, `node check.js`, `bash policy.sh` 등). stdin으로 JSON 입력, stdout으로 JSON 응답. **언어 무관** — Python, Node, Go, 무엇이든. 가장 일반적이고 거의 모든 시나리오를 커버.
+- **`prompt`** — 작은 LLM에게 자연어로 질문해 결정을 받는다. 기본 모델은 small fast(빠르고 싸다). `$ARGUMENTS` 플레이스홀더로 컨텍스트가 자동 주입. **"이 명령이 위험한가?"** 같은 판단을 외부 스크립트 없이 LLM에 위임할 때.
+- **`agent`** — 풀 에이전트 호출 — **도구 사용까지 가능하다**. 기본 Haiku. `prompt`보다 강력하지만 비싸고 느림. "transcript를 읽어 패턴을 분석한 뒤 결정" 같은 복합 판단에 쓴다.
+- **`http`** — 외부 HTTP 엔드포인트에 POST 요청. 응답 본문이 stdout 응답 스키마와 동일한 JSON 형식이어야 함. 사내 정책 서버나 SaaS 웹훅과 연동할 때.
 
 `command` 타입이 가장 풍부하다 — `shell`, `async`, `asyncRewake`, `once` 같은 옵션이 여기만 있다. 셸 명령이 가장 많은 시나리오를 커버하니까.
 
@@ -388,9 +396,11 @@ async def get_matching_hooks(
 
 Python 등가의 list comprehension에 박힌 `or` 세 조건이 핵심이다. 결과 리스트에 들어간 hook들이 곧 "매칭된 hook" = 실행될 후보다. 즉 **조건이 True → 매칭 인정, False → 매칭 안 됨**. `or`의 short-circuit 평가로 위에서부터 순서대로 검사된다.
 
-- **① `not match_query`**: 이벤트가 매칭 축 자체를 정하지 않은 경우 (위 `switch`/`match`에서 어디에도 안 잡힌 이벤트). 검사할 키가 없으니 **무조건 매칭 인정**.
-- **② `not m.matcher`**: settings.json에 `"matcher"` 키를 안 적었거나 빈 문자열인 경우. **글로벌 hook** — matcher를 생략하면 해당 이벤트의 모든 발생에 반응한다 (= 무조건 매칭 인정).
-- **③ `matches_pattern(match_query, m.matcher)`**: ①②가 모두 거짓일 때만 실제 패턴 매칭 결과에 따른다.
+두 변수 `match_query`와 `m.matcher`는 출처가 완전히 다르다. `match_query`는 **Claude Code가 런타임에 만드는 값** — 위 switch/match의 결과, 지금 발생한 이벤트의 "매칭 대상"(PreToolUse면 도구 이름 `"Bash"`, FileChanged면 파일명 `"app.py"`, SessionStart면 source `"startup"`). `m.matcher`는 **settings.json에 사용자가 적은 패턴** (`"Bash"`, `"Bash|Write"`, 또는 생략).
+
+- **① `not match_query`** — *이벤트 정의 측* 부재. Claude Code의 switch/match에서 그 이벤트가 어디에도 안 잡힌 경우. 검사할 키 자체가 없으니 **무조건 매칭 인정**.
+- **② `not m.matcher`** — *hook 설정 측* 부재. settings.json에 `"matcher"` 키를 안 적었거나 빈 문자열인 hook. **글로벌 hook** — matcher를 생략하면 해당 이벤트의 모든 발생에 반응한다 (= 무조건 매칭 인정).
+- **③ `matches_pattern(match_query, m.matcher)`** — ①②가 모두 거짓, 즉 *런타임 값*과 *설정 패턴*이 둘 다 존재할 때만 실제 패턴 매칭 결과에 따른다.
 
 사고법이 미묘하다 — 이건 "매칭 *되는* 것을 골라내는" 코드가 아니라 **"매칭시킬 수 없는 사유가 없으면 일단 매칭으로 인정하는" fail-open 필터**다. 그래서 matcher를 깜빡 안 적은 hook도 동작한다. 보안적으로 위험할 수 있어서, 6.4의 권한 룰을 재활용하는 `if` 조건(다음 H3, 2차 필터)이 별도로 있고 워크스페이스 trust 같은 안전장치가 위에 깔린다.
 
@@ -472,15 +482,36 @@ async def prepare_if_condition_matcher(
 
 :::
 
-**여기가 이 챕터의 보석이다.** `permissionRuleValueFromString`은 6.4에서 본 바로 그 함수다. `"Bash(git *)"` 같은 권한 룰 문법을 파싱해서 도구 이름과 패턴을 분리하는 함수. 그리고 `tool.preparePermissionMatcher`도 6.4에서 BashTool이 `git *` 와일드카드를 정규식으로 변환하던 바로 그 메서드다.
+**여기가 이 챕터의 보석이다.** `permissionRuleValueFromString`은 룰 문자열에서 도구 이름과 패턴을 분리하는 파서다 — 6.4의 `get_allow_rules`가 8개 출처의 룰을 한 리스트로 평탄화할 때 호출했던 그 파서. 그리고 `tool.preparePermissionMatcher`는 각 도구가 "룰 패턴과 입력을 어떻게 매칭할지"를 주는 메서드인데, BashTool 안에서는 6.4의 `matchWildcardPattern`(7단계 변환, null-byte sentinel, 트레일링 옵셔널화)을 그대로 호출한다.
 
-**Hook의 `if` 조건은 권한 룰 매칭 코드를 100% 재활용한다.** 같은 패턴 문법, 같은 변환 로직, 같은 와일드카드 규칙. 6.4에서 `Bash(git *)` 룰이 `git` 단독도 매칭하도록 트레일링 옵셔널화를 하던 그 7단계 변환이 — Hook의 `if` 조건에서도 그대로 작동한다.
+**Hook의 `if` 조건은 룰 매칭 메커니즘을 100% 재활용한다.** 같은 패턴 문법, 같은 변환 로직, 같은 와일드카드 규칙. 6.4에서 `Bash(git *)` 룰이 `git` 단독도 매칭하도록 트레일링 옵셔널화를 하던 그 7단계 변환이 — Hook의 `if` 조건에서도 그대로 작동한다.
 
 이게 의미하는 것: Hook 설정에 `"if": "Bash(rm *)"` 이라고 쓰면, 6.4에서 배운 모든 패턴이 그대로 적용된다. null-byte sentinel, 짝수 백슬래시, 트레일링 옵셔널화 — 전부.
 
+#### 매칭의 방향과 `if` 라는 이름
+
+매칭의 *방향*을 명확히 하면: Hook의 `if` 패턴이 **검사 기준**, 지금 실행 중인 도구 호출(이름 + 입력)이 **검사 대상**이다. `if`라는 키 이름은 프로그래밍의 `if` 문 그대로의 직관 — *"만약 이 조건이 도구 호출에 맞으면 그때 hook을 실행한다"*. GitHub Actions의 step마다 있는 `if:` 키와 같은 컨벤션이다.
+
+1차의 `matcher`와 2차의 `if`는 정밀도가 다르다:
+
+| 키 | 검사 대상 | 정밀도 |
+|---|---|---|
+| `matcher` | 도구 *이름*만 | 단순 매칭 (`"Bash"`, `"Bash\|Write"`) |
+| `if` | 도구 *이름 + 입력* 전체 | 6.4 와일드카드 매칭 (`"Bash(git *)"`) |
+
+`matcher`로 hook 후보를 거르고, `if`로 그 후보의 도구 호출까지 정밀하게 거른다.
+
+#### 매칭 함수는 순수하다 — 권한 시스템과 Hook은 *독립* 평가
+
+같은 매칭 함수가 권한 룰에서도 쓰이고 Hook `if`에서도 쓰인다는 점이 헷갈림을 만들 수 있다. *"그럼 권한이 deny한 도구 호출은 hook도 skip되나?"* — 아니다. 매칭 함수는 **순수**하다: "이 패턴 문자열이 이 도구 호출에 매칭되는가?"만 답할 뿐, *왜 묻는지*(권한? Hook?)와 *매칭 후 무엇을 할지*(차단? 로깅?)는 호출자 책임. 그래서 권한과 Hook은 **완전히 독립적으로** 평가되고, 양쪽 결과가 합산된다.
+
+Hook의 `if` 매칭은 단지 **"이 hook을 발동시킬지"의 필터**일 뿐 — 발동된 hook이 권한 결정을 내릴 수도, 그냥 로그만 남길 수도, 컨텍스트만 주입할 수도, 외부 시스템에 알림만 보낼 수도 있다. 무엇을 할지는 hook 코드에 달려 있다. **권한 룰의 매칭이 곧 결정인 것과 달리, Hook의 매칭은 *발동 트리거*일 뿐 결정은 아니다**.
+
+예: `"if": "Bash(git *)"`에 매달린 hook이 stdin의 JSON을 받아 `git-usage.log`에 한 줄 기록만 하고 빈 JSON `{}`을 출력한다면 — `git push -f` 시도가 권한에서 deny 돼도, hook은 그 직전에 이미 돌아서 *차단된 시도도* 로그에 남는다. 권한과 Hook이 *겹쳐서*가 아니라 *합쳐져서* 작동하는 모양새다.
+
 ### 실행 — `execCommandHook`에서 실제로 일어나는 일
 
-매칭이 끝나면 `execute_hooks`가 hook들을 각자 task로 띄워 `asyncio.as_completed`로 머지한다 (= TS의 `generators.ts:all()` = `Promise.race` 기반). 진입점에서 위임받은 병렬 실행 패턴이 여기서 풀린다.
+진입점에서 위임받은 `execute_hooks` 안에서 일어나는 흐름은 **세 단계**다 — (1) `get_matching_hooks`(+ `prepareIfConditionMatcher`, 위 두 H3)로 hook 후보를 거른 뒤, (2) 매칭된 hook 마다 `run_one` task 를 띄우고, (3) `asyncio.as_completed`로 먼저 끝나는 순서대로 결과를 yield 한다 (= TS의 `generators.ts:all()` = `Promise.race` 기반). **매칭은 외부에서 끝난 게 아니라 이 함수 안의 첫 단계다.**
 
 ```python
 # Python 등가 — execute_hooks 의 병렬 머지 (위 두 H3 의 매칭 결과를 받아 hook 마다 task)
@@ -517,24 +548,41 @@ async function execCommandHook(
   hook: HookCommand & { type: 'command' },
   hookEvent: HookEvent,
   hookName: string,
-  jsonInput: string,  // ← stdin으로 파이프됨
+  jsonInput: string,  // ← stdin 으로 파이프됨
   signal: AbortSignal,
-  // ...
 ) {
   const shellType = hook.shell ?? DEFAULT_HOOK_SHELL  // 'bash' 기본
   const isPowerShell = shellType === 'powershell'
 
-  // Windows에서는 경로를 POSIX로 변환 (Git Bash 호환)
+  // Windows 에서는 경로를 POSIX 로 변환 (Git Bash 호환)
   const toHookPath = isWindows && !isPowerShell
     ? (p: string) => windowsPathToPosixPath(p)
     : (p: string) => p
 
+  // (1) 명령어 문자열 치환: ${CLAUDE_PLUGIN_ROOT}, ${user_config.X}
   let command = hook.command
-  // ${CLAUDE_PLUGIN_ROOT}, ${user_config.X} 치환
-  // 환경 변수: CLAUDE_SESSION_ID, CLAUDE_CWD, CLAUDE_PROJECT_DIR 등 설정
-  // ...
+  if (pluginRoot) {
+    command = command.replace(/\$\{CLAUDE_PLUGIN_ROOT\}/g, toHookPath(pluginRoot))
+    command = substituteUserConfigVariables(command, pluginOpts)
+  }
 
-  // 실행: stdin에 jsonInput을 파이프, stdout/stderr를 수집
+  // (2) 환경 변수 구성: CLAUDE_PROJECT_DIR, CLAUDE_PLUGIN_ROOT, CLAUDE_PLUGIN_OPTION_*, ...
+  const envVars = {
+    ...subprocessEnv(),
+    CLAUDE_PROJECT_DIR: toHookPath(getProjectRoot()),
+    // pluginRoot/skillRoot 이 있으면 CLAUDE_PLUGIN_ROOT, CLAUDE_PLUGIN_DATA 등 추가
+  }
+
+  // (3) spawn — bash 또는 powershell 갈래
+  const child = isPowerShell
+    ? spawn(pwshPath, ['-NoProfile', '-NonInteractive', '-Command', command],
+            { env: envVars, cwd: safeCwd })
+    : spawn(command, [], { env: envVars, cwd: safeCwd,
+                            shell: isWindows ? findGitBashPath() : true })
+
+  // (4) stdin 으로 jsonInput 파이프, stdout/stderr 수집, exit code 확인
+  child.stdin.write(jsonInput); child.stdin.end()
+  // ... wrapSpawn 으로 timeout/abort 처리, 결과 { stdout, stderr, status } 반환
 }
 ```
 
@@ -544,24 +592,56 @@ async def exec_command_hook(
     hook: dict,                # type='command'
     hook_event: HookEvent,
     hook_name: str,
-    json_input: str,           # stdin으로 파이프됨
+    json_input: str,           # stdin 으로 파이프됨
     signal,
 ):
     shell_type = hook.get("shell", DEFAULT_HOOK_SHELL)  # 'bash' 기본
     is_powershell = shell_type == "powershell"
 
-    # Windows에서는 경로를 POSIX로 변환 (Git Bash 호환)
+    # Windows 에서는 경로를 POSIX 로 변환 (Git Bash 호환)
     to_hook_path = (
         windows_path_to_posix_path
         if is_windows and not is_powershell
         else lambda p: p
     )
 
+    # (1) 명령어 문자열 치환: ${CLAUDE_PLUGIN_ROOT}, ${user_config.X}
     command = hook["command"]
-    # ${CLAUDE_PLUGIN_ROOT}, ${user_config.X} 치환
-    # 환경 변수: CLAUDE_SESSION_ID, CLAUDE_CWD, CLAUDE_PROJECT_DIR 설정
+    if plugin_root:
+        command = command.replace("${CLAUDE_PLUGIN_ROOT}", to_hook_path(plugin_root))
+        command = substitute_user_config_variables(command, plugin_opts)
 
-    # 실행: stdin에 json_input 파이프, stdout/stderr 수집 (asyncio.create_subprocess_exec)
+    # (2) 환경 변수 구성: CLAUDE_PROJECT_DIR, CLAUDE_PLUGIN_ROOT, CLAUDE_PLUGIN_OPTION_*, ...
+    env_vars = {
+        **subprocess_env(),
+        "CLAUDE_PROJECT_DIR": to_hook_path(get_project_root()),
+        # plugin_root/skill_root 있으면 CLAUDE_PLUGIN_ROOT, CLAUDE_PLUGIN_DATA 등 추가
+    }
+
+    # (3) spawn — bash 또는 powershell 갈래
+    if is_powershell:
+        proc = await asyncio.create_subprocess_exec(
+            pwsh_path, "-NoProfile", "-NonInteractive", "-Command", command,
+            env=env_vars, cwd=safe_cwd,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+    else:
+        proc = await asyncio.create_subprocess_shell(
+            command, env=env_vars, cwd=safe_cwd,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+
+    # (4) stdin 으로 json_input 파이프, stdout/stderr 수집, exit code 확인
+    stdout, stderr = await proc.communicate(json_input.encode())
+    return {
+        "stdout": stdout.decode(),
+        "stderr": stderr.decode(),
+        "status": proc.returncode,
+    }
 ```
 
 :::
