@@ -566,6 +566,7 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [ ] 8.1 AgentTool 재귀
 - [ ] 8.2 createSubagentContext
 - [ ] 8.3 Coordinator Mode
+- [ ] 8.4 에이전트 팀 (in-process + 공유 메모리)
 
 ### Part 9: 미니 Claude Code
 - [ ] 9.1 설계 — 미니 에이전트의 골격
