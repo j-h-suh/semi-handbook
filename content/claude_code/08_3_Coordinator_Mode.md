@@ -46,11 +46,13 @@ You: Found the bug — null pointer in validate.ts:42.
 
 이 챕터에서 — 시스템 프롬프트 한 장과 작은 규칙 몇 개가 어떻게 멀티 에이전트 오케스트레이션을 만드는지 본다.
 
+> ⚠️ **다만, 외부 빌드는 환경 변수만으로 켜지지 않는다**: `feature('COORDINATOR_MODE')` 가 _빌드 시점 상수_ (`bun:bundle` 의 dead-code-elimination) 라서, 외부 npm 배포본은 `main.tsx:74-76` 의 `require('./coordinator/coordinatorMode.js')` 부터 통째로 잘려나간다. 즉 _코디네이터 모듈 자체가 번들에 없다_. 이 챕터의 동작은 **Anthropic 사내 / dev 빌드 / 직접 빌드한 경우**에만 재현 가능 — 외부 빌드에는 _디자인은 남아있지만 활성화 경로가 없는_ 상태로 동봉된다.
+
 ---
 
 ## 본문
 
-### 모드 토글 — 환경 변수 한 줄
+### 모드 토글 — 빌드 게이트 + 환경 변수의 이중 조건
 
 `coordinator/coordinatorMode.ts:36` — 모드 진입의 모든 조건.
 
@@ -75,11 +77,15 @@ def is_coordinator_mode() -> bool:
 
 :::
 
-환경 변수 한 줄. 7.1의 4-SDK 추상화와 같은 정신 — 외부 토글, 내부는 아무것도 안 바뀜. 같은 query 루프, 같은 메시지 형식, 같은 도구 인터페이스. 그런데 모델한테 보이는 시스템 프롬프트와 도구 세트가 완전히 달라진다.
+**두 개의 문지기**. 코디네이터 모드에 진입하려면 두 단계를 통과해야 한다. **빌드 게이트** — Anthropic 이 _배포 파일을 만드는 시점_ 에 "이 빌드에 코디네이터 모드를 넣을지" 결정한다. **환경 변수** — 사용자가 _실행하는 시점_ 에 `CLAUDE_CODE_COORDINATOR_MODE=1` 로 켤지 결정한다. **두 단계가 서로 다른 시점에 작동**하는 게 핵심이다.
+
+Anthropic 사내 빌드와 dev 빌드 (개발자가 소스에서 직접 빌드한 경우) — 이 둘은 빌드 게이트가 _켜진 채로_ 빌드되어, 환경 변수 단계가 의미를 가진다. **외부 빌드** (npm 에서 일반 사용자가 받는 배포본) 는 빌드 게이트가 _꺼진 채로_ 빌드된다. _꺼진 채로 빌드_ 한다는 게 정확히 뭘 의미하냐면 — 빌드 도구 (Bun) 가 `feature('COORDINATOR_MODE')` 를 _빌드 시점에 상수 `false` 로 미리 평가_ 하고, `if (false) { ... }` 가 된 블록을 _영원히 실행될 일이 없는 코드_ 라고 판단해 **번들에서 통째로 제거**한다. 이런 처리를 **죽은 코드 제거 (dead-code elimination)** 라 부른다. 결과적으로 외부 빌드의 `isCoordinatorMode()` 는 _`return false` 한 줄_ 로 단순화되고, 코디네이터 모듈 파일 자체도 번들에 들어가지 않는다 — 사용자가 환경 변수를 켜도 _읽을 코드가 없는_ 상태가 된다.
+
+7.1 의 4-SDK 추상화가 _런타임에 어떤 SDK 를 쓸지_ 토글하는 디자인이었다면, 여기는 한 층 더 — **빌드 시점에 코드가 들어갈지부터** 결정한 뒤, _런타임에 활성화 여부_ 결정. 같은 query 루프, 같은 메시지 형식, 같은 도구 인터페이스. 그런데 모델한테 보이는 시스템 프롬프트와 도구 세트가 완전히 달라진다.
 
 그리고 토글이 한 층 더 있다. `CLAUDE_CODE_SIMPLE=1` 을 같이 켜면 — 워커가 가질 수 있는 도구가 **Bash, Read, Edit 셋**으로 줄어든다. 풀 모드는 `ASYNC_AGENT_ALLOWED_TOOLS` 의 표준 셋 + MCP + 스킬. 단순 모드는 최소 셋. **2단계 dimming** — 코디네이터로 갈지 + 워커한테 얼마나 많이 줄지 두 노브를 따로 돌릴 수 있다.
 
-Resume 케이스도 친절하다.
+이전 대화 세션을 이어 시작하는 **Resume 케이스** (슬래시 명령 `/resume`, CLI `claude --resume [id]`, 별칭 `/continue`) 도 친절하다.
 
 :::tabs
 
@@ -137,7 +143,7 @@ def match_session_mode(
 
 :::
 
-세션이 코디네이터로 시작했으면 재개도 코디네이터로. 모드를 섞으면 메시지 형식이 호환 안 됨 — `<task-notification>` 메시지를 일반 모드 모델이 보면 사용자 메시지로 오해한다. `isCoordinatorMode()` 가 캐시 없이 라이브로 환경 변수를 읽기 때문에 — 플립 한 줄로 즉시 모드가 바뀐다.
+세션이 코디네이터로 시작했으면 재개도 코디네이터로. 모드를 섞으면 메시지 형식이 호환 안 됨 — `<task-notification>` 메시지를 일반 모드 모델이 보면 사용자 메시지로 오해한다. `isCoordinatorMode()` 가 캐시 없이 라이브로 환경 변수를 읽기 때문에 — _빌드 게이트가 살아있는 빌드_ 라면 플립 한 줄로 즉시 모드가 바뀐다.
 
 ### 시스템 프롬프트 — 모델한테 새 정체성
 
@@ -172,16 +178,14 @@ the user as it arrives.
 
 ### 4단계 워크플로
 
-```
-| Phase          | Who              | Purpose |
-|----------------|------------------|---------|
-| Research       | Workers (병렬)   | 코드베이스 조사, 파일 찾기, 문제 파악 |
-| Synthesis      | **You** (코디)   | 결과 읽기, 문제 이해, **구현 스펙 작성** |
-| Implementation | Workers          | 스펙대로 변경, 커밋 |
-| Verification   | Workers          | 변경이 작동하는지 테스트 |
-```
+| Phase | Who | Purpose |
+|-------|-----|---------|
+| Research | Workers (병렬) | 코드베이스 조사, 파일 찾기, 문제 파악 |
+| Synthesis | **코디네이터** (메인 Claude) | 결과 읽기, 문제 이해, **구현 스펙 작성** |
+| Implementation | Workers | 스펙대로 변경, 커밋 |
+| Verification | Workers | 변경이 작동하는지 테스트 |
 
-4단계 중 1단계만 코디네이터가 한다. 나머지 셋은 워커. 그 1단계가 **Synthesis** — 코디네이터의 유일한 책임.
+4단계 중 _한 단계_ 만 코디네이터가 한다. 나머지 셋은 워커. 그 한 단계가 **Synthesis** — 코디네이터의 유일한 책임.
 
 검증 셀이 단순해 보이지만 — 시스템 프롬프트의 별도 섹션 "What Real Verification Looks Like" 가 이걸 강화한다. **"테스트 통과 확인"** 이 아니라 **코드가 작동함을 증명**. **rubber-stamp** (찍어 통과) 금지. 피처 플래그를 켠 상태로 테스트, 타입체크 에러는 조사, 의심스러우면 파고들기. 검증이 약하면 전체가 무너진다.
 
@@ -244,7 +248,11 @@ enqueue_pending_notification({"value": message, "mode": "task-notification"})
 
 :::
 
-**XML로 포장된 user 메시지**. 코디네이터의 다음 턴이 시작될 때 — `messageQueueManager` 의 통합 `commandQueue` 에서 빠져 코디네이터의 컨텍스트에 **user 메시지로** 들어간다. 작은 디테일이 디자인을 살린다 — `enqueuePendingNotification` 은 priority **`'later'`** 로 enqueue한다. 사용자 입력은 `'next'`, 워커 알림은 `'later'`. **사용자 인풋과 워커 알림이 같은 큐에 있지만 사용자가 항상 우선**. 알림이 사용자를 방해하지 않는 디자인.
+**XML 로 포장된 user 메시지**. 코디네이터의 다음 턴이 시작될 때 _user 메시지로_ 도착한다는 게 핵심이다. 정확한 메커니즘은 이렇다 — 워커가 완료되면 `enqueuePendingNotification` 이라는 함수가 호출되고, 이 함수가 알림을 `messageQueueManager` (큐 매니저) 가 관리하는 `commandQueue` 라는 _단일 큐_ 에 넣는다. 이 큐가 **"통합"** 인 이유 — _사용자가 직접 친 입력_ 과 _워커가 보낸 알림_ 이 **같은 큐**에 쌓이기 때문이다. 코디네이터가 다음 턴을 시작하면 이 큐에서 꺼내져 _user 메시지로_ 컨텍스트에 합류한다.
+
+작은 디테일이 디자인을 살린다 — 큐에 넣을 때 **우선순위 (priority)** 도 같이 지정한다. 사용자가 직접 친 입력은 `'next'` (가장 먼저 꺼내라), 워커 알림은 `'later'` (뒤로 미뤄도 됨). **사용자 입력과 워커 알림이 같은 큐를 공유하지만, 사용자가 항상 우선**이다. 사용자가 뭔가 타이핑한 게 큐에 대기 중이면 워커 알림은 그 뒤에서 기다린다. _알림이 사용자를 방해하지 않도록_ 한 설계.
+
+큐에서 꺼내져 _user 메시지로 컨텍스트에 합류_ 한다는 게 정확히 뭘 의미하냐면 — 코디네이터의 메시지 히스토리 (`[system, user, assistant, user, assistant, ...]` 식의 누적 리스트) 끝에 _이 user 메시지가 append_ 된다. 그리고 다음 LLM API 호출 시 _전체 메시지 히스토리_ 가 그대로 모델에 전달된다. Anthropic Messages API 는 매 호출마다 전체 히스토리를 보내는 _stateless_ 방식 — 서버가 대화 상태를 따로 보관하지 않고 클라이언트가 매번 다 보낸다. 모델은 히스토리 끝에 새 user 메시지가 있는 걸 보고 _자기가 응답할 차례_ 라고 인식 → assistant 메시지를 생성. 그 assistant 메시지도 히스토리에 append 되면서 다음 턴으로 이어진다.
 
 **이게 진짜 우아하다**. 모델한테는 **"다음 user 메시지는 워커 결과다"** 라고 가르칠 필요가 없다 — **그냥 이미 user 메시지**. LLM이 학습된 **user→assistant 패턴**을 그대로 쓴다. 비동기 분산 시스템이 대화 모델에 자연스럽게 매핑된 사례.
 
@@ -260,15 +268,10 @@ Distinguish them by the <task-notification> opening tag.
 
 코디네이터는 대부분의 도구를 안 쓴다. 자기가 작성자가 아니니까. 대신 오케스트레이션 도구 셋(+1 조건부)에 의존한다.
 
-```
-- **Agent**          — 새 워커 띄우기 (8.1)
-- **SendMessage**    — 기존 워커 이어가기 (`to`: agent ID)
-- **TaskStop**       — 잘못된 방향의 워커 중단
-- **subscribe_pr_activity / unsubscribe_pr_activity** (조건부)
-                     — GitHub PR 이벤트(리뷰 코멘트, CI 결과)를
-                       user 메시지로 받음. 코디네이터가 직접 호출 —
-                       워커한테 위임하지 말라고 명시.
-```
+- **Agent** — 새 워커 띄우기 (8.1)
+- **SendMessage** — 기존 워커 이어가기 (`to`: agent ID)
+- **TaskStop** — 잘못된 방향의 워커 중단
+- **`subscribe_pr_activity` / `unsubscribe_pr_activity`** (조건부) — GitHub PR 이벤트 (리뷰 코멘트, CI 결과) 를 user 메시지로 받음. 코디네이터가 직접 호출 — 워커한테 위임하지 말라고 명시
 
 `SendMessage` 가 진짜 흥미로운 도구다. 워커를 처음부터 다시 띄우지 않고 같은 워커한테 후속 지시를 보낸다. 워커는 자기 컨텍스트를 그대로 들고 있다 (8.2의 컨텍스트 보존). 같은 파일들이 메모리에 있고, 자기가 뭘 했는지 안다 — 재시작 비용 없이 일을 이어간다.
 
@@ -278,18 +281,16 @@ Distinguish them by the <task-notification> opening tag.
 
 **Continue vs Spawn 의사 결정 표**가 진짜 디테일하다.
 
-```
-| 상황                          | 어떻게               | 이유                         |
-|-------------------------------|----------------------|------------------------------|
-| 조사한 파일이 곧 편집할 파일  | **Continue**         | 워커가 이미 컨텍스트 + 명확한 plan |
-| 조사는 넓고 구현은 좁음       | **Spawn fresh**      | 탐색 노이즈 안 끌고 옴       |
-| 실패 수정 / 작업 확장          | **Continue**         | 에러 컨텍스트 + 시도 이력    |
-| 다른 워커가 짠 코드를 검증    | **Spawn fresh**      | 검증자는 **fresh eyes**       |
-| 구현 접근 방식이 완전히 틀림  | **Spawn fresh**      | 잘못된 컨텍스트가 재시도 오염 |
-| 완전히 무관한 태스크          | **Spawn fresh**      | 재사용할 컨텍스트 없음       |
+| 상황 | 어떻게 | 이유 |
+|------|--------|------|
+| 조사한 파일이 곧 편집할 파일 | **Continue** | 워커가 이미 컨텍스트 + 명확한 plan |
+| 조사는 넓고 구현은 좁음 | **Spawn fresh** | 탐색 노이즈 안 끌고 옴 |
+| 실패 수정 / 작업 확장 | **Continue** | 에러 컨텍스트 + 시도 이력 |
+| 다른 워커가 짠 코드를 검증 | **Spawn fresh** | 검증자는 **fresh eyes** |
+| 구현 접근 방식이 완전히 틀림 | **Spawn fresh** | 잘못된 컨텍스트가 재시도 오염 |
+| 완전히 무관한 태스크 | **Spawn fresh** | 재사용할 컨텍스트 없음 |
 
 **"기본값은 없다. 컨텍스트 오버랩이 결정 기준이다."**
-```
 
 이 표가 프로덕션에서 배운 직관의 정수다. 7.4의 컨텍스트 압축에서 본 것과 같은 컨텍스트 위생 원리. **나쁜 컨텍스트가 좋은 새 컨텍스트보다 비싸다**. 잘못된 방향의 컨텍스트를 끌고 가는 것보다 처음부터 다시 시작하는 게 나을 때가 있다. 검증자는 반드시 새 워커 — 확증 편향 회피.
 
@@ -328,7 +329,20 @@ Agent({ prompt: "Fix the null pointer in src/auth/validate.ts:42.
   Commit and report the hash.", … })
 ```
 
-두 번째 anti-pattern이 더 은밀하다. **"the worker found an issue"** — 코디네이터가 워커가 뭘 찾았는지 읽지 않고 다른 워커한테 알아서 찾아 고치라고 떠넘기는 것. 첫 번째는 명시적 게으름, 두 번째는 위장된 게으름 — 둘 다 같은 죄. 좋은 스펙은 파일 경로 + 줄 번호 + 정확한 변경 + 완료 기준. 워커가 **fresh든 continued든** — 이 스펙만 있으면 일이 된다.
+두 anti-pattern 의 차이가 흥미롭다. **첫 번째 anti-pattern** — `"Based on your findings, fix the auth bug"` — 은 _명시적 게으름_. 워커한테 _자기 자신의 직전 발견을 다시 참조하라_ 고 말한다. 사람으로 치면 _"네가 방금 한 말 기억나지? 그거 처리해"_ 같은 식. 워커는 자기 컨텍스트를 다시 뒤져야 하고, 코디네이터는 _합성을 안 했음_ 이 한눈에 드러난다.
+
+**두 번째 anti-pattern** — `"The worker found an issue in the auth module. Please fix it."` — 은 더 은밀하다. 표면적으로는 _뭔가를 설명하는_ 척 한다. 그러나 _"the worker found an issue"_ 라는 표현이 진실을 드러낸다 — _다른 워커_ 가 _뭔가를_ 발견했고, 이 워커더러 _알아서 찾아서 고쳐라_ 는 뜻. **코디네이터가 워커의 발견을 읽지 않았다**는 사실을 _위장한_ 떠넘기기다. 결과는 첫 번째와 같다 — 새 워커가 _이전 워커의 작업물_ 을 다시 탐색해야 한다.
+
+두 anti-pattern 의 공통 죄는 **합성의 회피**다. 코디네이터의 유일한 책임이 _Synthesis_ 인데, _"based on…"_ 이든 _"the worker found…"_ 이든 그 책임을 _다음 워커한테 외주_ 주는 행위. 그러면 코디네이터는 _메시지를 옮기는 라우터_ 로 전락한다 — 정보가 흐르긴 하는데 _아무도 이해하지 않는_ 상태.
+
+좋은 스펙은 정반대다. 네 가지 요소가 모두 들어 있어야 한다.
+
+1. **파일 경로 + 줄 번호** — `src/auth/validate.ts:42` 처럼 _어디_ 인지 정확히 명시. 워커가 검색에 시간 쓸 필요가 없다.
+2. **상황 설명 (인과 관계)** — `The user field on Session ... is undefined when sessions expire but the token remains cached` 처럼 _왜 이 버그가 생기는지_ 의 흐름을 명시. 워커가 _같은 분석을 반복_ 안 해도 된다.
+3. **정확한 변경** — `Add a null check before user.id access — if null, return 401 with 'Session expired'` 처럼 _무엇을_ 어떻게 바꿀지 명시. 디자인 결정이 _코디네이터한테 남아_ 있다.
+4. **완료 기준** — `Commit and report the hash` 처럼 _작업 완료를 어떻게 증명_ 할지 명시. 워커가 _자기가 끝났는지_ 스스로 판단할 수 있다.
+
+이 네 가지가 다 들어가면 워커는 _기존 컨텍스트 없이_ 도 일을 시작할 수 있다. 그래서 워커가 **fresh** (방금 spawn 된 새 워커) 든 **continued** (`SendMessage` 로 이어가는 기존 워커) 든 — 같은 스펙으로 작동한다. 코디네이터가 _이해를 자기 안에서 끝낸_ 결과를 **자족적 (self-contained) 인 지시문**으로 만들었기 때문이다.
 
 ---
 
@@ -368,6 +382,7 @@ class TaskNotification:
 class CoordinatorState:
     pending_workers: dict[str, asyncio.Task] = field(default_factory=dict)
     completed_notifications: list[TaskNotification] = field(default_factory=list)
+    worker_inboxes: dict[str, asyncio.Queue] = field(default_factory=dict)  # 워커별 메시지 큐 — send_message 가 여기에 넣음
 
 
 # ─── 코디네이터 시스템 프롬프트 (요약) ────────────────
@@ -399,7 +414,9 @@ async def spawn_worker(
     state: CoordinatorState,
 ) -> str:
     """비동기로 워커 띄움. *기다리지 않고* task_id 반환."""
-    task_id = f"agent-{len(state.pending_workers):03d}"
+    # task_id 가 본문의 *agent ID* — send_message(to=task_id, ...) 로 다시 지목할 때 식별자
+    task_id = f"agent-{len(state.pending_workers):03d}"  # "agent-000", "agent-001", ...
+    state.worker_inboxes[task_id] = asyncio.Queue()       # 워커의 메시지 큐 초기화 (send_message 가 여기에 넣음)
     
     async def _run_worker() -> None:
         # 8.1의 runAgent 호출 — query() 재귀
@@ -421,13 +438,20 @@ async def spawn_worker(
 # ─── 도구: continue worker (SendMessage) ────────────────
 async def send_message(
     *,
-    to: str,  # agent ID
+    to: str,  # agent ID — spawn_worker 가 반환한 task_id 를 그대로 전달
     message: str,
     state: CoordinatorState,
 ) -> str:
     """기존 워커한테 후속 지시 — *컨텍스트 보존*."""
-    # 워커의 큐에 새 user 메시지 enqueue
-    # (실제는 워커가 자기 query 루프 다음 턴에 받음)
+    # 1. 대상 워커의 메시지 큐 (inbox) 찾기
+    inbox = state.worker_inboxes.get(to)
+    if inbox is None:
+        return f"Worker {to} not found"
+    
+    # 2. 새 user 메시지로 enqueue — priority 'next' 로 (코디네이터 지시는 우선)
+    await inbox.put({"role": "user", "content": message, "priority": "next"})
+    
+    # 3. 워커는 자기 query 루프 다음 turn 에 inbox 에서 꺼내 누적 히스토리에 append → API call
     return f"Sent to {to}"
 
 
@@ -460,12 +484,22 @@ async def coordinator_loop(user_request: str) -> None:
             break  # 사용자 다음 입력 대기
         
         await asyncio.sleep(0.1)  # 비동기 양보
+    
+    # ─── 압축된 부분 ────────────────
+    # 이 함수는 *fork-join 패턴의 핵심 골격*만 보여주는 압축본이다. 실제 구현은 더 많은 것을 포함:
+    # - call_llm 안: Anthropic Messages API 호출, 스트리밍, 재시도, 토큰/캐시 키 관리 (2.3, 7.4)
+    # - 워커 결과 수신 파이프라인: 워커의 query() 재귀가 끝나면 enqueuePendingNotification 이
+    #   state.completed_notifications 에 push (8.1 의 runAgent)
+    # - 사용자 입력 큐 통합: 위에서는 4단계로 *사용자 입력 대기* 가 break 한 줄로 압축됐지만,
+    #   실제로는 commandQueue 가 priority 'next' (사용자) vs 'later' (워커 알림) 로 통합 관리
+    # - 에러 / abort / cleanup: 8.2 의 AbortController, weakref(parent) 와 연동된 정리 로직
+    # - 컨텍스트 압축 (7.4) 과의 통합: 메시지 히스토리가 길어지면 자동 압축 트리거
 ```
 
 핵심 셋이 다 있다.
 
 1. **`COORDINATOR_PROMPT` 한 줄**이 모델 정체성을 바꾼다. 같은 모델, 다른 역할. **"never delegate understanding"** 의 한 문장이 코디네이터의 유일한 책임을 정의.
-2. **워커는 비동기 `asyncio.Task`** — `spawn_worker` 가 **기다리지 않고 task_id 반환**. 코디네이터는 자기 턴을 끝내고, **다음 턴에 결과를 user 메시지로** 받는다. 대화 모델 ↔ 비동기 시스템의 자연스런 매핑.
+2. **워커는 비동기 `asyncio.Task`** — `spawn_worker` 가 **기다리지 않고 task_id 반환**. 이 `task_id` 가 본문에서 말한 _agent ID_ — `send_message(to=...)` 의 `to` 인자에 그대로 전달해서 _특정 워커를 다시 지목_ 할 수 있다. 코디네이터는 자기 턴을 끝내고, **다음 턴에 결과를 user 메시지로** 받는다. 대화 모델 ↔ 비동기 시스템의 자연스런 매핑.
 3. **`<task-notification>` XML이 user-role 메시지로 들어옴** — 모델한테 **"다음 user는 결과다"** 를 설명할 필요가 없다. 학습된 user→assistant 패턴이 그대로 작동.
 
 > 💡 **Fork-join 패턴.** 병렬 컴퓨팅의 클래식 패턴. **Fork** — N개의 작업을 동시에 띄운다. **Join** — 결과들이 모두 돌아올 때까지 기다린다. Coordinator Mode가 **대화형 LLM의 fork-join** — fork는 `Agent` 호출들, join은 **다음 턴에 user 메시지로 들어오는 알림**. 동기 join 대신 **비동기 enqueue** 라서 코디네이터는 기다리는 동안 사용자와 대화까지 할 수 있다.
@@ -474,9 +508,9 @@ async def coordinator_loop(user_request: str) -> None:
 
 ## 핵심 정리
 
-- **Coordinator Mode = 시스템 프롬프트 한 장 + 도구 세트 변경**. 모델/엔진/query 루프 전부 그대로. `CLAUDE_CODE_COORDINATOR_MODE=1` 환경 변수로 토글.
+- **Coordinator Mode = 시스템 프롬프트 한 장 + 도구 세트 변경**. 모델/엔진/query 루프 전부 그대로. `feature('COORDINATOR_MODE')` 빌드 게이트 + `CLAUDE_CODE_COORDINATOR_MODE=1` 환경 변수의 _이중 조건_ 으로 토글. **외부 빌드는 빌드 게이트가 꺼져 있어 환경 변수만으로 켤 수 없음** — 코디네이터 모듈 자체가 번들에서 dead-code-eliminated.
 - 역할이 바뀐다: 평소 Claude는 작성자, 코디네이터는 관리자. 직접 도구를 부르지 않고 워커한테 지시. **같은 모델, 다른 정체성**.
-- **4단계 워크플로**: Research(워커 병렬) → **Synthesis(코디네이터)** → Implementation(워커) → Verification(워커). 4단계 중 1단계만 코디네이터가 한다.
+- **4단계 워크플로**: Research(워커 병렬) → **Synthesis(코디네이터)** → Implementation(워커) → Verification(워커). 4단계 중 _한 단계_ 만 코디네이터가 한다.
 - 동시성 규칙은 DB 트랜잭션 격리와 같은 직관: 읽기 전용은 제한 없이 병렬, 쓰기는 파일 단위 직렬화, 검증은 겹치지 않는 파일 영역에서 동시 가능.
 - **`<task-notification>` XML** = 워커 결과의 와이어 포맷. **user-role 메시지**로 포장되어 코디네이터의 다음 턴에 도착. **모델한테 새 패턴을 가르칠 필요 없음 — 학습된 user→assistant 패턴이 그대로 작동**. 비동기 분산 시스템이 대화 모델에 자연스럽게 매핑된 우아한 사례.
 - **오케스트레이션 도구 3개 + 1**: `Agent`(spawn), `SendMessage`(continue, 컨텍스트 보존), `TaskStop`(잘못된 워커 중단), 그리고 조건부로 `subscribe_pr_activity / unsubscribe_pr_activity`(GitHub PR 이벤트). `SendMessage`는 코디네이터 전용 — `INTERNAL_WORKER_TOOLS` 가 워커 도구 목록에서 빼내서 **모든 join이 코디네이터로 일원화**.
