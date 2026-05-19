@@ -319,37 +319,49 @@ def process_hook_json_output(json: dict, command: str, hook_name: str) -> dict:
 
 ```
 [1] executePreToolHooks(toolName="Bash", toolInput={command:"git push --force"}, ...)
+    │   ▸ 도구 실행 직전 Hook 진입점 (PreToolUse 이벤트 전용)
     │
     ├─ hasHookForEvent('PreToolUse') → true (설정 있음)
+    │   ▸ 이 이벤트에 등록된 hook 이 하나라도 있는지 빠른 가드 체크
     │
     ├─ createBaseHookInput() → { session_id, cwd, transcript_path, permission_mode }
     │   + { hook_event_name: 'PreToolUse', tool_name: 'Bash', tool_input: {...} }
+    │   ▸ Hook 스크립트의 stdin 으로 보낼 JSON (공통 필드 + 이벤트별 필드) 조립
     │
     └─ yield* executeHooks({ hookInput, matchQuery: "Bash", ... })
+         │   ▸ 매칭과 실제 실행을 위임받는 메인 함수
          │
          ├─ shouldSkipHookDueToTrust() → false (workspace 신뢰됨)
+         │   ▸ workspace trust 미수락 시 모든 hook 무시 (보안 가드)
          │
          ├─ getMatchingHooks(appState, sessionId, 'PreToolUse', hookInput)
+         │   │   ▸ 1차 매칭 — settings 에서 hook 후보 추리기 (도구 이름 기반)
          │   ├─ getHooksConfig() → settings 3곳에서 수집
          │   ├─ matchQuery = "Bash"
          │   ├─ filteredMatchers: matcher가 "Bash"이거나 undefined인 것만
-         │   ├─ dedup: 중복 제거
+         │   ├─ dedup: 같은 command+shell+if 정의는 하나로
          │   └─ return [{ hook: {type:'command', command:'python3 guard.py', if:'Bash(git push *)'} }]
          │
          ├─ prepareIfConditionMatcher()
+         │   │   ▸ 2차 매칭 — if 패턴이 현재 도구 호출에 맞는지 검사하는 매처 생성 (6.4 재활용)
          │   ├─ permissionRuleValueFromString("Bash(git push *)") → { toolName: "Bash", ruleContent: "git push *" }
+         │   │   ▸ 룰 문자열을 도구 이름 / 패턴 부분으로 분리하는 파서
          │   ├─ tool.preparePermissionMatcher("git push *") → 정규식 매처
+         │   │   ▸ BashTool 이 6.4 의 matchWildcardPattern (7단계 변환) 을 호출해 매처 생성
          │   └─ "git push --force" matches "git push *" → true!
          │
          ├─ execCommandHook(hook, jsonInput=JSON.stringify(hookInput), ...)
+         │   │   ▸ 매칭된 한 hook 의 셸 명령을 subprocess 로 spawn
          │   ├─ stdin으로 JSON 파이프
          │   ├─ `python3 guard.py` 실행
          │   └─ stdout: '{"decision":"block","reason":"force push는 금지됨"}'
          │
          ├─ parseHookOutput(stdout)
+         │   │   ▸ stdout 텍스트를 JSON 객체로 파싱 (실패 시 plain text 처리)
          │   └─ JSON 파싱 성공 → { json: { decision: "block", reason: "..." } }
          │
          └─ processHookJSONOutput({ json, ... })
+             │   ▸ JSON 을 내부 HookResult (권한 판단/입력 수정/컨텍스트 주입 등) 로 변환
              ├─ decision === "block"
              ├─ result.permissionBehavior = 'deny'
              └─ result.blockingError = { blockingError: "force push는 금지됨", ... }
