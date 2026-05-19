@@ -1,4 +1,4 @@
-# 8.1 AgentTool — 도구이면서 LLM을 호출하는 재귀
+# 8.1 도구로 위장한 LLM — `AgentTool` 의 재귀 호출
 
 ---
 
@@ -169,6 +169,8 @@ def get_built_in_agents() -> list[AgentDefinition]:
 
 즉 **외부 CLI 표준 빌드는 5개** (`general-purpose`, `statusline-setup`, `Explore`, `Plan`, `claude-code-guide`). `verification` 은 두 게이트가 모두 켜져야 들어오기 때문에 사실상 **ant-only**.
 
+> 💡 ***비-SDK 진입점*** 이란? CLI/데스크탑 앱/IDE 확장/웹 — 사용자가 Claude Code 를 **직접** 쓰는 환경. *SDK 임베드*(개발자가 자기 앱에 Claude Agent SDK 를 끼워 넣은 경우)에서는 `claude-code-guide` 가 자동 제외된다 — SDK 사용자의 앱에서 "Claude Code 자체 사용법" 안내 에이전트가 떠도 어색하기 때문.
+
 각 정의가 5가지 차원에서 다르다 — 시스템 프롬프트 / 도구 / 모델 / `CLAUDE.md` / 권한 모드.
 
 | 에이전트 | 시스템 프롬프트 | 도구 | 모델 | `CLAUDE.md` | 권한 모드 |
@@ -184,9 +186,11 @@ def get_built_in_agents() -> list[AgentDefinition]:
 
 가장 흥미로운 둘이 **Explore**와 **Plan**이다. 자세히 보자.
 
-### 읽기 전용 에이전트의 컨텍스트 다이어트
+### 읽기 전용 에이전트의 이중 방어 + 컨텍스트 다이어트
 
-`built-in/exploreAgent.ts` — 일부러 모델한테 조심성을 주는 패턴이 가득.
+Explore/Plan 같은 읽기 전용 에이전트에는 **두 패턴**이 한꺼번에 박혀 있다 — *(1) 의도에서 벗어나지 못하게 막는 이중 방어* (시스템 프롬프트 + `disallowedTools`) 와 *(2) 컨텍스트 다이어트* (`CLAUDE.md`·`gitStatus` 생략으로 토큰 절약). 차례로 본다.
+
+먼저 이중 방어. `built-in/exploreAgent.ts` 의 **시스템 프롬프트**(= 자식 Claude 의 LLM 호출 시 `system` 필드로 들어가는 텍스트, 부모의 메인 시스템 프롬프트를 *대체*) 가 모델한테 조심성을 주는 패턴으로 가득하다.
 
 ```typescript
 // exploreAgent.ts:26-36 (verbatim)
@@ -275,7 +279,7 @@ should_omit_claude_md = (
 
 **주당 5-15 Giga-token 절약**. Explore 에이전트가 주당 3,400만 번 띄워진다는 사실이 코멘트에 들어 있다. 한 번에 `CLAUDE.md`(보통 2-5KB)를 생략하는 것만으로 — **Gtok 단위**의 토큰이 떨어진다. **그런데 kill-switch가 같이 박혀 있다** — `tengu_slim_subagent_claudemd` GrowthBook 게이트가 **기본 true** 지만, **언제든 flip 해서 fallback 할 수 있게** 무장. 5-15 Gtok/week 절약은 기본값에 의존. 프로덕션이 언제든 되돌릴 수 있게 디자인된 모범 사례.
 
-같은 정신이 **gitStatus**에도 적용된다.
+같은 정신이 **gitStatus**에도 적용된다. 단 `gitStatus`는 `CLAUDE.md`와 *다른 슬롯*에 산다 — 부모 세션 시작 시 캡처되어 **시스템 컨텍스트(`systemContext`)** 슬롯에 박힌 ~40KB 환경 메타 데이터 (현재 브랜치, working tree 상태, IDE 정보 등). 6.1의 사용자 컨텍스트(`userContext`, `CLAUDE.md`가 들어가는 자리)와 *형제 슬롯*이고, 슬롯 구조 자세한 건 8.2에서 다룬다.
 
 :::tabs
 
@@ -336,9 +340,25 @@ When using the Agent tool, specify a subagent_type parameter…
 
 각 에이전트의 `whenToUse` 와 `disallowedTools` 가 그대로 모델한테 노출된다. 모델은 5개의 옵션을 보고 가장 맞는 걸 고른다.
 
-> ⚙️ **`(Tools: *)` 는 literal 한 글자** (`prompt.ts:15-37`). `general-purpose.tools = ['*']` 가 전부 의미할 것 같지만 — 실제 `getToolsDescription` 의 allowlist 분기는 **그저 `tools.join(', ')`**. 즉 `'*'` 가 join 결과가 문자 한 글자. **모델은 그 한 글자를 보고 전부 라고 추론한다**. 우연히 전부를 의미하게 되는 명명 컨벤션 — 코드는 그저 join 만 함.
+> ⚙️ **`(Tools: *)` 는 literal 한 글자** (`prompt.ts:15-37`). `general-purpose.tools = ['*']` 정의를 description 으로 풀 때 — 보통은 *룰베이스 확장* (`*` → 모든 도구 이름 나열) 을 코드가 해줄 거라 기대할 것이다. 그러나 `getToolsDescription` 의 allowlist 분기는 **그저 `tools.join(', ')`** 만 한다. 그래서 `'*'` 한 글자가 description 텍스트에 그대로 박히고, **모델이 그 한 글자를 보고 *전부* 라고 추론** 해서 작동하는 셈. 코드는 와일드카드를 *해석하지 않고*, LLM 학습 데이터에 박힌 별표 = 와일드카드 컨벤션이 의미를 채워준다 — 우연히 전부를 의미하게 되는 명명 컨벤션.
 
-> ⚙️ **에이전트 리스트가 attachment 로 빠진 사연** (`prompt.ts:48-64`). `shouldInjectAgentListInMessages()` 함수의 코멘트가 사연을 기록: **"The dynamic agent list was ~10.2% of fleet cache_creation tokens: MCP async connect, /reload-plugins, or permission-mode changes mutate the list → description changes → full tool-schema cache bust."** **fleet cache_creation 의 10.2%** 가 동적 에이전트 리스트 때문이었다 — MCP 서버가 async connect 되거나 plugin 이 reload 될 때마다 리스트가 바뀌고, 그 description 변화가 **전체 tool-schema 캐시**를 무효화. 그래서 attachment 로 분리해서 **tool description 을 정적으로 유지**. 프로덕션 단단함의 또 한 조각 — 7.4의 캐시 공유 정신과 같다.
+> ⚙️ **에이전트 리스트가 attachment 로 빠진 사연** (`prompt.ts:48-64`). `shouldInjectAgentListInMessages()` 함수의 코드 코멘트가 사연을 *직접 기록* 한다 — **동적 에이전트 리스트가 함대(fleet) 전체 `cache_creation` 토큰의 약 10.2% 를 차지하고 있었다**.
+>
+> 원인은 이렇다. MCP 서버가 비동기로 연결되거나(`MCP async connect`), 플러그인을 리로드하거나(`/reload-plugins`), 권한 모드가 바뀔 때마다(`permission-mode changes`) 에이전트 리스트가 *변동* 한다. 그러면 AgentTool 의 description 텍스트가 바뀌고, description 은 *tool-schema* 의 일부이기 때문에 — **전체 tool-schema 캐시가 통째로 무효화**(코멘트의 표현은 `cache bust`) 된다.
+>
+> 7.4 에서 본 prompt cache 의 cache-key 가 *(시스템 프롬프트 + tools 정의 + 메시지 prefix)* 해시였던 점을 떠올리면 — **tools 정의가 한 글자라도 바뀌면 hit 가 0** 이 된다. 함대 전체로 보면 그 손실이 10.2%.
+>
+> 해결책: 에이전트 리스트를 tool description 에서 빼내 **attachment(메시지 자리에 첨부) 로 분리**. attachment 는 메시지 슬롯에 들어가므로 tool-schema 자체는 정적으로 유지되고, 캐시 hit 가 깨지지 않는다. 프로덕션 단단함의 또 한 조각 — 7.4 의 캐시 공유 정신과 같다.
+
+> ⚙️ **느슨한 타이핑이 캐시를 살린다.** 그런데 잠깐 — *AgentTool 도 도구* 이므로 자체 schema 는 tool-schema 1번 자리에 *들어간다*. 그러면 새 에이전트가 추가될 때 AgentTool 의 schema 도 바뀌어야 하는 것 아닌가? 그렇지 않다. **시그니처를 의도적으로 *느슨하게* 정의** 했기 때문. AgentTool 의 `subagent_type` 입력은:
+>
+> ```typescript
+> subagent_type: z.string().optional().describe('The type of specialized agent…'),
+> ```
+>
+> 그저 `z.string()` 이다. `z.enum(['Explore', 'Plan', 'general-purpose', ...])` 처럼 *값 집합을 schema 에 박지 않는다*. 만약 enum 으로 정의했다면 새 에이전트가 추가될 때마다 시그니처가 바뀌고 → tool-schema 캐시 무효화. 시그니처는 *string* 으로 두고, **가능한 값들의 메뉴는 attachment 텍스트로 안내** — 모델이 자연어 추론으로 그 메뉴를 읽고 적절한 값을 골라 채운다. 즉 *어떤 에이전트를 쓸지의 결정을* 시그니처가 아닌 *자연어 추론* 으로 미뤘다.
+>
+> 보통 *엄격한 타이핑* 이 좋다는 직관이 있지만 (잘못된 값을 컴파일 타임에 막아주니까), LLM 인터페이스에서는 **그 엄격함이 캐시 비용으로 돌아온다**. 그래서 의도적으로 *덜 엄격하게* 정의. 비슷한 패턴이 MCP 가 등록하는 도구들의 `input_schema` 에도 보인다 — 엄격한 입력 검증은 호출 후 *도구 코드 내부* 로 미루는 경향 (예: 3.5 BashTool 의 `parseForSecurity`).
 
 가장 멋진 부분은 프롬프트 작성 가이드다.
 
@@ -510,11 +530,16 @@ EXPLORE = AgentDefinition(
 )
 ```
 
-핵심 셋이 다 있다.
+핵심 넷이 다 있다.
 
 1. **`call()` 안에서 `query()` 를 부른다** — 재귀. 그 외는 다 디테일.
 2. **`disallowed_tools` 는 프롬프트가 아닌 진짜 필터**. 모델이 그 도구들을 애초에 못 본다.
 3. **`omit_claude_md` 같은 다이어트 플래그** — 에이전트는 자기에 맞는 컨텍스트만. 모든 자식이 풀 컨텍스트면 비용이 N배.
+4. **자식의 마지막 발화가 곧 부모의 도구 결과** — `final_response` 가 그 짝. 자식 세션 전체가 아닌 *최종 발화만* 전달되므로, 자식이 *처음부터 압축된 보고서 형태로* 발화하도록 두 자리에서 유도한다.
+   - **자식 시스템 프롬프트** (에이전트 정의의 자체 system) 가 기본 역할 가이드: *"네 최종 응답이 부모에게 전달된다, 보고서 형태로 마무리하라"*. `verification` 의 *"VERDICT: PASS/FAIL/PARTIAL"* 처럼 **출력 *형식* 자체를 강제**하는 사례까지 있다.
+   - **부모의 user prompt** 가 이번 호출의 구체 요구: *"report in under 200 words"*. AgentTool description 의 작성 가이드(*"If you need a short response, say so"*) 가 부모한테 그렇게 시킨다.
+   
+   요약 LLM 을 별도로 한 번 더 호출해(7.4 compaction 처럼) 자식 결과를 후처리할 수도 있지만, 그건 추가 호출/지연/비용. **자식이 처음부터 압축된 발화를 만들도록 프롬프트로 유도**하면 추가 호출 없이 같은 효과 — *프롬프트 엔지니어링으로 코드를 단순화한 사례*.
 
 > 💡 **`AsyncGenerator[dict, None]`.** 2.2에서 본 비동기 제너레이터. AgentTool도 메시지를 스트리밍으로 내놓는다. 자식 에이전트의 진행 메시지가 부모의 UI에 실시간으로 흐를 수 있는 이유. 부모는 최종 결과만 받지만, 사용자는 과정을 볼 수 있다.
 
