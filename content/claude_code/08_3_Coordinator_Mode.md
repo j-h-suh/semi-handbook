@@ -1,4 +1,4 @@
-# 8.3 Coordinator Mode — 메인이 여러 워커를 fork-join으로 조율
+# 8.3 코디네이터 모드 — 메인이 여러 워커를 fork-join 으로 조율
 
 ---
 
