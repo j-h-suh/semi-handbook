@@ -3,28 +3,26 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal, Briefcase, X } from 'lucide-react';
+import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal, X } from 'lucide-react';
 import type { ChapterMeta } from '@/lib/markdown';
 
-type BookTab = 'semi' | 'stats' | 'claude' | 'exec';
+type BookTab = 'semi' | 'stats' | 'claude';
 
 const BOOK_META: Record<BookTab, { label: string; icon: typeof Cpu; color: string; tabColor: string; chapterColor: string; route: string }> = {
     semi: { label: '반도체', icon: Cpu, color: 'text-slate-500', tabColor: 'text-cyan-400 border-cyan-400', chapterColor: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', route: '/semi' },
     stats: { label: '통계학', icon: TrendingUp, color: 'text-slate-500', tabColor: 'text-emerald-400 border-emerald-400', chapterColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', route: '/stats' },
     claude: { label: '클로드', icon: Terminal, color: 'text-slate-500', tabColor: 'text-violet-400 border-violet-400', chapterColor: 'bg-violet-500/10 text-violet-400 border-violet-500/20', route: '/claude' },
-    exec: { label: '임원', icon: Briefcase, color: 'text-slate-500', tabColor: 'text-amber-400 border-amber-400', chapterColor: 'bg-amber-500/10 text-amber-400 border-amber-500/20', route: '/exec' },
 };
 
 interface Props {
     semiChapters: ChapterMeta[];
     statsChapters: ChapterMeta[];
     claudeChapters: ChapterMeta[];
-    execChapters: ChapterMeta[];
     isOpen?: boolean;       // 모바일 드로어 열림 상태
     onClose?: () => void;   // 모바일 드로어 닫기
 }
 
-export default function Sidebar({ semiChapters, statsChapters, claudeChapters, execChapters, isOpen = false, onClose }: Props) {
+export default function Sidebar({ semiChapters, statsChapters, claudeChapters, isOpen = false, onClose }: Props) {
     const pathname = usePathname();
     const decodedPathname = decodeURIComponent(pathname);
 
@@ -32,7 +30,6 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters, e
         if (decodedPathname.startsWith('/semi/')) return 'semi';
         if (decodedPathname.startsWith('/stats/')) return 'stats';
         if (decodedPathname.startsWith('/claude/')) return 'claude';
-        if (decodedPathname.startsWith('/exec/')) return 'exec';
         return null;
     }, [decodedPathname]);
 
@@ -45,7 +42,7 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters, e
     }, [pathname, onClose]);
     const activeBook: BookTab = userOverride ?? detectedBook ?? 'semi';
 
-    const chaptersMap: Record<BookTab, ChapterMeta[]> = { semi: semiChapters, stats: statsChapters, claude: claudeChapters, exec: execChapters };
+    const chaptersMap: Record<BookTab, ChapterMeta[]> = { semi: semiChapters, stats: statsChapters, claude: claudeChapters };
     const chapters = chaptersMap[activeBook];
     const routePrefix = BOOK_META[activeBook].route;
 

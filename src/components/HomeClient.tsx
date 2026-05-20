@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, MessageSquare, Clock, BookText, BarChart3, ArrowRight, Cpu, TrendingUp, Terminal, Briefcase } from 'lucide-react';
+import { BookOpen, MessageSquare, Clock, BookText, BarChart3, ArrowRight, Cpu, TrendingUp, Terminal } from 'lucide-react';
 import { supabase, type Post } from '@/lib/supabase';
 
 interface RecentChapter {
@@ -15,18 +15,16 @@ interface Props {
     semiChapterCount: number;
     statsChapterCount: number;
     claudeChapterCount: number;
-    execChapterCount: number;
     totalTerms: number;
     totalDiagrams: number;
     recentSemiChapters: RecentChapter[];
     recentStatsChapters: RecentChapter[];
     recentClaudeChapters: RecentChapter[];
-    recentExecChapters: RecentChapter[];
 }
 
 export default function HomeClient({
-    semiChapterCount, statsChapterCount, claudeChapterCount, execChapterCount, totalTerms, totalDiagrams,
-    recentSemiChapters, recentStatsChapters, recentClaudeChapters, recentExecChapters,
+    semiChapterCount, statsChapterCount, claudeChapterCount, totalTerms, totalDiagrams,
+    recentSemiChapters, recentStatsChapters, recentClaudeChapters,
 }: Props) {
     const [recentPosts, setRecentPosts] = useState<Post[]>([]);
 
@@ -70,7 +68,7 @@ export default function HomeClient({
                 </div>
 
                 {/* Book Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     {/* Semi Handbook */}
                     <Link
                         href="/semi/00_00_들어가며"
@@ -146,36 +144,12 @@ export default function HomeClient({
                         </div>
                     </Link>
 
-                    {/* Exec Handbook */}
-                    <Link
-                        href="/exec/00_01_들어가며"
-                        className="group p-6 rounded-2xl border border-amber-500/10 bg-amber-500/[0.03] hover:bg-amber-500/[0.06] hover:border-amber-500/25 transition-all"
-                    >
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-                                <Briefcase size={24} />
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-bold text-white">임원 핸드북</h2>
-                                <p className="text-xs text-slate-500">임원을 위한 소프트웨어 개발</p>
-                            </div>
-                        </div>
-                        <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                            데모는 시작이다 — 하드웨어 임원이 SW 팀과 같은 언어로 대화하는 멘탈모델
-                        </p>
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs text-slate-600">{execChapterCount}개 챕터</span>
-                            <span className="text-sm text-amber-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                                읽기 <ArrowRight size={14} />
-                            </span>
-                        </div>
-                    </Link>
                 </div>
 
                 {/* Stats Summary */}
                 <div className="grid grid-cols-4 gap-3 mb-12">
                     <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">{semiChapterCount + statsChapterCount + claudeChapterCount + execChapterCount}</div>
+                        <div className="text-2xl font-bold text-white mb-1">{semiChapterCount + statsChapterCount + claudeChapterCount}</div>
                         <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
                             <BookOpen size={12} /> 총 챕터
                         </div>
@@ -193,7 +167,7 @@ export default function HomeClient({
                         </div>
                     </div>
                     <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">4</div>
+                        <div className="text-2xl font-bold text-white mb-1">3</div>
                         <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
                             <BookOpen size={12} /> 시리즈
                         </div>
@@ -201,7 +175,7 @@ export default function HomeClient({
                 </div>
 
                 {/* Recent Updates + Board */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                     {/* Recent Semi Updates */}
                     <div>
@@ -251,25 +225,6 @@ export default function HomeClient({
                                 <Link
                                     key={ch.id}
                                     href={`/claude/${ch.id}`}
-                                    className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
-                                >
-                                    <div className="text-xs font-medium text-slate-200 line-clamp-1 mb-0.5">{ch.title}</div>
-                                    <div className="text-[10px] text-slate-600">{formatDate(ch.lastUpdated)}</div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Recent Exec Updates */}
-                    <div>
-                        <h2 className="flex items-center gap-2 text-xs font-bold text-amber-500/70 mb-3">
-                            <Clock size={13} /> 임원 핸드북 최근 업데이트
-                        </h2>
-                        <div className="space-y-1.5">
-                            {recentExecChapters.map(ch => (
-                                <Link
-                                    key={ch.id}
-                                    href={`/exec/${ch.id}`}
                                     className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
                                 >
                                     <div className="text-xs font-medium text-slate-200 line-clamp-1 mb-0.5">{ch.title}</div>

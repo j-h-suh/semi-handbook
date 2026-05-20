@@ -5,7 +5,7 @@ import matter from 'gray-matter';
 
 /* ─── Book 타입 및 설정 ─── */
 
-export type Book = 'semi' | 'stats' | 'claude' | 'exec';
+export type Book = 'semi' | 'stats' | 'claude';
 
 interface BookConfig {
   contentDir: string;
@@ -61,20 +61,6 @@ const BOOK_CONFIGS: Record<Book, BookConfig> = {
       if (id.startsWith('09_')) return 'Part 9: 미니 Claude Code';
       if (id.startsWith('10_')) return 'Part 10: 확장하기';
       if (id.startsWith('11_')) return '에필로그';
-      return '기타';
-    },
-  },
-  exec: {
-    contentDir: path.join(process.cwd(), 'content', 'exec'),
-    imageRewrite: '/content/images/exec/',
-    excludePattern: (f) => f === 'handbook-treatment.md',
-    getPartFromId: (id) => {
-      if (id.startsWith('00_')) return '들어가며';
-      if (id.startsWith('01_')) return 'Part 1: 데모는 시작이다';
-      if (id.startsWith('02_')) return 'Part 2: 출시한 다음 날부터';
-      if (id.startsWith('03_')) return 'Part 3: 보이지 않던 부채';
-      if (id.startsWith('04_')) return 'Part 4: 새 도구가 들어왔다';
-      if (id.startsWith('05_')) return 'Part 5: 남은 사람들의 풍경';
       return '기타';
     },
   },
@@ -235,12 +221,4 @@ export function getSortedClaudeChapters(): ChapterMeta[] {
 
 export async function getClaudeChapterData(id: string): Promise<Chapter> {
   return getChapter('claude', id);
-}
-
-export function getSortedExecChapters(): ChapterMeta[] {
-  return getSortedChapters('exec');
-}
-
-export async function getExecChapterData(id: string): Promise<Chapter> {
-  return getChapter('exec', id);
 }
