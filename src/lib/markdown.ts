@@ -49,7 +49,8 @@ const BOOK_CONFIGS: Record<Book, BookConfig> = {
     imageRewrite: '/content/images/claude_code/',
     excludePattern: () => false,
     getPartFromId: (id) => {
-      if (id.startsWith('00_')) return '들어가며';
+      if (id.startsWith('00_0_')) return '들어가며';
+      if (id.startsWith('00_')) return 'Part 0: 배경지식';
       if (id.startsWith('01_')) return 'Part 1: 부트스트랩';
       if (id.startsWith('02_')) return 'Part 2: 에이전트 루프';
       if (id.startsWith('03_')) return 'Part 3: 도구 시스템';
