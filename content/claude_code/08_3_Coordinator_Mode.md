@@ -256,6 +256,8 @@ enqueue_pending_notification({"value": message, "mode": "task-notification"})
 
 **이게 진짜 우아하다**. 모델한테는 **"다음 user 메시지는 워커 결과다"** 라고 가르칠 필요가 없다 — **그냥 이미 user 메시지**. LLM이 학습된 **user→assistant 패턴**을 그대로 쓴다. 비동기 분산 시스템이 대화 모델에 자연스럽게 매핑된 사례.
 
+**그런데 왜 하필 XML 일까**. 자연어와 너무 다른 형식이라 모델이 잘 처리할까 의심스러울 수 있는데 — 사실 정반대다. Claude 의 학습 데이터에는 HTML/XML 페이지가 풍부하고 (웹 크롤링의 큰 부분), Anthropic 의 _prompting guide_ 자체가 `<context>`, `<example>`, `<thinking>` 같은 XML 태그를 _구조화 입력의 표준_ 으로 권장한다. RLHF 단계에서도 이 패턴이 강화돼서 — `<task-notification>` 같은 _전혀 본 적 없는 커스텀 태그_ 도 모델이 _학습된 메타패턴 (태그 = 구조 경계)_ 의 새 인스턴스로 인식한다. 빡빡해 보이는 형식이 _오히려 장점_ 이다. 자연어로 _"Status is completed and result is..."_ 라고 적으면 모델이 _어디부터 어디까지가 result 인지_ 문맥 추론해야 하지만, `<status>completed</status><result>...</result>` 는 _토큰 레벨에서 경계가 명시_ 된다. 그리고 `<result>` 안에 코드/마크다운/긴 에러 메시지가 _이스케이프 없이_ 들어갈 수 있다 — JSON 의 `"result": "...\n..."` 이스케이프 부담 회피.
+
 시스템 프롬프트의 경고가 친절하다.
 
 ```
