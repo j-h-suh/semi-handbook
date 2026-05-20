@@ -5,7 +5,7 @@
 ## 이 챕터에서 배우는 것
 
 - **서브에이전트 위에 올린 두 번째 확장** — 8.1~8.2 의 공통 기반 위에 8.3 코디네이터 모드와 _완전히 다른 디자인_ 의 에이전트 팀이 같은 저장소에 공존한다는 사실
-- **AsyncLocalStorage 기반 in-process 격리** — 같은 Node.js 프로세스 안에서 동시 실행되는 팀원들이 어떻게 서로의 컨텍스트를 침범하지 않는가
+- **`AsyncLocalStorage` 기반 자동 컨텍스트 격리** — 같은 Node.js 프로세스 안에서 _N 명의 팀원이 동시 실행_ 될 때 async 호출 트리를 따라 _자동으로_ 각자의 정체성을 유지하는 메커니즘 (8.2 의 _명시적_ 객체 분리와 대비)
 - **팀 lead 와 메일박스** — 코디네이터 모드의 `<task-notification>` XML 과 정반대로 _팀원끼리 peer DM_ 이 가능한 통신 모델
 - **팀 메모리(team memory) 와 secret guard** — 팀원들이 메모리를 공유하는 위험과 그 위험을 막는 방어선
 - **두 빌드 게이트의 분리** — `agentSwarmsEnabled` (런타임) + `feature('TEAMMEM')` (빌드 타임) 으로 부분 활성화가 가능한 이유
@@ -24,15 +24,13 @@
 
 이 챕터에서 — 다섯 가지 축으로 두 확장을 비교한다.
 
-```
-| 축              | 코디네이터 모드 (8.3)              | 에이전트 팀 (8.4)                   |
-|----------------|-----------------------------------|-------------------------------------|
-| 게이트          | feature('COORDINATOR_MODE') + env | agentSwarmsEnabled() + env/CLI + GB |
-| 실행 모델       | out-of-process (LocalAgentTask)   | in-process (AsyncLocalStorage)      |
-| 정체성          | 부모-자식, 익명 워커               | agent@team, 명시적 팀 lead          |
-| 통신            | <task-notification> user XML      | Mailbox + Stop 훅 idle notification |
-| 메모리          | 자식 컨텍스트 격리 (8.2)           | 팀 공유 메모리 + secret guard       |
-```
+| 축 | 코디네이터 모드 (8.3) | 에이전트 팀 (8.4) |
+|------|---------------------|------------------|
+| 게이트 | `feature('COORDINATOR_MODE')` + env | `agentSwarmsEnabled()` + env/CLI + GrowthBook |
+| 격리 메커니즘 | 명시적 객체 분리 (`createSubagentContext`, 8.2) | `AsyncLocalStorage` 기반 async context 격리 |
+| 정체성 | 부모-자식, 익명 워커 | `agent@team`, 명시적 팀 lead |
+| 통신 | `<task-notification>` user XML | Mailbox + Stop 훅 idle notification |
+| 메모리 | 자식 컨텍스트 격리 (8.2) | 팀 공유 메모리 + secret guard |
 
 > 💡 **출시 상태 (2026-05 기준)**: 에이전트 팀은 **2026-02-05 Claude Code v2.1.32 + Opus 4.6 와 함께 experimental 로 외부 출시**됐다. 외부 사용자도 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 환경 변수나 settings.json 으로 활성화 가능 (`agentSwarmsEnabled` 의 외부 옵트인 경로). 더 나아가 **2026-03-09 Anthropic 이 _Claude Code Review_ 를 출시** — 에이전트 팀을 자기 PR 리뷰에 적용한 _프로덕션 애플리케이션_ 으로, 내부 코드 리뷰 coverage 가 **16% → 54%** 로 약 3 배 상승했다. 8.3 의 코디네이터 모드가 _외부 미출시_ 인 것과 대조 — Anthropic 이 두 디자인을 시도해본 결과 _peer 모델_ 이 채택됐다. 메모리 동기화 게이트 (`feature('TEAMMEM')`) 만 별도로 빌드 시점에 결정되어 일부 외부 빌드에서 dead-code-eliminated 될 수 있다.
 
@@ -97,19 +95,36 @@ def is_agent_swarms_enabled() -> bool:
 
 세 번째 단계가 진짜 핵심이다. **GrowthBook 킬스위치**. Anthropic 이 _원격으로_ 이 기능을 꺼버릴 수 있다. 사용자가 환경 변수를 켜도, 플래그를 줘도 — Anthropic 의 결정 한 번이면 기능이 죽는다. 코디네이터 모드의 build-time feature flag 와 다른 종류의 게이트 — _런타임에 원격으로 제어 가능_ 한 **점진 rollout 게이트**. 2026-02 외부 experimental 출시 시점부터 이 게이트가 _누구한테 언제 활성화_ 를 조정하는 인프라로 쓰였다.
 
-그리고 **메모리 동기화** 만 따로 또 다른 게이트가 있다. `teamMemSecretGuard.ts:19` 의 `feature('TEAMMEM')` — _빌드 시점 게이트_. 팀 자체는 켤 수 있어도 _메모리 공유 기능만 부분적으로_ 빠질 수 있다는 뜻이다. **이중 게이트, 부분 활성화**. 어디까지 활성화할지 두 개의 노브로 따로 돌릴 수 있다.
+**GrowthBook** 은 [growthbook.io](https://www.growthbook.io) 의 _오픈소스 feature flag 관리 + A/B 테스트 플랫폼_ 이다. 코드 안에 _스위치_ 를 심어두면 _서버에서 원격으로_ 켜고 끌 수 있다. Anthropic 은 이걸로 세 가지를 한다 — (1) _점진 rollout_ (처음 5% 사용자 → 25% → 50% → 100% 식의 단계적 공개), (2) _A/B 테스트_ (사용자 그룹별 새 기능 vs 옛 기능 비교), (3) _킬스위치_ (사고 시 즉시 차단). 클라이언트는 _캐시된 값_ 을 우선 읽고 (함수명 `getFeatureValue_CACHED_MAY_BE_STALE` 의 _stale_ 이 그 흔적 — 캐시는 stale 일 수 있음) 백그라운드에서 주기적으로 서버와 sync 한다. **Claude Code 의 experimental rollout 인프라 거의 전부가 GrowthBook 에 의존** — 에이전트 팀의 `tengu_amber_flint`, Remote Bridge 의 `tengu_ccr_bridge`, voice mode 의 `tengu_amber_quartz_disabled` 등 _색상+동물 코드네임_ 이 모두 GrowthBook 게이트다.
 
-> 💡 **GrowthBook 게이트의 의미.** 8.1 에서 본 `tengu_amber_stoat` 같은 _색상+동물_ 코드네임의 GrowthBook 게이트들은 _기능 자체의 살아있는 죽음 스위치_ 다. 빌드 후에도 Anthropic 의 결정 한 번으로 끌 수 있다. _점진 공개 기능_ 을 외부에 노출할 때의 안전 장치 — 문제가 터지면 즉시 차단.
+그리고 **메모리 동기화** 만 따로 _또 다른 게이트_ 가 있다. `teamMemSecretGuard.ts:19` 의 `feature('TEAMMEM')` — _빌드 시점 게이트_ 다. 앞서 본 `agentSwarmsEnabled` 가 _팀 기능 자체_ 를 켤지 결정한다면, `feature('TEAMMEM')` 은 _팀이 켜진 뒤에도 공유 메모리 기능을 빌드에 포함할지_ 를 따로 결정한다. 두 게이트가 _독립적_ 이라서 세 가지 조합이 가능하다 — (1) _팀 + 메모리 둘 다 켜짐_ (풀 기능, 팀원이 _공유 메모리_ 로 협업), (2) _팀만 켜지고 메모리는 꺼짐_ (팀 기능은 돌지만 _각 팀원이 자기 개인 메모리만_), (3) _팀 자체가 꺼짐_ (메모리 게이트 무관). **이중 게이트 + 부분 활성화**. 두 개의 노브로 _얼마나 노출할지_ 따로 돌릴 수 있다.
+
+**왜 메모리 게이트만 빌드 시점에 따로 두는가** — _공유 메모리_ 는 보안 위험이 크다 (저장소 협업자 모두한테 노출). 뒤에서 볼 `secretScanner` 같은 런타임 방어선이 있어도 _attack surface 자체를 줄이는_ 가장 안전한 길은 _빌드에서 코드를 빼는 것_ 이다. 외부 빌드에서 메모리 공유를 빼면 secretScanner 의 정규식 컴파일도 일어나지 않고 _공유 메모리를 쓰는 모든 코드 경로_ 가 dead-code-eliminated. _런타임 게이트로 끄는 것_ 과 _빌드에 아예 안 넣는 것_ 의 보안 차이를 인식한 디자인.
+
+<details>
+<summary>🔬 Deep Dive — GrowthBook 게이트의 명명 규칙</summary>
+
+> Anthropic 의 GrowthBook 게이트는 **`tengu_<색상>_<단어>`** 3단계 구조를 따른다.
+>
+> - **`tengu_`** — Anthropic 공통 prefix (일본 신화의 _덴구 (天狗)_ 에서 따온 사내 코드네임). _Anthropic 사내 다른 제품/팀_ (Claude.ai 웹, Claude Desktop, Claude API 등) _과의 namespace 분리로 추정_ — 같은 GrowthBook 인스턴스를 공유할 때 prefix 로 구분 (코드 주석에 명시된 사실은 아니고 prefix 의 일관성으로부터의 합리적 추정).
+> - **`<색상>`** — `amber`, `cobalt`, `copper`, `coral`, `jade`, `onyx` 등 _광물/보석 계열_ (기능 그룹의 구분자).
+> - **`<단어>`** — _동물_ (`stoat` 담비, `wren` 굴뚝새, `raccoon`, `panda`), _자연물/사물_ (`flint` 부싯돌, `prism`, `quartz`, `lantern`, `bridge`), 또는 _기능명_ (`json_tools`) — 개별 게이트의 고유 식별자.
+>
+> 이런 _코드네임_ 패턴의 장점 — (1) 게이트 이름이 _기능을 드러내지 않아_ 외부에서 추측 어려움, (2) _기억 가능_ 한 조합 (색상+동물), (3) _내부 식별자_ 와 _공개 기능명_ 의 분리 (출시 후 기능명이 바뀌어도 게이트는 고정 유지).
+>
+> 그리고 이 게이트들은 _기능 자체의 살아있는 죽음 스위치_ 다. 빌드 후에도 Anthropic 의 결정 한 번으로 끌 수 있다. _점진 공개 기능_ 을 외부에 노출할 때의 안전 장치 — 문제가 터지면 즉시 차단.
+
+</details>
 
 코디네이터 모드는 _켜기 쉽다_ — 사용자가 결정하면 끝. 에이전트 팀은 _켜기 까다롭다_ — 두 단계 옵트인 + 원격 킬스위치. 디자인 의도가 보인다 — **상용 출시를 염두에 둔 신중한 rollout 디자인**. 실제로 2026-02-05 외부 experimental 출시 시 이 단계적 게이트 구조가 그대로 _점진 공개_ 의 도구로 쓰였고, 2026-03-09 Claude Code Review 프로덕션 채택 시점에도 같은 인프라가 _누구한테 언제 활성화_ 를 결정했다.
 
-### 실행 모델 — 같은 프로세스 안에서 격리
+### 격리 메커니즘 — 명시적 객체 분리에서 자동 컨텍스트 격리로
 
-8.2 에서 본 `createSubagentContext` 는 자식 에이전트가 _부모와 컨텍스트를 분리_ 해서 격리되도록 한다. AbortController 도 분리, attribution state 도 분리, app state 도 분리. **두 에이전트가 서로의 상태를 침범하지 않는다**.
+8.2 에서 본 `createSubagentContext` 는 자식 에이전트가 _부모와 컨텍스트를 분리_ 해서 격리되도록 한다. AbortController 도 분리, attribution state 도 분리, app state 도 분리. **두 에이전트가 서로의 상태를 침범하지 않는다**. 이 격리는 _코드가 명시적으로_ 부모 컨텍스트를 받아 자식 컨텍스트 객체를 만들어 분리하는 방식 — _명시적 객체 분리_.
 
-그런데 8.2 의 격리는 _out-of-process_ 가 아니다 — 같은 Node.js 프로세스 안의 _객체 분리_ 다. 실제 워커도 `LocalAgentTask` 로 같은 프로세스에서 실행되거나, 별도 자식 프로세스로 spawn 되거나 — 8.1 의 `runAgent` 는 두 가지 다 지원했다.
+먼저 짚어둘 것 — 8.2, 8.3, 8.4 _모두_ 같은 Node.js 프로세스 안의 **in-process 격리**다. `LocalAgentTask` (일반 서브에이전트 / 코디네이터 워커) 도 `child_process` 같은 OS API 없이 `query()` 의 _async generator 재귀_ 로 작동한다. 그러니 8.2 와 8.4 의 차이는 _프로세스 격리 vs in-process_ 가 아니라 **격리 메커니즘 자체**의 차이다 — _명시적 객체 분리_ 와 _자동 컨텍스트 격리_.
 
-에이전트 팀은 _완전히 다른 격리 메커니즘_ 을 쓴다. **AsyncLocalStorage** (`utils/teammateContext.ts:41`):
+에이전트 팀은 _같은 in-process 환경에서 다른 격리 메커니즘_ 을 쓴다. **`AsyncLocalStorage`** (`utils/teammateContext.ts:41`):
 
 :::tabs
 
@@ -179,13 +194,54 @@ def get_teammate_context() -> TeammateContext | None:
 
 :::
 
-**`AsyncLocalStorage`** 는 Node.js 의 비동기 작업별 격리 메커니즘이다. 한 프로세스 안에서 동시에 실행되는 N 개의 async 작업이 _각자 자기만의 store_ 를 가진다. `.run(context, fn)` 으로 들어간 callstack 안에서는 — 어떤 `await` 를 거치든, 어떤 `setTimeout` 을 건너든 — `getStore()` 가 그 context 를 그대로 돌려준다. 다른 작업의 context 와 섞이지 않는다.
+**`AsyncLocalStorage`** 는 Node.js 의 비동기 작업별 격리 메커니즘이다. 한 프로세스 안에서 동시에 실행되는 N 개의 async 작업이 _각자 자기만의 store_ 를 가진다. `.run(context, fn)` 으로 들어간 callstack 안에서는 — 어떤 `await` 를 거치든, 어떤 `setTimeout` 을 건너든 — `getStore()` 가 그 context 를 그대로 돌려준다. 다른 작업의 context 와 섞이지 않는다. **8.2 와의 결정적 차이는 _배정 방식_** — 8.2 가 _수동 방번호 배정_ (코드가 `ctx` 객체를 인자로 명시 전달) 이라면, 8.4 는 _자동 방번호 배정_ (`.run(context, fn)` 으로 async 트리에 한 번 묶으면 그 안의 모든 함수가 자동으로 자기 컨텍스트를 인식). _얕은 호출에서는 두 방식의 차이가 얇지만, 깊이 N 단계 호출 체인에서 진짜 가치가 드러난다_.
+
+<details>
+<summary>🔬 Deep Dive — 5 단계 호출에서 보이는 _pass-through 비용_</summary>
+
+> 단순한 한 단계 호출에서는 두 방식 차이가 얇아 보인다. 진짜 차이는 _깊이 5 단계_ 호출 체인 (`worker → do_search → fetch_url → parse_response → log_event`) 에서 드러난다.
+>
+> **8.2 방식** — `log_event` 만 ctx 를 쓰는데도 5 단계 _모든 함수_ 가 시그니처에 `ctx: Context` 를 받아야 한다 (pass-through). 4 단계는 _ctx 를 안 쓰면서_ 시그니처에 끼임.
+>
+> ```python
+> async def worker(ctx: Context):
+>     await do_search(ctx, "foo")
+>
+> async def do_search(ctx: Context, query):       # pass-through (ctx 안 씀)
+>     await fetch_url(ctx, query)
+>
+> # ... 3 단계 모두 ctx 받아 전달만 ...
+>
+> async def log_event(ctx: Context, query):
+>     print(f"[{ctx.agent_id}] event")             # *드디어* 사용
+> ```
+>
+> **8.4 방식** — `log_event` 만 `get_teammate_context()` 호출. 중간 함수들은 ctx 의 존재 자체를 모름.
+>
+> ```python
+> async def worker():                              # ctx 시그니처 없음
+>     await do_search("foo")
+>
+> async def do_search(query):                      # ctx 시그니처 없음
+>     await fetch_url(query)
+>
+> # ... 3 단계 모두 시그니처 깨끗 ...
+>
+> async def log_event(query):
+>     agent_id = get_teammate_context().agent_id   # 자기가 직접 가져옴
+> ```
+>
+> 이 _pass-through 의 누적_ 이 큰 코드베이스에서 진짜 비용이 된다. `claude-code` 가 _수십~수백 단계 호출_ 의 복잡한 시스템이라 _ctx 안 쓰는 함수까지 시그니처 오염_ 되면 _필드 추가 한 번_ 에 _수백 함수 시그니처 변경_ PR. 제3자 라이브러리 (axios, lodash 등) 는 _ctx 인자를 안 받음_ 이라 8.2 는 _호출 체인 중간에서 끊김_. 8.4 는 라이브러리 안에서도 `get_teammate_context()` 호출 가능 (라이브러리가 ContextVar 쓰면).
+
+</details>
 
 > 💡 **AsyncLocalStorage 는 비동기판 thread-local.** 일반적인 모듈 변수는 _전역 공유_ 다. 두 동시 작업이 같은 변수를 쓰면 race condition. AsyncLocalStorage 는 _async 컨텍스트 트리_ 를 따라 분기된 변수 — 같은 프로세스 안의 N 팀원이 각자 자기 정체성을 들고 동시에 일할 수 있다. Python 의 `contextvars` 가 같은 디자인 (PEP 567, 2018).
 
-이게 _진짜로_ in-process 다. 자식 프로세스 spawn 없음 (코디네이터 모드의 `LocalAgentTask` 와 대비). 같은 메모리 공간, 같은 V8 인스턴스, 같은 `process.env`. **격리는 _AsyncLocalStorage 만이_ 보장**한다.
+이게 _같은 프로세스 안의 자동 격리_ 다. 자식 프로세스 spawn 없음 — 8.2 의 `createSubagentContext` 와 마찬가지로 _프로세스 자체는 같다_. 차이는 _격리 방식_ 이다 — 8.2 는 _코드가 명시적으로 부모/자식 컨텍스트 객체를 분리_, 여기는 _`AsyncLocalStorage` 가 async 호출 트리를 따라 자동으로 분기_. 같은 메모리 공간, 같은 V8 인스턴스, 같은 `process.env` — **격리는 _`AsyncLocalStorage` 가 자동으로 보장_**한다.
 
 추가로 — 정체성 해상도가 우선순위 사다리로 작동한다 (`utils/teammate.ts:88`):
+
+:::tabs
 
 ```typescript
 export function getAgentId(): string | undefined {
@@ -196,6 +252,19 @@ export function getAgentId(): string | undefined {
 }
 ```
 
+```python
+# Python 등가 — 우선순위 사다리로 정체성 조회
+def get_agent_id() -> str | None:
+    in_process_ctx = get_teammate_context()         # 1. ContextVar
+    if in_process_ctx:
+        return in_process_ctx.agent_id
+    if dynamic_team_context:
+        return dynamic_team_context.agent_id        # 2. 런타임 동적 컨텍스트 (tmux)
+    return os.environ.get("CLAUDE_CODE_AGENT_ID")   # 3. 환경 변수 fallback
+```
+
+:::
+
 세 단계 — in-process 컨텍스트가 최우선, 그 다음이 _tmux 기반 팀원_ (별도 프로세스, CLI 인자로 `--agent-id` 전달), 마지막이 환경 변수. **에이전트 팀은 in-process 뿐 아니라 tmux 기반 out-of-process 도 같이 지원**한다. 한 디자인이 두 가지 실행 모델을 다 커버. 정체성 해상도가 일관성 있게 작동.
 
 8.2 의 격리가 _객체 분리_ 라면, 여기는 _async 컨텍스트 격리_ 다. 같은 코드 경로가 N 명의 팀원에게 호출되는데 — 각자 자기 `agentId`, 자기 `teamName`, 자기 `abortController` 를 본다. **모듈은 한 벌, 실행 컨텍스트는 N 벌**.
@@ -205,6 +274,8 @@ export function getAgentId(): string | undefined {
 코디네이터 모드의 정체성은 단순했다. **메인 = 코디네이터**, **워커 = 익명 워커** (`agent-a1b` 같은 ID, 사용자한테는 거의 안 보임). 일회용 — 끝나면 사라진다.
 
 에이전트 팀은 _이름과 역할_ 이 있다. `agentId: "researcher@my-team"` (`tasks/InProcessTeammateTask/types.ts:14`):
+
+:::tabs
 
 ```typescript
 export type TeammateIdentity = {
@@ -217,9 +288,25 @@ export type TeammateIdentity = {
 }
 ```
 
+```python
+# Python 등가 — 팀원의 정체성 (AppState 에 저장되는 plain data)
+@dataclass
+class TeammateIdentity:
+    agent_id: str                    # "researcher@my-team"
+    agent_name: str                  # "researcher"
+    team_name: str                   # "my-team"
+    plan_mode_required: bool
+    parent_session_id: str           # Leader's session ID
+    color: str | None = None
+```
+
+:::
+
 `agent@team` 형식 — **Slack/Discord 핸들과 같은 컨벤션**. 사람이 부르고, 사람이 기억하고, 사람이 메시지를 보내는 이름. 8.2 의 자식 에이전트가 한 번 쓰고 버려지는 thread 였다면, 팀원은 _세션이 지속되는 동안 식별 가능한 동료_ 다.
 
 그리고 _명시적 lead_ 라는 개념이 있다 (`utils/teammate.ts:171`):
+
+:::tabs
 
 ```typescript
 export function isTeamLead(
@@ -241,9 +328,33 @@ export function isTeamLead(
 }
 ```
 
+```python
+# Python 등가 — 현재 세션이 팀 lead 인지 판단
+def is_team_lead(team_context: TeamContext | None) -> bool:
+    if not team_context or not team_context.lead_agent_id:
+        return False
+
+    my_agent_id = get_agent_id()
+    lead_agent_id = team_context.lead_agent_id
+
+    # 내 agent ID == lead ID 면 내가 lead
+    if my_agent_id == lead_agent_id:
+        return True
+
+    # 역호환: agent ID 없고 팀 컨텍스트 있으면 — 팀을 만든 원래 세션 (lead)
+    if not my_agent_id:
+        return True
+
+    return False
+```
+
+:::
+
 **팀에는 _공식적으로 한 명의 lead_ 가 있다**. 코디네이터 모드의 메인 Claude 와 비슷해 보이지만 다르다. 메인 Claude 는 시스템 프롬프트 한 장으로 _정체성을 바꾼_ 같은 Claude. lead 는 _팀 멤버 중 한 명_ — `teamFile.members` 배열에 들어 있고, 다른 멤버들과 같은 식으로 메시지를 받는다.
 
 lead 의 _유일한 다른 점_ 은 `teammateInit.ts:86` 에서 보인다:
+
+:::tabs
 
 ```typescript
 // 이 에이전트가 lead 면 idle notification hook 건너뜀
@@ -254,6 +365,17 @@ if (agentId === leadAgentId) {
   return
 }
 ```
+
+```python
+# Python 등가 — lead 면 idle 알림 hook 등록 안 함
+if agent_id == lead_agent_id:
+    logger.debug(
+        "[TeammateInit] This agent is the team leader - skipping idle notification hook"
+    )
+    return
+```
+
+:::
 
 **lead 는 다른 lead 에게 idle 알림을 보내지 않는다** (자기 자신한테 보내는 게 무의미하니까). 그 외에는 — lead 도 일반 팀원과 같은 도구, 같은 권한, 같은 통신 채널을 쓴다. **위계가 약한 디자인**. 코디네이터 모드의 _"메인은 작성자가 아니라 관리자"_ 같은 강한 역할 분리가 없다.
 
@@ -272,6 +394,8 @@ if (agentId === leadAgentId) {
 **팀원끼리 협업할 수 있다**. researcher 가 implementer 한테 "이 파일의 함수를 확인해줘" 라고 직접 보내고, implementer 가 reviewer 한테 "내가 짠 거 봐줘" 라고 보낸다. lead 는 _전체 진행 상황_ 을 보고받지만 모든 메시지를 거치지는 않는다. **분산 협업**.
 
 그리고 **Stop 훅** 과의 만남. 팀원이 작업을 마치고 idle 상태가 되면 — 그 사실을 어떻게 알릴까? 답: **세션 종료 시 자동으로 발화하는 Stop 훅 안에서 lead 메일박스에 idle 알림 작성** (`teammateInit.ts:98`):
+
+:::tabs
 
 ```typescript
 addFunctionHook(
@@ -300,11 +424,41 @@ addFunctionHook(
 )
 ```
 
+```python
+# Python 등가 — Stop 훅에서 lead 메일박스에 idle 알림
+async def on_stop(messages: list[dict], _signal: Any) -> bool:
+    # 팀 설정에서 이 팀원을 idle 로 마크
+    await set_member_active(team_name, agent_name, False)
+
+    # lead 메일박스에 idle 알림 보내기
+    notification = create_idle_notification(
+        agent_name,
+        idle_reason="available",
+        summary=get_last_peer_dm_summary(messages),
+    )
+    await write_to_mailbox(
+        lead_agent_name,
+        MailboxMessage(
+            sender=agent_name,
+            text=json.dumps(notification.__dict__),
+            timestamp=datetime.now().isoformat(),
+            color=get_teammate_color(),
+        ),
+    )
+    return True
+
+add_function_hook(set_app_state, session_id, "Stop", "", on_stop, ...)
+```
+
+:::
+
 **6장 (Hook 시스템) 의 메커니즘이 8.4 의 통신 인프라로 재사용된다**. 같은 코드가 다른 맥락에서 새로운 의미. Stop 훅은 _원래_ 세션 종료 시 임의 동작 실행을 위한 훅 — 여기서는 _팀원의 work-cycle 끝을 lead 한테 알리는 신호_ 가 된다.
 
 > 💡 **메일박스가 디스크 기반인 이유.** in-process 팀원만 있으면 메모리 큐로 충분하다. 그런데 _tmux 기반 out-of-process 팀원_ 도 같이 지원해야 한다. 별도 프로세스끼리 어떻게 메시지 주고받나? **파일 시스템 — 모두가 합의하는 공통 매체**. 1.1 의 `~/.claude/ide/` 잠금 파일 패턴, 7.5 의 IDE Bridge 의 lockfile 발견 패턴, 그리고 여기 mailbox 가 같은 디자인 철학. **rendezvous as filesystem**.
 
 그리고 lead 가 _polling 없이_ 기다리는 메커니즘이 있다 (`utils/teammate.ts:238`):
+
+:::tabs
 
 ```typescript
 export function waitForTeammatesToBecomeIdle(
@@ -341,6 +495,49 @@ export function waitForTeammatesToBecomeIdle(
   })
 }
 ```
+
+```python
+# Python 등가 — polling 없이 모든 팀원이 idle 될 때까지 대기
+async def wait_for_teammates_to_become_idle(
+    set_app_state: Callable[[Callable[[AppState], AppState]], None],
+    app_state: AppState,
+) -> None:
+    working_task_ids = [
+        task_id for task_id, task in app_state.tasks.items()
+        if task.type == "in_process_teammate" and not task.is_idle
+    ]
+
+    if not working_task_ids:
+        return  # 모두 이미 idle
+
+    future: asyncio.Future[None] = asyncio.Future()
+    remaining = len(working_task_ids)
+
+    def on_idle() -> None:
+        nonlocal remaining
+        remaining -= 1
+        if remaining == 0:
+            future.set_result(None)
+
+    def update_tasks(prev: AppState) -> AppState:
+        new_tasks = dict(prev.tasks)
+        for task_id in working_task_ids:
+            task = new_tasks.get(task_id)
+            if task and task.type == "in_process_teammate":
+                if task.is_idle:
+                    on_idle()  # 이미 idle 이면 즉시 호출 (race 처리)
+                else:
+                    new_tasks[task_id] = replace(
+                        task,
+                        on_idle_callbacks=[*task.on_idle_callbacks, on_idle],
+                    )
+        return replace(prev, tasks=new_tasks)
+
+    set_app_state(update_tasks)
+    await future
+```
+
+:::
 
 **`onIdleCallbacks` 배열에 콜백을 등록**. 각 팀원이 idle 상태가 되면 자기 콜백들을 호출. lead 는 `Promise` 하나를 기다리면 _모든 팀원이 idle_ 이 될 때 resolve. _polling 없음_, _busy-wait 없음_. 이벤트 기반 fan-in.
 
@@ -715,7 +912,7 @@ async def spawn_in_process_teammate(
 
 - **서브에이전트 기반 위의 두 갈래 시도 — 그중 _peer 모델이 채택_ 됨**. 8.1~8.2 의 공통 기반 (`AgentTool` 재귀 + `createSubagentContext` 컨텍스트 분리) 위에, 8.3 코디네이터 모드 (위계) 와 8.4 에이전트 팀 (peer) 두 디자인이 시도됐고 — **peer 모델이 2026-02-05 외부 experimental 출시, 2026-03-09 Claude Code Review 프로덕션 적용**으로 채택됐다. 코디네이터 모드는 외부 미출시 (저장소에 디자인 흔적만 남음).
 - **게이트가 세 단계 — experimental rollout 의 인프라**. `agentSwarmsEnabled()` 는 ant 빌드 자동 on / 외부는 env+CLI 옵트인 / GrowthBook `tengu_amber_flint` 킬스위치 통과. 2026-02-05 외부 experimental 출시 시점부터 이 게이트 구조가 _점진 공개_ 의 도구로 쓰임 — Anthropic 이 _누구한테 언제 활성화_ 를 GrowthBook 한 줄로 조정. 메모리 동기화만 별도 빌드 게이트 `feature('TEAMMEM')`. **이중 게이트 + 부분 활성화**.
-- **AsyncLocalStorage 기반 in-process 격리**. Node 의 _비동기판 thread-local_. 같은 프로세스의 N 팀원이 _자기 정체성을 들고 동시 실행_. Python 의 `contextvars` 와 같은 디자인. 모듈은 한 벌, 실행 컨텍스트는 N 벌.
+- **`AsyncLocalStorage` 의 자동 컨텍스트 격리**. Node 의 _비동기판 thread-local_. 같은 프로세스 안에서 _N 명의 팀원이 동시 실행_ 될 때 async 호출 트리를 따라 _자동으로_ 각자의 정체성이 유지된다 — 8.2 의 _명시적 객체 분리_ (`createSubagentContext` 가 코드로 부모/자식 분리) 와 달리 _코드가 분기를 관리할 필요 없음_. Python 의 `contextvars` 와 같은 디자인. 모듈은 한 벌, 실행 컨텍스트는 N 벌.
 - **정체성과 lead**. `agent@team` 형식 — Slack/Discord 핸들과 같은 컨벤션. _명시적 팀 lead_ 는 통신 허브이지 _코디네이터처럼 강한 역할 분리는 아님_. 다른 점은 _자기 자신한테 idle 알림 안 보낸다_ 정도.
 - **Mailbox + Stop 훅 통신**. 코디네이터 모드의 `<task-notification>` user 메시지와 정반대 — _peer DM 가능_, _LLM 사이클과 독립_ 한 디스크 기반 메시지 큐. 팀원이 Stop 훅에서 lead 메일박스에 자동 idle 알림. **6장의 훅 메커니즘이 통신 인프라로 재사용**.
 - **Polling 없는 fan-in**. `onIdleCallbacks` 배열 + 등록 직전 isIdle 재체크로 _exactly-once_ 통지. lead 가 `Promise` 하나로 _모든 팀원이 idle 될 때_ 깨어남.
