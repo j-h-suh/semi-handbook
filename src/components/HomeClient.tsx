@@ -1,15 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, MessageSquare, Clock, BookText, BarChart3, ArrowRight, Cpu, TrendingUp, Terminal } from 'lucide-react';
-import { supabase, type Post } from '@/lib/supabase';
-
-interface RecentChapter {
-    id: string;
-    title: string;
-    lastUpdated: string;
-}
+import { BookOpen, ArrowRight, Cpu, TrendingUp, Terminal } from 'lucide-react';
 
 interface Props {
     semiChapterCount: number;
@@ -17,38 +9,15 @@ interface Props {
     claudeChapterCount: number;
     totalTerms: number;
     totalDiagrams: number;
-    recentSemiChapters: RecentChapter[];
-    recentStatsChapters: RecentChapter[];
-    recentClaudeChapters: RecentChapter[];
 }
 
 export default function HomeClient({
     semiChapterCount, statsChapterCount, claudeChapterCount, totalTerms, totalDiagrams,
-    recentSemiChapters, recentStatsChapters, recentClaudeChapters,
 }: Props) {
-    const [recentPosts, setRecentPosts] = useState<Post[]>([]);
-
-    useEffect(() => {
-        supabase.from('posts').select('*').order('created_at', { ascending: false }).limit(3)
-            .then(({ data }) => setRecentPosts(data ?? []));
-    }, []);
-
-    const formatDate = (d: string) => {
-        const date = new Date(d);
-        return `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')}`;
-    };
-
-    const categoryColor = (cat: string) => {
-        switch (cat) {
-            case '질문': return 'text-amber-400 bg-amber-500/10 border-amber-500/20';
-            case '수정요청': return 'text-rose-400 bg-rose-500/10 border-rose-500/20';
-            default: return 'text-slate-400 bg-white/5 border-white/10';
-        }
-    };
-
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 w-full">
-            <div className="max-w-4xl mx-auto w-full px-4 py-8 md:px-8 md:py-16 lg:px-12">
+            <div className="min-h-full flex flex-col justify-center">
+                <div className="max-w-4xl mx-auto w-full px-4 py-8 md:px-8 md:py-16 lg:px-12">
 
                 {/* Hero */}
                 <div className="text-center mb-12 md:mb-16">
@@ -145,130 +114,7 @@ export default function HomeClient({
                     </Link>
 
                 </div>
-
-                {/* Stats Summary */}
-                <div className="grid grid-cols-4 gap-3 mb-12">
-                    <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">{semiChapterCount + statsChapterCount + claudeChapterCount}</div>
-                        <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
-                            <BookOpen size={12} /> 총 챕터
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">{totalTerms}</div>
-                        <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
-                            <BookText size={12} /> 용어
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">{totalDiagrams}</div>
-                        <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
-                            <BarChart3 size={12} /> 다이어그램
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
-                        <div className="text-2xl font-bold text-white mb-1">3</div>
-                        <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
-                            <BookOpen size={12} /> 시리즈
-                        </div>
-                    </div>
-                </div>
-
-                {/* Recent Updates + Board */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                    {/* Recent Semi Updates */}
-                    <div>
-                        <h2 className="flex items-center gap-2 text-xs font-bold text-cyan-500/70 mb-3">
-                            <Clock size={13} /> 반도체 최근 업데이트
-                        </h2>
-                        <div className="space-y-1.5">
-                            {recentSemiChapters.map(ch => (
-                                <Link
-                                    key={ch.id}
-                                    href={`/semi/${ch.id}`}
-                                    className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
-                                >
-                                    <div className="text-xs font-medium text-slate-200 line-clamp-1 mb-0.5">{ch.title}</div>
-                                    <div className="text-[10px] text-slate-600">{formatDate(ch.lastUpdated)}</div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Recent Stats Updates */}
-                    <div>
-                        <h2 className="flex items-center gap-2 text-xs font-bold text-emerald-500/70 mb-3">
-                            <Clock size={13} /> 통계학 최근 업데이트
-                        </h2>
-                        <div className="space-y-1.5">
-                            {recentStatsChapters.map(ch => (
-                                <Link
-                                    key={ch.id}
-                                    href={`/stats/${ch.id}`}
-                                    className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
-                                >
-                                    <div className="text-xs font-medium text-slate-200 line-clamp-1 mb-0.5">{ch.title}</div>
-                                    <div className="text-[10px] text-slate-600">{formatDate(ch.lastUpdated)}</div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Recent Claude Updates */}
-                    <div>
-                        <h2 className="flex items-center gap-2 text-xs font-bold text-violet-500/70 mb-3">
-                            <Clock size={13} /> Claude Code 최근 업데이트
-                        </h2>
-                        <div className="space-y-1.5">
-                            {recentClaudeChapters.map(ch => (
-                                <Link
-                                    key={ch.id}
-                                    href={`/claude/${ch.id}`}
-                                    className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
-                                >
-                                    <div className="text-xs font-medium text-slate-200 line-clamp-1 mb-0.5">{ch.title}</div>
-                                    <div className="text-[10px] text-slate-600">{formatDate(ch.lastUpdated)}</div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Recent Board Posts */}
-                    <div>
-                        <div className="flex items-center justify-between mb-3">
-                            <h2 className="flex items-center gap-2 text-xs font-bold text-slate-400">
-                                <MessageSquare size={13} /> 최근 게시글
-                            </h2>
-                            <Link href="/board" className="text-[10px] text-slate-600 hover:text-cyan-400 transition-colors">
-                                전체보기 →
-                            </Link>
-                        </div>
-                        <div className="space-y-1.5">
-                            {recentPosts.length === 0 ? (
-                                <div className="px-3 py-6 rounded-xl border border-white/5 bg-white/[0.02] text-center text-[11px] text-slate-600">
-                                    아직 게시글이 없습니다
-                                </div>
-                            ) : (
-                                recentPosts.map(post => (
-                                    <Link
-                                        key={post.id}
-                                        href="/board"
-                                        className="block px-3 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all"
-                                    >
-                                        <div className="flex items-center gap-1.5 mb-0.5">
-                                            <span className={`text-[9px] px-1 py-0.5 rounded border ${categoryColor(post.category)}`}>
-                                                {post.category}
-                                            </span>
-                                            <span className="text-xs font-medium text-slate-200 line-clamp-1">{post.title}</span>
-                                        </div>
-                                        <div className="text-[10px] text-slate-600">{post.nickname} · {formatDate(post.created_at)}</div>
-                                    </Link>
-                                ))
-                            )}
-                        </div>
-                    </div>
-                </div>
+            </div>
             </div>
         </div>
     );
