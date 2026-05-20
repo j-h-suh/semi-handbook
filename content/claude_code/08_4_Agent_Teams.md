@@ -106,13 +106,13 @@ def is_agent_swarms_enabled() -> bool:
 
 > Anthropic 의 GrowthBook 게이트는 **`tengu_<색상>_<단어>`** 3단계 구조를 따른다.
 >
-> - **`tengu_`** — Anthropic 공통 prefix (일본 신화의 _덴구 (天狗)_ 에서 따온 사내 코드네임). _Anthropic 사내 다른 제품/팀_ (Claude.ai 웹, Claude Desktop, Claude API 등) _과의 namespace 분리로 추정_ — 같은 GrowthBook 인스턴스를 공유할 때 prefix 로 구분 (코드 주석에 명시된 사실은 아니고 prefix 의 일관성으로부터의 합리적 추정).
-> - **`<색상>`** — `amber`, `cobalt`, `copper`, `coral`, `jade`, `onyx` 등 _광물/보석 계열_ (기능 그룹의 구분자).
+> - **`tengu_`** — Anthropic 공통 prefix (일본 신화의 덴구 (天狗) 에서 따온 사내 코드네임). Anthropic 사내 다른 제품/팀 (Claude.ai 웹, Claude Desktop, Claude API 등) 과의 namespace 분리로 추정 — 같은 GrowthBook 인스턴스를 공유할 때 prefix 로 구분 (코드 주석에 명시된 사실은 아니고 prefix 의 일관성으로부터의 합리적 추정).
+> - **`<색상>`** — `amber`, `cobalt`, `copper`, `coral`, `jade`, `onyx` 등 광물/보석 계열 (기능 그룹의 구분자).
 > - **`<단어>`** — _동물_ (`stoat` 담비, `wren` 굴뚝새, `raccoon`, `panda`), _자연물/사물_ (`flint` 부싯돌, `prism`, `quartz`, `lantern`, `bridge`), 또는 _기능명_ (`json_tools`) — 개별 게이트의 고유 식별자.
 >
-> 이런 _코드네임_ 패턴의 장점 — (1) 게이트 이름이 _기능을 드러내지 않아_ 외부에서 추측 어려움, (2) _기억 가능_ 한 조합 (색상+동물), (3) _내부 식별자_ 와 _공개 기능명_ 의 분리 (출시 후 기능명이 바뀌어도 게이트는 고정 유지).
+> 이런 코드네임 패턴의 장점 — (1) 게이트 이름이 기능을 드러내지 않아 외부에서 추측 어려움, (2) 기억 가능한 조합 (색상+동물), (3) 내부 식별자와 공개 기능명의 분리 (출시 후 기능명이 바뀌어도 게이트는 고정 유지).
 >
-> 그리고 이 게이트들은 _기능 자체의 살아있는 죽음 스위치_ 다. 빌드 후에도 Anthropic 의 결정 한 번으로 끌 수 있다. _점진 공개 기능_ 을 외부에 노출할 때의 안전 장치 — 문제가 터지면 즉시 차단.
+> 그리고 이 게이트들은 **기능 자체의 살아있는 죽음 스위치** 다. 빌드 후에도 Anthropic 의 결정 한 번으로 끌 수 있다. 점진 공개 기능을 외부에 노출할 때의 안전 장치 — 문제가 터지면 즉시 차단.
 
 </details>
 
@@ -197,11 +197,11 @@ def get_teammate_context() -> TeammateContext | None:
 **`AsyncLocalStorage`** 는 Node.js 의 비동기 작업별 격리 메커니즘이다. 한 프로세스 안에서 동시에 실행되는 N 개의 async 작업이 _각자 자기만의 store_ 를 가진다. `.run(context, fn)` 으로 들어간 callstack 안에서는 — 어떤 `await` 를 거치든, 어떤 `setTimeout` 을 건너든 — `getStore()` 가 그 context 를 그대로 돌려준다. 다른 작업의 context 와 섞이지 않는다. **8.2 와의 결정적 차이는 _배정 방식_** — 8.2 가 _수동 방번호 배정_ (코드가 `ctx` 객체를 인자로 명시 전달) 이라면, 8.4 는 _자동 방번호 배정_ (`.run(context, fn)` 으로 async 트리에 한 번 묶으면 그 안의 모든 함수가 자동으로 자기 컨텍스트를 인식). _얕은 호출에서는 두 방식의 차이가 얇지만, 깊이 N 단계 호출 체인에서 진짜 가치가 드러난다_.
 
 <details>
-<summary>🔬 Deep Dive — 5 단계 호출에서 보이는 _pass-through 비용_</summary>
+<summary>🔬 Deep Dive — 5 단계 호출에서 보이는 pass-through 비용</summary>
 
-> 단순한 한 단계 호출에서는 두 방식 차이가 얇아 보인다. 진짜 차이는 _깊이 5 단계_ 호출 체인 (`worker → do_search → fetch_url → parse_response → log_event`) 에서 드러난다.
+> 단순한 한 단계 호출에서는 두 방식 차이가 얇아 보인다. 진짜 차이는 **깊이 5 단계** 호출 체인 (`worker → do_search → fetch_url → parse_response → log_event`) 에서 드러난다.
 >
-> **8.2 방식** — `log_event` 만 ctx 를 쓰는데도 5 단계 _모든 함수_ 가 시그니처에 `ctx: Context` 를 받아야 한다 (pass-through). 4 단계는 _ctx 를 안 쓰면서_ 시그니처에 끼임.
+> **8.2 방식** — `log_event` 만 ctx 를 쓰는데도 5 단계 **모든 함수** 가 시그니처에 `ctx: Context` 를 받아야 한다 (pass-through). 4 단계는 ctx 를 안 쓰면서 시그니처에 끼임.
 >
 > ```python
 > async def worker(ctx: Context):
@@ -231,41 +231,13 @@ def get_teammate_context() -> TeammateContext | None:
 >     agent_id = get_teammate_context().agent_id   # 자기가 직접 가져옴
 > ```
 >
-> 이 _pass-through 의 누적_ 이 큰 코드베이스에서 진짜 비용이 된다. `claude-code` 가 _수십~수백 단계 호출_ 의 복잡한 시스템이라 _ctx 안 쓰는 함수까지 시그니처 오염_ 되면 _필드 추가 한 번_ 에 _수백 함수 시그니처 변경_ PR. 제3자 라이브러리 (axios, lodash 등) 는 _ctx 인자를 안 받음_ 이라 8.2 는 _호출 체인 중간에서 끊김_. 8.4 는 라이브러리 안에서도 `get_teammate_context()` 호출 가능 (라이브러리가 ContextVar 쓰면).
+> 이 **pass-through 의 누적** 이 큰 코드베이스에서 진짜 비용이 된다. `claude-code` 가 수십~수백 단계 호출의 복잡한 시스템이라 ctx 안 쓰는 함수까지 시그니처 오염되면 _필드 추가 한 번_ 에 **수백 함수 시그니처 변경** PR. 제3자 라이브러리 (axios, lodash 등) 는 ctx 인자를 안 받음이라 8.2 는 호출 체인 중간에서 끊김. 8.4 는 라이브러리 안에서도 `get_teammate_context()` 호출 가능 (라이브러리가 ContextVar 쓰면).
 
 </details>
 
 > 💡 **AsyncLocalStorage 는 비동기판 thread-local.** 일반적인 모듈 변수는 _전역 공유_ 다. 두 동시 작업이 같은 변수를 쓰면 race condition. AsyncLocalStorage 는 _async 컨텍스트 트리_ 를 따라 분기된 변수 — 같은 프로세스 안의 N 팀원이 각자 자기 정체성을 들고 동시에 일할 수 있다. Python 의 `contextvars` 가 같은 디자인 (PEP 567, 2018).
 
 이게 _같은 프로세스 안의 자동 격리_ 다. 자식 프로세스 spawn 없음 — 8.2 의 `createSubagentContext` 와 마찬가지로 _프로세스 자체는 같다_. 차이는 _격리 방식_ 이다 — 8.2 는 _코드가 명시적으로 부모/자식 컨텍스트 객체를 분리_, 여기는 _`AsyncLocalStorage` 가 async 호출 트리를 따라 자동으로 분기_. 같은 메모리 공간, 같은 V8 인스턴스, 같은 `process.env` — **격리는 _`AsyncLocalStorage` 가 자동으로 보장_**한다.
-
-추가로 — 정체성 해상도가 우선순위 사다리로 작동한다 (`utils/teammate.ts:88`):
-
-:::tabs
-
-```typescript
-export function getAgentId(): string | undefined {
-  const inProcessCtx = getTeammateContext()      // 1. AsyncLocalStorage
-  if (inProcessCtx) return inProcessCtx.agentId
-  return dynamicTeamContext?.agentId             // 2. 런타임 동적 컨텍스트 (tmux)
-                                                  // 3. 환경 변수 (fallback)
-}
-```
-
-```python
-# Python 등가 — 우선순위 사다리로 정체성 조회
-def get_agent_id() -> str | None:
-    in_process_ctx = get_teammate_context()         # 1. ContextVar
-    if in_process_ctx:
-        return in_process_ctx.agent_id
-    if dynamic_team_context:
-        return dynamic_team_context.agent_id        # 2. 런타임 동적 컨텍스트 (tmux)
-    return os.environ.get("CLAUDE_CODE_AGENT_ID")   # 3. 환경 변수 fallback
-```
-
-:::
-
-세 단계 — in-process 컨텍스트가 최우선, 그 다음이 _tmux 기반 팀원_ (별도 프로세스, CLI 인자로 `--agent-id` 전달), 마지막이 환경 변수. **에이전트 팀은 in-process 뿐 아니라 tmux 기반 out-of-process 도 같이 지원**한다. 한 디자인이 두 가지 실행 모델을 다 커버. 정체성 해상도가 일관성 있게 작동.
 
 8.2 의 격리가 _객체 분리_ 라면, 여기는 _async 컨텍스트 격리_ 다. 같은 코드 경로가 N 명의 팀원에게 호출되는데 — 각자 자기 `agentId`, 자기 `teamName`, 자기 `abortController` 를 본다. **모듈은 한 벌, 실행 컨텍스트는 N 벌**.
 
@@ -303,6 +275,34 @@ class TeammateIdentity:
 :::
 
 `agent@team` 형식 — **Slack/Discord 핸들과 같은 컨벤션**. 사람이 부르고, 사람이 기억하고, 사람이 메시지를 보내는 이름. 8.2 의 자식 에이전트가 한 번 쓰고 버려지는 thread 였다면, 팀원은 _세션이 지속되는 동안 식별 가능한 동료_ 다.
+
+이 정체성이 _어디서 조회되는가_ — `getAgentId()` 가 _세 경로의 우선순위 사다리_ 로 작동한다 (`utils/teammate.ts:88`):
+
+:::tabs
+
+```typescript
+export function getAgentId(): string | undefined {
+  const inProcessCtx = getTeammateContext()      // 1. AsyncLocalStorage
+  if (inProcessCtx) return inProcessCtx.agentId
+  return dynamicTeamContext?.agentId             // 2. 런타임 동적 컨텍스트 (tmux)
+                                                  // 3. 환경 변수 (fallback)
+}
+```
+
+```python
+# Python 등가 — 우선순위 사다리로 정체성 조회
+def get_agent_id() -> str | None:
+    in_process_ctx = get_teammate_context()         # 1. ContextVar
+    if in_process_ctx:
+        return in_process_ctx.agent_id
+    if dynamic_team_context:
+        return dynamic_team_context.agent_id        # 2. 런타임 동적 컨텍스트 (tmux)
+    return os.environ.get("CLAUDE_CODE_AGENT_ID")   # 3. 환경 변수 fallback
+```
+
+:::
+
+세 단계 — in-process 컨텍스트가 최우선, 그 다음이 _별도 프로세스 팀원_ (사용자가 _여러 개의 터미널을 각기 띄우고_ 각 터미널에서 `claude --agent-id ...` 로 _서로 다른 에이전트한테 업무를 시키는_ 형태 — `tmux` 같은 분할 도구가 흔히 쓰이지만 필수는 아님), 마지막이 환경 변수. **에이전트 팀은 in-process 뿐 아니라 _여러 터미널 기반_ out-of-process 도 같이 지원**한다. 한 디자인이 _자동 spawn 다중 팀원_ 과 _사용자가 직접 띄운 다중 터미널_ 두 가지 실행 모델을 다 커버.
 
 그리고 _명시적 lead_ 라는 개념이 있다 (`utils/teammate.ts:171`):
 
@@ -387,7 +387,118 @@ if agent_id == lead_agent_id:
 
 에이전트 팀의 통신은 _완전히 다른 디자인_ 이다. **Mailbox** + **Stop 훅 idle notification**.
 
+#### 기본 큐-루프 모델 — 메모리 큐 + async 이벤트 루프
+
+두 모델 모두 _같은 기본 흐름_ 위에 있다 — **메시지가 큐에 누적되고, query 루프가 매 turn 시작 시 큐에서 꺼내 컨텍스트에 합류**. 그림으로 보면:
+
+```
+┌──────────────── query loop (계속 돔) ────────────────┐
+│                                                       │
+│  ① await queue.get()  ── 큐가 비면 *대기* (idle)      │
+│                                                       │
+│  [메시지 enqueue 됨 → await resume]                   │
+│                                                       │
+│  ② 큐에서 꺼냄 → 히스토리에 user 메시지로 append      │
+│                                                       │
+│  ③ API call (누적 히스토리 전체)                      │
+│                                                       │
+│  ④ 모델 응답 → 히스토리에 assistant 메시지로 append    │
+│                                                       │
+│  ⑤ 도구 호출 있나?                                    │
+│      ├── 있음: tool 실행 → tool_result 로 ③ 로 (같은 turn) │
+│      └── 없음: turn 종료 → ① 로 돌아감                │
+│                                                       │
+└───────────────────────────────────────────────────────┘
+
+         ┌──────── queue ────────┐
+         │  - 사용자 입력 (next)  │
+         │  - 워커 알림 (later)   │
+         │  - 팀원 메일 (later)   │
+         │  - 시스템 알림 (...)   │
+         └────────────────────────┘
+```
+
+큐에 들어가는 메시지 종류:
+
+| 메시지 종류 | 출처 | priority | 다루는 챕터 |
+|---|---|---|---|
+| 사용자 입력 | 키보드 (`stdin`) | `'next'` | — |
+| 워커(Agent) 결과 | 비동기 워커의 `enqueuePendingNotification` | `'later'` | 8.3 |
+| 팀원 메일 | 디스크 watcher → 큐로 합류 | `'later'` | 8.4 (아래) |
+| 시스템 알림 | 컨텍스트 압축 등 | 상황에 따라 | 7.4 |
+
+Python 의사 코드로 핵심 구조:
+
+```python
+import asyncio
+
+class QueryLoop:
+    def __init__(self):
+        self.queue: asyncio.Queue = asyncio.Queue()
+        self.history: list[dict] = []
+
+    async def enqueue(self, message: dict, priority: str = "later"):
+        """큐에 메시지 등록 — 사용자/워커/메일/시스템 알림 모두 여기로."""
+        await self.queue.put({"value": message, "priority": priority})
+
+    async def run(self):
+        """query 루프 — 한 번 시작되면 계속 돈다."""
+        while True:
+            # ① 큐 대기 (비면 await 가 멈춤, 메시지 도착 시 자동 resume)
+            msg = await self.queue.get()
+
+            # ② 히스토리에 user 메시지로 append
+            self.history.append({"role": "user", "content": msg["value"]})
+
+            # ③~⑤ 한 turn — 도구 호출 round-trip 까지 같은 turn 안
+            while True:
+                response = await call_llm(messages=self.history)
+                self.history.append(response)
+
+                tool_calls = response.get("tool_uses", [])
+                if not tool_calls:
+                    break  # 모델 발화 완료 → turn 종료
+
+                for tool_call in tool_calls:
+                    result = await dispatch_tool(tool_call)
+                    self.history.append({"role": "tool_result", "content": result})
+            # turn 종료 → 다시 ① 로 돌아가 큐 대기
+```
+
+세 가지 핵심:
+
+1. **큐는 async 이벤트 채널** — polling 없이 `await queue.get()` 이 멈췄다 깨어남
+2. **query 루프는 한 번만 시작** — 계속 돌면서 매 turn 큐를 확인. _새로 진입_ 이 아니라 _기존 루프가 큐를 모니터_
+3. **모든 입력이 같은 채널** — 사용자 입력이든 워커 결과든 메일이든 _같은 큐_ 에 들어가 _다음 turn 의 user 메시지로_
+
+이 공통 기반 위에 두 모델이 올라간다 — **코디네이터 모드는 _메모리 큐 (`commandQueue`)_ 한 종류**, **에이전트 팀은 _메모리 큐 + 디스크 큐 (`mailbox`)_ 두 종류** (디스크 큐는 별도 프로세스 팀원 간 통신용). 이제 mailbox 의 특별함을 본다.
+
+#### Mailbox — peer DM 가능한 디스크 큐
+
 먼저 mailbox. `utils/teammateMailbox.ts` — 1184 줄. 디스크 기반의 메시지 큐. 각 팀원이 자기 메일박스 파일을 가지고, 다른 팀원/lead 가 거기 메시지를 _append_ 한다. 인터페이스는 `writeToMailbox(recipient, message)` 같은 단순한 형태.
+
+다만 `writeToMailbox` 는 **디스크에 쓰기만 한다** — _수신자의 메모리 큐에 직접 enqueue 하지 않는다_. **발신자와 수신자가 분리된 단계로 작동**하기 때문이다. 전체 흐름:
+
+```
+[발신자 측]
+  ① writeToMailbox(recipient, message)
+       │ jsonl 한 줄 append
+       ▼
+  ┌─────────────────────────────────────────────┐
+  │  ~/.claude/teams/<team>/<recipient>.jsonl   │  ← 발신자/수신자 공통 매체
+  └─────────────────────────────────────────────┘
+       │
+[수신자 측]
+       ▼
+  ② watcher (또는 polling) 가 자기 메일박스 파일의 변경 감지
+  ③ 새 메시지를 *자기 commandQueue (메모리 큐)* 에 enqueue
+       │
+       ▼  (이하 *기본 큐-루프 모델* 그대로)
+  ④ query loop 가 다음 turn 시작 시 큐에서 꺼냄
+  ⑤ 히스토리에 append → API call
+```
+
+이 분리 덕에 **디스크가 발신자/수신자의 공통 매체** 가 된다. 발신자는 _수신자의 프로세스/위치를 몰라도_ `writeToMailbox` 한 번이면 끝 — 수신자가 같은 프로세스의 다른 async 트리든, 사용자가 다른 터미널에서 띄운 별도 프로세스든, 메일은 _디스크에 도착해 있다_. 수신자 측의 _watcher_ 가 _디스크 → 자기 메모리 큐_ 의 bridge 역할 — 그 뒤는 _기본 큐-루프 모델_ 흐름 그대로. 메일박스의 _rendezvous as filesystem_ 의 진짜 의미가 이 _발신/수신 분리_ 에 있다. `teammateMailbox.ts` 가 1184 줄로 큰 이유도 _쓰기 (writeToMailbox)_ 보다 _읽기/watcher/메모리 큐 합류_ 의 디스크→메모리 변환 로직이 대부분이기 때문.
 
 핵심은 _누가 누구한테 보내는가_ 다. 코디네이터 모드는 _워커끼리 직접 통신 불가_ — `SendMessage` 가 코디네이터 전용. 에이전트 팀은 _peer DM 가능_. 팀원 A 가 팀원 B 한테 직접 메시지를 보낼 수 있다. `teammateInit.ts:111` 의 `getLastPeerDmSummary(messages)` 가 그 증거 — _peer DM_ 이라는 용어가 인프라에 명시적으로 박혀 있다.
 
@@ -454,13 +565,18 @@ add_function_hook(set_app_state, session_id, "Stop", "", on_stop, ...)
 
 **6장 (Hook 시스템) 의 메커니즘이 8.4 의 통신 인프라로 재사용된다**. 같은 코드가 다른 맥락에서 새로운 의미. Stop 훅은 _원래_ 세션 종료 시 임의 동작 실행을 위한 훅 — 여기서는 _팀원의 work-cycle 끝을 lead 한테 알리는 신호_ 가 된다.
 
-> 💡 **메일박스가 디스크 기반인 이유.** in-process 팀원만 있으면 메모리 큐로 충분하다. 그런데 _tmux 기반 out-of-process 팀원_ 도 같이 지원해야 한다. 별도 프로세스끼리 어떻게 메시지 주고받나? **파일 시스템 — 모두가 합의하는 공통 매체**. 1.1 의 `~/.claude/ide/` 잠금 파일 패턴, 7.5 의 IDE Bridge 의 lockfile 발견 패턴, 그리고 여기 mailbox 가 같은 디자인 철학. **rendezvous as filesystem**.
+> 💡 **메일박스가 디스크 기반인 이유.** in-process 팀원만 있으면 메모리 큐로 충분하다. 그런데 _사용자가 여러 터미널에서 띄운 별도 프로세스 팀원_ 도 같이 지원해야 한다. 별도 프로세스끼리 어떻게 메시지 주고받나? **파일 시스템 — 모두가 합의하는 공통 매체**. 1.1 의 `~/.claude/ide/` 잠금 파일 패턴, 7.5 의 IDE Bridge 의 lockfile 발견 패턴, 그리고 여기 mailbox 가 같은 디자인 철학. **rendezvous as filesystem**.
 
 그리고 lead 가 _polling 없이_ 기다리는 메커니즘이 있다 (`utils/teammate.ts:238`):
 
 :::tabs
 
 ```typescript
+// polling 없이 모든 팀원이 idle 될 때까지 대기
+//
+// task 란 Read/Bash 같은 도구 호출이 아니라, appState.tasks 가 추적하는 작업 인스턴스다.
+// task.type 으로 종류 구분: 'in_process_teammate' (팀원, 8.4), LocalAgentTask (서브에이전트, 8.1).
+// 이 함수는 팀원만 필터링 — 서브에이전트는 끝나면 사라지므로 idle 개념이 없다.
 export function waitForTeammatesToBecomeIdle(
   setAppState: (f: (prev: AppState) => AppState) => void,
   appState: AppState,
@@ -498,6 +614,10 @@ export function waitForTeammatesToBecomeIdle(
 
 ```python
 # Python 등가 — polling 없이 모든 팀원이 idle 될 때까지 대기
+#
+# task 란 Read/Bash 같은 도구 호출이 아니라, app_state.tasks 가 추적하는 작업 인스턴스다.
+# task.type 으로 종류 구분: "in_process_teammate" (팀원, 8.4), LocalAgentTask (서브에이전트, 8.1).
+# 이 함수는 팀원만 필터링 — 서브에이전트는 끝나면 사라지므로 idle 개념이 없다.
 async def wait_for_teammates_to_become_idle(
     set_app_state: Callable[[Callable[[AppState], AppState]], None],
     app_state: AppState,
@@ -510,14 +630,14 @@ async def wait_for_teammates_to_become_idle(
     if not working_task_ids:
         return  # 모두 이미 idle
 
-    future: asyncio.Future[None] = asyncio.Future()
+    event = asyncio.Event()
     remaining = len(working_task_ids)
 
     def on_idle() -> None:
         nonlocal remaining
         remaining -= 1
         if remaining == 0:
-            future.set_result(None)
+            event.set()
 
     def update_tasks(prev: AppState) -> AppState:
         new_tasks = dict(prev.tasks)
@@ -534,14 +654,64 @@ async def wait_for_teammates_to_become_idle(
         return replace(prev, tasks=new_tasks)
 
     set_app_state(update_tasks)
-    await future
+    await event.wait()
 ```
 
 :::
 
+**왜 lead 가 팀원의 idle 을 기다리는가** — 주로 _shutdown / 종료 시점의 안전한 정리_ 와 _fork-join 의 join 단계_ 다. `claude --print` 같은 headless 모드에서 lead 의 마지막 응답 출력 후 종료할 때 _작업 중인 팀원이 있으면 고아 task 가 됨_ → 모두 idle 될 때까지 기다림 (인접 함수 `hasActiveInProcessTeammates` 의 주석 _"Used by headless/print mode to determine if we should wait for teammates before exiting"_). 또는 lead 가 N 명에게 작업을 분배한 후 _모두 결과를 받아야_ 다음 단계로 진행 가능 — _polling 없는 즉시 깨어남_ 이 latency 0 의 join 을 가능하게 한다.
+
 **`onIdleCallbacks` 배열에 콜백을 등록**. 각 팀원이 idle 상태가 되면 자기 콜백들을 호출. lead 는 `Promise` 하나를 기다리면 _모든 팀원이 idle_ 이 될 때 resolve. _polling 없음_, _busy-wait 없음_. 이벤트 기반 fan-in.
 
 `onIdleCallbacks` 등록 _직전에_ `task.isIdle` 을 다시 체크하는 race 처리도 있다 — 콜백 등록 중에 팀원이 이미 idle 이 됐을 가능성. 정확하게 _at-least-once_ 가 아니라 _exactly-once_ 통지를 보장하는 디자인.
+
+<details>
+<summary>🔬 Deep Dive — 전체 시스템의 이벤트 기반 일관성과 async 디자인의 동기</summary>
+
+> 여기까지 본 큐, watcher, callback 세 메커니즘 모두 — **polling 없는 event 기반** 으로 통일된다.
+>
+> | 메커니즘 | 어떻게 이벤트 받는가 |
+> |---------|----------------|
+> | `await queue.get()` (메모리 큐) | `asyncio.Queue` 가 put 시 자동 깨움 |
+> | filesystem watcher (디스크 큐 메일박스) | OS 가 파일 변경 시 event emit → event loop 통합 |
+> | `onIdleCallbacks` (lead 의 idle 대기) | 팀원이 idle 될 때 콜백 호출 |
+>
+> **watcher 도 완전 async 다**. Linux 의 `inotify`, macOS 의 `kqueue` / `FSEvents`, Windows 의 `ReadDirectoryChangesW` 같은 OS 커널 레벨 filesystem event 가 Node.js / Python 의 event loop 에 직접 연결. polling 없음.
+>
+> ```python
+> # Python 등가 — async watcher
+> import asyncio
+> from watchfiles import awatch
+>
+> async def watch_mailbox(mailbox_path: Path, queue: asyncio.Queue):
+>     """완전 비동기 watcher — OS event 가 event loop 에 직접 연결."""
+>     async for changes in awatch(mailbox_path):
+>         new_messages = read_new_lines(mailbox_path)
+>         for msg in new_messages:
+>             await queue.put({"value": msg, "priority": "later"})
+> ```
+>
+> `async for changes in awatch(...)` 가 핵심 — watcher 가 async iterator 라 event loop 에 자연스럽게 통합. `while True + sleep` 같은 polling 코드가 없다.
+>
+> **왜 이런 디자인인가** — Claude Code 의 작업이 **압도적으로 I/O bound** 다 (AI API 응답 1~30초, 파일 I/O, MCP 통신, 사용자 입력 대기, 메일박스 watcher 등). CPU 가 대부분 idle 인 시간을 활용해 N 명 팀원 + 워커 + watcher + MCP 를 하나의 **single-threaded event loop** 에서 효율적으로 운용.
+>
+> | 분류 | 특징 | async 효과 |
+> |---|---|---|
+> | **I/O bound** (네트워크, 디스크, AI API) | CPU 가 기다리는 시간이 압도적 | 크다 |
+> | **CPU bound** (계산, 이미지 처리) | CPU 가 계속 일함 | 작거나 음수 (multi-process 가 더 효과적) |
+>
+> **single-threaded async event loop** (Node.js / Python `asyncio`) 의 디자인:
+>
+> | | Single-threaded async | Multi-threaded |
+> |---|---|---|
+> | 컨텍스트 스위칭 비용 | 거의 0 | OS 스레드 스위칭 비용 큼 |
+> | Race condition | 희박 (한 시점에 한 작업) | 흔함 — lock 필요 |
+> | 메모리 사용 | 하나의 스레드 | 스레드당 stack 메모리 |
+> | CPU bound 작업 | 못함 | 잘함 (멀티 코어) |
+>
+> **I/O bound + single-threaded async** = Node.js / asyncio 의 **표준 패턴**. Claude Code 만의 특별함이 아니라 현대 시스템의 흔한 디자인. 다만 Claude Code 는 AI 응답 시간이 압도적으로 길고 모든 작업이 I/O bound 라 그 패턴이 **극단적으로 매칭** 되는 사례 — async 가 부차적 디자인이 아니라 **시스템 전체의 핵심 철학**.
+
+</details>
 
 > 🔬 코디네이터 모드의 `<task-notification>` 과 비교하면 — 코디네이터의 user 메시지는 _다음 턴에 도착_ (LLM 의 발화 사이클에 묶임). 메일박스는 _세션 종료 즉시 디스크에 append_ — LLM 사이클과 독립. **LLM 의 학습된 user→assistant 패턴을 영리하게 재사용한 코디네이터** vs **OS 와 파일시스템의 메시지 큐를 직설적으로 활용한 에이전트 팀**. 같은 문제에 두 가지 답.
 
@@ -618,15 +788,23 @@ def check_team_mem_secrets(
 
 세 가지 디자인 디테일이 모두 _공유의 비용_ 을 의식한다:
 
-1. **빌드 시점 게이트**: `feature('TEAMMEM')` 가 false 면 secretScanner 코드 자체가 번들에 없다. 외부 빌드에서 secret 스캐닝을 _안 하는_ 게 아니라 _할 코드가 없다_. dead-code-elimination 으로 attack surface 자체를 줄임.
+1. **빌드 시점 게이트로 코드 자체를 제거**: `feature('TEAMMEM')` 는 8.3 에서 본 _빌드 게이트_ 와 같은 메커니즘이다. bundler (`bun:bundle`) 가 이 함수 호출을 _빌드 시점 상수로 평가_ 하므로, false 면 그 안의 모든 코드 (secretScanner 호출 포함) 가 _죽은 코드 (dead code)_ 로 판정되어 최종 번들에서 _완전히_ 제거된다. 외부 빌드에서 _런타임에 스캐닝을 끄는 것_ 이 아니라 _스캐닝할 코드 자체가 번들에 들어가지 않는다_. 이게 **dead-code-elimination** 이다.
 
-2. **동적 `require`**: `secretScanner` 와 `isTeamMemPath` 가 _함수 호출 시점에_ require. 모듈 로드 시 정적 import 대비 — 호출되지 않는 경로면 secretScanner 의 정규식 컴파일도 일어나지 않음. _lazy 평가_.
+   왜 이렇게까지 하는가 — **attack surface** (공격이 가능한 표면적) 의 _근본적_ 감소다. 런타임 게이트는 _공격자가 게이트를 우회_ 하거나 _향후 버그로 게이트가 빠지면_ 코드가 다시 노출될 수 있다. 빌드에서 제거된 코드는 그런 우회 자체가 불가능 — _코드가 존재하지 않기 때문_. _가장 안전한 보안은 그 기능이 아예 없는 것_ 이라는 원칙의 적용이다.
 
-3. **명시적 에러 메시지**: 모델이 secret 을 쓰려고 시도하면 — _왜 차단됐는지_ 친절하게 설명. "Team memory is shared with all repository collaborators." — 모델이 _상황을 이해하고 행동을 수정_ 할 수 있도록. 단순 거부가 아닌 _맥락 있는 교정_.
+2. **동적 `require` 로 모듈 자체를 지연 로드**: `secretScanner` 와 `isTeamMemPath` 가 _파일 최상단의 정적 import_ 가 아니라 _함수가 호출될 때_ require 된다. 두 방식의 차이를 보면 — 정적 import 였다면 Node 가 프로세스 시작 시 secretScanner 모듈을 _즉시_ 로드하고 그 안의 정규식들을 _전부 컴파일_ 해서 메모리에 상주시킨다 (_쓰지도 않을 수 있는 비용을 미리 지불_). 동적 require 는 _처음 호출되는 순간에만_ 로드하므로, 공유 메모리 쓰기를 한 번도 하지 않는 세션에서는 정규식 컴파일 비용이 _제로_.
+
+   이게 **lazy evaluation** (지연 평가) — _필요해질 때까지 비용을 미루는_ 전략이다. 1번의 빌드 시점 게이트가 _아예 없애는_ 것이라면, lazy require 는 _필요할 때만 켜는_ 것. 코드는 번들에 있지만 _대부분의 세션에서는 잠들어 있다_.
+
+3. **명시적 에러 메시지로 모델을 교정**: 모델이 secret 을 쓰려고 시도하면 단순히 _거부_ 만 하는 게 아니라 _왜 차단됐는지_ 까지 함께 알려준다 — "Team memory is shared with all repository collaborators. Remove the sensitive content and try again."
+
+   LLM 시대의 에러 메시지 디자인 원칙이 드러난다 — 에러를 받는 _독자가 모델 자신_ 이다. 모델이 _상황을 이해하고 다음 행동을 수정_ 할 수 있도록 _맥락_ 을 함께 주는 것이 핵심. 그냥 "denied" 면 모델은 _왜 거부됐는지 모르고 같은 시도를 반복_ 할 수 있다. _공유 메모리이므로 secret 은 안 된다_ 는 _이유_ 를 받으면 모델이 자연스럽게 _공유 메모리 안 쓰는 방향_ 으로 재시도. 단순 거부가 아닌 _자기 회복적 가이드_.
+
+1 → 2 → 3 으로 갈수록 _점진적으로 약한 방어선_ 이지만, 셋이 모여 **심층 방어 (defense in depth)** 를 이룬다 — _빌드에서 빠지면 끝_, _빠지지 않았어도 안 호출되면 비활성_, _호출되어도 차단 + 모델 교정_.
 
 8.2 의 `weakref.ref(parent)` 가 _메모리 누수 방지_ 를 위한 방어선이었다면, 여기는 _보안 누수 방지_ 를 위한 방어선. **공유의 강점만큼 명확한 위험 — 그 위험을 방어선으로 격리**.
 
-> ⚠️ **메모리 캡과 OOM 사례**: `tasks/InProcessTeammateTask/types.ts:101` 의 `TEAMMATE_MESSAGES_UI_CAP = 50` 도 같은 _공유의 비용_ 이야기. 코멘트가 솔직하다 — _"BQ analysis (round 9, 2026-03-20) showed ~20MB RSS per agent at 500+ turn sessions and ~125MB per concurrent agent in swarm bursts. Whale session 9a990de8 launched 292 agents in 2 minutes and reached 36.8GB."_ **292 에이전트 → 36.8GB**. 캡이 없으면 OOM. 같은 프로세스에서 동시 실행되는 N 팀원의 메시지가 모두 같은 AppState 에 누적되기 때문. 디자인 결정마다 _실제 사고_ 가 뒷받침되어 있다.
+> ⚠️ **메모리 캡과 OOM 사례**: `tasks/InProcessTeammateTask/types.ts:101` 의 `TEAMMATE_MESSAGES_UI_CAP = 50` 도 같은 _공유의 비용_ 이야기. 코멘트가 솔직하다 — Anthropic 내부의 BigQuery 분석 (round 9, 2026-03-20) 에 따르면, _500 턴 이상의 긴 세션_ 에서는 에이전트당 약 **20MB RSS** (Resident Set Size — 실제 점유 물리 메모리), _swarm burst_ (다수 에이전트가 짧은 시간에 동시 spawn 되는 폭증 구간) 에서는 동시 에이전트당 약 **125MB**. 그리고 _whale session_ (비정상적으로 큰 헤비유저 세션 — 일종의 "고래" 사용자) 9a990de8 은 _2 분 만에 292 에이전트를 spawn_ 해 **36.8GB** 까지 치솟았다. 캡이 없으면 OOM. 같은 프로세스에서 동시 실행되는 N 팀원의 메시지가 모두 같은 AppState 에 누적되기 때문이다. 디자인 결정마다 _실제 사고_ 가 뒷받침되어 있다.
 
 ---
 
@@ -795,14 +973,14 @@ class TeamCoordinator:
         if not working:
             return  # 모두 이미 idle
         
-        future: asyncio.Future[None] = asyncio.Future()
+        event = asyncio.Event()
         remaining = len(working)
         
         def on_idle() -> None:
             nonlocal remaining
             remaining -= 1
             if remaining == 0:
-                future.set_result(None)
+                event.set()
         
         for task in working:
             if task.is_idle:
@@ -811,7 +989,7 @@ class TeamCoordinator:
             else:
                 task.on_idle_callbacks.append(on_idle)
         
-        await future
+        await event.wait()
     
     def mark_idle(self, agent_id: str) -> None:
         """팀원이 idle 상태가 됐을 때 — 등록된 콜백들 발화."""
@@ -897,7 +1075,7 @@ async def spawn_in_process_teammate(
 핵심 다섯이 다 있다:
 
 1. **`ContextVar` 기반 격리** — Node 의 `AsyncLocalStorage` 와 같은 디자인. 같은 프로세스 안의 N 팀원이 _자기 정체성_ 을 들고 동시에 일한다.
-2. **디스크 메일박스** — _jsonl_ append-only. in-process 팀원과 out-of-process tmux 팀원이 같은 매체로 통신할 수 있는 _공통 기반_.
+2. **디스크 메일박스** — _jsonl_ append-only. in-process 팀원과 _여러 터미널 기반_ out-of-process 팀원이 같은 매체로 통신할 수 있는 _공통 기반_.
 3. **Stop 훅 + idle 알림** — 6장의 훅 메커니즘이 통신 인프라로 재사용. 팀원의 work-cycle 끝이 _자동으로_ lead 한테 알려진다.
 4. **콜백 기반 fan-in** — polling 없는 _이벤트 기반_ idle 대기. race 처리 (등록 직전 isIdle 재체크) 까지 포함.
 5. **Secret guard** — 도구 입력 검증 단계에서 _공유의 위험_ 을 차단. 빌드 게이트로 attack surface 줄임.
