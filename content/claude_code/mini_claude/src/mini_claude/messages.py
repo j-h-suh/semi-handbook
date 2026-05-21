@@ -1,23 +1,25 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Any, Literal
-
-
-# Anthropic API의 메시지 형식을 그대로 dataclass로
-@dataclass
-class Message:
-    role: Literal["user", "assistant"]
-    content: list[dict[str, Any]] | str
+from typing import Any
 
 
 @dataclass
 class ConversationState:
     """누적되는 대화 — 0.1의 messages 리스트의 살 붙은 버전."""
-    messages: list[Message] = field(default_factory=list)
 
-    def append(self, message: Message) -> None:
-        self.messages.append(message)
+    messages: list[dict[str, Any]] = field(default_factory=list)
+
+    def add_user(self, content: str | list[dict[str, Any]]) -> None:
+        """user 메시지 추가. content가 문자열이면 그대로, 리스트면 그대로."""
+        self.messages.append({"role": "user", "content": content})
+
+    def add_assistant(self, content: list[dict[str, Any]]) -> None:
+        """assistant 메시지 추가. 반드시 content 블록 리스트로 들어가야 한다."""
+        self.messages.append({"role": "assistant", "content": content})
 
     def to_api_format(self) -> list[dict[str, Any]]:
-        """Anthropic API가 받는 형식으로 변환."""
-        return [{"role": m.role, "content": m.content} for m in self.messages]
+        """Anthropic API가 받는 형식 — 우리는 이미 그 형식으로 저장 중."""
+        return self.messages
+
+    def __len__(self) -> int:
+        return len(self.messages)

@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 from .agent import query
 from .messages import ConversationState
-from .permissions import PermissionEngine
 from .tools import default_tool_pool
 
 
@@ -22,7 +21,6 @@ async def main_async() -> None:
         )
 
     state = ConversationState()
-    permissions = PermissionEngine()
     tools = default_tool_pool()
 
     print("mini-claude 시작 (Ctrl+D로 종료)")
@@ -36,15 +34,12 @@ async def main_async() -> None:
         if not user_input.strip():
             continue
 
-        async for chunk in query(
+        await query(
             user_input=user_input,
             tools=tools,
-            permissions=permissions,
             cwd=str(args.cwd),
             state=state,
-        ):
-            print(chunk, end="", flush=True)
-        print()
+        )
 
 
 def main() -> None:

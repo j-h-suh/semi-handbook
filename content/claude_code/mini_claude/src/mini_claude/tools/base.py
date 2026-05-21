@@ -1,27 +1,27 @@
 from __future__ import annotations
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Protocol
-from pydantic import BaseModel
 
 
 @dataclass
 class ToolContext:
-    """도구 호출 시 주변 컨텍스트 — 8.2의 createSubagentContext의 미니 버전."""
+    """도구 실행 시 주변 컨텍스트. 9.4에서 permissions 추가."""
     cwd: str
-    permissions: Any  # PermissionEngine — 9.4에서 정의
-    read_files: set[str] = field(default_factory=set)  # Read-before-Edit 추적 (9.3 EditTool)
 
 
 class Tool(Protocol):
-    """Tool 인터페이스 — 3.2의 47개 필드를 5개로 압축."""
+    """Tool 인터페이스 — 9.3에서 Pydantic으로 정식화."""
     name: str
     description: str
-    input_model: type[BaseModel]   # Pydantic으로 스키마 자동 생성
+    input_schema: dict[str, Any]   # JSONSchema dict (9.3에서 자동 생성)
 
-    async def call(self, args: dict, context: ToolContext) -> str:
-        """도구의 실제 동작. 결과는 문자열 (Anthropic API가 받는 형식)."""
+    async def call(self, args: dict[str, Any], context: ToolContext) -> str:
         ...
 
-    def is_read_only(self) -> bool:
-        """Fail-safe: 모르면 False (위험하다고 가정)."""
-        ...
+
+def find_tool(tools: list[Tool], name: str) -> Tool:
+    """이름으로 도구 찾기. 못 찾으면 에러."""
+    for t in tools:
+        if t.name == name:
+            return t
+    raise ValueError(f"Unknown tool: {name}")
