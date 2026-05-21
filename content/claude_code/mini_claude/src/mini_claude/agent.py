@@ -6,6 +6,7 @@ from anthropic import AsyncAnthropic
 from .tools.base import Tool, ToolContext, find_tool, tool_to_anthropic_schema
 from .permissions import PermissionEngine, prompt_user
 from .messages import ConversationState
+from .hooks import HookEngine
 
 
 # 위로 흘려보낼 청크 종류 ─────────────────────────────────
@@ -41,11 +42,14 @@ async def query(
     state: ConversationState,
     system_prompt: str = "You are a helpful coding assistant.",
     client: AsyncAnthropic | None = None,
+    hooks: HookEngine | None = None,
 ) -> AsyncIterator[QueryChunk]:
     """*async generator*. 각 청크를 부모에게 흘려보낸다.
 
     9.4 에서는 `async def query(...) -> None` 이었다. 이제 yield 가
     들어가서 *generator 함수*로 변신. *호출자는 `async for` 로 받는다*.
+
+    10.4 에서 `hooks` 인자가 추가됐다. None 이면 hook 비활성 — 9.5 동작과 동일.
     """
     client = client or AsyncAnthropic()
     state.add_user(user_input)
@@ -81,10 +85,15 @@ async def query(
         state.add_assistant(content_blocks)
 
         if response.stop_reason == "end_turn":
+            # ── Hook (10.4) — Stop ──────────────
+            if hooks:
+                await hooks.stop(cwd=cwd, stop_reason="end_turn")
             yield TurnDone(stop_reason="end_turn")
             return
 
         if response.stop_reason != "tool_use":
+            if hooks:
+                await hooks.stop(cwd=cwd, stop_reason=response.stop_reason)
             yield TurnDone(stop_reason=response.stop_reason)
             return
 
@@ -96,6 +105,25 @@ async def query(
 
             tool = find_tool(tools, block["name"])
             yield ToolUseStarted(name=tool.name, input=block["input"])
+
+            # ── Hook (10.4) — PreToolUse: deny 면 차단, updatedInput 이면 교체 ─
+            if hooks:
+                pre_resp = await hooks.pre_tool_use(
+                    cwd=cwd, tool_name=tool.name, tool_input=block["input"]
+                )
+                if pre_resp and pre_resp.permission_decision == "deny":
+                    tool_results.append({
+                        "type": "tool_result",
+                        "tool_use_id": block["id"],
+                        "content": (
+                            "Permission denied by hook: "
+                            f"{pre_resp.permission_decision_reason or '(no reason)'}"
+                        ),
+                        "is_error": True,
+                    })
+                    continue
+                if pre_resp and pre_resp.updated_input is not None:
+                    block["input"] = pre_resp.updated_input
 
             # ── 9.4 의 권한 게이트 (그대로) ─────────────
             decision = permissions.check(tool, block["input"])
@@ -130,6 +158,21 @@ async def query(
                 "content": result_text,
                 **({"is_error": True} if is_error else {}),
             })
+
+            # ── Hook (10.4) — PostToolUse: additional_context 누적 ─────
+            if hooks and not is_error:
+                post_resp = await hooks.post_tool_use(
+                    cwd=cwd,
+                    tool_name=tool.name,
+                    tool_input=block["input"],
+                    tool_response=result_text,
+                )
+                if post_resp and post_resp.additional_context:
+                    # tool_result.content 에 보강 (진짜는 system msg 를 더한다)
+                    tool_results[-1]["content"] = (
+                        f"{result_text}\n\n[hook_context]\n"
+                        f"{post_resp.additional_context}"
+                    )
 
         state.add_user(tool_results)
         # while 루프의 다음 iteration → 다음 LLM 호출

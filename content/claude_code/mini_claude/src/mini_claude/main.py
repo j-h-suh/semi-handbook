@@ -4,6 +4,7 @@ import asyncio
 import os
 from pathlib import Path
 from .agent import query, TextDelta, ToolUseStarted, TurnDone
+from .hooks import HookEngine
 from .messages import ConversationState
 from .permissions import PermissionEngine
 from .tools import default_tool_pool
@@ -16,6 +17,15 @@ async def main_async(args: argparse.Namespace) -> None:
         deny_rules={"Bash:rm -rf *", "Bash:sudo *"},
     )
 
+    # ── Hook (10.4) ─── ~/.mini_claude/hooks.json 자동 로드 (없으면 비활성)
+    hooks = HookEngine.from_file()
+    session_start_resp = await hooks.session_start(cwd=str(args.cwd))
+    session_context = (
+        session_start_resp.additional_context
+        if session_start_resp and session_start_resp.additional_context
+        else None
+    )
+
     # 9.4 의 도구 풀 + AgentTool 추가
     parent_tools = default_tool_pool()
     agent_tool = AgentTool(
@@ -25,6 +35,8 @@ async def main_async(args: argparse.Namespace) -> None:
     parent_tools.append(agent_tool)
 
     print("mini-claude 시작 (Ctrl+D로 종료)")
+    if session_context:
+        print(f"[hook] SessionStart context: {session_context[:120]}...")
     while True:
         try:
             user_input = await asyncio.to_thread(input, "> ")
@@ -35,6 +47,21 @@ async def main_async(args: argparse.Namespace) -> None:
         if not user_input.strip():
             continue
 
+        # ── Hook (10.4) — UserPromptSubmit ──────────────
+        ups_resp = await hooks.user_prompt_submit(
+            cwd=str(args.cwd), prompt=user_input
+        )
+        if ups_resp and ups_resp.permission_decision == "deny":
+            print(
+                f"[hook] Prompt rejected: "
+                f"{ups_resp.permission_decision_reason or '(no reason)'}"
+            )
+            continue
+        if ups_resp and ups_resp.additional_context:
+            user_input = (
+                f"{user_input}\n\n[context]\n{ups_resp.additional_context}"
+            )
+
         # ⭐ 9.5 의 핵심 변화: async for 로 청크를 받아 즉시 출력
         async for chunk in query(
             user_input=user_input,
@@ -42,6 +69,7 @@ async def main_async(args: argparse.Namespace) -> None:
             permissions=permissions,
             cwd=str(args.cwd),
             state=state,
+            hooks=hooks,
         ):
             if isinstance(chunk, TextDelta):
                 print(chunk.text, end="", flush=True)
