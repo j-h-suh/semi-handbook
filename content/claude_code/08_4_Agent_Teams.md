@@ -16,7 +16,7 @@
 
 8.1 과 8.2 에서 우리는 서브에이전트의 _공통 기반_ 을 봤다. **`AgentTool` 의 재귀 호출** (8.1) — 도구로 위장한 LLM 이 자기 자신을 다시 부른다. **`createSubagentContext`** (8.2) — 자식 에이전트가 부모와 컨텍스트를 분리해 격리된다. 이게 멀티 에이전트의 _기본 메커니즘_ 이다.
 
-8.3 에서 이 기반 위에 _첫 번째 확장_ 이 올라간다. **코디네이터 모드** — 시스템 프롬프트 한 장으로 메인 Claude 의 정체성을 _작성자에서 관리자로_ 전환. 메인이 워커를 fork-join 으로 조율하고 `<task-notification>` user 메시지로 결과를 받는다. _위계 기반_ 의 협업 디자인.
+8.3 에서 이 기반 위에 _첫 번째 확장_ 이 올라간다. **코디네이터 모드** — 시스템 프롬프트 한 장으로 메인 Claude 의 정체성을 _작성자에서 관리자로_ 전환. 메인이 워커를 fork-join 으로 조율하고 `<task-notification>` user 메시지로 결과를 받는다. _위계 기반_ 의 협업 디자인. 다만 워커끼리는 서로 직접 못 말하고 합성은 _코디네이터의 독점_ — 모든 결과가 한 명을 통해 흘러간다. 이게 _다른 시도_ 의 자리를 만든다.
 
 같은 기반 위에 _두 번째 확장_ 이 또 있다. **에이전트 팀**. `tasks/InProcessTeammateTask/`, `utils/swarm/`, `services/teamMemorySync/`, `tools/TeamCreateTool/`, `components/teams/` ... 152 파일에 걸쳐 있는 별도 클러스터. 8.3 과는 _완전히 다른 디자인 결정_ 들로 채워져 있다.
 
@@ -1090,7 +1090,7 @@ async def spawn_in_process_teammate(
 
 - **서브에이전트 기반 위의 두 갈래 시도 — 그중 _peer 모델이 채택_ 됨**. 8.1~8.2 의 공통 기반 (`AgentTool` 재귀 + `createSubagentContext` 컨텍스트 분리) 위에, 8.3 코디네이터 모드 (위계) 와 8.4 에이전트 팀 (peer) 두 디자인이 시도됐고 — **peer 모델이 2026-02-05 외부 experimental 출시, 2026-03-09 Claude Code Review 프로덕션 적용**으로 채택됐다. 코디네이터 모드는 외부 미출시 (저장소에 디자인 흔적만 남음).
 - **게이트가 세 단계 — experimental rollout 의 인프라**. `agentSwarmsEnabled()` 는 ant 빌드 자동 on / 외부는 env+CLI 옵트인 / GrowthBook `tengu_amber_flint` 킬스위치 통과. 2026-02-05 외부 experimental 출시 시점부터 이 게이트 구조가 _점진 공개_ 의 도구로 쓰임 — Anthropic 이 _누구한테 언제 활성화_ 를 GrowthBook 한 줄로 조정. 메모리 동기화만 별도 빌드 게이트 `feature('TEAMMEM')`. **이중 게이트 + 부분 활성화**.
-- **`AsyncLocalStorage` 의 자동 컨텍스트 격리**. Node 의 _비동기판 thread-local_. 같은 프로세스 안에서 _N 명의 팀원이 동시 실행_ 될 때 async 호출 트리를 따라 _자동으로_ 각자의 정체성이 유지된다 — 8.2 의 _명시적 객체 분리_ (`createSubagentContext` 가 코드로 부모/자식 분리) 와 달리 _코드가 분기를 관리할 필요 없음_. Python 의 `contextvars` 와 같은 디자인. 모듈은 한 벌, 실행 컨텍스트는 N 벌.
+- **`AsyncLocalStorage` 의 자동 컨텍스트 격리**. Node 의 _비동기판 thread-local_. 같은 프로세스 안에서 _N 명의 팀원이 동시 실행_ 될 때 async 호출 트리를 따라 _자동으로_ 각자의 정체성이 유지된다 — 8.2 의 _명시적 객체 분리_ (`createSubagentContext` 가 코드로 부모/자식 분리) 와 달리 _코드가 분기를 관리할 필요 없음_. Python 의 `contextvars` 와 같은 디자인. 모듈은 한 벌, 실행 컨텍스트는 N 벌. 다만 _격리 방식_ 만 다르고 — 자식이 띄운 백그라운드 작업의 root 추적 (8.2 의 `setAppStateForTasks` / PPID=1 고아 방지) 같은 OS-레벨 안전망은 두 디자인 모두에 동일하게 필요. 격리든 공유든, 프로세스 트리의 책임자는 늘 root.
 - **정체성과 lead**. `agent@team` 형식 — Slack/Discord 핸들과 같은 컨벤션. _명시적 팀 lead_ 는 통신 허브이지 _코디네이터처럼 강한 역할 분리는 아님_. 다른 점은 _자기 자신한테 idle 알림 안 보낸다_ 정도.
 - **Mailbox + Stop 훅 통신**. 코디네이터 모드의 `<task-notification>` user 메시지와 정반대 — _peer DM 가능_, _LLM 사이클과 독립_ 한 디스크 기반 메시지 큐. 팀원이 Stop 훅에서 lead 메일박스에 자동 idle 알림. **6장의 훅 메커니즘이 통신 인프라로 재사용**.
 - **Polling 없는 fan-in**. `onIdleCallbacks` 배열 + 등록 직전 isIdle 재체크로 _exactly-once_ 통지. lead 가 `Promise` 하나로 _모든 팀원이 idle 될 때_ 깨어남.

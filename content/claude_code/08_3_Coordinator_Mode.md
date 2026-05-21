@@ -519,4 +519,5 @@ async def coordinator_loop(user_request: str) -> None:
 - **Continue vs Spawn 의사 결정 표** — 6가지 상황, 결정 기준은 컨텍스트 오버랩. 검증은 **반드시 fresh** (확증 편향 회피). **"기본값은 없다"**.
 - **`Never delegate understanding`** — 코디네이터의 유일한 책임이 합성. 워커한테 **"based on your findings, fix it"** 같은 말 금지. 이해가 워커들한테 흩어지면 코디네이터는 라우터로 전락. 의미가 사라진다.
 - **Fork-join 패턴**의 LLM 버전 — Fork는 `Agent` 병렬 호출, Join은 **다음 턴의 user 메시지**. 비동기라 코디네이터는 기다리는 동안 사용자와도 대화 가능.
+- **위계의 한계가 다음 챕터의 자리**: 코디네이터 모드는 _부모-자식 위계_ — 워커끼리는 서로 직접 못 말한다. 합성도 코디네이터의 독점. 이 한계가 _peer 모델_ — 팀원끼리 DM, 합성도 분산 — 의 자리를 만든다. 8.4 에이전트 팀에서 같은 `query` 재귀와 `createSubagentContext` 위에 **다른 통신 토폴로지**를 얹는다.
 
