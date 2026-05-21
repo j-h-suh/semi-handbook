@@ -37,6 +37,10 @@ class Tool(Protocol):
         """파일을 지우거나 덮어쓸 수 있는가? 모르면 True."""
         ...
 
+    def permission_summary(self, args: dict[str, Any]) -> str:
+        """*권한 매칭에 쓸 한 줄 문자열* (9.4)."""
+        ...
+
 
 def find_tool(tools: list[Tool], name: str) -> Tool:
     """이름으로 도구 찾기."""

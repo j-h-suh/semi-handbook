@@ -1,6 +1,7 @@
 from __future__ import annotations
 from anthropic import AsyncAnthropic
 from .messages import ConversationState
+from .permissions import PermissionEngine, prompt_user
 from .tools.base import Tool, ToolContext, find_tool, tool_to_anthropic_schema
 
 
@@ -13,18 +14,19 @@ async def query(
     *,
     user_input: str,
     tools: list[Tool],
+    permissions: PermissionEngine,
     cwd: str,
     state: ConversationState,
     system_prompt: str = "You are a helpful coding assistant.",
     client: AsyncAnthropic | None = None,
     max_iterations: int = 50,
 ) -> None:
-    """에이전트 루프 — 0.1의 50줄 챗봇 + 비동기 + 타입.
+    """에이전트 루프 — 0.1의 50줄 챗봇 + 비동기 + 타입 + 권한.
 
-    스트리밍/권한/서브 에이전트는 9.4-9.5에서 추가.
+    스트리밍/서브 에이전트는 9.5에서 추가.
     """
     client = client or AsyncAnthropic()
-    context = ToolContext(cwd=cwd)
+    context = ToolContext(cwd=cwd, permissions=permissions)
 
     # 사용자 입력을 메시지 히스토리에 추가
     state.add_user(user_input)
@@ -50,7 +52,7 @@ async def query(
                     print(block["text"])
             return
 
-        # ── ④ tool_use — 각 도구 실행, 결과 user 메시지로 ──
+        # ── ④ tool_use — 권한 게이트 + 각 도구 실행 ──
         if response.stop_reason == "tool_use":
             tool_results: list[dict] = []
             for block in content_blocks:
@@ -58,22 +60,42 @@ async def query(
                     continue
 
                 tool = find_tool(tools, block["name"])
-                print(f"[{tool.name}] {block['input']}")  # 임시 로그
+                print(f"[{tool.name}] {block['input']}")
 
-                try:
-                    result = await tool.call(block["input"], context)
-                    tool_results.append({
-                        "type": "tool_result",
-                        "tool_use_id": block["id"],
-                        "content": result,
-                    })
-                except Exception as e:
-                    tool_results.append({
-                        "type": "tool_result",
-                        "tool_use_id": block["id"],
-                        "content": f"Error: {e}",
-                        "is_error": True,    # ← 모델의 에러 회복 행동을 트리거
-                    })
+                # ── 권한 게이트 ──────────────────────
+                decision = permissions.check(tool, block["input"])
+
+                if decision == "deny":
+                    result_text = "Permission denied by deny rule."
+                    is_error = True
+                elif decision == "ask":
+                    allowed, new_rule = await prompt_user(tool, block["input"])
+                    if new_rule:
+                        permissions.add_allow(new_rule)
+                    if allowed:
+                        try:
+                            result_text = await tool.call(block["input"], context)
+                            is_error = False
+                        except Exception as e:
+                            result_text = f"Error: {e}"
+                            is_error = True
+                    else:
+                        result_text = "Permission denied by user."
+                        is_error = True
+                else:  # "allow"
+                    try:
+                        result_text = await tool.call(block["input"], context)
+                        is_error = False
+                    except Exception as e:
+                        result_text = f"Error: {e}"
+                        is_error = True
+
+                tool_results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block["id"],
+                    "content": result_text,
+                    **({"is_error": True} if is_error else {}),
+                })
 
             state.add_user(tool_results)
             continue  # 루프 위로 — Claude한테 결과 보여주고 다음 결정

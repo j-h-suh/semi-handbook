@@ -36,6 +36,9 @@ class BashTool:
     def is_destructive(self) -> bool:
         return True
 
+    def permission_summary(self, args: dict[str, Any]) -> str:
+        return args.get("command", "")
+
     async def call(self, args: dict[str, Any], context: ToolContext) -> str:
         validated = BashInput.model_validate(args)
         timeout = validated.timeout_sec or DEFAULT_TIMEOUT_SEC

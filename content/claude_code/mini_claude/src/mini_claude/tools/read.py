@@ -26,6 +26,9 @@ class ReadTool:
     def is_destructive(self) -> bool:
         return False
 
+    def permission_summary(self, args: dict[str, Any]) -> str:
+        return args.get("file_path", "")
+
     async def call(self, args: dict[str, Any], context: ToolContext) -> str:
         # ① 검증 — Pydantic이 한다
         validated = ReadInput.model_validate(args)

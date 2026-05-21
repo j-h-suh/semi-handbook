@@ -39,6 +39,9 @@ class EditTool:
     def is_destructive(self) -> bool:
         return True
 
+    def permission_summary(self, args: dict[str, Any]) -> str:
+        return args.get("file_path", "")
+
     async def call(self, args: dict[str, Any], context: ToolContext) -> str:
         validated = EditInput.model_validate(args)
 

@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from .agent import query
 from .messages import ConversationState
+from .permissions import PermissionEngine
 from .tools import default_tool_pool
 
 
@@ -21,6 +22,12 @@ async def main_async() -> None:
         )
 
     state = ConversationState()
+    permissions = PermissionEngine(
+        deny_rules={
+            "Bash:rm -rf *",
+            "Bash:sudo *",
+        },
+    )
     tools = default_tool_pool()
 
     print("mini-claude 시작 (Ctrl+D로 종료)")
@@ -37,6 +44,7 @@ async def main_async() -> None:
         await query(
             user_input=user_input,
             tools=tools,
+            permissions=permissions,
             cwd=str(args.cwd),
             state=state,
         )
