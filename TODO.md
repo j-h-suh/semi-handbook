@@ -508,7 +508,20 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
-## Phase 5: claude_code 본문 수정·보완
+## Phase 8: 1~8장 변화 → 9~10장 본문 동기화 *(1순위 — 다음 작업)*
+
+1~8장의 _최근 변경_ (예: Part 8.4 에이전트 팀 추가, 0~4장 본문 보강 등)이 9~10장 본문에 _충분히 반영_ 되어 있는지 점검·보강한다. 9~10장은 _이전 시점_ 의 1~8장을 회수하며 작성됐기 때문에, 최근 변경된 자리가 9~10장에서 _누락_ 또는 _불일치_ 로 남아 있을 수 있다. 본문 보강이 끝나면 그 영향이 mini_claude 실제 코드에도 미치는지 같이 정리한다.
+
+### 작업 흐름 (plan에서 세부화)
+
+- [ ] **1~8장 최근 변화 인벤토리** — git log + 본문 diff 로 _9~10 작성 이후_ 1~8장이 어떻게 바뀌었는지 정리
+- [ ] **반영 매핑** — 각 변화가 9~10장의 어느 자리에 _회수되어야 자연스러운지_ 후보 작성 (예: 새 함수/패턴/메타포가 9~10에서 다시 등장하는가)
+- [ ] **9~10장 본문 보강** — 매핑된 자리에 cross-reference / 메타포 / 코드 회수 추가
+- [ ] **mini_claude 코드 영향 점검** — 본문 보강이 코드 변경을 유발하면 같이 정리. 본문이 source of truth 원칙 유지
+
+---
+
+## Phase 5: claude_code 본문 수정·보완 *(2순위 — Phase 8 이후)*
 
 전 챕터(0.0 ~ 11) 본문 내용 검토·보완. Phase 3(스타일·포맷)과 별개로 본문 자체의 정확도, 흐름, 보충 설명을 다듬는 작업입니다. **0.2~0.5는 본문에서 짧게 짚고 넘어가는 JS/TS·React 패턴을 깊이 보충하는 신규 사전 지식 챕터입니다.** (본문은 그대로 유지)
 
@@ -585,38 +598,38 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
-## Phase 6: mini_claude 코드–핸드북 갭
+## Phase 6: mini_claude 코드–핸드북 갭 *(✅ 완료 — 참고용)*
 
 `mini_claude` 실행 중 발견된 코드/문서 갭. 코드 수정분은 roll-back되어 다시 적용해야 하며, 9.1/9.2 핸드북 본문에도 반영해야 합니다. (구 `content/claude_code/_revisions.md` 통합)
 
 ### 9.1 설계 — 미니 에이전트의 골격
 
-- [ ] **`pyproject.toml`에 `[build-system]` 섹션 추가**
+- [x] **`pyproject.toml`에 `[build-system]` 섹션 추가**
   - 현상: `[build-system]`이 없으면 uv가 프로젝트 본체를 설치하지 않아 `[project.scripts]` entry point가 `.venv/bin/`에 생성되지 않음 → `uv run mini-claude` 실행 실패
   - 반영 위치: 9.1 `pyproject.toml` 예시(현재 172~186줄)에 `[build-system] requires = ["hatchling"], build-backend = "hatchling.build"` 블록 추가
 
-- [ ] **`tools/__init__.py` 예시에 `default_tool_pool` stub 포함**
+- [x] **`tools/__init__.py` 예시에 `default_tool_pool` stub 포함**
   - 현상: `main.py`가 `from .tools import default_tool_pool`를 import. 스캐폴드 단계에 stub이 없으면 `ImportError`
   - 반영 위치: 9.1 "Python으로 옮기면" 섹션에 `tools/__init__.py` 예시 추가 — `def default_tool_pool() -> list[Tool]: return []`
 
-- [ ] **`main.py` API 키 미설정 에러 메시지 친절화**
+- [x] **`main.py` API 키 미설정 에러 메시지 친절화**
   - 현상: 기존 메시지("ANTHROPIC_API_KEY 환경 변수가 필요해.")는 해결 방법 미제공
   - 반영 위치: 9.1 `main.py` 예시(현재 337~338줄)의 SystemExit 메시지에 `export ANTHROPIC_API_KEY=sk-ant-... 후 다시 실행.` 안내 한 줄 추가
 
-- [ ] **`agent.py` stub에 unreachable `yield` 추가**
+- [x] **`agent.py` stub에 unreachable `yield` 추가**
   - 현상: `async def query(...) -> AsyncGenerator[str, None]`에 `yield`가 없으면 Python이 coroutine으로 인식 → `async for`에서 `TypeError`
   - 반영 위치: 9.1 `agent.py` stub(현재 303~316줄)의 `raise NotImplementedError` 다음 줄에 `yield  # async generator로 인식시키기 위한 unreachable yield`
 
 ### 9.2 핵심 루프
 
-- [ ] **"첫 실행" 단락 추가 (API 키 설정 안내)**
+- [x] **"첫 실행" 단락 추가 (API 키 설정 안내)**
   - 현상: "안녕" 입력 예시로 시작하나, 실제로는 `ANTHROPIC_API_KEY` 미설정으로 SystemExit → 첫 실행에서 막힘
   - 반영 위치: 9.2의 "안녕" 예시(현재 442~444줄) **직전**에 단락 추가 — 환경 변수 설정(`export ANTHROPIC_API_KEY=...`), 실행 명령(`uv run mini-claude`), 첫 프롬프트 예시(`> 안녕`)
   - 비채택 대안: `.env` 지원(의존성 증가), 별도 "환경 준비" 섹션(흐름 단절)
 
 ---
 
-## Phase 7: Deep Dive 콜아웃 포맷 통일
+## Phase 7: Deep Dive 콜아웃 포맷 통일 *(3순위 — 출간 직전 정리)*
 
 기존 Deep Dive는 펼친 blockquote(`> 🔬 **Deep Dive — 제목** ...`) 한 덩어리로 작성되어 있어, 본문 흐름을 끊고 길이도 부담스럽다. 6.5장에서 도입한 `<details>` + blockquote 패턴(접고 펴기 + 펼쳤을 때 블록 경계 표시)으로 전 챕터를 통일한다.
 
