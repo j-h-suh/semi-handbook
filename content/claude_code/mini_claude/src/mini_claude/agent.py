@@ -7,6 +7,7 @@ from .tools.base import Tool, ToolContext, find_tool, tool_to_anthropic_schema
 from .permissions import PermissionEngine, prompt_user
 from .messages import ConversationState
 from .hooks import HookEngine
+from . import message_queue
 
 
 # 위로 흘려보낼 청크 종류 ─────────────────────────────────
@@ -173,6 +174,14 @@ async def query(
                         f"{result_text}\n\n[hook_context]\n"
                         f"{post_resp.additional_context}"
                     )
+
+        # ── 메시지 큐 (10.6) — 외부에서 push 된 항목을 다음 LLM 호출에 attachment ──
+        queued = message_queue.drain()
+        for item in queued:
+            tool_results.append({
+                "type": "text",
+                "text": f"[queued/{item.source}] {item.content}",
+            })
 
         state.add_user(tool_results)
         # while 루프의 다음 iteration → 다음 LLM 호출
