@@ -34,7 +34,11 @@ Run /mcp auth github to authorize.
 
 먼저 OAuth가 결과를 어떻게 전달하는지 짚자. 사용자가 GitHub에서 동의 버튼을 누르면 — GitHub은 인증 코드를 사용자에게 직접 주지 않는다. 대신 사용자 브라우저를 **`redirect_uri`** 로 명시된 URL로 HTTP 302 redirect한다. 사용자 브라우저는 그 redirect를 따라가며 그 URL로 GET 요청을 보낸다 (`?code=abc123&state=...` 같은 쿼리 파라미터 동반). **즉 인증 코드를 받으려면 redirect URI 호스트에 HTTP 요청을 받을 서버가 필요하다.** 웹앱이면 자기 백엔드 서버. 모바일 앱이면 OS의 URL scheme 핸들러(`myapp://callback`). **CLI는 둘 다 없다** — 그래서 트릭이 필요하다.
 
-답: **CLI가 잠깐 HTTP 서버가 된다**. RFC 8252 §7.3 — **Native Apps 용 OAuth**는 루프백 리다이렉션을 허용한다 (실제 출처: `oauthPort.ts:18` JSDoc **"loopback redirect URIs match any port as long as the path matches"**). `oauthPort.ts`:
+답: **CLI가 잠깐 HTTP 서버가 된다**. RFC 8252 §7.3 — **Native Apps 용 OAuth**는 루프백 리다이렉션을 허용한다 (실제 출처: `oauthPort.ts:18` JSDoc **"loopback redirect URIs match any port as long as the path matches"**).
+
+> 💡 **다른 redirect 옵션과의 트레이드오프.** Native app OAuth 의 redirect 후보가 세 가지. (1) **custom URL scheme** (`myapp://callback`) — OS별 등록 필요(Windows 코드 사인·macOS Info.plist·Linux mime types 모두 다른 분기 코드). (2) **WebSocket** — RFC 8252 표준 외, 일부 IdP 가 거부. (3) **루프백 HTTP** — `localhost` 가 모든 OS 공통, 4줄짜리 서버. 짧은 인증 한 번에만 서버가 필요한 CLI 입장에서 (3) 의 비용이 압도적으로 낮다. **트레이드오프가 명확해서 표준(RFC 8252)이 됐다**.
+
+`oauthPort.ts`:
 
 :::tabs
 
