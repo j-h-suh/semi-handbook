@@ -175,6 +175,8 @@ function Counter() {
 
 `useState`, `useEffect`, 컴포넌트, JSX — 다 그대로. 차이는 그려지는 출력뿐 — `<div>` 대신 `<Box>`, `<span>` 대신 `<Text>`. 그리고 그 출력이 ANSI escape sequence 를 통해 터미널에 그려진다.
 
+> 💡 **Python 등가**: Ink 는 JS/TS 전용 라이브러리지만, 패러다임 자체는 언어 독립적이다. Python 에서는 **Textual** 이 가장 가깝다 — `reactive` 속성 + 위젯 클래스로 같은 "상태 → UI" 흐름을 만든다. 차이는 컴포넌트 모델 (Textual 은 자체, Ink 는 React 위) — 5.1 에서 자세히 본다.
+
 Claude Code 의 모든 터미널 UI 는 Ink 컴포넌트로 짜여 있다. 메시지 패널, 입력 프롬프트, 진행 표시, 슬래시 명령 자동완성 — 전부 React 컴포넌트와 훅이다. 본격 분석은 5장 (특히 5.1 터미널에 React) 에서 한다.
 
 ---
