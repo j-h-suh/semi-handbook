@@ -791,7 +791,7 @@ chmod +x ~/.mini_claude/guard.py
 
 ```bash
 cd content/claude_code/mini_claude
-export ANTHROPIC_API_KEY=sk-ant-...
+export GOOGLE_CLOUD_PROJECT=<your-gcp-project>   # + gcloud auth application-default login
 uv run mini-claude
 ```
 
