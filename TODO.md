@@ -393,7 +393,7 @@
 - [x] `src/components/diagrams/stats/` 디렉토리 생성
 - [x] `diagramRegistry.ts`에 stats 섹션 구분 주석 추가
 - [x] 통계학 다이어그램용 색상 팔레트 결정 (반도체=시안 계열 → 통계=에메랄드/그린 계열)
-- [ ] 공용 훅 `useSlider`, `useSimulation` 추출 (반복 패턴이면) — 현재 각 컴포넌트에서 useState로 직접 처리, 추후 필요 시 추출
+- [x] 공용 훅 `useSlider`, `useSimulation` 추출 (반복 패턴이면) — **won't fix**: 28개 컴포넌트 모두 useState로 안정 작동, 추가 컴포넌트 계획 없음. 새 컴포넌트 추가 트리거 시 재검토.
 - [x] 마크다운 내 이미지 플레이스홀더 일괄 삽입 — 수동 완료
 
 ---
