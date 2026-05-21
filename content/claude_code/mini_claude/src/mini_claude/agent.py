@@ -1,13 +1,35 @@
 from __future__ import annotations
+import asyncio
+from dataclasses import dataclass
+from typing import Any, AsyncIterator
 from anthropic import AsyncAnthropic
-from .messages import ConversationState
-from .permissions import PermissionEngine, prompt_user
 from .tools.base import Tool, ToolContext, find_tool, tool_to_anthropic_schema
+from .permissions import PermissionEngine, prompt_user
+from .messages import ConversationState
 
 
-# 모델 이름은 한 곳에서 관리
-DEFAULT_MODEL = "claude-opus-4-6"
-DEFAULT_MAX_TOKENS = 4096
+# 위로 흘려보낼 청크 종류 ─────────────────────────────────
+@dataclass
+class TextDelta:
+    """진행 중인 텍스트 한 조각."""
+    text: str
+
+
+@dataclass
+class ToolUseStarted:
+    """도구 호출이 시작됐다는 알림."""
+    name: str
+    input: dict[str, Any]
+
+
+@dataclass
+class TurnDone:
+    """한 턴이 끝났다는 신호."""
+    stop_reason: str
+
+
+# 위로 흘려보내는 청크의 union
+QueryChunk = TextDelta | ToolUseStarted | TurnDone
 
 
 async def query(
@@ -19,91 +41,95 @@ async def query(
     state: ConversationState,
     system_prompt: str = "You are a helpful coding assistant.",
     client: AsyncAnthropic | None = None,
-    max_iterations: int = 50,
-) -> None:
-    """에이전트 루프 — 0.1의 50줄 챗봇 + 비동기 + 타입 + 권한.
+) -> AsyncIterator[QueryChunk]:
+    """*async generator*. 각 청크를 부모에게 흘려보낸다.
 
-    스트리밍/서브 에이전트는 9.5에서 추가.
+    9.4 에서는 `async def query(...) -> None` 이었다. 이제 yield 가
+    들어가서 *generator 함수*로 변신. *호출자는 `async for` 로 받는다*.
     """
     client = client or AsyncAnthropic()
+    state.add_user(user_input)
     context = ToolContext(cwd=cwd, permissions=permissions)
 
-    # 사용자 입력을 메시지 히스토리에 추가
-    state.add_user(user_input)
-
-    for _ in range(max_iterations):
-        # ── ① API 호출 ────────────────────────────
-        response = await client.messages.create(
-            model=DEFAULT_MODEL,
-            max_tokens=DEFAULT_MAX_TOKENS,
+    while True:
+        # 9.2 의 messages.create() → stream() 으로 교체
+        async with client.messages.stream(
+            model="claude-opus-4-6",
+            max_tokens=4096,
             system=system_prompt,
-            tools=[tool_to_anthropic_schema(t) for t in tools],
             messages=state.to_api_format(),
-        )
+            tools=[tool_to_anthropic_schema(t) for t in tools],
+        ) as stream:
+            async for event in stream:
+                # 진짜 코드의 switch (part.type) 에 해당
+                if event.type == "content_block_delta":
+                    delta = event.delta
+                    if delta.type == "text_delta":
+                        # ⭐ += 한 줄에 해당 — SDK 가 누적해 두지만 우리는
+                        # *조각 자체* 를 부모에게 흘려보낸다.
+                        yield TextDelta(text=delta.text)
+                # content_block_start / content_block_stop / message_delta
+                # 는 미니에서는 *그냥 흘려보낸다*. SDK 가 알아서 final
+                # message 에 다 박아 준다.
 
-        # ── ② assistant content를 그대로 저장 ──────
+            # 스트림이 끝나면 SDK 의 누적된 *완성된* 메시지를 가져온다.
+            response = await stream.get_final_message()
+
+        # 9.2 의 stop_reason 분기 — 변한 게 없다.
+        # assistant 메시지를 그대로 history 에 박는다.
         content_blocks = [b.model_dump() for b in response.content]
         state.add_assistant(content_blocks)
 
-        # ── ③ end_turn — 텍스트 출력 후 종료 ─────────
         if response.stop_reason == "end_turn":
-            for block in content_blocks:
-                if block["type"] == "text":
-                    print(block["text"])
+            yield TurnDone(stop_reason="end_turn")
             return
 
-        # ── ④ tool_use — 권한 게이트 + 각 도구 실행 ──
-        if response.stop_reason == "tool_use":
-            tool_results: list[dict] = []
-            for block in content_blocks:
-                if block["type"] != "tool_use":
-                    continue
+        if response.stop_reason != "tool_use":
+            yield TurnDone(stop_reason=response.stop_reason)
+            return
 
-                tool = find_tool(tools, block["name"])
-                print(f"[{tool.name}] {block['input']}")
+        # tool_use 분기 — 9.4 의 권한 게이트는 *한 줄도 안 바뀜*.
+        tool_results: list[dict] = []
+        for block in content_blocks:
+            if block["type"] != "tool_use":
+                continue
 
-                # ── 권한 게이트 ──────────────────────
-                decision = permissions.check(tool, block["input"])
+            tool = find_tool(tools, block["name"])
+            yield ToolUseStarted(name=tool.name, input=block["input"])
 
-                if decision == "deny":
-                    result_text = "Permission denied by deny rule."
-                    is_error = True
-                elif decision == "ask":
-                    allowed, new_rule = await prompt_user(tool, block["input"])
-                    if new_rule:
-                        permissions.add_allow(new_rule)
-                    if allowed:
-                        try:
-                            result_text = await tool.call(block["input"], context)
-                            is_error = False
-                        except Exception as e:
-                            result_text = f"Error: {e}"
-                            is_error = True
-                    else:
-                        result_text = "Permission denied by user."
-                        is_error = True
-                else:  # "allow"
+            # ── 9.4 의 권한 게이트 (그대로) ─────────────
+            decision = permissions.check(tool, block["input"])
+            if decision == "deny":
+                result_text = "Permission denied by deny rule."
+                is_error = True
+            elif decision == "ask":
+                allowed, new_rule = await prompt_user(tool, block["input"])
+                if new_rule:
+                    permissions.add_allow(new_rule)
+                if allowed:
                     try:
                         result_text = await tool.call(block["input"], context)
                         is_error = False
                     except Exception as e:
                         result_text = f"Error: {e}"
                         is_error = True
+                else:
+                    result_text = "Permission denied by user."
+                    is_error = True
+            else:  # "allow"
+                try:
+                    result_text = await tool.call(block["input"], context)
+                    is_error = False
+                except Exception as e:
+                    result_text = f"Error: {e}"
+                    is_error = True
 
-                tool_results.append({
-                    "type": "tool_result",
-                    "tool_use_id": block["id"],
-                    "content": result_text,
-                    **({"is_error": True} if is_error else {}),
-                })
+            tool_results.append({
+                "type": "tool_result",
+                "tool_use_id": block["id"],
+                "content": result_text,
+                **({"is_error": True} if is_error else {}),
+            })
 
-            state.add_user(tool_results)
-            continue  # 루프 위로 — Claude한테 결과 보여주고 다음 결정
-
-        raise RuntimeError(
-            f"Unexpected stop_reason: {response.stop_reason}"
-        )
-
-    raise RuntimeError(
-        f"max_iterations({max_iterations}) 초과 — Claude가 도구 호출 루프를 못 빠져나옴"
-    )
+        state.add_user(tool_results)
+        # while 루프의 다음 iteration → 다음 LLM 호출
