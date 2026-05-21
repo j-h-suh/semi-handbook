@@ -299,7 +299,12 @@ async def validate_input(self, input: dict) -> dict:
 
 같은 3단계 패턴이 다른 적과 만나면 다른 모양이 된다. 패턴은 같고, 그 안의 채움이 다르다. 이게 인터페이스의 힘이다.
 
-> 🔬 **Deep Dive — `parseForSecurity`가 tree-sitter를 쓰는 진짜 이유.** tree-sitter는 부분 파싱과 에러 복구가 강하다. 셸 입력은 문법이 깨진 채로 도착할 수 있다 — LLM이 토큰 한 개를 빼먹거나, 인용을 잘못 닫거나. 일반 파서는 그 자리에서 throw한다. 근데 보안 결정을 **throw 한 번**에 맡길 수는 없다 — 그러면 파싱 실패 = 런타임 에러가 되고, 사용자는 권한 다이얼로그조차 못 본다. tree-sitter는 **깨진 입력에서도 부분 AST**를 돌려준다. 그 부분 AST에서 최대한 많은 하위 명령을 추출하고, **나머지는 fail-safe로 ask**. 정규식이나 일반 파서로는 못 하는 일이다.
+<details>
+<summary>🔬 Deep Dive — `parseForSecurity`가 tree-sitter를 쓰는 진짜 이유</summary>
+
+> tree-sitter는 부분 파싱과 에러 복구가 강하다. 셸 입력은 문법이 깨진 채로 도착할 수 있다 — LLM이 토큰 한 개를 빼먹거나, 인용을 잘못 닫거나. 일반 파서는 그 자리에서 throw한다. 근데 보안 결정을 **throw 한 번**에 맡길 수는 없다 — 그러면 파싱 실패 = 런타임 에러가 되고, 사용자는 권한 다이얼로그조차 못 본다. tree-sitter는 **깨진 입력에서도 부분 AST**를 돌려준다. 그 부분 AST에서 최대한 많은 하위 명령을 추출하고, **나머지는 fail-safe로 ask**. 정규식이나 일반 파서로는 못 하는 일이다.
+
+</details>
 
 ---
 
@@ -384,7 +389,10 @@ print(matcher_broken("anything"))  # True  ← fail-safe로 권한 묻기
 2. **환경 변수 prefix를 떼어 정규화한다** (`strip_env_prefix`).
 3. **파싱 실패면 fail-safe로 항상 매칭한다** → 권한 묻기 발동.
 
-> 🔬 **Deep Dive — `strip_env_prefix` 동작 추적.** 위 코드의 `strip_env_prefix` 가 어떻게 환경 변수 prefix 를 떼어내는지 한 줄씩 본다.
+<details>
+<summary>🔬 Deep Dive — `strip_env_prefix` 동작 추적</summary>
+
+> 위 코드의 `strip_env_prefix` 가 어떻게 환경 변수 prefix 를 떼어내는지 한 줄씩 본다.
 >
 > ```python
 > def strip_env_prefix(argv: list[str]) -> list[str]:
@@ -415,6 +423,8 @@ print(matcher_broken("anything"))  # True  ← fail-safe로 권한 묻기
 > → `return argv[2:]` = `["git", "push"]`. env prefix 두 개 떼고 진짜 명령만 남음.
 >
 > **참고 — short-circuit 평가:** `while a and b and c` 에서 `a` 가 False 면 `b`, `c` 는 평가 안 됨. iteration 3 에서 `"=" in "git"` 이 False 가 나오자마자 `.split(...).isidentifier()` 는 호출 안 됨 — `=` 없는 명령에서 `KeyError` 같은 부작용 없음.
+
+</details>
 
 진짜 BashTool은 여기에 진짜 셸 파서, **tree-sitter**, 50개 검증기, 분류기, 샌드박스 결정, 백그라운드 작업, **sed 시뮬레이션**까지 더해진 게 1,144줄이다. 본질은 위 50줄. **나머지는 같은 본질의 더 정교한 적용**일 뿐이다.
 

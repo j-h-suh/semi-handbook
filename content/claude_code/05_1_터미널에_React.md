@@ -215,7 +215,12 @@ def render_diff(prev_screen: list[list[str]], new_screen: list[list[str]]) -> st
 
 이게 깜빡임 없는 UI의 비결이다. `clear` 명령으로 화면을 다 지우고 다시 그리면 — 깜빡인다. 사람 눈에 프레임이 잠깐 비었다 다시 채워지는 것이 보인다. 셀 단위 diff는 비는 순간이 없다. 안 바뀐 부분은 그대로 있고, 바뀐 부분만 덮어 쓴다.
 
-> 🔬 **Deep Dive — DOM의 React diff와 정확히 같다.** React의 가상 DOM diff가 "이 노드와 이 노드만 바뀌었으니 그것만 patchDOM해라"라고 react-dom에게 알려주는 것과 — Ink의 Screen diff가 "이 셀과 이 셀만 바뀌었으니 ANSI escape로 그것만 덮어써라"라고 stdout에게 알려주는 것은 완전히 같은 패턴이다. **React의 핵심 가치 — 최소 변경을 최소 비용으로** — 이 터미널에서도 그대로 통한다. 30Hz로 갱신해도 CPU가 놀고 있다.
+<details>
+<summary>🔬 Deep Dive — DOM의 React diff와 정확히 같다</summary>
+
+> React의 가상 DOM diff가 "이 노드와 이 노드만 바뀌었으니 그것만 patchDOM해라"라고 react-dom에게 알려주는 것과 — Ink의 Screen diff가 "이 셀과 이 셀만 바뀌었으니 ANSI escape로 그것만 덮어써라"라고 stdout에게 알려주는 것은 완전히 같은 패턴이다. **React의 핵심 가치 — 최소 변경을 최소 비용으로** — 이 터미널에서도 그대로 통한다. 30Hz로 갱신해도 CPU가 놀고 있다.
+
+</details>
 
 ### `useInput`, `useStdin` — 키 입력도 React 스럽게
 

@@ -253,7 +253,12 @@ CLAUDE.md를 boundary 앞(★)에 못 넣는 이유는 큰 그림의 "사용자�
 
 대신 메시지 영역(☆)에 prepend된다. 메시지 영역 끝에 박힌 `org` 마커(`addCacheBreakpoints`, `claude.ts:3063` — *"Exactly one message-level cache_control marker per request"*)가 prefix 전체를 한 캐시 단위로 묶기 때문에, **메타 메시지(CLAUDE.md 포함)도 두 번째 턴부터 캐시 hit**. 손해가 없다.
 
-> 🔬 **Deep Dive — 1P/3P가 만드는 캐시 위계 차이.** `shouldUseGlobalCacheScope` (`betas.ts:227`)는 `getAPIProvider() === 'firstParty'`일 때만 true다. 글로벌 캐시는 Anthropic 직접 호출(1P) 한정. AWS Bedrock / Google Vertex / Azure Foundry(3P)는 백엔드가 별개라 Anthropic이 자기 인프라의 공유 캐시에 접근시킬 수 없다. 3P에서는 boundary가 의미 없고, 시스템 프롬프트 전체가 `org` 스코프로 떨어진다. **같은 코드가 백엔드에 따라 다른 캐시 위계를 탄다.** 7.1에서 본 1P/3P 분기가 캐시 계층에도 그대로 반영되는 셈.
+<details>
+<summary>🔬 Deep Dive — 1P/3P가 만드는 캐시 위계 차이</summary>
+
+> `shouldUseGlobalCacheScope` (`betas.ts:227`)는 `getAPIProvider() === 'firstParty'`일 때만 true다. 글로벌 캐시는 Anthropic 직접 호출(1P) 한정. AWS Bedrock / Google Vertex / Azure Foundry(3P)는 백엔드가 별개라 Anthropic이 자기 인프라의 공유 캐시에 접근시킬 수 없다. 3P에서는 boundary가 의미 없고, 시스템 프롬프트 전체가 `org` 스코프로 떨어진다. **같은 코드가 백엔드에 따라 다른 캐시 위계를 탄다.** 7.1에서 본 1P/3P 분기가 캐시 계층에도 그대로 반영되는 셈.
+
+</details>
 
 ### 4단계 메모리 계층
 

@@ -186,7 +186,12 @@ You are a senior security engineer conducting a focused security review...
 
 이 모델의 핵심은 — **한 덩어리의 마크다운에 프롬프트(본문) + 권한(`allowed-tools`) + 설명(`description`)이 응축돼 있다**는 것. `commit.ts`처럼 TS 코드 곳곳에 흩어져 있던 셋이 한 텍스트로 묶인 형태다. 10.2에서 직접 SKILL.md를 만들 때 이 응축을 손으로 다시 한다.
 
-> 🔬 **Deep Dive — `claude -p ... --allowedTools`와는 정반대다.** Headless 모드(`claude -p`)의 `--allowedTools`는 **화이트리스트 필터**다 — 목록에 없는 도구는 아예 사용 불가. 슬래시 명령의 `allowedTools`는 반대로 **자동 허용 목록**이다 — 거기 있으면 다이얼로그를 건너뛰고, 없는 도구도 권한이 있다면 여전히 쓸 수 있다. 같은 키워드가 실행 환경(headless vs interactive)에 따라 정반대 방향으로 동작한다는 걸 알면 정리된다.
+<details>
+<summary>🔬 Deep Dive — `claude -p ... --allowedTools`와는 정반대다</summary>
+
+> Headless 모드(`claude -p`)의 `--allowedTools`는 **화이트리스트 필터**다 — 목록에 없는 도구는 아예 사용 불가. 슬래시 명령의 `allowedTools`는 반대로 **자동 허용 목록**이다 — 거기 있으면 다이얼로그를 건너뛰고, 없는 도구도 권한이 있다면 여전히 쓸 수 있다. 같은 키워드가 실행 환경(headless vs interactive)에 따라 정반대 방향으로 동작한다는 걸 알면 정리된다.
+
+</details>
 
 ### 4장 통합 — 명령 = 번들
 

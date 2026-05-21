@@ -220,7 +220,12 @@ export const fileReadTool = {
 
 `buildTool`은 이 셋을 다 해결한다. **기본값은 한 군데. 도구는 항상 완전. 호출자는 항상 그냥 호출.** 47개짜리 인터페이스를 7개 기본값으로 안전하게 채우는 제일 단순한 방법이다.
 
-> 🔬 **Deep Dive — TypeScript의 타입 매직.** 위 코드의 진짜 어려운 부분은 런타임이 아니라 타입이다. `Tool.ts:707-714`에 `DefaultableToolKeys`라는 union type이 있어서 **어떤 7개가 default로 채워지는지**가 타입 레벨에 못 박혀 있다. 그리고 `Tool.ts:735-741`의 `BuiltTool<D>` 매핑 타입이 — 작성자가 채운 키는 그 타입을 그대로 유지하고, 안 채운 키는 기본값 타입을 가져온다. 그래서 `myTool.isReadOnly`를 호출하면 컴파일러가 "이건 무조건 함수다"라고 알게 된다. 작성자가 안 썼는데도. 이 타입 매직 덕분에 호출자는 옵셔널 체이닝(`?.`)이나 nullish 병합(`??`)을 전혀 안 써도 된다. 코드가 더 짧고 더 안전해진다. **즉, 7개의 기본값은 런타임에도 한 곳 (`TOOL_DEFAULTS`, `Tool.ts:757`), 타입에도 한 곳 (`DefaultableToolKeys`, `Tool.ts:707`) 에 산다.** Python에는 이런 매핑 타입이 없어서 같은 효과를 내려면 mypy plugin이나 TypedDict 트릭이 필요하다. (그래서 다음 챕터의 Python 버전은 더 단순하다.)
+<details>
+<summary>🔬 Deep Dive — TypeScript의 타입 매직</summary>
+
+> 위 코드의 진짜 어려운 부분은 런타임이 아니라 타입이다. `Tool.ts:707-714`에 `DefaultableToolKeys`라는 union type이 있어서 **어떤 7개가 default로 채워지는지**가 타입 레벨에 못 박혀 있다. 그리고 `Tool.ts:735-741`의 `BuiltTool<D>` 매핑 타입이 — 작성자가 채운 키는 그 타입을 그대로 유지하고, 안 채운 키는 기본값 타입을 가져온다. 그래서 `myTool.isReadOnly`를 호출하면 컴파일러가 "이건 무조건 함수다"라고 알게 된다. 작성자가 안 썼는데도. 이 타입 매직 덕분에 호출자는 옵셔널 체이닝(`?.`)이나 nullish 병합(`??`)을 전혀 안 써도 된다. 코드가 더 짧고 더 안전해진다. **즉, 7개의 기본값은 런타임에도 한 곳 (`TOOL_DEFAULTS`, `Tool.ts:757`), 타입에도 한 곳 (`DefaultableToolKeys`, `Tool.ts:707`) 에 산다.** Python에는 이런 매핑 타입이 없어서 같은 효과를 내려면 mypy plugin이나 TypedDict 트릭이 필요하다. (그래서 다음 챕터의 Python 버전은 더 단순하다.)
+
+</details>
 
 ---
 

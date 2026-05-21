@@ -178,7 +178,12 @@ class MyWidget(Widget):
 
 이 셋이 들어가면 — React는 "이 컴포넌트는 이 외부 스토어를 구독한다"를 알게 된다. 스토어가 알림을 보내면, React가 이 컴포넌트만 다시 렌더한다.
 
-> 🔬 **Deep Dive — 왜 `useState` + `useEffect`로는 안 되나?** 옛날에는 `useState` + `useEffect`로 외부 스토어를 묶곤 했다. 근데 **concurrent rendering**에 들어가면서 문제가 생긴다 — React가 컴포넌트를 여러 번 시뮬레이션하면서 렌더링하는 경우, 외부 상태가 렌더링 도중에 바뀌면 tearing(일부 컴포넌트는 옛 상태, 일부는 새 상태로 그려지는 현상)이 일어난다. `useSyncExternalStore`는 동기적으로 외부 상태를 끌어와서 그 tearing을 원천 차단한다. 이래서 React 18에 전용 훅으로 들어왔다. "외부 스토어를 React에 묶으라"는 한 가지 일을 정확히 잘 한다.
+<details>
+<summary>🔬 Deep Dive — 왜 `useState` + `useEffect`로는 안 되나?</summary>
+
+> 옛날에는 `useState` + `useEffect`로 외부 스토어를 묶곤 했다. 근데 **concurrent rendering**에 들어가면서 문제가 생긴다 — React가 컴포넌트를 여러 번 시뮬레이션하면서 렌더링하는 경우, 외부 상태가 렌더링 도중에 바뀌면 tearing(일부 컴포넌트는 옛 상태, 일부는 새 상태로 그려지는 현상)이 일어난다. `useSyncExternalStore`는 동기적으로 외부 상태를 끌어와서 그 tearing을 원천 차단한다. 이래서 React 18에 전용 훅으로 들어왔다. "외부 스토어를 React에 묶으라"는 한 가지 일을 정확히 잘 한다.
+
+</details>
 
 ### selector 패턴 — 부분 구독
 

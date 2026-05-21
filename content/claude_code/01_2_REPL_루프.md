@@ -240,7 +240,12 @@ class ClaudeCodeREPL(App):
 
 다른 점은 Textual은 **자체 컴포넌트 시스템**을 쓴다는 것. Ink는 React 위에 얹혀 있어서 React 생태계의 훅, 라이브러리, 패턴을 그대로 가져다 쓸 수 있다. 반면 Textual은 자체적이라 일관성이 좋고 학습 곡선이 부드럽다. 트레이드오프다.
 
-> 🔬 **Deep Dive — 왜 굳이 React인가?** Anthropic이 Ink를 선택한 이유는 "React를 아는 사람이 많아서"가 가장 크다고 본다. Claude Code가 처음 만들어질 때 Anthropic 내부 엔지니어 대부분이 React 경험이 있었을 거고, "새 UI 라이브러리 배워라"보다 "이미 아는 걸로 빠르게 만들어라"가 합리적이다. 그 결정이 지금 와서 보면 **터미널 UI에서 흔치 않은 풍부함**을 가능하게 했다. 권한 다이얼로그, 사이드 패널, 가상 스크롤, 모달 — 이게 다 React 패턴 그대로다.
+<details>
+<summary>🔬 Deep Dive — 왜 굳이 React인가?</summary>
+
+> Anthropic이 Ink를 선택한 이유는 "React를 아는 사람이 많아서"가 가장 크다고 본다. Claude Code가 처음 만들어질 때 Anthropic 내부 엔지니어 대부분이 React 경험이 있었을 거고, "새 UI 라이브러리 배워라"보다 "이미 아는 걸로 빠르게 만들어라"가 합리적이다. 그 결정이 지금 와서 보면 **터미널 UI에서 흔치 않은 풍부함**을 가능하게 했다. 권한 다이얼로그, 사이드 패널, 가상 스크롤, 모달 — 이게 다 React 패턴 그대로다.
+
+</details>
 
 ---
 
