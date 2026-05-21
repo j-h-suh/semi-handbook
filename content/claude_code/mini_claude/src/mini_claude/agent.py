@@ -8,6 +8,7 @@ from .permissions import PermissionEngine, prompt_user
 from .messages import ConversationState
 from .hooks import HookEngine
 from . import message_queue
+from . import teams
 
 
 # 위로 흘려보낼 청크 종류 ─────────────────────────────────
@@ -89,12 +90,15 @@ async def query(
             # ── Hook (10.4) — Stop ──────────────
             if hooks:
                 await hooks.stop(cwd=cwd, stop_reason="end_turn")
+            # ── 10.7 — 팀원이면 lead 메일박스에 idle 알림 + coordinator.mark_idle ──
+            await _notify_lead_on_idle(state, stop_reason="end_turn")
             yield TurnDone(stop_reason="end_turn")
             return
 
         if response.stop_reason != "tool_use":
             if hooks:
                 await hooks.stop(cwd=cwd, stop_reason=response.stop_reason)
+            await _notify_lead_on_idle(state, stop_reason=response.stop_reason)
             yield TurnDone(stop_reason=response.stop_reason)
             return
 
@@ -185,3 +189,47 @@ async def query(
 
         state.add_user(tool_results)
         # while 루프의 다음 iteration → 다음 LLM 호출
+
+
+def _last_assistant_text(state: ConversationState) -> str:
+    """대화 끝에서 가장 가까운 assistant 텍스트 블록을 합쳐 돌려준다.
+
+    팀원이 turn 을 끝내면서 *지금까지 한 일* 의 요약을 lead 에게 전달하는 자리.
+    AgentTool / TeamTool 의 마지막 텍스트 회수 로직과 같은 fallback.
+    """
+    for msg in reversed(state.messages):
+        if msg.get("role") != "assistant":
+            continue
+        blocks = msg.get("content", [])
+        texts = [
+            b.get("text", "") for b in blocks
+            if isinstance(b, dict) and b.get("type") == "text"
+        ]
+        if texts:
+            return "\n".join(texts)
+    return ""
+
+
+async def _notify_lead_on_idle(state: ConversationState, stop_reason: str) -> None:
+    """팀원의 turn 이 끝났을 때 lead 메일박스에 idle 알림 + coordinator.mark_idle.
+
+    *팀 컨텍스트 밖* (단독 실행, 또는 lead 본인) 이면 no-op.
+    """
+    identity = teams.get_identity()
+    if identity is None or identity.is_lead:
+        return  # 팀 밖 또는 lead 본인 — 알림 불필요
+
+    summary = _last_assistant_text(state)
+    coordinator = teams.get_coordinator()
+    # ① fan-in 콜백 트리거 — lead 의 wait_all_idle() 깨움
+    coordinator.mark_idle(identity.agent_id, result=summary or None)
+    # ② lead 메일박스에 idle 메시지 push — wait_all_idle 후 drain 으로 검토
+    lead_id = f"lead@{identity.team_name}"
+    await teams.deliver(
+        lead_id,
+        teams.MailboxMessage(
+            sender=identity.agent_name,
+            text=summary or f"(no text; stop_reason={stop_reason})",
+            kind="idle",
+        ),
+    )

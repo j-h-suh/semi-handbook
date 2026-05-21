@@ -10,6 +10,7 @@ from .messages import ConversationState
 from .permissions import PermissionEngine
 from .tools import default_tool_pool
 from .tools.agent import AgentTool
+from .tools.team import TeamTool
 
 
 async def main_async(args: argparse.Namespace) -> None:
@@ -38,6 +39,13 @@ async def main_async(args: argparse.Namespace) -> None:
         user_agents=user_agents,
     )
     parent_tools.append(agent_tool)
+    # 10.7 — TeamTool: N 명의 팀원을 동시 spawn. AgentTool 과 같은 user_agents 풀 공유
+    team_tool = TeamTool(
+        parent_tools=parent_tools,
+        permissions=permissions,
+        user_agents=user_agents,
+    )
+    parent_tools.append(team_tool)
 
     print("mini-claude 시작 (Ctrl+D로 종료)")
     if user_agents:
