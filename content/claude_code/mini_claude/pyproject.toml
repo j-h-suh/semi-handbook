@@ -1,0 +1,16 @@
+[project]
+name = "mini-claude"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.40.0",   # LLM API 클라이언트
+    "pydantic>=2.0.0",     # 도구 입력 스키마 + JSONSchema 자동 생성
+    "rich>=13.0.0",        # 스트리밍 출력 색깔/포맷
+]
+
+[project.scripts]
+mini-claude = "mini_claude.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
