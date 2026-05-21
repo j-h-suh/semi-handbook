@@ -12,6 +12,41 @@ Anthropic API 키 없이 mini_claude 를 실행하려면 GCP Vertex AI 의 Anthr
 
 ---
 
+## 0. GCP 를 처음 쓰는 학습자라면
+
+위 _전제_ 가 안 갖춰진 학습자를 위한 진입 가이드. 이미 GCP project + billing 이 있다면 §1 로 건너뛰세요.
+
+### ① Google 계정 + GCP 가입
+
+[console.cloud.google.com](https://console.cloud.google.com) 접속 → Google 계정으로 로그인. 처음이면 _Free Trial_ ($300 크레딧 90 일) 자동 활성화.
+
+### ② Project 생성
+
+GCP Console → 상단의 _project 선택 드롭다운_ → **New Project**. 이름은 자유 (예: `mini-claude-learn`). project ID 가 자동 생성됨 — 이게 `GOOGLE_CLOUD_PROJECT` 환경변수 값.
+
+### ③ Billing 활성화 (필수)
+
+- GCP Console → _Billing_ → _Link a billing account_
+- 신용카드 등록 — Free Trial 크레딧 안에서는 _과금 안 됨_, 다만 카드 등록 자체는 필요
+- _Vertex AI 의 Anthropic Claude_ 는 _per-token 과금_ — Free Trial $300 안에서 수십만 토큰 호출 가능
+
+> ⚠️ **Billing 안 하면 Vertex AI API 활성화 단계에서 막힘**. `gcloud services enable aiplatform.googleapis.com` 가 `FAILED_PRECONDITION: Billing must be enabled` 로 거부됨.
+
+### ④ gcloud CLI 설치 + 첫 로그인
+
+- macOS: `brew install --cask google-cloud-sdk`
+- Linux/Windows: [공식 설치 가이드](https://cloud.google.com/sdk/docs/install)
+- 설치 후:
+  ```bash
+  gcloud auth login                          # 브라우저 로그인 (CLI 자체용)
+  gcloud config set project <YOUR_PROJECT>   # 작업 project 지정
+  gcloud auth application-default login      # ADC — 코드가 쓰는 인증
+  ```
+
+이제 §1 로.
+
+---
+
 ## 1. GCP project 확인 + Vertex AI API 활성화
 
 ```bash

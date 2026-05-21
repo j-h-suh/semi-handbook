@@ -692,3 +692,45 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
+## Phase 9: 학습자 Vertex 환경 보장 + 누적 실 검증 *(✅ 완료)*
+
+학습자들이 _Anthropic API 키 없이 GCP Vertex 만 가능한 환경_ 에서 mini_claude 를 9.1 첫 챕터부터 _본문 코드 그대로 따라_ 만들어 실행할 수 있도록. 그 과정에서 _실제 학습자 시뮬레이션_ ($CLAUDE_JOB_DIR/learner_sim 에 본문 코드 누적 적용 + paper-viewer .env GCP 환경에서 호출) 으로 본문 갭을 _진짜 막힘 자리_ 단위로 발견 + 보강.
+
+### 작업 결과 (10 commits 묶음)
+
+**신규 챕터 + 추상화 도입** (Part 10 확장):
+- [x] 10.7 에이전트 팀 신규 챕터 + mini_claude teams 모듈 (commit `bcf8423`)
+- [x] 10.8 API 클라이언트 신규 챕터 + mini_claude clients 모듈 (Vertex + vLLM 어댑터) (commit `4832510`)
+
+**Vertex 실행 보장**:
+- [x] mini_claude/SETUP.md + `anthropic[vertex]` extra — google.auth import 보장 (commit `3416d0e`)
+- [x] Vertex region/model 기본값 학습자 환경 표준에 맞춤 — `claude-opus-4-7` alias + `global` region + `CLOUD_ML_REGION` fallback (commit `b25b356`)
+
+**9.x + 10.4 본문 코드 Vertex 화**:
+- [x] 9.x + 10.4 본문 코드 인용을 `AsyncAnthropicVertex` 로 (23 자리) — 학습자가 본문 그대로 복사해서 만들면 작동 (commit `af4654a`)
+
+**누적 검증 발견 갭 보강 (7 개)**:
+- [x] 9.1/9.2/9.5 본문 갭 3개 — pyproject Vertex extra / messages.py 라벨 / agent.py import (commit `324da39`)
+- [x] 10.1/10.4/10.5 본문 갭 3개 — PyYAML 의존성 / hooks 생략 메서드 + HookInput / _normalize_list 정의 (commit `bcb20ad`)
+- [x] 추가 보강 4 — 10.3 mcp[cli] / 10.4 완전한 hooks 본문 / SETUP §0 GCP 진입 가이드 / 11 에필로그 10.7·10.8 회수 (이 commit)
+
+### 누적 검증 통과 13 챕터
+
+| 시점 | 시나리오 | 결과 |
+|---|---|---|
+| 9.1 | stub `NotImplementedError` | ✅ 의도된 결과 |
+| 9.2 | 도구 없는 단순 응답 | ✅ Vertex 호출 |
+| 9.3 | Bash `ls` 도구 호출 | ✅ |
+| 9.4 | 권한 게이트 (allow_rule) | ✅ |
+| 9.5 | 스트리밍 + AgentTool | ✅ |
+| 10.1 | `/hello Alice` 슬래시 명령 → `$name` 치환 | ✅ |
+| 10.2 | 자연어 → SkillTool 자동 매칭 | ✅ |
+| 10.3 | 가짜 MCP 서버 spawn → tools/call | ✅ |
+| 10.4 | Hook 빈 registry → None | ✅ |
+| 10.5 | AGENT.md 발견 → spec 1개 | ✅ |
+| 10.6 | message_queue push/drain | ✅ |
+| 10.7 | teams wait_all_idle + mailbox | ✅ |
+| 10.8 | make_client → Vertex + vLLM 변환 | ✅ |
+
+---
+

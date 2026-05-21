@@ -204,11 +204,30 @@ class PostToolUseInput(BaseHookInput):
 class StopInput(BaseHookInput):
     hook_event_name: Literal["Stop"] = "Stop"
     stop_reason: str
+
+
+class SessionStartInput(BaseHookInput):
+    hook_event_name: Literal["SessionStart"] = "SessionStart"
+
+
+class UserPromptSubmitInput(BaseHookInput):
+    hook_event_name: Literal["UserPromptSubmit"] = "UserPromptSubmit"
+    prompt: str
+
+
+# 5 이벤트를 묶는 union — runner.py / __init__.py 에서 *공통 타입* 으로 쓴다.
+HookInput = (
+    PreToolUseInput
+    | PostToolUseInput
+    | StopInput
+    | SessionStartInput
+    | UserPromptSubmitInput
+)
 ```
 
 다섯 이벤트가 *공통 필드 + 이벤트별 추가 필드* 라는 *판별 유니온(0.4)* 의 정직한 응용이다. `hook_event_name` 으로 분기.
 
-> ⚙️ **나머지 두 이벤트 + `HookInput` 별칭**: 본문은 `PreToolUseInput / PostToolUseInput / StopInput` 세 개만 보였지만 — `SessionStartInput`, `UserPromptSubmitInput` 도 같은 `BaseHookInput` 상속 + 이벤트별 필드 한 줄 추가 패턴. 그리고 다섯을 묶는 `HookInput = PreToolUseInput | PostToolUseInput | StopInput | SessionStartInput | UserPromptSubmitInput` 별칭이 `runner.py` / `__init__.py` 에서 _공통 타입_ 으로 쓰인다. 완전한 코드는 `content/claude_code/mini_claude/src/mini_claude/hooks/events.py` 참고.
+> ⚙️ **`HookInput` union 별칭**: 다섯 이벤트의 입력 dataclass 를 묶는 *공통 타입*. `runner.py` 의 `execute_hook(spec, hook_input: HookInput)` 시그니처와 `__init__.py` 의 `_fire_first` 가 이 별칭으로 5 이벤트를 한 형태로 받는다. *판별 유니온(0.4)* 의 정수.
 
 stdout 응답은 *모든 필드가 옵션*. 채워진 것만 동작한다.
 
@@ -418,9 +437,52 @@ class HookEngine:
             tool_name=tool_name,
         )
 
-    # post_tool_use / stop / session_start / user_prompt_submit 도 같은 패턴 —
-    # 이벤트 이름 + 해당 입력 dataclass 만 다르고 내부는 _fire_first 호출 한 줄.
-    # 완전한 구현은 mini_claude/src/mini_claude/hooks/__init__.py 참고.
+    async def post_tool_use(
+        self, *, cwd: str, tool_name: str,
+        tool_input: dict[str, Any], tool_response: str,
+    ) -> HookResponse | None:
+        return await self._fire_first(
+            "PostToolUse",
+            PostToolUseInput(
+                session_id=self.session_id,
+                transcript_path=self.transcript_path,
+                cwd=cwd, tool_name=tool_name,
+                tool_input=tool_input, tool_response=tool_response,
+            ),
+            tool_name=tool_name,
+        )
+
+    async def stop(self, *, cwd: str, stop_reason: str) -> HookResponse | None:
+        return await self._fire_first(
+            "Stop",
+            StopInput(
+                session_id=self.session_id,
+                transcript_path=self.transcript_path,
+                cwd=cwd, stop_reason=stop_reason,
+            ),
+        )
+
+    async def session_start(self, *, cwd: str) -> HookResponse | None:
+        return await self._fire_first(
+            "SessionStart",
+            SessionStartInput(
+                session_id=self.session_id,
+                transcript_path=self.transcript_path,
+                cwd=cwd,
+            ),
+        )
+
+    async def user_prompt_submit(
+        self, *, cwd: str, prompt: str,
+    ) -> HookResponse | None:
+        return await self._fire_first(
+            "UserPromptSubmit",
+            UserPromptSubmitInput(
+                session_id=self.session_id,
+                transcript_path=self.transcript_path,
+                cwd=cwd, prompt=prompt,
+            ),
+        )
 
     async def _fire_first(
         self, event: str, hook_input: HookInput,
