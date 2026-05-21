@@ -1,7 +1,7 @@
 from __future__ import annotations
 from anthropic import AsyncAnthropic
 from .messages import ConversationState
-from .tools.base import Tool, ToolContext, find_tool
+from .tools.base import Tool, ToolContext, find_tool, tool_to_anthropic_schema
 
 
 # 모델 이름은 한 곳에서 관리
@@ -35,14 +35,7 @@ async def query(
             model=DEFAULT_MODEL,
             max_tokens=DEFAULT_MAX_TOKENS,
             system=system_prompt,
-            tools=[
-                {
-                    "name": t.name,
-                    "description": t.description,
-                    "input_schema": t.input_schema,
-                }
-                for t in tools
-            ],
+            tools=[tool_to_anthropic_schema(t) for t in tools],
             messages=state.to_api_format(),
         )
 
