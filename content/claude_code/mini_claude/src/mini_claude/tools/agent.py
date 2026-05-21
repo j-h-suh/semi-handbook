@@ -3,10 +3,18 @@ from dataclasses import dataclass, field
 from typing import Any
 from pydantic import BaseModel, Field
 from .base import Tool, ToolContext
+from ..agents import AgentSpec
 from ..messages import ConversationState
 
 
 class AgentToolInput(BaseModel):
+    subagent_type: str = Field(
+        default="default",
+        description=(
+            "에이전트 종류. `.claude/agents/<name>/AGENT.md` 에 정의된 이름. "
+            "비워두거나 'default' 를 주면 기본 read-only 서브에이전트."
+        ),
+    )
     prompt: str = Field(
         description="서브 에이전트에게 시킬 작업 설명. 한 문장 이상."
     )
@@ -32,6 +40,9 @@ class AgentTool:
     진짜는 1398 줄. 미니는 ~30 줄. 빠진 것: teammate spawn,
     fork path, background async, MCP 통합, in-process teammate,
     11 가지 컨텍스트 격리 슬라이더. 남은 것: *query() 를 다시 부른다*.
+
+    10.5 에서 ``user_agents`` 필드가 추가됐다. ``.claude/agents/<name>/AGENT.md``
+    한 파일이 새 에이전트를 만든다 — 코드 한 줄 없이.
     """
 
     name: str = "Agent"
@@ -44,6 +55,24 @@ class AgentTool:
     # 부모가 가진 도구 풀에서 *읽기 전용* 만 자식에게 넘긴다.
     parent_tools: list[Tool] = field(default_factory=list)
     permissions: Any = None  # PermissionEngine
+    # 10.5 — ``.claude/agents/`` 에서 로드된 사용자 정의 에이전트들
+    user_agents: list[AgentSpec] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        """user_agents 가 있으면 description 에 *메뉴* 를 prepend.
+
+        8.1 의 *attachment 패턴* 의 단순화 — 진짜 코드는 메뉴를 메시지 슬롯의
+        attachment 에 넣지만 (캐시 hit 유지), 미니는 description 에 그냥 박는다.
+        """
+        if not self.user_agents:
+            return
+        menu_lines = ["", "", "사용 가능한 에이전트 (subagent_type 값으로 지정):"]
+        for spec in self.user_agents:
+            line = f"- {spec.name}: {spec.description}"
+            if spec.when_to_use:
+                line += f" (트리거: {spec.when_to_use})"
+            menu_lines.append(line)
+        self.description = self.description + "\n".join(menu_lines)
 
     def is_read_only(self) -> bool:
         return False  # 자식이 뭘 할지 모르므로 fail-closed
@@ -52,24 +81,57 @@ class AgentTool:
         return False
 
     def permission_summary(self, args: dict[str, Any]) -> str:
-        return args.get("prompt", "")[:80]
+        sub = args.get("subagent_type", "default")
+        prompt = args.get("prompt", "")[:60]
+        return f"{sub}:{prompt}" if sub != "default" else prompt
+
+    def _find_spec(self, subagent_type: str) -> AgentSpec | None:
+        """``subagent_type`` 으로 user_agents 에서 spec 조회."""
+        for spec in self.user_agents:
+            if spec.name == subagent_type:
+                return spec
+        return None
+
+    def _filter_tools(self, spec: AgentSpec | None) -> list[Tool]:
+        """자식에게 넘길 도구 풀. spec 이 있으면 allowed/disallowed 적용,
+        없으면 *읽기 전용 + Agent 자기 제외* 의 기본 정책."""
+        if spec is None:
+            return [
+                t for t in self.parent_tools
+                if t.is_read_only() and t.name != self.name
+            ]
+
+        disallowed = set(spec.disallowed_tools)
+        allowed = set(spec.allowed_tools) if spec.allowed_tools else None
+
+        result: list[Tool] = []
+        for tool in self.parent_tools:
+            if tool.name == self.name:
+                continue                                    # 무한 재귀 방지
+            if tool.name in disallowed:
+                continue                                    # 명시적 차단
+            if allowed is not None and tool.name not in allowed:
+                continue                                    # 화이트리스트
+            result.append(tool)
+        return result
 
     async def call(self, args: dict[str, Any], context: ToolContext) -> str:
         prompt = args["prompt"]
+        subagent_type = args.get("subagent_type", "default")
 
-        # ── ① 격리: *새 conversation state*. 13 개 override 의 압축 ──
+        # ── ① user agent spec 조회 (없으면 기본) ──
+        spec = self._find_spec(subagent_type) if subagent_type != "default" else None
+
+        # ── ② 격리: *새 conversation state*. 13 개 override 의 압축 ──
         child_state = ConversationState()
 
-        # ── ② 자식이 쓸 수 있는 도구는 *읽기 전용 + Agent 자기 제외* ──
-        # AgentTool 자기 자신을 자식에게 안 주는 이유: 무한 재귀 방지.
-        # 진짜 코드는 fork-path 에선 자기를 *준다* (cache hit 유지).
-        # 미니는 그런 거 없으므로 그냥 뺀다.
-        child_tools = [
-            t for t in self.parent_tools
-            if t.is_read_only() and t.name != self.name
-        ]
+        # ── ③ 도구 필터링 — user agent 면 allowed/disallowed, 아니면 read-only 기본 ──
+        child_tools = self._filter_tools(spec)
 
-        # ── ③ ⭐ 재귀 — query() 가 query() 를 부른다 ──
+        # ── ④ 시스템 프롬프트 — user agent 면 AGENT.md 본문, 아니면 기본 ──
+        system_prompt = spec.system_prompt if spec else SUB_AGENT_SYSTEM
+
+        # ── ⑤ ⭐ 재귀 — query() 가 query() 를 부른다 ──
         # runAgent.ts:748 의 정수.
         query = _query_lazy()
         async for chunk in query(
@@ -78,7 +140,7 @@ class AgentTool:
             permissions=self.permissions,  # 부모와 공유
             cwd=context.cwd,
             state=child_state,             # ⭐ 격리된 새 그릇
-            system_prompt=SUB_AGENT_SYSTEM,
+            system_prompt=system_prompt,
         ):
             # 자식의 청크는 그냥 *드롭*. 진짜 코드는 부모로 forwarding 해서
             # 진행률을 보여주지만, 미니는 *부모가 동기로 기다리는 단순 모드*.

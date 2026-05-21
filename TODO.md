@@ -593,6 +593,7 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [x] 10.2 스킬 만들기
 - [x] 10.3 MCP 서버 만들기
 - [x] 10.4 Hook 만들기 (6.5 회수 — 5 이벤트, fail-open, deny 절대 우선)
+- [x] 10.5 사용자 정의 에이전트 (8.1·8.2 회수 — `.claude/agents/<name>/AGENT.md` + subagent_type 분기)
 
 ### 에필로그
 - [x] 11 에필로그
