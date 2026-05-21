@@ -2,11 +2,11 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 from typing import Any, AsyncIterator
-from anthropic import AsyncAnthropic
 from .tools.base import Tool, ToolContext, find_tool, tool_to_anthropic_schema
 from .permissions import PermissionEngine, prompt_user
 from .messages import ConversationState
 from .hooks import HookEngine
+from .clients import make_client, get_default_model
 from . import message_queue
 from . import teams
 
@@ -43,8 +43,9 @@ async def query(
     cwd: str,
     state: ConversationState,
     system_prompt: str = "You are a helpful coding assistant.",
-    client: AsyncAnthropic | None = None,
+    client: Any = None,
     hooks: HookEngine | None = None,
+    model: str | None = None,
 ) -> AsyncIterator[QueryChunk]:
     """*async generator*. 각 청크를 부모에게 흘려보낸다.
 
@@ -52,15 +53,21 @@ async def query(
     들어가서 *generator 함수*로 변신. *호출자는 `async for` 로 받는다*.
 
     10.4 에서 `hooks` 인자가 추가됐다. None 이면 hook 비활성 — 9.5 동작과 동일.
+
+    10.8 에서 `client` 와 `model` 이 _backend-agnostic_ 으로. None 이면
+    환경변수 (`MINI_LLM_PROVIDER`) 로 분기. *구조적 타이핑* — Anthropic 가족
+    (Vertex 포함) 과 vLLM 어댑터가 같은 `messages.stream(...)` 인터페이스.
     """
-    client = client or AsyncAnthropic()
+    client = client or make_client()
+    if model is None:
+        model = get_default_model()
     state.add_user(user_input)
     context = ToolContext(cwd=cwd, permissions=permissions)
 
     while True:
         # 9.2 의 messages.create() → stream() 으로 교체
         async with client.messages.stream(
-            model="claude-opus-4-6",
+            model=model,
             max_tokens=4096,
             system=system_prompt,
             messages=state.to_api_format(),

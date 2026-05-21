@@ -95,16 +95,58 @@ async def main_async(args: argparse.Namespace) -> None:
                 print()  # 마무리 줄 바꿈
 
 
+def _check_environment() -> None:
+    """provider 별 필수 환경변수 검증. 친절한 에러 메시지.
+
+    10.8 — MINI_LLM_PROVIDER 로 분기. 미설정 시 vertex 기본 (사용자가
+    Anthropic 직접 API 키가 없는 상황 가정).
+    """
+    provider = os.environ.get("MINI_LLM_PROVIDER", "vertex").lower().strip()
+
+    if provider == "vertex":
+        has_project = any(
+            k in os.environ
+            for k in ("VERTEX_PROJECT_ID", "GCLOUD_PROJECT", "GOOGLE_CLOUD_PROJECT")
+        )
+        if not has_project:
+            raise SystemExit(
+                "Vertex 사용 시 VERTEX_PROJECT_ID 환경변수 필수.\n"
+                "  export VERTEX_PROJECT_ID=<your-gcp-project>\n"
+                "  export VERTEX_LOCATION=us-east5  # (선택) Claude region\n"
+                "  export GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json"
+            )
+        return
+
+    if provider == "vllm":
+        if "MINI_LLM_MODEL" not in os.environ:
+            raise SystemExit(
+                "vLLM 사용 시 MINI_LLM_MODEL 환경변수 필수.\n"
+                "  export MINI_LLM_MODEL=<vllm 서버의 모델 이름>\n"
+                "  export VLLM_BASE_URL=http://localhost:8000/v1  # (선택)\n"
+                "  export VLLM_API_KEY=dummy  # (선택)"
+            )
+        return
+
+    if provider == "anthropic":
+        if "ANTHROPIC_API_KEY" not in os.environ:
+            raise SystemExit(
+                "Anthropic 직접 사용 시 ANTHROPIC_API_KEY 환경 변수 필수.\n"
+                "  https://console.anthropic.com 에서 키 발급 후 "
+                "`export ANTHROPIC_API_KEY=sk-ant-...` 로 설정."
+            )
+        return
+
+    raise SystemExit(
+        f"Unknown MINI_LLM_PROVIDER: {provider!r}. "
+        "지원: vertex (기본) | vllm | anthropic"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="mini-claude")
     parser.add_argument("--cwd", type=Path, default=Path.cwd())
     args = parser.parse_args()
 
-    if "ANTHROPIC_API_KEY" not in os.environ:
-        raise SystemExit(
-            "ANTHROPIC_API_KEY 환경 변수가 필요해.\n"
-            "  https://console.anthropic.com 에서 키 발급 후 "
-            "`export ANTHROPIC_API_KEY=sk-ant-...` 로 설정."
-        )
+    _check_environment()
 
     asyncio.run(main_async(args))

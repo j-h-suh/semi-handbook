@@ -583,6 +583,7 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [x] 10.5 사용자 정의 에이전트 (8.1·8.2 회수 — `.claude/agents/<name>/AGENT.md` + subagent_type 분기)
 - [x] 10.6 메시지 큐 (2.2 Deep Dive 회수 — 모듈 싱글턴 deque, 4 입력자 인프라, 10.7 의 토대)
 - [x] 10.7 에이전트 팀 (8.4 회수 — contextvars 격리, asyncio.Queue 메일박스, polling 없는 fan-in. 게이트/공유 메모리/secret guard OUT)
+- [x] 10.8 API 클라이언트 (07_1 회수 — Vertex 기본 + vLLM OpenAI 호환 어댑터. Bedrock/Foundry OUT)
 
 ### 에필로그
 - [x] 11 에필로그
