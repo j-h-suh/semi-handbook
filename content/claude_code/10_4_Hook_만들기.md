@@ -208,6 +208,8 @@ class StopInput(BaseHookInput):
 
 다섯 이벤트가 *공통 필드 + 이벤트별 추가 필드* 라는 *판별 유니온(0.4)* 의 정직한 응용이다. `hook_event_name` 으로 분기.
 
+> ⚙️ **나머지 두 이벤트 + `HookInput` 별칭**: 본문은 `PreToolUseInput / PostToolUseInput / StopInput` 세 개만 보였지만 — `SessionStartInput`, `UserPromptSubmitInput` 도 같은 `BaseHookInput` 상속 + 이벤트별 필드 한 줄 추가 패턴. 그리고 다섯을 묶는 `HookInput = PreToolUseInput | PostToolUseInput | StopInput | SessionStartInput | UserPromptSubmitInput` 별칭이 `runner.py` / `__init__.py` 에서 _공통 타입_ 으로 쓰인다. 완전한 코드는 `content/claude_code/mini_claude/src/mini_claude/hooks/events.py` 참고.
+
 stdout 응답은 *모든 필드가 옵션*. 채워진 것만 동작한다.
 
 ```python
@@ -416,7 +418,9 @@ class HookEngine:
             tool_name=tool_name,
         )
 
-    # post_tool_use / stop / session_start / user_prompt_submit 도 같은 패턴 ...
+    # post_tool_use / stop / session_start / user_prompt_submit 도 같은 패턴 —
+    # 이벤트 이름 + 해당 입력 dataclass 만 다르고 내부는 _fire_first 호출 한 줄.
+    # 완전한 구현은 mini_claude/src/mini_claude/hooks/__init__.py 참고.
 
     async def _fire_first(
         self, event: str, hook_input: HookInput,
