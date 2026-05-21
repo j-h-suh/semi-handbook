@@ -32,8 +32,9 @@ def make_client() -> Any:
 
     Vertex 추가 환경변수:
         VERTEX_PROJECT_ID (또는 GCLOUD_PROJECT / GOOGLE_CLOUD_PROJECT)
-        VERTEX_LOCATION (기본: us-east5 — Anthropic Claude 가능 region)
-        GOOGLE_APPLICATION_CREDENTIALS: service account JSON 경로
+        VERTEX_LOCATION (또는 CLOUD_ML_REGION — Anthropic SDK 표준.
+            기본: global — Vertex 가 region 자동 라우팅. us-east5/europe-west1 등 명시도 가능)
+        GOOGLE_APPLICATION_CREDENTIALS: service account JSON 경로 (또는 gcloud ADC)
 
     vLLM 추가 환경변수:
         VLLM_BASE_URL (기본: http://localhost:8000/v1)
@@ -59,7 +60,11 @@ def make_client() -> Any:
                 "GOOGLE_CLOUD_PROJECT) 환경변수 필수.\n"
                 "GOOGLE_APPLICATION_CREDENTIALS 도 함께 설정해야 인증 가능."
             )
-        region = os.environ.get("VERTEX_LOCATION", "us-east5")
+        region = (
+            os.environ.get("VERTEX_LOCATION")
+            or os.environ.get("CLOUD_ML_REGION")
+            or "global"
+        )
         return AsyncAnthropicVertex(project_id=project_id, region=region)
 
     if provider == "vllm":
@@ -86,7 +91,14 @@ def make_client() -> Any:
 def get_default_model() -> str:
     """provider 별 default model id. MINI_LLM_MODEL 환경변수가 우선.
 
-    Vertex 의 Anthropic Claude 모델 ID 는 ``claude-<name>@<date>`` 형식.
+    Vertex 의 Anthropic Claude 모델 ID 는 두 가지 형식:
+    - *alias* (``claude-opus-4-7``) — Vertex 가 자동으로 최신 stable 버전으로
+    - *명시 버전* (``claude-opus-4-1@20250805``) — 특정 release 고정
+
+    학습자 환경의 Model Garden 에서 *enable 한 정확한 ID* 를 ``MINI_LLM_MODEL`` 로
+    설정하는 게 안전. 미설정 시 *alias* 로 fallback — Model Garden 에서 해당 alias 가
+    활성화되어 있어야 작동.
+
     vLLM 은 사용자가 띄운 모델에 의존하므로 *명시 필수*.
     """
     if env := os.environ.get("MINI_LLM_MODEL"):
@@ -95,8 +107,8 @@ def get_default_model() -> str:
     provider = os.environ.get("MINI_LLM_PROVIDER", "vertex").lower().strip()
 
     if provider == "vertex":
-        # Vertex 의 Claude Opus 4.1. region 별로 다른 모델 ID 가 있을 수 있음
-        return "claude-opus-4-1@20250805"
+        # alias 형식 — Vertex Model Garden 에서 enable 되어 있으면 자동 라우팅
+        return "claude-opus-4-7"
 
     if provider == "anthropic":
         return "claude-opus-4-6"

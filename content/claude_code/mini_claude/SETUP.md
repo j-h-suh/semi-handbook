@@ -38,12 +38,15 @@ gcloud services list --enabled | grep aiplatform
 **가장 자주 놓치는 자리**. Anthropic Claude 모델은 _명시적 동의_ 후에만 사용 가능합니다.
 
 1. [Vertex Model Garden — Claude](https://console.cloud.google.com/vertex-ai/model-garden) 페이지로 이동
-2. **Claude Opus 4.1** (또는 사용할 모델) 선택
+2. **Claude Opus 4.7** (또는 사용할 모델) 선택
 3. **Enable** 버튼 클릭 — Anthropic 의 _사용 약관 동의_ 절차
-4. 활성화된 후 _Model 상세 페이지_ 에서 **정확한 model ID** 와 **사용 가능 region** 확인
-   - 예: `claude-opus-4-1@20250805` (region: `us-east5`)
+4. 활성화된 후 _Model 상세 페이지_ 에서 **모델 ID** 와 **사용 가능 region** 확인
+   - region 옵션: `global` (다중 region 자동 라우팅 — 학습용 권장) 또는 `us-east5` / `europe-west1` 등 명시
+   - 모델 ID 두 형식 — 둘 다 작동:
+     - *alias*: `claude-opus-4-7` — Vertex 가 _최신 stable 버전_ 으로 자동 라우팅
+     - *명시 버전*: `claude-opus-4-1@20250805` — 특정 release 고정
 
-> 모델 ID 는 _`@` 뒤의 날짜 버전_ 까지 정확해야 합니다. 학습자 시점에 따라 _다른 버전_ 일 수 있으니 _Model Garden 에서 본 그대로_ 사용하세요.
+> 학습자 시점에 따라 _enable 된 모델 ID 와 region 이 다를 수 있으니_ Model Garden 에서 본 그대로 사용하세요. _alias 형식_ 이 버전 관리 부담 없어 학습용으로 편리합니다.
 
 ---
 
@@ -101,14 +104,16 @@ SA 의 경우 `--member="serviceAccount:NAME@PROJECT.iam.gserviceaccount.com"`.
 
 ```bash
 export MINI_LLM_PROVIDER=vertex                        # 기본값이라 생략 가능
-export VERTEX_PROJECT_ID=your-gcp-project              # 필수
-export VERTEX_LOCATION=us-east5                        # Model Garden 에서 본 region
-export MINI_LLM_MODEL=claude-opus-4-1@20250805         # Model Garden 에서 본 정확한 ID
+export VERTEX_PROJECT_ID=your-gcp-project              # 필수 (또는 GOOGLE_CLOUD_PROJECT)
+export VERTEX_LOCATION=global                          # 기본값. global / us-east5 등
+                                                       # (CLOUD_ML_REGION 도 fallback 으로 인식)
+export MINI_LLM_MODEL=claude-opus-4-7                  # alias 또는 claude-opus-4-1@20250805
 # (선택) Service Account 경로
 # export GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa-key.json
 ```
 
-> `MINI_LLM_MODEL` 미설정 시 `clients/__init__.py` 의 `get_default_model()` 이 _추정 ID_ 를 돌려주지만, 학습자 시점의 _실제 활성화된 ID_ 와 다를 수 있으니 _명시 권장_.
+> `MINI_LLM_MODEL` 미설정 시 `clients/__init__.py` 의 `get_default_model()` 이 _alias 형식_ default 를 돌려줌. 학습자 시점의 _Model Garden 에서 enable 된 alias_ 와 일치해야 자동으로 작동.
+
 
 ---
 
