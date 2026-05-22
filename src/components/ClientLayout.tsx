@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { Menu } from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
+import { Menu, PanelLeftOpen } from 'lucide-react';
 import { QnAPanelProvider } from '@/components/QnAContext';
 import QnAPanel from '@/components/QnAPanel';
 import SettingsModal from '@/components/SettingsModal';
@@ -18,20 +18,44 @@ interface Props {
     claudeChapters: ChapterMeta[];
 }
 
-export default function ClientLayout({ children, searchData, semiChapters, statsChapters, claudeChapters }: Props) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+const STORAGE_KEY = 'sidebar-desktop-hidden';
 
-    // useCallback 으로 참조 안정화 — 매 렌더마다 새 함수가 생성되면
-    // Sidebar 의 useEffect 의존성이 매번 바뀌어 즉시 닫힘 버그 발생.
-    const openSidebar = useCallback(() => setSidebarOpen(true), []);
-    const closeSidebar = useCallback(() => setSidebarOpen(false), []);
+export default function ClientLayout({ children, searchData, semiChapters, statsChapters, claudeChapters }: Props) {
+    const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+    const [desktopHidden, setDesktopHidden] = useState(false);
+
+    // localStorage 에서 초기 상태 복원 (클라이언트에서만)
+    useEffect(() => {
+        try {
+            if (localStorage.getItem(STORAGE_KEY) === 'true') {
+                setDesktopHidden(true);
+            }
+        } catch {
+            // SSR / private mode 등에서 무시
+        }
+    }, []);
+
+    // 상태 변경 시 저장
+    useEffect(() => {
+        try {
+            localStorage.setItem(STORAGE_KEY, String(desktopHidden));
+        } catch {
+            // ignore
+        }
+    }, [desktopHidden]);
+
+    // useCallback 으로 참조 안정화 — Sidebar 의 useEffect 의존성 안정화 목적
+    const openMobileDrawer = useCallback(() => setMobileDrawerOpen(true), []);
+    const closeMobileDrawer = useCallback(() => setMobileDrawerOpen(false), []);
+    const collapseDesktopSidebar = useCallback(() => setDesktopHidden(true), []);
+    const expandDesktopSidebar = useCallback(() => setDesktopHidden(false), []);
 
     return (
         <QnAPanelProvider>
             {/* 모바일 헤더 (md 미만에서만 표시) */}
             <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 flex items-center px-4 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
                 <button
-                    onClick={openSidebar}
+                    onClick={openMobileDrawer}
                     className="p-2 -ml-2 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/50 transition-colors"
                     aria-label="메뉴 열기"
                 >
@@ -41,21 +65,34 @@ export default function ClientLayout({ children, searchData, semiChapters, stats
             </header>
 
             {/* 모바일 백드롭 */}
-            {sidebarOpen && (
+            {mobileDrawerOpen && (
                 <div
-                    onClick={closeSidebar}
+                    onClick={closeMobileDrawer}
                     className="md:hidden fixed inset-0 bg-black/60 z-40"
                     aria-hidden="true"
                 />
             )}
 
-            {/* 사이드바 — 데스크탑 고정, 모바일 드로어 */}
+            {/* 데스크탑 사이드바 열기 버튼 — 숨김 상태일 때만 표시 */}
+            {desktopHidden && (
+                <button
+                    onClick={expandDesktopSidebar}
+                    className="hidden md:flex fixed top-4 left-4 z-30 p-2 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/50 transition-colors border border-slate-800 bg-slate-950/95 backdrop-blur"
+                    aria-label="사이드바 열기"
+                >
+                    <PanelLeftOpen size={18} />
+                </button>
+            )}
+
+            {/* 사이드바 — 데스크탑 고정/숨김, 모바일 드로어 */}
             <Sidebar
                 semiChapters={semiChapters}
                 statsChapters={statsChapters}
                 claudeChapters={claudeChapters}
-                isOpen={sidebarOpen}
-                onClose={closeSidebar}
+                isOpen={mobileDrawerOpen}
+                onClose={closeMobileDrawer}
+                isDesktopHidden={desktopHidden}
+                onCollapse={collapseDesktopSidebar}
             />
 
             {/* 본문 영역 — 모바일 헤더 높이만큼 padding-top */}
