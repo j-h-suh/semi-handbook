@@ -3,6 +3,9 @@ import argparse
 import asyncio
 import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
 from .agent import query, TextDelta, ToolUseStarted, TurnDone
 from .agents import discover_agents
 from .hooks import HookEngine
@@ -64,9 +67,7 @@ async def main_async(args: argparse.Namespace) -> None:
             continue
 
         # ── Hook (10.4) — UserPromptSubmit ──────────────
-        ups_resp = await hooks.user_prompt_submit(
-            cwd=str(args.cwd), prompt=user_input
-        )
+        ups_resp = await hooks.user_prompt_submit(cwd=str(args.cwd), prompt=user_input)
         if ups_resp and ups_resp.permission_decision == "deny":
             print(
                 f"[hook] Prompt rejected: "
@@ -74,9 +75,7 @@ async def main_async(args: argparse.Namespace) -> None:
             )
             continue
         if ups_resp and ups_resp.additional_context:
-            user_input = (
-                f"{user_input}\n\n[context]\n{ups_resp.additional_context}"
-            )
+            user_input = f"{user_input}\n\n[context]\n{ups_resp.additional_context}"
 
         # ⭐ 9.5 의 핵심 변화: async for 로 청크를 받아 즉시 출력
         async for chunk in query(
@@ -143,6 +142,8 @@ def _check_environment() -> None:
 
 
 def main() -> None:
+    load_dotenv()  # .env 자동 로드 — SETUP.md §2
+
     parser = argparse.ArgumentParser(prog="mini-claude")
     parser.add_argument("--cwd", type=Path, default=Path.cwd())
     args = parser.parse_args()

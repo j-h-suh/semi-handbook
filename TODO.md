@@ -734,16 +734,27 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
-## Phase 10: SETUP 단순화 — JSON 한 길로 통일
+## Phase 10: SETUP 단순화 — JSON 한 길 + `.env` 흐름
 
-학습자 SETUP 흐름이 _gcloud 로그인 길_ + _SA JSON 길_ 두 갈래로 복잡해서 _JSON 한 길_ 로 압축. 본문 9.x / 10.8 도 _gcloud ADC_ 표현을 _Service Account JSON_ 으로 통일.
+학습자 SETUP 흐름이 _gcloud 로그인 길_ + _SA JSON 길_ 두 갈래로 복잡해서 _JSON 한 길_ 로 압축. 본문 9.x / 10.8 도 _gcloud ADC_ 표현을 _Service Account JSON_ 으로 통일. 환경변수 설정은 _shell rc export_ 가 아닌 _`.env` 파일 + `python-dotenv` 자동 로드_ 방식으로.
 
+### 10-1. gcloud → SA JSON 통일
 - [x] SETUP.md 재작성 — §0 GCP 신규 / §1 API / §2 Model Garden / §4 IAM 을 _전제_ 로 압축, §3 의 길 A(gcloud) 제거. ~204줄 → ~85줄
 - [x] 9.1 본문 — 인증 한 줄 + 💡 콜아웃 + `main.py` stub 에러 메시지 (3 자리)
 - [x] 9.2 본문 — `_make_vertex_client()` env 이름 (`GOOGLE_CLOUD_PROJECT`→`VERTEX_PROJECT_ID`, `CLOUD_ML_REGION`→`VERTEX_LOCATION`), `main.py` env 체크, 진짜로 돌려보기 셸
 - [x] 10.8 본문 — ⚠️ 콜아웃 끝 표현 + Vertex 시나리오 셸 (gcloud 두 줄 제거)
 - [x] mini_claude 코드 — `clients/__init__.py` docstring 의 _또는 gcloud ADC_ 제거
 - [x] 학습자 누적 시뮬로 검증 — `VERTEX_PROJECT_ID` + `VERTEX_LOCATION` + `GOOGLE_APPLICATION_CREDENTIALS` + `MINI_LLM_MODEL` 4 개만으로 (1) `_check_environment()` 통과 (2) 9.2 `_make_vertex_client()` 객체 생성 (3) 10.8 `make_client()` + `get_default_model()` 작동 (4) `VERTEX_PROJECT_ID` 누락 시 친절 에러 — 4/4 PASS
+
+### 10-2. `.env` 흐름 도입
+- [x] `mini_claude/pyproject.toml` — `python-dotenv>=1.0.0` 의존성 추가 + `uv sync`
+- [x] `mini_claude/src/mini_claude/main.py` — `from dotenv import load_dotenv` + `main()` 첫 줄에 `load_dotenv()` 호출 (Write 로 file 전체 한 번에 — ruff hook 의 중간상태 F401 회피)
+- [x] `mini_claude/.env.example` 신규 — 학습자 템플릿 (4 변수 + vLLM 주석)
+- [x] 저장소 root `.gitignore` — `.env*` 옆에 `!.env.example` negation 추가
+- [x] SETUP.md §2 재작성 — _shell rc export_ → `cp .env.example .env` + 편집 흐름. 💡 콜아웃에 `.env` git 제외 + dotenv 자동 로드 설명
+- [x] 9.1 본문 — pyproject.toml 의존성 _세 줄→네 줄_ + main.py stub 의 `from dotenv import load_dotenv` + `main()` 의 `load_dotenv()` 호출
+- [x] 9.2 본문 — main.py 의 dotenv import + `load_dotenv()` 호출 + 진짜로 돌려보기 셸 (`export ...` → `cp .env.example .env` + 편집)
+- [x] `.env` 자동 로드 시뮬 검증 — tmpdir 의 `.env` → `load_dotenv()` → `_check_environment()` 통과 → `make_client()` 작동 (4/4 PASS) + 진짜 `mini-claude` CLI 가 _.env 만으로_ REPL 진입 확인
 
 ---
 

@@ -24,18 +24,28 @@ mv ~/Downloads/your-sa-key.json ~/.config/gcp/mini-claude-sa.json
 chmod 600 ~/.config/gcp/mini-claude-sa.json
 ```
 
-## 2. 환경변수 네 개
+## 2. `.env` 파일 만들기
 
-`.env` 또는 shell rc (`~/.zshrc`, `~/.bashrc`) 에:
+`mini_claude/` 디렉토리의 `.env.example` 을 복사:
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcp/mini-claude-sa.json
-export VERTEX_PROJECT_ID=your-gcp-project       # SA JSON 의 project_id 와 같아야 함
-export VERTEX_LOCATION=global                    # 기본값. global / us-east5 / europe-west1 등
-export MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
+cd content/claude_code/mini_claude
+cp .env.example .env
 ```
 
-> 💡 **JSON 의 `project_id` 와 `VERTEX_PROJECT_ID` 가 다르면 403/404**. JSON 파일을 열어 `project_id` 필드를 확인하세요. `MINI_LLM_PROVIDER` 는 미설정 시 `vertex` 가 기본값이라 생략해도 됩니다.
+`.env` 파일을 본인 값으로 편집:
+
+```bash
+# .env
+GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcp/mini-claude-sa.json
+VERTEX_PROJECT_ID=your-gcp-project       # SA JSON 의 project_id 와 같아야 함
+VERTEX_LOCATION=global                    # 기본값. global / us-east5 / europe-west1 등
+MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
+```
+
+> 💡 **JSON 의 `project_id` 와 `VERTEX_PROJECT_ID` 가 다르면 403/404**. JSON 파일을 열어 `project_id` 필드를 확인하세요.
+
+> 💡 **`.env` 는 git 에 안 올라감** — `.gitignore` 의 `.env*` + `!.env.example` 패턴 덕에 _학습자 본인의 `.env`_ 만 무시되고 _`.env.example` 템플릿_ 은 추적됩니다. `mini-claude` 가 시작할 때 `python-dotenv` 가 `.env` 를 자동으로 읽어 환경변수로 올립니다. `MINI_LLM_PROVIDER` 는 미설정 시 `vertex` 가 기본값이라 `.env` 에 안 적어도 됩니다.
 
 ## 3. 첫 실행
 
