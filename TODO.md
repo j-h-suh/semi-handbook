@@ -473,7 +473,7 @@
 `11_에필로그.md`의 "39 개", "52 만", "11 개" 등 숫자와 단위 사이 공백을 표준 한국어 표기(붙여쓰기)로 수정. 전체 파일에서 유사 패턴(조사/접미사 분절) 함께 확인.
 
 - [x] 숫자 + 단위 붙여쓰기: `39개/11개/52만/4가지/5가지/5단계/6장/80줄/500줄/400줄/30줄/5줄/2026년/3월/31일`
-- [x] 섹션 번호 + 한국어 조사 붙여쓰기: `0.0의/0.0에서/6.4의/3.5의/7.4의/9.4의/8.1의/8.2의/9.3의/9.3은/9.3에서/10.3의/10.3은/10.2의/7.2의/8.3에서` 등
+- [x] 섹션 번호 + 한국어 조사 붙여쓰기: `0.0의/0.0에서/6.4의/3.5의/7.4의/9.4의/8.1의/8.2의/9.3의/9.3은/9.3에서/10.4의/10.4은/10.2의/7.2의/8.3에서` 등
 - [x] `Part N` + 한국어 조사 붙여쓰기: `Part 1의 ~ Part 10의`, `Part 7에서`, `Part 9와 Part 10`
 - [x] `9.1 ~ 9.5` → `9.1~9.5` (틸드 주변 공백 제거)
 - 유지: 영어 단어 + 한국어 조사(예: `Claude Code 를`, `claude 를`)는 저자 스타일로 존치
@@ -578,12 +578,12 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 ### Part 10: 확장하기
 - [x] 10.1 사용자 정의 슬래시 명령
 - [x] 10.2 스킬 만들기
-- [x] 10.3 MCP 서버 만들기
-- [x] 10.4 Hook 만들기 (6.5 회수 — 5 이벤트, fail-open, deny 절대 우선)
-- [x] 10.5 사용자 정의 에이전트 (8.1·8.2 회수 — `.claude/agents/<name>/AGENT.md` + subagent_type 분기)
-- [x] 10.6 메시지 큐 (2.2 Deep Dive 회수 — 모듈 싱글턴 deque, 4 입력자 인프라, 10.7 의 토대)
-- [x] 10.7 에이전트 팀 (8.4 회수 — contextvars 격리, asyncio.Queue 메일박스, polling 없는 fan-in. 게이트/공유 메모리/secret guard OUT)
-- [x] 10.8 API 클라이언트 (07_1 회수 — Vertex 기본 + vLLM OpenAI 호환 어댑터. Bedrock/Foundry OUT)
+- [x] 10.3 Hook 만들기 (6.5 회수 — 5 이벤트, fail-open, deny 절대 우선)
+- [x] 10.4 MCP 서버 만들기
+- [x] 10.5 API 클라이언트 (07_1 회수 — Vertex 기본 + vLLM OpenAI 호환 어댑터. Bedrock/Foundry OUT)
+- [x] 10.6 사용자 정의 에이전트 (8.1·8.2 회수 — `.claude/agents/<name>/AGENT.md` + subagent_type 분기)
+- [x] 10.7 메시지 큐 (2.2 Deep Dive 회수 — 모듈 싱글턴 deque, 4 입력자 인프라, 10.8 의 토대)
+- [x] 10.8 에이전트 팀 (8.4 회수 — contextvars 격리, asyncio.Queue 메일박스, polling 없는 fan-in. 게이트/공유 메모리/secret guard OUT)
 
 ### 에필로그
 - [x] 11 에필로그
@@ -699,20 +699,20 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 ### 작업 결과 (10 commits 묶음)
 
 **신규 챕터 + 추상화 도입** (Part 10 확장):
-- [x] 10.7 에이전트 팀 신규 챕터 + mini_claude teams 모듈 (commit `bcf8423`)
-- [x] 10.8 API 클라이언트 신규 챕터 + mini_claude clients 모듈 (Vertex + vLLM 어댑터) (commit `4832510`)
+- [x] 10.8 에이전트 팀 신규 챕터 + mini_claude teams 모듈 (commit `bcf8423`)
+- [x] 10.5 API 클라이언트 신규 챕터 + mini_claude clients 모듈 (Vertex + vLLM 어댑터) (commit `4832510`)
 
 **Vertex 실행 보장**:
 - [x] mini_claude/SETUP.md + `anthropic[vertex]` extra — google.auth import 보장 (commit `3416d0e`)
 - [x] Vertex region/model 기본값 학습자 환경 표준에 맞춤 — `claude-opus-4-7` alias + `global` region + `CLOUD_ML_REGION` fallback (commit `b25b356`)
 
-**9.x + 10.4 본문 코드 Vertex 화**:
-- [x] 9.x + 10.4 본문 코드 인용을 `AsyncAnthropicVertex` 로 (23 자리) — 학습자가 본문 그대로 복사해서 만들면 작동 (commit `af4654a`)
+**9.x + 10.3 본문 코드 Vertex 화**:
+- [x] 9.x + 10.3 본문 코드 인용을 `AsyncAnthropicVertex` 로 (23 자리) — 학습자가 본문 그대로 복사해서 만들면 작동 (commit `af4654a`)
 
 **누적 검증 발견 갭 보강 (7 개)**:
 - [x] 9.1/9.2/9.5 본문 갭 3개 — pyproject Vertex extra / messages.py 라벨 / agent.py import (commit `324da39`)
-- [x] 10.1/10.4/10.5 본문 갭 3개 — PyYAML 의존성 / hooks 생략 메서드 + HookInput / _normalize_list 정의 (commit `bcb20ad`)
-- [x] 추가 보강 4 — 10.3 mcp[cli] / 10.4 완전한 hooks 본문 / SETUP §0 GCP 진입 가이드 / 11 에필로그 10.7·10.8 회수 (이 commit)
+- [x] 10.1/10.3/10.6 본문 갭 3개 — PyYAML 의존성 / hooks 생략 메서드 + HookInput / _normalize_list 정의 (commit `bcb20ad`)
+- [x] 추가 보강 4 — 10.4 mcp[cli] / 10.3 완전한 hooks 본문 / SETUP §0 GCP 진입 가이드 / 11 에필로그 10.8·10.5 회수 (이 commit)
 
 ### 누적 검증 통과 13 챕터
 
@@ -725,26 +725,26 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 | 9.5 | 스트리밍 + AgentTool | ✅ |
 | 10.1 | `/hello Alice` 슬래시 명령 → `$name` 치환 | ✅ |
 | 10.2 | 자연어 → SkillTool 자동 매칭 | ✅ |
-| 10.3 | 가짜 MCP 서버 spawn → tools/call | ✅ |
-| 10.4 | Hook 빈 registry → None | ✅ |
-| 10.5 | AGENT.md 발견 → spec 1개 | ✅ |
-| 10.6 | message_queue push/drain | ✅ |
-| 10.7 | teams wait_all_idle + mailbox | ✅ |
-| 10.8 | make_client → Vertex + vLLM 변환 | ✅ |
+| 10.3 | Hook 빈 registry → None | ✅ |
+| 10.4 | 가짜 MCP 서버 spawn → tools/call | ✅ |
+| 10.5 | make_client → Vertex + vLLM 변환 | ✅ |
+| 10.6 | AGENT.md 발견 → spec 1개 | ✅ |
+| 10.7 | message_queue push/drain | ✅ |
+| 10.8 | teams wait_all_idle + mailbox | ✅ |
 
 ---
 
 ## Phase 10: SETUP 단순화 — JSON 한 길 + `.env` 흐름 + 프로젝트 내 `secrets/`
 
-학습자 SETUP 흐름이 _gcloud 로그인 길_ + _SA JSON 길_ 두 갈래로 복잡해서 _JSON 한 길_ 로 압축. 본문 9.x / 10.8 도 _gcloud ADC_ 표현을 _Service Account JSON_ 으로 통일. 환경변수 설정은 _shell rc export_ 가 아닌 _`.env` 파일 + `python-dotenv` 자동 로드_ 방식으로. SA JSON 자체도 HOME (`~/.config/gcp/`) 이 아닌 _프로젝트 내 `secrets/`_ 폴더로 옮겨 _프로젝트와 키의 인지적 결속_ 을 강화.
+학습자 SETUP 흐름이 _gcloud 로그인 길_ + _SA JSON 길_ 두 갈래로 복잡해서 _JSON 한 길_ 로 압축. 본문 9.x / 10.5 도 _gcloud ADC_ 표현을 _Service Account JSON_ 으로 통일. 환경변수 설정은 _shell rc export_ 가 아닌 _`.env` 파일 + `python-dotenv` 자동 로드_ 방식으로. SA JSON 자체도 HOME (`~/.config/gcp/`) 이 아닌 _프로젝트 내 `secrets/`_ 폴더로 옮겨 _프로젝트와 키의 인지적 결속_ 을 강화.
 
 ### 10-1. gcloud → SA JSON 통일
 - [x] SETUP.md 재작성 — §0 GCP 신규 / §1 API / §2 Model Garden / §4 IAM 을 _전제_ 로 압축, §3 의 길 A(gcloud) 제거. ~204줄 → ~85줄
 - [x] 9.1 본문 — 인증 한 줄 + 💡 콜아웃 + `main.py` stub 에러 메시지 (3 자리)
 - [x] 9.2 본문 — `_make_vertex_client()` env 이름 (`GOOGLE_CLOUD_PROJECT`→`VERTEX_PROJECT_ID`, `CLOUD_ML_REGION`→`VERTEX_LOCATION`), `main.py` env 체크, 진짜로 돌려보기 셸
-- [x] 10.8 본문 — ⚠️ 콜아웃 끝 표현 + Vertex 시나리오 셸 (gcloud 두 줄 제거)
+- [x] 10.5 본문 — ⚠️ 콜아웃 끝 표현 + Vertex 시나리오 셸 (gcloud 두 줄 제거)
 - [x] mini_claude 코드 — `clients/__init__.py` docstring 의 _또는 gcloud ADC_ 제거
-- [x] 학습자 누적 시뮬로 검증 — `VERTEX_PROJECT_ID` + `VERTEX_LOCATION` + `GOOGLE_APPLICATION_CREDENTIALS` + `MINI_LLM_MODEL` 4 개만으로 (1) `_check_environment()` 통과 (2) 9.2 `_make_vertex_client()` 객체 생성 (3) 10.8 `make_client()` + `get_default_model()` 작동 (4) `VERTEX_PROJECT_ID` 누락 시 친절 에러 — 4/4 PASS
+- [x] 학습자 누적 시뮬로 검증 — `VERTEX_PROJECT_ID` + `VERTEX_LOCATION` + `GOOGLE_APPLICATION_CREDENTIALS` + `MINI_LLM_MODEL` 4 개만으로 (1) `_check_environment()` 통과 (2) 9.2 `_make_vertex_client()` 객체 생성 (3) 10.5 `make_client()` + `get_default_model()` 작동 (4) `VERTEX_PROJECT_ID` 누락 시 친절 에러 — 4/4 PASS
 
 ### 10-2. `.env` 흐름 도입
 - [x] `mini_claude/pyproject.toml` — `python-dotenv>=1.0.0` 의존성 추가 + `uv sync`

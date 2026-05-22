@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
     "anthropic[vertex]>=0.40.0",   # LLM API 클라이언트 + Vertex extra (google-auth 포함)
-    "openai>=2.37.0",              # vLLM 어댑터용 (10.8)
+    "openai>=2.37.0",              # vLLM 어댑터용 (10.5)
     "pydantic>=2.0.0",             # 도구 입력 스키마 + JSONSchema 자동 생성
     "rich>=13.0.0",                # 스트리밍 출력 색깔/포맷
     "python-dotenv>=1.0.0",        # .env 파일 자동 로드 (SETUP.md §2)

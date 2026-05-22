@@ -1,4 +1,4 @@
-# 10.4 Hook 만들기 — 도구 실행 흐름에 끼어드는 사용자 코드
+# 10.3 Hook 만들기 — 도구 실행 흐름에 끼어드는 사용자 코드
 
 ---
 
@@ -515,7 +515,7 @@ class HookEngine:
 tool = find_tool(tools, block["name"])
 yield ToolUseStarted(name=tool.name, input=block["input"])
 
-# ── Hook (10.4) — PreToolUse ──────────────
+# ── Hook (10.3) — PreToolUse ──────────────
 if hooks:
     pre_resp = await hooks.pre_tool_use(
         cwd=cwd, tool_name=tool.name, tool_input=block["input"]
@@ -556,7 +556,7 @@ tool_results.append({
     **({"is_error": True} if is_error else {}),
 })
 
-# ── Hook (10.4) — PostToolUse: additional_context 누적 ─
+# ── Hook (10.3) — PostToolUse: additional_context 누적 ─
 if hooks and not is_error:
     post_resp = await hooks.post_tool_use(
         cwd=cwd,
@@ -914,7 +914,3 @@ if payload["tool_name"] == "Edit":
 - **6.4 의 fnmatch 회수** — matcher 한 줄로 매칭의 *첫 단계*. *둘째 단계 (if 조건) 는 hook 스크립트 안* 으로 미뤄두는 디자인이 진짜 코드와 정신이 같다.
 - **fail-open + deny 절대 우선** — Hook 깨져도 mini 는 살아남고 (None 반환), 명시적 deny (exit code 또는 permissionDecision) 만 차단으로 해석. 9.4 권한 게이트가 *마지막 방어선* — Hook 이 권한을 우회하려 해도 9.4 가 잡는다.
 - **`hooks.ts` 3,400 줄을 280 줄로** — 12배 압축. 병렬 머지·if DSL·workspace trust·transcript·결과 캐싱이 OUT. 본질 (이벤트, matcher, JSON 프로토콜, 결정 합산) 은 *살아 있다*.
-
----
-
-*다음 챕터: 10.5 사용자 정의 에이전트 — `.claude/agents/*.md` 한 파일이 새 에이전트가 된다*

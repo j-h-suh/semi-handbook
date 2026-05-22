@@ -103,4 +103,4 @@ export MINI_LLM_MODEL=meta-llama/Llama-3.1-70B-Instruct
 export VLLM_BASE_URL=http://localhost:8000/v1
 ```
 
-자세한 내용은 핸드북 **10.8 API 클라이언트** 챕터.
+자세한 내용은 핸드북 **10.5 API 클라이언트** 챕터.

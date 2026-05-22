@@ -22,7 +22,7 @@ async def main_async(args: argparse.Namespace) -> None:
         deny_rules={"Bash:rm -rf *", "Bash:sudo *"},
     )
 
-    # ── Hook (10.4) ─── ~/.mini_claude/hooks.json 자동 로드 (없으면 비활성)
+    # ── Hook (10.3) ─── ~/.mini_claude/hooks.json 자동 로드 (없으면 비활성)
     hooks = HookEngine.from_file()
     session_start_resp = await hooks.session_start(cwd=str(args.cwd))
     session_context = (
@@ -31,7 +31,7 @@ async def main_async(args: argparse.Namespace) -> None:
         else None
     )
 
-    # 10.5 — .claude/agents/ 에서 사용자 정의 에이전트 발견
+    # 10.6 — .claude/agents/ 에서 사용자 정의 에이전트 발견
     user_agents = discover_agents(args.cwd)
 
     # 9.4 의 도구 풀 + AgentTool 추가
@@ -42,7 +42,7 @@ async def main_async(args: argparse.Namespace) -> None:
         user_agents=user_agents,
     )
     parent_tools.append(agent_tool)
-    # 10.7 — TeamTool: N 명의 팀원을 동시 spawn. AgentTool 과 같은 user_agents 풀 공유
+    # 10.8 — TeamTool: N 명의 팀원을 동시 spawn. AgentTool 과 같은 user_agents 풀 공유
     team_tool = TeamTool(
         parent_tools=parent_tools,
         permissions=permissions,
@@ -66,7 +66,7 @@ async def main_async(args: argparse.Namespace) -> None:
         if not user_input.strip():
             continue
 
-        # ── Hook (10.4) — UserPromptSubmit ──────────────
+        # ── Hook (10.3) — UserPromptSubmit ──────────────
         ups_resp = await hooks.user_prompt_submit(cwd=str(args.cwd), prompt=user_input)
         if ups_resp and ups_resp.permission_decision == "deny":
             print(
@@ -97,7 +97,7 @@ async def main_async(args: argparse.Namespace) -> None:
 def _check_environment() -> None:
     """provider 별 필수 환경변수 검증. 친절한 에러 메시지.
 
-    10.8 — MINI_LLM_PROVIDER 로 분기. 미설정 시 vertex 기본 (사용자가
+    10.5 — MINI_LLM_PROVIDER 로 분기. 미설정 시 vertex 기본 (사용자가
     Anthropic 직접 API 키가 없는 상황 가정).
     """
     provider = os.environ.get("MINI_LLM_PROVIDER", "vertex").lower().strip()

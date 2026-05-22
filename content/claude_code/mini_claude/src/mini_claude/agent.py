@@ -52,9 +52,9 @@ async def query(
     9.4 에서는 `async def query(...) -> None` 이었다. 이제 yield 가
     들어가서 *generator 함수*로 변신. *호출자는 `async for` 로 받는다*.
 
-    10.4 에서 `hooks` 인자가 추가됐다. None 이면 hook 비활성 — 9.5 동작과 동일.
+    10.3 에서 `hooks` 인자가 추가됐다. None 이면 hook 비활성 — 9.5 동작과 동일.
 
-    10.8 에서 `client` 와 `model` 이 _backend-agnostic_ 으로. None 이면
+    10.5 에서 `client` 와 `model` 이 _backend-agnostic_ 으로. None 이면
     환경변수 (`MINI_LLM_PROVIDER`) 로 분기. *구조적 타이핑* — Anthropic 가족
     (Vertex 포함) 과 vLLM 어댑터가 같은 `messages.stream(...)` 인터페이스.
     """
@@ -94,10 +94,10 @@ async def query(
         state.add_assistant(content_blocks)
 
         if response.stop_reason == "end_turn":
-            # ── Hook (10.4) — Stop ──────────────
+            # ── Hook (10.3) — Stop ──────────────
             if hooks:
                 await hooks.stop(cwd=cwd, stop_reason="end_turn")
-            # ── 10.7 — 팀원이면 lead 메일박스에 idle 알림 + coordinator.mark_idle ──
+            # ── 10.8 — 팀원이면 lead 메일박스에 idle 알림 + coordinator.mark_idle ──
             await _notify_lead_on_idle(state, stop_reason="end_turn")
             yield TurnDone(stop_reason="end_turn")
             return
@@ -118,7 +118,7 @@ async def query(
             tool = find_tool(tools, block["name"])
             yield ToolUseStarted(name=tool.name, input=block["input"])
 
-            # ── Hook (10.4) — PreToolUse: deny 면 차단, updatedInput 이면 교체 ─
+            # ── Hook (10.3) — PreToolUse: deny 면 차단, updatedInput 이면 교체 ─
             if hooks:
                 pre_resp = await hooks.pre_tool_use(
                     cwd=cwd, tool_name=tool.name, tool_input=block["input"]
@@ -171,7 +171,7 @@ async def query(
                 **({"is_error": True} if is_error else {}),
             })
 
-            # ── Hook (10.4) — PostToolUse: additional_context 누적 ─────
+            # ── Hook (10.3) — PostToolUse: additional_context 누적 ─────
             if hooks and not is_error:
                 post_resp = await hooks.post_tool_use(
                     cwd=cwd,
@@ -186,7 +186,7 @@ async def query(
                         f"{post_resp.additional_context}"
                     )
 
-        # ── 메시지 큐 (10.6) — 외부에서 push 된 항목을 다음 LLM 호출에 attachment ──
+        # ── 메시지 큐 (10.7) — 외부에서 push 된 항목을 다음 LLM 호출에 attachment ──
         queued = message_queue.drain()
         for item in queued:
             tool_results.append({
