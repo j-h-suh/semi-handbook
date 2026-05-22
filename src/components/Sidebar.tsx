@@ -65,9 +65,12 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters, i
         new Set(activePart ? [activePart] : [Object.keys(groupedChapters)[0]])
     );
 
-    if (activePart && !openParts.has(activePart)) {
-        setOpenParts(prev => new Set([...prev, activePart]));
-    }
+    // activePart 가 바뀔 때만 자동 펴짐. 같은 챕터에서 사용자가 수동으로 닫으면
+    // (= 이전엔 렌더 중 setState 가 즉시 재추가해서 무응답으로 보였던 버그) 닫힌 채 유지.
+    useEffect(() => {
+        if (!activePart) return;
+        setOpenParts(prev => (prev.has(activePart) ? prev : new Set([...prev, activePart])));
+    }, [activePart]);
 
     const togglePart = (part: string) => {
         setOpenParts(prev => {
