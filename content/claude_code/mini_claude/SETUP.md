@@ -1,4 +1,4 @@
-# mini_claude 학습자 환경 설정 — Vertex AI
+# 미니 claude 학습자 환경 설정 — Vertex 첫 호출까지의 최소 셋업
 
 Anthropic API 키 없이 mini_claude 를 GCP Vertex AI 의 Claude 모델로 실행하려면 _Service Account JSON 키_ 한 개와 환경변수 네 개만 있으면 됩니다.
 
