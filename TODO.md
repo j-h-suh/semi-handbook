@@ -734,9 +734,9 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
-## Phase 10: SETUP 단순화 — JSON 한 길 + `.env` 흐름
+## Phase 10: SETUP 단순화 — JSON 한 길 + `.env` 흐름 + 프로젝트 내 `secrets/`
 
-학습자 SETUP 흐름이 _gcloud 로그인 길_ + _SA JSON 길_ 두 갈래로 복잡해서 _JSON 한 길_ 로 압축. 본문 9.x / 10.8 도 _gcloud ADC_ 표현을 _Service Account JSON_ 으로 통일. 환경변수 설정은 _shell rc export_ 가 아닌 _`.env` 파일 + `python-dotenv` 자동 로드_ 방식으로.
+학습자 SETUP 흐름이 _gcloud 로그인 길_ + _SA JSON 길_ 두 갈래로 복잡해서 _JSON 한 길_ 로 압축. 본문 9.x / 10.8 도 _gcloud ADC_ 표현을 _Service Account JSON_ 으로 통일. 환경변수 설정은 _shell rc export_ 가 아닌 _`.env` 파일 + `python-dotenv` 자동 로드_ 방식으로. SA JSON 자체도 HOME (`~/.config/gcp/`) 이 아닌 _프로젝트 내 `secrets/`_ 폴더로 옮겨 _프로젝트와 키의 인지적 결속_ 을 강화.
 
 ### 10-1. gcloud → SA JSON 통일
 - [x] SETUP.md 재작성 — §0 GCP 신규 / §1 API / §2 Model Garden / §4 IAM 을 _전제_ 로 압축, §3 의 길 A(gcloud) 제거. ~204줄 → ~85줄
@@ -755,6 +755,12 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [x] 9.1 본문 — pyproject.toml 의존성 _세 줄→네 줄_ + main.py stub 의 `from dotenv import load_dotenv` + `main()` 의 `load_dotenv()` 호출
 - [x] 9.2 본문 — main.py 의 dotenv import + `load_dotenv()` 호출 + 진짜로 돌려보기 셸 (`export ...` → `cp .env.example .env` + 편집)
 - [x] `.env` 자동 로드 시뮬 검증 — tmpdir 의 `.env` → `load_dotenv()` → `_check_environment()` 통과 → `make_client()` 작동 (4/4 PASS) + 진짜 `mini-claude` CLI 가 _.env 만으로_ REPL 진입 확인
+
+### 10-3. SA JSON 위치 — HOME → 프로젝트 내 `secrets/`
+- [x] 저장소 `.gitignore` 에 `content/claude_code/mini_claude/secrets/` 명시적 추가 — 사용자 글로벌 `~/.gitignore_global` 의존성 제거, 다른 학습자 clone 시에도 보호
+- [x] SETUP.md §1 재작성 — `~/.config/gcp/` → `cd content/claude_code/mini_claude && mkdir -p secrets && mv ... secrets/` + `chmod 600` 흐름. 💡 (gitignore 보호 + 공유 시 주의) + ⚠️ (`chmod 600` 의 역할) 콜아웃 추가
+- [x] `.env.example` + SETUP.md §2 의 `GOOGLE_APPLICATION_CREDENTIALS` 값을 `secrets/your-sa-key.json` (mini_claude/ cwd 기준 상대 경로) 으로 갱신
+- [x] 시뮬 검증 — `mini_claude/secrets/your-sa-key.json` 가짜 키 + `.env` 의 상대 경로로 진짜 `mini-claude` CLI 가 REPL 진입 (`.env` 자동 로드 + `_check_environment()` 통과). `git check-ignore` 로 `secrets/` 와 `.env` 모두 무시 패턴 매칭 확인
 
 ---
 

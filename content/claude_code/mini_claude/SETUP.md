@@ -18,11 +18,18 @@ Anthropic API 키 없이 mini_claude 를 GCP Vertex AI 의 Claude 모델로 실�
 
 ## 1. JSON 키 안전한 자리에 두기
 
+프로젝트 디렉토리 안에 `secrets/` 폴더를 만들어 키를 옮깁니다:
+
 ```bash
-mkdir -p ~/.config/gcp
-mv ~/Downloads/your-sa-key.json ~/.config/gcp/mini-claude-sa.json
-chmod 600 ~/.config/gcp/mini-claude-sa.json
+cd content/claude_code/mini_claude
+mkdir -p secrets
+mv ~/Downloads/your-sa-key.json secrets/
+chmod 600 secrets/your-sa-key.json
 ```
+
+> 💡 **`secrets/` 는 저장소 `.gitignore` 에 등록되어 있어 commit 안 됨**. _프로젝트와 키가 같이 묶이는_ 인지적 명확함을 위해 HOME (`~/.config/gcp/`) 이 아닌 프로젝트 내에 둡니다. 단 _프로젝트 폴더를 압축해 공유_ 하거나 _백업 도구가 통째로 백업_ 할 때 키도 같이 가니, _공유 전 반드시 `secrets/` 제외_.
+
+> ⚠️ **`chmod 600` 의 역할**: 파일 권한을 _본인만 읽기·쓰기_ 로 좁힙니다 (`rw-------`). SA JSON 은 자격증명이라 _시스템의 다른 사용자_ 가 못 읽게 막아야 합니다. google-auth 라이브러리도 권한이 넓으면 경고를 띄웁니다.
 
 ## 2. `.env` 파일 만들기
 
@@ -37,7 +44,7 @@ cp .env.example .env
 
 ```bash
 # .env
-GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcp/mini-claude-sa.json
+GOOGLE_APPLICATION_CREDENTIALS=secrets/your-sa-key.json   # §1 에서 옮긴 키 (mini_claude/ cwd 기준 상대 경로)
 VERTEX_PROJECT_ID=your-gcp-project       # SA JSON 의 project_id 와 같아야 함
 VERTEX_LOCATION=global                    # 기본값. global / us-east5 / europe-west1 등
 MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
