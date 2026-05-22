@@ -223,3 +223,53 @@ export function getSortedClaudeChapters(): ChapterMeta[] {
 export async function getClaudeChapterData(id: string): Promise<Chapter> {
   return getChapter('claude', id);
 }
+
+/* ─── mini_claude SETUP.md 전용 (챕터 폴더 밖의 부속 문서) ─── */
+
+export async function getMiniClaudeSetupData(): Promise<Chapter> {
+  const resolvedPath = path.join(
+    process.cwd(),
+    'content', 'claude_code', 'mini_claude', 'SETUP.md'
+  );
+  const fileContents = fs.readFileSync(resolvedPath, 'utf8');
+
+  const matterResult = matter(fileContents);
+
+  let title = 'mini_claude SETUP';
+  const match = fileContents.match(/^#\s+(.*)/m);
+  if (match) title = match[1].trim();
+
+  const contentWithoutTitle = matterResult.content.replace(/^#\s+(.*)/m, '');
+  const fixedBoldContent = contentWithoutTitle.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  let lastUpdated: string | null = null;
+  const commitHistory: GitCommit[] = [];
+  try {
+    const gitLog = execSync(
+      `git log --follow --format="%ci|||%s" -- "${resolvedPath}"`,
+      { cwd: process.cwd(), encoding: 'utf8' }
+    ).trim();
+    if (gitLog) {
+      const lines = gitLog.split('\n').filter(Boolean);
+      for (const line of lines) {
+        const [dateStr, ...msgParts] = line.split('|||');
+        const date = dateStr.trim().split(' ')[0];
+        const message = msgParts.join('|||').trim();
+        commitHistory.push({ date, message });
+      }
+      if (commitHistory.length > 0) lastUpdated = commitHistory[0].date;
+    }
+  } catch {
+    // git not available
+  }
+
+  return {
+    id: 'setup',
+    title,
+    part: 'mini_claude',
+    content: fixedBoldContent,
+    lastUpdated,
+    commitHistory,
+    ...matterResult.data,
+  };
+}
