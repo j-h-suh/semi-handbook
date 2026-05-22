@@ -14,7 +14,7 @@ export default function CDSAXSConcept() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 540, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="/content/images/02_12/cd_saxs_concept.png?v=1" alt="CD-SAXS 개념도" style={{ width: '100%', display: 'block' }} />
+                    <img src="/content/semi/images/02_12/cd_saxs_concept.png?v=1" alt="CD-SAXS 개념도" style={{ width: '100%', display: 'block' }} />
                 </div>
             </div>
             <div style={{ maxWidth: 640, margin: '8px auto 0' }}>

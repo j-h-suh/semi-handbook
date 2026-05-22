@@ -34,7 +34,7 @@ export default function PhotoPrintingVsLitho() {
 
             {/* 이미지 */}
             <div style={{ maxWidth: 650, margin: '0 auto', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <img src="/content/images/02_01/photo_printing_vs_lithography.png" alt="사진 인화 vs 포토리소그래피"
+                <img src="/content/semi/images/02_01/photo_printing_vs_lithography.png" alt="사진 인화 vs 포토리소그래피"
                     style={{ width: '100%', display: 'block', filter: 'brightness(0.92)' }} />
             </div>
 

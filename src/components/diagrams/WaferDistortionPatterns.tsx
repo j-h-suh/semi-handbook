@@ -15,7 +15,7 @@ export default function WaferDistortionPatterns() {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 640, borderRadius: 8, overflow: 'hidden', aspectRatio: '1.7/1' }}>
                     <img
-                        src="/content/images/02_08/wafer_distortion_patterns.png?v=2"
+                        src="/content/semi/images/02_08/wafer_distortion_patterns.png?v=2"
                         alt="웨이퍼 변형 패턴 (Bowl/Saddle/Higher-order)"
                         style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 56%' }}
                     />

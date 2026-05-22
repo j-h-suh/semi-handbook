@@ -14,7 +14,7 @@ export default function OCDSpectrumMatching() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 480, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="/content/images/02_12/ocd_spectrum_matching.png?v=1" alt="OCD 스펙트럼 매칭" style={{ width: '100%', display: 'block' }} />
+                    <img src="/content/semi/images/02_12/ocd_spectrum_matching.png?v=1" alt="OCD 스펙트럼 매칭" style={{ width: '100%', display: 'block' }} />
                 </div>
             </div>
             <div style={{ maxWidth: 640, margin: '8px auto 0' }}>

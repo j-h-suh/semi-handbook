@@ -14,7 +14,7 @@ export default function SamplingMapComparison() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 540, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="/content/images/02_09/sampling_map_comparison.png?v=1"
+                    <img src="/content/semi/images/02_09/sampling_map_comparison.png?v=1"
                         alt="샘플링 맵 비교 (고정 격자 vs AI 최적화)"
                         style={{ width: '100%', display: 'block' }} />
                 </div>

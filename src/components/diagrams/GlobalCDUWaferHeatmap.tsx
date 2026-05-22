@@ -14,7 +14,7 @@ export default function GlobalCDUWaferHeatmap() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 440, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="/content/images/02_11/global_cdu_wafer_heatmap.png?v=1" alt="Global CDU 웨이퍼 히트맵" style={{ width: '100%', display: 'block' }} />
+                    <img src="/content/semi/images/02_11/global_cdu_wafer_heatmap.png?v=1" alt="Global CDU 웨이퍼 히트맵" style={{ width: '100%', display: 'block' }} />
                 </div>
             </div>
             <div style={{ maxWidth: 640, margin: '8px auto 0' }}>

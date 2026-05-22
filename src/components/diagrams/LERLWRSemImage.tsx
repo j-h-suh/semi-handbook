@@ -14,7 +14,7 @@ export default function LERLWRSemImage() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 480, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="/content/images/02_11/ler_lwr_sem_image.png?v=1" alt="LER/LWR SEM 이미지" style={{ width: '100%', display: 'block' }} />
+                    <img src="/content/semi/images/02_11/ler_lwr_sem_image.png?v=1" alt="LER/LWR SEM 이미지" style={{ width: '100%', display: 'block' }} />
                 </div>
             </div>
             <div style={{ maxWidth: 640, margin: '8px auto 0' }}>

@@ -40,7 +40,7 @@ export default function ASMLTwinscanScanner() {
                 {/* 이미지 */}
                 <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)',
                     maxWidth: 360, flexShrink: 0 }}>
-                    <img src="/content/images/02_02/asml_twinscan_scanner.png" alt="ASML TWINSCAN Scanner"
+                    <img src="/content/semi/images/02_02/asml_twinscan_scanner.png" alt="ASML TWINSCAN Scanner"
                         style={{ width: '100%', display: 'block', filter: 'brightness(0.9)' }} />
                 </div>
 

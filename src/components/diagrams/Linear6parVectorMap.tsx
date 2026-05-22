@@ -14,7 +14,7 @@ export default function Linear6parVectorMap() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 540, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="/content/images/02_10/linear_6par_vector_map.png?v=1"
+                    <img src="/content/semi/images/02_10/linear_6par_vector_map.png?v=1"
                         alt="선형 6성분 벡터맵"
                         style={{ width: '100%', display: 'block' }} />
                 </div>

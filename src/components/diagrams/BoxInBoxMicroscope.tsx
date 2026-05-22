@@ -14,7 +14,7 @@ export default function BoxInBoxMicroscope() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: 400, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="/content/images/02_09/box_in_box_microscope.png?v=1"
+                    <img src="/content/semi/images/02_09/box_in_box_microscope.png?v=1"
                         alt="Box-in-Box 마크 현미경 이미지"
                         style={{ width: '100%', display: 'block' }} />
                 </div>

@@ -35,7 +35,7 @@ export default function ASMLEuvScanner() {
             {/* Image + Overlay */}
             <div style={{ position: 'relative', maxWidth: 600, margin: '0 auto', borderRadius: 12, overflow: 'hidden',
                 border: '1px solid rgba(255,255,255,0.06)' }}>
-                <img src="/content/images/01_10/asml_euv_scanner.png" alt="ASML EUV 노광기"
+                <img src="/content/semi/images/01_10/asml_euv_scanner.png" alt="ASML EUV 노광기"
                     style={{ width: '100%', display: 'block', filter: hovered !== null ? 'brightness(0.6)' : 'brightness(0.85)',
                         transition: 'filter 0.3s' }} />
 
