@@ -734,3 +734,16 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
+## Phase 10: SETUP 단순화 — JSON 한 길로 통일
+
+학습자 SETUP 흐름이 _gcloud 로그인 길_ + _SA JSON 길_ 두 갈래로 복잡해서 _JSON 한 길_ 로 압축. 본문 9.x / 10.8 도 _gcloud ADC_ 표현을 _Service Account JSON_ 으로 통일.
+
+- [x] SETUP.md 재작성 — §0 GCP 신규 / §1 API / §2 Model Garden / §4 IAM 을 _전제_ 로 압축, §3 의 길 A(gcloud) 제거. ~204줄 → ~85줄
+- [x] 9.1 본문 — 인증 한 줄 + 💡 콜아웃 + `main.py` stub 에러 메시지 (3 자리)
+- [x] 9.2 본문 — `_make_vertex_client()` env 이름 (`GOOGLE_CLOUD_PROJECT`→`VERTEX_PROJECT_ID`, `CLOUD_ML_REGION`→`VERTEX_LOCATION`), `main.py` env 체크, 진짜로 돌려보기 셸
+- [x] 10.8 본문 — ⚠️ 콜아웃 끝 표현 + Vertex 시나리오 셸 (gcloud 두 줄 제거)
+- [x] mini_claude 코드 — `clients/__init__.py` docstring 의 _또는 gcloud ADC_ 제거
+- [x] 학습자 누적 시뮬로 검증 — `VERTEX_PROJECT_ID` + `VERTEX_LOCATION` + `GOOGLE_APPLICATION_CREDENTIALS` + `MINI_LLM_MODEL` 4 개만으로 (1) `_check_environment()` 통과 (2) 9.2 `_make_vertex_client()` 객체 생성 (3) 10.8 `make_client()` + `get_default_model()` 작동 (4) `VERTEX_PROJECT_ID` 누락 시 친절 에러 — 4/4 PASS
+
+---
+

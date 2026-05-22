@@ -16,6 +16,7 @@ OUT (사용자 환경에 안 맞음):
 - Foundry (Azure) — 사용자 환경 없음
 - Anthropic 직접 — API 키 없음 (다만 명시적 provider=anthropic 안전망 유지)
 """
+
 from __future__ import annotations
 import os
 from typing import Any
@@ -34,7 +35,7 @@ def make_client() -> Any:
         VERTEX_PROJECT_ID (또는 GCLOUD_PROJECT / GOOGLE_CLOUD_PROJECT)
         VERTEX_LOCATION (또는 CLOUD_ML_REGION — Anthropic SDK 표준.
             기본: global — Vertex 가 region 자동 라우팅. us-east5/europe-west1 등 명시도 가능)
-        GOOGLE_APPLICATION_CREDENTIALS: service account JSON 경로 (또는 gcloud ADC)
+        GOOGLE_APPLICATION_CREDENTIALS: service account JSON 경로
 
     vLLM 추가 환경변수:
         VLLM_BASE_URL (기본: http://localhost:8000/v1)
