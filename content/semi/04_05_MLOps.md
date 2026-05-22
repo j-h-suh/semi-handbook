@@ -32,7 +32,7 @@
 
 ### Edge + Central 2계층 아키텍처
 
-![반도체 ML 배포 아키텍처](/content/images/04_05/ml_deploy_arch.svg)
+![반도체 ML 배포 아키텍처](/content/semi/images/04_05/ml_deploy_arch.svg)
 
 **Edge 레이어** — 장비 근처에 배치된 서버에서 실시간 추론(VM 예측, APC 보정값 계산)을 수행한다. 레이턴시 요구가 1초 미만이므로, 네트워크 홉을 최소화하기 위해 장비에 가까이 배치한다. 경량화된 모델(ONNX Runtime, TensorRT)을 사용하여 CPU만으로도 밀리초 단위 추론이 가능하다.
 
@@ -47,7 +47,7 @@
 ### Data Drift — 입력 분포가 변한다
 
 
-![Data Drift 모니터링 — PSI 추이 차트](/content/images/04_05/data_drift_psi_trend.png)
+![Data Drift 모니터링 — PSI 추이 차트](/content/semi/images/04_05/data_drift_psi_trend.png)
 
 입력 데이터의 통계적 분포가 학습 시와 **달라지는** 현상이다. PM 후 센서 값의 범위가 변하거나, 새 레지스트 로트가 투입되면 레지스트 두께의 분포가 시프트하거나, 여름 → 겨울 전환으로 클린룸 온습도가 변한다.
 
@@ -59,7 +59,7 @@ Data Drift보다 위험한 것은 **Concept Drift** — 입력-출력 관계 **�
 
 탐지 방법 — **예측 잔차(Residual)의 평균/분산 추이**를 모니터링한다. 잔차의 평균이 0에서 벗어나면 모델에 **편향(Bias)**이 발생한 것이고, 분산이 커지면 모델의 **정밀도**가 떨어진 것이다. **슬라이딩 윈도우 RMSE** — 최근 N개 예측의 RMSE를 실시간으로 추적 — 가 가장 직관적이다.
 
-![모니터링 대시보드](/content/images/04_05/monitoring_dashboard.svg)
+![모니터링 대시보드](/content/semi/images/04_05/monitoring_dashboard.svg)
 
 ---
 
@@ -103,7 +103,7 @@ Data Drift보다 위험한 것은 **Concept Drift** — 입력-출력 관계 **�
 ### Model Registry
 
 
-![Model Registry 버전 타임라인](/content/images/04_05/model_registry_timeline.svg)
+![Model Registry 버전 타임라인](/content/semi/images/04_05/model_registry_timeline.svg)
 
 모든 모델의 버전, 성능, 학습 데이터 기간, 파라미터를 체계적으로 관리한다.
 

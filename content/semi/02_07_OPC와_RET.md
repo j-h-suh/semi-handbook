@@ -31,18 +31,18 @@
 
 왜곡을 예측하고, 그 반대의 왜곡을 마스크에 적용하면, 두 왜곡이 상쇄되어 웨이퍼에서 원래 의도한 패턴에 가까운 결과를 얻는다. 이것이 OPC의 전부다.
 
-![OPC 보정 유형](/content/images/02_07/opc_correction_types.svg)
+![OPC 보정 유형](/content/semi/images/02_07/opc_correction_types.svg)
 
 ### Rule-Based OPC에서 Model-Based OPC로
 
 
-![OPC 보정 전/후 마스크 패턴 비교](/content/images/02_07/opc_before_after.png)
+![OPC 보정 전/후 마스크 패턴 비교](/content/semi/images/02_07/opc_before_after.png)
 
 초기(1990년대) OPC는 **규칙 기반(Rule-Based)**이었다. "패턴 끝에 20 nm 세리프를 추가하라", "고립 선폭은 5 nm 넓히고 밀집 선폭은 3 nm 좁혀라" 같은 사전 정의된 규칙표를 적용했다. 단순하고 빠르지만, 현대의 수십억 개 패턴에 적용하려면 규칙이 폭발적으로 증가하고, 규칙 간 충돌이 발생하며, 패턴의 복잡한 상호작용을 포착하지 못한다.
 
 현재 주류는 **모델 기반(Model-Based) OPC**다. 빛의 회절과 레지스트의 화학 반응을 **물리적으로 시뮬레이션**하여, 마스크 패턴을 반복적으로 보정한다.
 
-![OPC 반복 최적화 루프](/content/images/02_07/opc_flow_loop.svg)
+![OPC 반복 최적화 루프](/content/semi/images/02_07/opc_flow_loop.svg)
 
 이 루프를 풀어쓰면 — 현재 마스크 패턴으로 웨이퍼 전사 결과를 시뮬레이션하고, 목표 패턴과 비교한다. 차이가 있으면 마스크의 에지(Edge)를 nm 단위로 이동시킨다. 수정된 마스크로 다시 시뮬레이션하여 비교한다. 이것을 **수렴할 때까지(보통 10~50회 반복)** 계속한다. 경사 하강법(Gradient Descent)으로 손실 함수를 최소화하는 머신러닝의 학습 루프와 구조적으로 동일하다.
 
@@ -57,7 +57,7 @@ OPC는 **RET(Resolution Enhancement Technique, 해상도 향상 기법)**의 한
 ### Off-Axis Illumination (OAI, 비축 조명)
 
 
-![조명 형태 비교 (Annular/Dipole/Quadrupole/Freeform)](/content/images/02_07/illumination_shapes_comparison.svg)
+![조명 형태 비교 (Annular/Dipole/Quadrupole/Freeform)](/content/semi/images/02_07/illumination_shapes_comparison.svg)
 
 2.2장에서 스캐너의 조명 시스템이 빛의 형태를 조절할 수 있다고 했다. 전통적인 수직 조명(Conventional Illumination) 대신 **경사진 각도**로 빛을 입사시키면, 패턴에 의한 회절광 중 렌즈에 들어오는 차수(Order)가 달라져 해상도와 DOF가 향상된다.
 
@@ -84,7 +84,7 @@ SMO의 결과로 나오는 조명 형태는 인간 엔지니어가 직관적으�
 ### ILT (Inverse Lithography Technology): 역으로 풀다
 
 
-![ILT 생성 마스크 패턴](/content/images/02_07/ilt_mask_pattern.png)
+![ILT 생성 마스크 패턴](/content/semi/images/02_07/ilt_mask_pattern.png)
 
 가장 진보된 OPC 기법인 **ILT(Inverse Lithography Technology, 역설계 리소그래피)**는 문제를 완전히 뒤집는다.
 

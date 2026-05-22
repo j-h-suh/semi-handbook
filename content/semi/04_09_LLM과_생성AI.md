@@ -34,7 +34,7 @@ $$
 
 **RAG(Retrieval-Augmented Generation)**은 이 문제를 해결한다.
 
-![RAG 기반 공정 Q&A](/content/images/04_09/rag_pipeline_qna.svg)
+![RAG 기반 공정 Q&A](/content/semi/images/04_09/rag_pipeline_qna.svg)
 
 파이프라인은 네 단계다. 팹 문서(매뉴얼, SOP, 과거 보고서, 트러블슈팅 기록)를 **벡터 DB**(Chroma, Pinecone 등)에 임베딩하여 인덱싱한다. 질문이 들어오면 의미적으로 **관련 문서를 검색**(Retrieval)한다. 검색된 문서와 질문을 LLM에 전달하여 **답변을 생성**한다. 답변에 **출처(Source)**를 함께 제공하여 엔지니어가 검증할 수 있게 한다.
 
@@ -99,7 +99,7 @@ LLM은 구조화된 데이터(수율 DB, 이상 로그, 웨이퍼맵 분류 결�
 ## AI 에이전트: 미래의 자율 분석 시스템
 
 
-![AI 에이전트 아키텍처 — Tool-Using Agent](/content/images/04_09/tool_using_agent_architecture.svg)
+![AI 에이전트 아키텍처 — Tool-Using Agent](/content/semi/images/04_09/tool_using_agent_architecture.svg)
 
 LLM의 가장 흥미로운 활용은 **도구 사용 에이전트(Tool-Using Agent)**로의 확장이다.
 
@@ -128,7 +128,7 @@ LLM의 가장 흥미로운 활용은 **도구 사용 에이전트(Tool-Using Age
 ### 팹 환경의 LLM 운용
 
 
-![On-Premise vs Cloud LLM 비교](/content/images/04_09/onpremise_vs_cloud_llm.svg)
+![On-Premise vs Cloud LLM 비교](/content/semi/images/04_09/onpremise_vs_cloud_llm.svg)
 
 **클라우드 LLM(OpenAI, Claude 등)** — 팹 데이터를 외부 서버에 전송할 수 없다(영업 비밀, 고객 NDA). 반도체 교과서 수준의 일반 지식이나 코드 생성에는 활용 가능하지만, 팹 내부 데이터와 결합하면 안 된다.
 

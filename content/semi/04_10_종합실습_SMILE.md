@@ -22,7 +22,7 @@ Part 1의 반도체 공정 이해, Part 2의 리소그래피 심화 기술, Part
 
 ## End-to-End 파이프라인: 6단계
 
-![SMILE 파이프라인](/content/images/04_10/smile_pipeline_overview.svg)
+![SMILE 파이프라인](/content/semi/images/04_10/smile_pipeline_overview.svg)
 
 이 파이프라인의 마지막 화살표 — 모니터링에서 재학습으로의 피드백 루프 — 가 시스템을 **살아 있게** 만든다. 한 번 배포하고 방치하는 것이 아니라, 공정 변화에 끊임없이 적응하는 자율 시스템이다.
 
@@ -83,7 +83,7 @@ Part 1의 반도체 공정 이해, Part 2의 리소그래피 심화 기술, Part
 
 ### 실시간 예측 아키텍처
 
-![VM 서빙 아키텍처](/content/images/04_10/vm_serving_architecture.svg)
+![VM 서빙 아키텍처](/content/semi/images/04_10/vm_serving_architecture.svg)
 
 3.6장의 **Reliance Index(RI)**가 여기서 구현된다. 입력 데이터가 학습 데이터의 분포에서 얼마나 벗어났는지를 계산하여, RI가 0.7 이상이면 VM 예측을 신뢰하고 실제 계측을 생략하며, RI가 0.7 미만이면 "이 예측은 신뢰할 수 없다"고 판단하여 실제 계측을 요청한다. **계측 절감과 안전성의 균형**이다.
 
@@ -112,7 +112,7 @@ $$
 ### 대시보드와 알림
 
 
-![SMILE 모니터링 대시보드 목업](/content/images/04_10/smile_dashboard_mockup.png)
+![SMILE 모니터링 대시보드 목업](/content/semi/images/04_10/smile_dashboard_mockup.png)
 
 
 
@@ -123,7 +123,7 @@ $$
 ## 시스템 아키텍처 종합
 
 
-![SMILE 시스템 아키텍처 종합](/content/images/04_10/smile_system_architecture.svg)
+![SMILE 시스템 아키텍처 종합](/content/semi/images/04_10/smile_system_architecture.svg)
 
 
 이 아키텍처는 4.5장의 **Edge + Central 2계층**을 구현한다. VM/APC 서버(Edge)가 실시간 추론과 보정을 수행하고, Spark/GPU 서버(Central)가 재학습과 모델 관리를 수행한다.
@@ -133,7 +133,7 @@ $$
 ## 개발 로드맵: 점진적 확장
 
 
-![SMILE 개발 로드맵 타임라인](/content/images/04_10/smile_development_roadmap.svg)
+![SMILE 개발 로드맵 타임라인](/content/semi/images/04_10/smile_development_roadmap.svg)
 
 
 

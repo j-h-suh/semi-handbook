@@ -49,7 +49,7 @@ $$
 ### Inter-Field 선형 모델
 
 
-![선형 6성분 시각화 (Translation/Rotation/Magnification)](/content/images/02_10/linear_6par_vector_map.png)
+![선형 6성분 시각화 (Translation/Rotation/Magnification)](/content/semi/images/02_10/linear_6par_vector_map.png)
 
 $$
 \text{OVL}_x(X, Y) = T_x + R_x \cdot Y + M_x \cdot X
@@ -100,7 +100,7 @@ $$
 ### ASML의 고차 정렬 지원
 
 
-![선형 vs 고차 vs AI 모델 잔차 비교](/content/images/02_10/model_residual_comparison.png)
+![선형 vs 고차 vs AI 모델 잔차 비교](/content/semi/images/02_10/model_residual_comparison.png)
 
 ASML 스캐너는 이 개념을 단계적으로 구현하여 제공한다. **6par**는 기본 선형 모델(Translation + Rotation + Magnification)이고, **19par**는 6par에 고차 항을 추가한 것이다. **38par / HOWA(Higher-Order Wafer Alignment)**는 더 높은 차수의 다항식을 사용하여 웨이퍼 레벨의 복잡한 변형을 포착한다. **CPE(Corrections Per Exposure)**는 각 노광 필드에 **독립적인 보정값**을 적용하는 가장 유연한 방식이다 — 개념적으로 다항식 피팅이 아니라 **룩업 테이블(Lookup Table)**에 가깝다. 필드 위치마다 별도의 보정값을 저장하는 것이다.
 
@@ -110,7 +110,7 @@ CPE가 이상적으로 보일 수 있지만, 각 필드에 독립 보정값을 �
 
 ## Correctables과 Residuals: 반도체 엔지니어링의 핵심 구분
 
-![Correctables vs Residuals 분리](/content/images/02_10/correctables_residuals_flow.svg)
+![Correctables vs Residuals 분리](/content/semi/images/02_10/correctables_residuals_flow.svg)
 
 **핵심 등식:**
 
@@ -132,7 +132,7 @@ $$
 
 실제 팹에서 이 모든 것이 자동으로 돌아가는 시스템이 **APC(Advanced Process Control)**다.
 
-![APC 보정 루프](/content/images/02_10/apc_control_loop.svg)
+![APC 보정 루프](/content/semi/images/02_10/apc_control_loop.svg)
 
 **Feed-Forward(전방 보정)**는 노광 **전에** 웨이퍼의 상태를 측정하여 보정값을 선제적으로 결정하는 방식이다. 스캐너의 정렬 스테이지에서 웨이퍼의 정렬 마크를 다수 읽어 Inter-Field 모델을 피팅하고, 그 결과를 보정값으로 즉시 적용한다. 각 웨이퍼의 개별적 변형에 대응할 수 있으므로 **웨이퍼 간 변동(Wafer-to-Wafer variation)**을 줄이는 데 효과적이다.
 

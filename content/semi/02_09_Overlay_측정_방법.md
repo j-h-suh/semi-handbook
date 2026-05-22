@@ -27,7 +27,7 @@
 ### Box-in-Box: 가장 직관적인 마크
 
 
-![Box-in-Box 마크 현미경 이미지](/content/images/02_09/box_in_box_microscope.png)
+![Box-in-Box 마크 현미경 이미지](/content/semi/images/02_09/box_in_box_microscope.png)
 
 IBO의 원리는 본질적으로 **광학 현미경으로 사진을 찍어 위치를 읽는 것**이다. 가장 대표적인 마크 형태는 **Box-in-Box** — 큰 박스 안에 작은 박스가 있는 구조다.
 
@@ -54,10 +54,10 @@ DBO는 마크의 **이미지를 직접 보지 않는다**. 대신, 마크에서 
 ### 격자 마크와 바이어스 트릭
 
 
-![DBO 회절 원리 (±1차 강도 비교)](/content/images/02_09/diffraction_principle.svg)
+![DBO 회절 원리 (±1차 강도 비교)](/content/semi/images/02_09/diffraction_principle.svg)
 
 
-![DBO 격자 마크 단면도 (대칭 vs 비대칭)](/content/images/02_09/dbo_grating_mark_cross_section.svg)
+![DBO 격자 마크 단면도 (대칭 vs 비대칭)](/content/semi/images/02_09/dbo_grating_mark_cross_section.svg)
 
 DBO에서는 Box-in-Box 대신 **주기적 격자(Grating) 패턴**을 사용한다. 이전 층과 현재 층에 각각 같은 피치(Pitch, P)의 격자를 형성하면, 두 격자가 겹쳐 합성 격자가 된다. 이 합성 격자에 빛을 쏘면 회절이 일어나는데, **+1차 회절광**과 **-1차 회절광**의 강도 차이가 두 격자의 상대적 오프셋 — 즉 Overlay — 에 의존한다.
 
@@ -67,7 +67,7 @@ DBO에서는 Box-in-Box 대신 **주기적 격자(Grating) 패턴**을 사용한
 
 이 의도적 오프셋(d)을 **바이어스(Bias)**라 한다.
 
-![DBO 측정 원리](/content/images/02_09/dbo_measurement_principle.svg)
+![DBO 측정 원리](/content/semi/images/02_09/dbo_measurement_principle.svg)
 
 마크 A와 B 각각에서 +1차와 -1차 회절 강도를 측정하면 4개의 값(I_A+, I_A-, I_B+, I_B-)을 얻는다. 이 4개의 값을 조합하면 Overlay를 계산할 수 있다.
 
@@ -138,7 +138,7 @@ Overlay 계측에서 **정밀도(Precision)**와 **정확도(Accuracy)**는 다�
 ### AI 기반 샘플링 최적화
 
 
-![샘플링 맵 비교 (고정 격자 vs AI 최적화)](/content/images/02_09/sampling_map_comparison.png)
+![샘플링 맵 비교 (고정 격자 vs AI 최적화)](/content/semi/images/02_09/sampling_map_comparison.png)
 
 기존에는 웨이퍼에 고정된 격자형 패턴으로 균일하게 포인트를 배치했다. 하지만 Overlay 변동은 웨이퍼 위치에 따라 다르다 — 가장자리(Edge)에서 변동이 크고 중심에서 작다면, 중심에 포인트를 많이 두는 것은 정보적으로 비효율적이다.
 

@@ -19,7 +19,7 @@
 
 Overlay는 이 "맞물림의 정밀도"를 나노미터 단위로 측정한 것이다.
 
-![Overlay 개념](/content/images/02_08/overlay_concept.svg)
+![Overlay 개념](/content/semi/images/02_08/overlay_concept.svg)
 
 Overlay는 **나노미터(nm)** 단위의 벡터량이다. x 방향 오차(OVLx)와 y 방향 오차(OVLy)를 따로 관리하며, 크기뿐 아니라 방향도 중요하다. 통계적으로는 Mean(평균 — 체계적 오차 성분), 3σ(3 표준편차 — 랜덤 오차 성분), Max(최대값)로 관리한다.
 
@@ -46,7 +46,7 @@ Overlay는 **나노미터(nm)** 단위의 벡터량이다. x 방향 오차(OVLx)
 ## Overlay 오차가 발생하면 무엇이 깨지는가
 
 
-![Overlay 오차에 의한 단선/단락 단면도](/content/images/02_08/overlay_open_short_cross_section.svg)
+![Overlay 오차에 의한 단선/단락 단면도](/content/semi/images/02_08/overlay_open_short_cross_section.svg)
 
 Overlay가 허용 범위를 벗어나면 칩에 치명적인 결과가 발생한다.
 
@@ -62,7 +62,7 @@ Overlay가 허용 범위를 벗어나면 칩에 치명적인 결과가 발생한
 
 Overlay 오차는 하나의 원인에서 나오지 않는다. 스캐너, 공정, 웨이퍼, 마스크, 계측 — **수십 가지 요인이 각각 기여하는 오차의 합**이다. 이 각 요인에 허용 오차를 배분하는 체계를 **Overlay 버짓(Overlay Budget)**이라 한다.
 
-![Overlay Budget 구성](/content/images/02_08/overlay_budget.svg)
+![Overlay Budget 구성](/content/semi/images/02_08/overlay_budget.svg)
 
 핵심은 합산 방식이다. 각 요인이 통계적으로 독립이라고 가정하면(대부분의 경우 합리적 가정), 전체 Overlay는 각 요인의 **제곱합의 제곱근(RSS, Root Sum of Squares)**으로 합산된다.
 
@@ -91,7 +91,7 @@ RSS 합산의 의미를 이해하는 것이 중요하다. 만약 스캐너 기�
 ### 3. 웨이퍼 기인 오차 (Wafer-Induced)
 
 
-![웨이퍼 변형 패턴 (Bowl/Saddle/Higher-order)](/content/images/02_08/wafer_distortion_patterns.png)
+![웨이퍼 변형 패턴 (Bowl/Saddle/Higher-order)](/content/semi/images/02_08/wafer_distortion_patterns.png)
 
 웨이퍼 자체의 물리적 특성에 의한 오차다.
 
@@ -104,7 +104,7 @@ RSS 합산의 의미를 이해하는 것이 중요하다. 만약 스캐너 기�
 ### 5. 계측 기인 오차 (Metrology-Induced)
 
 
-![마크 비대칭에 의한 측정 왜곡](/content/images/02_08/mark_asymmetry_distortion.svg)
+![마크 비대칭에 의한 측정 왜곡](/content/semi/images/02_08/mark_asymmetry_distortion.svg)
 
 Overlay를 **측정하는 과정 자체**에서도 오차가 발생한다. 이 오차가 가장 교활한 유형이다 — 실제 Overlay 오차가 아닌데 오차가 있는 것처럼 보이게 만들 수 있기 때문이다.
 
