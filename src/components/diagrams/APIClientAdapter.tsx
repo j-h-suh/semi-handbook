@@ -52,7 +52,7 @@ export default function APIClientAdapter() {
                 API 클라이언트 어댑터 패턴
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 12 }}>
-                _family B (vLLM)_ 를 family A (Anthropic) 인터페이스 위로 흉내 — agent.py 는 무지
+                family B (vLLM) 를 family A (Anthropic) 인터페이스 위로 흉내 — agent.py 는 무지
             </p>
 
             {/* agent.py — 구조적 타이핑 */}

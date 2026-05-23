@@ -78,7 +78,7 @@ export default function TeamMailboxFlow() {
                 <div style={arrowStyle}>↓</div>
                 <div style={stepStyle}>② watcher (또는 polling) — 자기 메일박스 파일 변경 감지</div>
                 <div style={arrowStyle}>↓</div>
-                <div style={stepStyle}>③ 새 메시지를 _자기 commandQueue (메모리 큐)_ 에 enqueue</div>
+                <div style={stepStyle}>③ 새 메시지를 자기 commandQueue (메모리 큐) 에 enqueue</div>
                 <div style={arrowStyle}>↓</div>
                 <div
                     style={{
