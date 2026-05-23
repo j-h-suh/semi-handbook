@@ -25,6 +25,9 @@ const TurnTokenFlow = dynamic(() => import('./TurnTokenFlow'), { ssr: false });
 const RecoveryPaths = dynamic(() => import('./RecoveryPaths'), { ssr: false });
 const QueryCallStack = dynamic(() => import('./QueryCallStack'), { ssr: false });
 const TurnApiSequence = dynamic(() => import('./TurnApiSequence'), { ssr: false });
+const AutoCompactFlow = dynamic(() => import('./AutoCompactFlow'), { ssr: false });
+const FileReadFlow = dynamic(() => import('./FileReadFlow'), { ssr: false });
+const BashCommandSplit = dynamic(() => import('./BashCommandSplit'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
@@ -48,4 +51,7 @@ export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/02_1/recovery_paths.svg': RecoveryPaths,
     '/content/claude_code/images/02_1/query_call_stack.svg': QueryCallStack,
     '/content/claude_code/images/02_1/turn_api_sequence.svg': TurnApiSequence,
+    '/content/claude_code/images/02_3/autocompact_flow.svg': AutoCompactFlow,
+    '/content/claude_code/images/03_4/fileread_flow.svg': FileReadFlow,
+    '/content/claude_code/images/03_5/bash_command_split.svg': BashCommandSplit,
 };

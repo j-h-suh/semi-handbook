@@ -18,11 +18,7 @@
 
 근데 `Bash`는 다르다. 입력 `{command: "ls && git push origin main"}`이 들어왔다고 하자. 이건 하나의 작업인가, 둘인가?
 
-```
-ls                      ← 읽기 작업 (안전)
-&&
-git push origin main    ← 원격에 푸시 (위험)
-```
+![Bash 합성 명령 — 부분별 안전성 분리](/content/claude_code/images/03_5/bash_command_split.svg)
 
 둘이다. 그리고 권한 시스템은 둘 다 검사해야 한다. 만약 문자열 통째로 매칭하면? 사용자가 `Bash(git *)` 룰로 **git 명령은 매번 묻기**로 설정해뒀어도, `ls && git push`는 그 룰을 우회한다. 룰의 패턴이 첫 글자 `l`에 안 맞으니까. 보안이 통째로 무너진다.
 

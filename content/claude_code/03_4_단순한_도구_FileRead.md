@@ -15,13 +15,7 @@
 
 Claude가 "파일 좀 읽어볼게요" 하고 spinner가 도는 그 순간. 사용자는 0.3초쯤 "음 읽고 있나 보다" 하고 본다. 그 0.3초 안에 세 가지 일이 순서대로 일어난다.
 
-```
-사용자가 본 것:        ⠋ Reading src/foo.ts
-실제로 일어난 일:
-   1. validateInput     ← 입력이 말이 되나? (디스크 안 만짐)
-   2. checkPermissions  ← 사용자 권한 룰에 맞나? (디스크 안 만짐)
-   3. call              ← 진짜 읽기 (드디어 디스크)
-```
+![FileRead 의 3 단계 — 순서 = 보안](/content/claude_code/images/03_4/fileread_flow.svg)
 
 이 3단계 순서가 우연이 아니다. **순서 자체가 보안 설계**다. 왜 그런지를 이 챕터에서 본다.
 
