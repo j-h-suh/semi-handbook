@@ -8,19 +8,17 @@ import SettingsModal from '@/components/SettingsModal';
 import SearchModal from '@/components/SearchModal';
 import Sidebar from '@/components/Sidebar';
 import type { SearchEntry } from '@/lib/searchIndex';
-import type { ChapterMeta } from '@/lib/markdown';
+import type { Book, ChapterMeta } from '@/lib/markdown';
 
 interface Props {
     children: React.ReactNode;
     searchData: SearchEntry[];
-    semiChapters: ChapterMeta[];
-    statsChapters: ChapterMeta[];
-    claudeChapters: ChapterMeta[];
+    chaptersByBook: Record<Book, ChapterMeta[]>;
 }
 
 const STORAGE_KEY = 'sidebar-desktop-hidden';
 
-export default function ClientLayout({ children, searchData, semiChapters, statsChapters, claudeChapters }: Props) {
+export default function ClientLayout({ children, searchData, chaptersByBook }: Props) {
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
     const [desktopHidden, setDesktopHidden] = useState(false);
 
@@ -86,9 +84,7 @@ export default function ClientLayout({ children, searchData, semiChapters, stats
 
             {/* 사이드바 — 데스크탑 고정/숨김, 모바일 드로어 */}
             <Sidebar
-                semiChapters={semiChapters}
-                statsChapters={statsChapters}
-                claudeChapters={claudeChapters}
+                chaptersByBook={chaptersByBook}
                 isOpen={mobileDrawerOpen}
                 onClose={closeMobileDrawer}
                 isDesktopHidden={desktopHidden}

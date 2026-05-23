@@ -4,49 +4,55 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal, X, PanelLeftClose } from 'lucide-react';
-import type { ChapterMeta } from '@/lib/markdown';
+import type { LucideIcon } from 'lucide-react';
+import { BOOKS, getBookConfig, type Book, type ChapterMeta, type IconName, type AccentName } from '@/lib/markdown';
 
-type BookTab = 'semi' | 'stats' | 'claude';
+const ICON_MAP: Record<IconName, LucideIcon> = {
+    'cpu': Cpu,
+    'trending-up': TrendingUp,
+    'terminal': Terminal,
+};
 
-const BOOK_META: Record<BookTab, { label: string; icon: typeof Cpu; color: string; tabColor: string; chapterColor: string; route: string }> = {
-    semi: { label: '반도체', icon: Cpu, color: 'text-slate-500', tabColor: 'text-cyan-400 border-cyan-400', chapterColor: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', route: '/semi' },
-    stats: { label: '통계학', icon: TrendingUp, color: 'text-slate-500', tabColor: 'text-emerald-400 border-emerald-400', chapterColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', route: '/stats' },
-    claude: { label: '클로드', icon: Terminal, color: 'text-slate-500', tabColor: 'text-violet-400 border-violet-400', chapterColor: 'bg-violet-500/10 text-violet-400 border-violet-500/20', route: '/claude' },
+// Tailwind safelist 회피 — 챕터 활성 자리의 색상 lookup
+const CHAPTER_ACTIVE_CLASSES: Record<AccentName, string> = {
+    cyan: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+    emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    violet: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
 };
 
 interface Props {
-    semiChapters: ChapterMeta[];
-    statsChapters: ChapterMeta[];
-    claudeChapters: ChapterMeta[];
+    chaptersByBook: Record<Book, ChapterMeta[]>;
     isOpen?: boolean;             // 모바일 드로어 열림 상태
     onClose?: () => void;         // 모바일 드로어 닫기
     isDesktopHidden?: boolean;    // 데스크탑 사이드바 숨김 상태
     onCollapse?: () => void;      // 데스크탑 사이드바 접기
 }
 
-export default function Sidebar({ semiChapters, statsChapters, claudeChapters, isOpen = false, onClose, isDesktopHidden = false, onCollapse }: Props) {
+export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDesktopHidden = false, onCollapse }: Props) {
     const pathname = usePathname();
     const decodedPathname = decodeURIComponent(pathname);
 
-    const detectedBook: BookTab | null = useMemo(() => {
-        if (decodedPathname.startsWith('/semi/')) return 'semi';
-        if (decodedPathname.startsWith('/stats/')) return 'stats';
-        if (decodedPathname.startsWith('/claude/')) return 'claude';
+    // URL 에서 활성 책 감지 — BOOKS.route 와 prefix 매칭
+    const detectedBook: Book | null = useMemo(() => {
+        for (const b of BOOKS) {
+            if (decodedPathname.startsWith(`${b.route}/`)) return b.id;
+        }
         return null;
     }, [decodedPathname]);
 
-    // 사용자가 명시적으로 탭을 클릭한 경우의 override.
-    // URL 이동(pathname 변경) 시 자동 초기화 → 챕터 페이지 진입 시 그 책 탭으로 자연 동기화.
-    const [userOverride, setUserOverride] = useState<BookTab | null>(null);
+    // 사용자가 명시적으로 dropdown 으로 선택한 경우의 override.
+    // URL 이동(pathname 변경) 시 자동 초기화 → 챕터 페이지 진입 시 그 책으로 자연 동기화.
+    const [userOverride, setUserOverride] = useState<Book | null>(null);
     useEffect(() => {
         setUserOverride(null);
         onClose?.();
     }, [pathname, onClose]);
-    const activeBook: BookTab = userOverride ?? detectedBook ?? 'semi';
+    const activeBook: Book = userOverride ?? detectedBook ?? BOOKS[0].id;
 
-    const chaptersMap: Record<BookTab, ChapterMeta[]> = { semi: semiChapters, stats: statsChapters, claude: claudeChapters };
-    const chapters = chaptersMap[activeBook];
-    const routePrefix = BOOK_META[activeBook].route;
+    const activeBookConfig = getBookConfig(activeBook);
+    const chapters = chaptersByBook[activeBook] ?? [];
+    const routePrefix = activeBookConfig.route;
+    const ActiveIcon = ICON_MAP[activeBookConfig.iconKey];
 
     const groupedChapters = chapters.reduce((acc, chapter) => {
         if (!acc[chapter.part]) acc[chapter.part] = [];
@@ -65,8 +71,7 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters, i
         new Set(activePart ? [activePart] : [Object.keys(groupedChapters)[0]])
     );
 
-    // activePart 가 바뀔 때만 자동 펴짐. 같은 챕터에서 사용자가 수동으로 닫으면
-    // (= 이전엔 렌더 중 setState 가 즉시 재추가해서 무응답으로 보였던 버그) 닫힌 채 유지.
+    // activePart 가 바뀔 때만 자동 펴짐. 같은 챕터에서 사용자가 수동으로 닫으면 닫힌 채 유지.
     useEffect(() => {
         if (!activePart) return;
         setOpenParts(prev => (prev.has(activePart) ? prev : new Set([...prev, activePart])));
@@ -79,6 +84,13 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters, i
             else next.add(part);
             return next;
         });
+    };
+
+    const handleBookChange = (book: Book) => {
+        setUserOverride(book);
+        const newChapters = chaptersByBook[book];
+        const firstPart = newChapters[0]?.part;
+        if (firstPart) setOpenParts(new Set([firstPart]));
     };
 
     return (
@@ -118,37 +130,33 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters, i
                 </button>
             </div>
 
-            {/* Book Tabs */}
-            <div className="flex border-b border-slate-800">
-                {(Object.keys(BOOK_META) as BookTab[]).map(book => {
-                    const meta = BOOK_META[book];
-                    const Icon = meta.icon;
-                    const isActive = activeBook === book;
-                    return (
-                        <button
-                            key={book}
-                            onClick={() => {
-                                setUserOverride(book);
-                                const newChapters = chaptersMap[book];
-                                const firstPart = newChapters[0]?.part;
-                                if (firstPart) setOpenParts(new Set([firstPart]));
-                            }}
-                            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-medium transition-colors cursor-pointer border-b-2 ${
-                                isActive
-                                    ? BOOK_META[book].tabColor
-                                    : 'text-slate-500 border-transparent hover:text-slate-300'
-                            }`}
-                        >
-                            <Icon size={14} />
-                            {meta.label}
-                        </button>
-                    );
-                })}
+            {/* Book Selector — N 핸드북 자연 확장 dropdown */}
+            <div className="px-4 py-3 border-b border-slate-800">
+                <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                        <ActiveIcon size={16} />
+                    </div>
+                    <select
+                        value={activeBook}
+                        onChange={(e) => handleBookChange(e.target.value as Book)}
+                        aria-label="핸드북 선택"
+                        className="w-full appearance-none bg-slate-900/60 border border-slate-700 hover:border-slate-600 focus:border-slate-500 rounded-lg pl-10 pr-9 py-2 text-sm text-slate-200 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-slate-500"
+                    >
+                        {BOOKS.map((book) => (
+                            <option key={book.id} value={book.id} className="bg-slate-900 text-slate-200">
+                                {book.fullLabel}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                        <ChevronDown size={16} />
+                    </div>
+                </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
                 {Object.entries(groupedChapters).map(([part, partChapters]) => {
-                    const isOpen = openParts.has(part);
+                    const isOpenPart = openParts.has(part);
                     return (
                         <div key={part} className="mb-2">
                             <button
@@ -156,20 +164,20 @@ export default function Sidebar({ semiChapters, statsChapters, claudeChapters, i
                                 className="w-full flex items-center justify-between px-2 py-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-300 transition-colors cursor-pointer"
                             >
                                 {part}
-                                <ChevronDown size={14} className={`transition-transform duration-200 ${isOpen ? '' : '-rotate-90'}`} />
+                                <ChevronDown size={14} className={`transition-transform duration-200 ${isOpenPart ? '' : '-rotate-90'}`} />
                             </button>
-                            {isOpen && (
+                            {isOpenPart && (
                                 <ul className="space-y-1 mt-1">
                                     {partChapters.map((chapter) => {
                                         const isActive = decodedPathname === `${routePrefix}/${chapter.id}`;
-                                        const accentColor = BOOK_META[activeBook].chapterColor;
+                                        const accentClass = CHAPTER_ACTIVE_CLASSES[activeBookConfig.accent];
                                         return (
                                             <li key={chapter.id}>
                                                 <Link
                                                     href={`${routePrefix}/${chapter.id}`}
                                                     onClick={onClose}
                                                     className={`block px-3 py-2 text-sm rounded-lg transition-all duration-200 ${isActive
-                                                        ? `${accentColor} font-medium border`
+                                                        ? `${accentClass} font-medium border`
                                                         : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
                                                     }`}
                                                 >
