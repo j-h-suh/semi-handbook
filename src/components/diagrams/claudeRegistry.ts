@@ -5,7 +5,9 @@ import type { ComponentType } from 'react';
 // img src 와 _완전 일치_ 한 key 로 매핑 (MarkdownViewer 의 diagramRegistry 매칭).
 
 const MiniClaudeArchitecture = dynamic(() => import('./MiniClaudeArchitecture'), { ssr: false });
+const TwoLayerAgentLoop = dynamic(() => import('./TwoLayerAgentLoop'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
+    '/content/claude_code/images/02_1/two_layer_loop.svg': TwoLayerAgentLoop,
 };
