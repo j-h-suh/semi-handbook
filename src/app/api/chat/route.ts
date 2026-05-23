@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
         // 4. Construct the prompt
         const systemInstruction = `
-You are a highly capable AI assistant embedded in the "반도체를 여행하는 세미에이아이를 위한 안내서".
+You are a highly capable AI assistant embedded in the "반도체를 여행하는 SemiAI를 위한 안내서".
 Your goal is to answer questions from CS/AI engineers learning about Semiconductor Photolithography.
 You are given the Markdown text of the document they are currently reading as "Context".
 ALWAYS base your answers on this context. If the answer is not in the context, you may use external knowledge but mention that it's out-of-context. Be polite, clear, and use Markdown for formatting your answers.

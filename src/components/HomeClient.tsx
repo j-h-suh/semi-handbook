@@ -1,15 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, Cpu, TrendingUp, Terminal } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import { BOOKS, type Book, type IconName, type AccentName, type BookMeta } from '@/lib/books';
-
-const ICON_MAP: Record<IconName, LucideIcon> = {
-    'cpu': Cpu,
-    'trending-up': TrendingUp,
-    'terminal': Terminal,
-};
+import { BOOKS, type Book, type AccentName, type BookMeta } from '@/lib/books';
 
 // Tailwind safelist 회피 — 단일 시그니처 Mintlify brand-green #00d4a4 .
 const ACCENT_CLASSES: Record<AccentName, {
@@ -39,26 +31,20 @@ interface Props {
 }
 
 function BookRow({ book, meta }: { book: BookMeta; meta: string }) {
-    const Icon = ICON_MAP[book.iconKey];
     const c = ACCENT_CLASSES[book.accent];
     return (
         <Link
             href={book.landingHref}
-            className={`group flex items-center gap-4 p-5 rounded-2xl border ${c.cardBorder} ${c.cardBg} ${c.cardHoverBg} ${c.cardHoverBorder} transition-all`}
+            className={`group block p-5 rounded-2xl border ${c.cardBorder} ${c.cardBg} ${c.cardHoverBg} ${c.cardHoverBorder} transition-all`}
         >
-            <div className={`w-12 h-12 rounded-xl ${c.iconBg} border ${c.iconBorder} flex items-center justify-center ${c.iconText} shrink-0`}>
-                <Icon size={24} />
+            <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                <h2 className="text-lg font-bold text-white">{book.fullLabel}</h2>
+                <p className="text-xs text-zinc-500">{book.subtitle}</p>
             </div>
-            <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2 mb-1 flex-wrap">
-                    <h2 className="text-lg font-bold text-white">{book.fullLabel}</h2>
-                    <p className="text-xs text-zinc-500">{book.subtitle}</p>
-                </div>
-                <p className="text-sm text-zinc-400 leading-relaxed">
-                    {book.description}
-                </p>
-                <span className="text-xs text-zinc-600">{meta}</span>
-            </div>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+                {book.description}
+            </p>
+            <span className="text-xs text-zinc-600">{meta}</span>
         </Link>
     );
 }
@@ -71,12 +57,9 @@ export default function HomeClient({ bookMetas }: Props) {
 
                 {/* Hero */}
                 <div className="text-center mb-12 md:mb-16">
-                    <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#00d4a4]/10 border border-[#00d4a4]/20 text-[#00d4a4] mb-6">
-                        <BookOpen size={32} className="md:w-9 md:h-9" />
-                    </div>
                     <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl mb-6 leading-snug">
                         반도체를 여행하는<br />
-                        세미에이아이를 위한<br />
+                        SemiAI를 위한<br />
                         <span className="bg-gradient-to-r from-[#00d4a4] to-[#7cebcb] bg-clip-text text-transparent">
                             핸드북 시리즈
                         </span>

@@ -3,16 +3,9 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings, BookText, Search, ChevronDown, Cpu, TrendingUp, Terminal, X, PanelLeftClose } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import { BOOKS, getBookMeta, type Book, type IconName, type AccentName } from '@/lib/books';
+import { Settings, BookText, Search, ChevronDown, X, PanelLeftClose } from 'lucide-react';
+import { BOOKS, getBookMeta, type Book, type AccentName } from '@/lib/books';
 import type { ChapterMeta } from '@/lib/markdown';
-
-const ICON_MAP: Record<IconName, LucideIcon> = {
-    'cpu': Cpu,
-    'trending-up': TrendingUp,
-    'terminal': Terminal,
-};
 
 // Tailwind safelist 회피 — 단일 시그니처 Mintlify brand-green #00d4a4 .
 const CHAPTER_ACTIVE_CLASSES: Record<AccentName, string> = {
@@ -51,7 +44,6 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
     const activeBookConfig = getBookMeta(activeBook);
     const chapters = chaptersByBook[activeBook] ?? [];
     const routePrefix = activeBookConfig.route;
-    const ActiveIcon = ICON_MAP[activeBookConfig.iconKey];
 
     const groupedChapters = chapters.reduce((acc, chapter) => {
         if (!acc[chapter.part]) acc[chapter.part] = [];
@@ -100,16 +92,11 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 <Link
                     href="/"
                     onClick={onClose}
-                    className="p-5 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
+                    className="p-5 hover:bg-white/[0.02] transition-colors block"
                 >
-                    <div className="w-10 h-10 rounded-xl bg-[#00d4a4]/10 border border-[#00d4a4]/20 flex items-center justify-center text-[#00d4a4] shrink-0">
-                        <BookOpen size={20} />
-                    </div>
-                    <div>
-                        <h1 className="text-sm font-bold text-zinc-200 whitespace-normal leading-snug">
-                            반도체를 여행하는<br />세미에이아이를 위한<br />핸드북 시리즈
-                        </h1>
-                    </div>
+                    <h1 className="text-sm font-bold text-zinc-200 whitespace-normal leading-snug">
+                        반도체를 여행하는<br />SemiAI를 위한<br />핸드북 시리즈
+                    </h1>
                 </Link>
                 {/* 모바일 닫기 버튼 */}
                 <button
@@ -132,14 +119,11 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
             {/* Book Selector — N 핸드북 자연 확장 dropdown */}
             <div className="px-3 py-3 border-b border-zinc-800/60">
                 <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#00d4a4] pointer-events-none">
-                        <ActiveIcon size={16} />
-                    </div>
                     <select
                         value={activeBook}
                         onChange={(e) => handleBookChange(e.target.value as Book)}
                         aria-label="핸드북 선택"
-                        className="w-full appearance-none bg-[#00d4a4]/[0.05] border border-[#00d4a4]/20 hover:border-[#00d4a4]/35 focus:border-[#00d4a4] rounded-lg pl-10 pr-9 py-2 text-sm text-zinc-100 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-[#00d4a4]"
+                        className="w-full appearance-none bg-[#00d4a4]/[0.05] border border-[#00d4a4]/20 hover:border-[#00d4a4]/35 focus:border-[#00d4a4] rounded-lg pl-3 pr-9 py-2 text-sm text-zinc-100 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-[#00d4a4]"
                     >
                         {BOOKS.map((book) => (
                             <option key={book.id} value={book.id} className="bg-zinc-900 text-zinc-200">
