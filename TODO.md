@@ -1593,3 +1593,53 @@ Phase 19 의 _후행_ 에서 _"변환 완료 후 lang === 'text' 분기 제거"_
 
 ---
 
+## Phase 32: claude 다이어그램 전수 종결 (batch 7~10) *(✅ 완료)*
+
+2026-05-23 사용자 _"이어서 합시다"_ — Phase 31 후행 ~18 자리 점진 진행.
+
+### 32-1. 변환 batch 7~10 (commit `d699654` / `7b938f5` / `e0e169f`)
+
+| Batch | 챕터 | 컴포넌트 | 자리 |
+|---|---|---|---|
+| 7 | 02_1 ×4 | TurnTokenFlow · RecoveryPaths · QueryCallStack · TurnApiSequence | 4 |
+| 8 | 02_3 + 03_4 + 03_5 | AutoCompactFlow · FileReadFlow · BashCommandSplit | 3 |
+| 9 | 04_1 ×2 | ChatVsSlashFlow (ChatInputFlow + SlashCommandFlow) | 2 |
+| 10 | (Part 5 + 06_6 + 11) | _변환 자리 없음_ | 0 |
+
+### 32-2. 보존 결정 자리 (batch 10 검토)
+
+- 05_1 BLOCK 2 (line 57, 3 줄) — _짧음_, 보존
+- 05_1 BLOCK 3 (line 209) — Python 코드 (`# 안 바뀐 셀은 ...`), _코드_, 건너뜀
+- 05_4 BLOCK 2/4 (line 136/178) — TypeScript / Python 코드, 건너뜀
+- 05_4 BLOCK 3 (line 141, cache hit list 4 줄) — _작은 자리_, 보존
+- 06_6 BLOCK 1 (line 22, Hook 7 단계) — _숫자 리스트_, 보존
+- 06_6 awk BLOCK 2 (line 532) — _file 485 줄_ → false positive
+- 11 — 다이어그램 _없음_
+
+### 32-3. 최종 누적 26 자리
+
+| Part | 자리 | 컴포넌트 |
+|---|---|---|
+| 0 | 00_1 ×2 + 00_2 | ClaudeCodeArchitecture · AgentLoopBranch · EventLoopAlgorithm |
+| 2 | 02_1 ×5 + 02_3 | TwoLayerAgentLoop · TurnTokenFlow · RecoveryPaths · QueryCallStack · TurnApiSequence · AutoCompactFlow |
+| 3 | 03_1 + 03_2 + 03_4 + 03_5 | ToolAsMicroservice · ToolInterface47Fields · FileReadFlow · BashCommandSplit |
+| 4 | 04_1 ×2 | ChatInputFlow · SlashCommandFlow |
+| 5 | 05_2 + 05_3 | AppStateSelectorPattern · VirtualScrollViewport |
+| 6 | 06_1 + 06_2 + 06_3 | CacheLayerBoundary · AppStateCategories · PermissionModeCycle |
+| 8 | 08_4 ×2 | QueueLoopModel · TeamMailboxFlow |
+| 9 | 09_1 | MiniClaudeArchitecture |
+| 10 | 10_1 + 10_3 + 10_5 | Part10Architecture · HookLifecycle · APIClientAdapter |
+
+### 32-4. 보존 자리 (전체)
+
+- TUI 시뮬: 04_2 (Settings/CLI), 04_3 (Permission), 05_1 (Settings), 05_4 (프롬프트), 06_4 (Permissions)
+- 디렉토리 트리: 09_1
+- 숫자 리스트 (다이어그램 아닌 자리): 06_6 Hook 7 단계, 05_4 cache hit
+- 코드 블록 (lang 없는 자리): 05_1 BLOCK 3, 05_4 BLOCK 2/4, 06_6 BLOCK 2 (awk false positive)
+
+### 32-5. claude 다이어그램 진짜 종결
+
+26 자리 변환 + 모든 chap 전수 발굴 완료. `lang === 'text'` 분기 (Phase 19) _영구 보존_ — TUI 시뮬 자리 보호.
+
+---
+
