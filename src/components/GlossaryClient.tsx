@@ -37,7 +37,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                 <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
                     용어 사전
                 </h1>
-                <p className="mt-3 text-sm text-slate-500">
+                <p className="mt-3 text-sm text-zinc-500">
                     핸드북에서 사용된 핵심 키워드 {glossary.length}개
                 </p>
             </header>
@@ -49,7 +49,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                     placeholder="용어 검색..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20 transition-colors"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20 transition-colors"
                 />
                 <div className="flex gap-2 flex-wrap">
                     {CATEGORIES.map(cat => (
@@ -59,7 +59,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                             className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
                                 activeCategory === cat
                                     ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
-                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
+                                    : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300 hover:border-white/15'
                             }`}
                         >
                             {cat}
@@ -71,22 +71,22 @@ export default function GlossaryClient({ chapterMap }: Props) {
             {/* Results */}
             <div className="space-y-1">
                 {filtered.length === 0 && (
-                    <p className="text-sm text-slate-600 py-8 text-center">검색 결과가 없습니다.</p>
+                    <p className="text-sm text-zinc-600 py-8 text-center">검색 결과가 없습니다.</p>
                 )}
                 {filtered.map((entry, i) => (
                     <div key={i} className="group px-4 py-3 rounded-xl hover:bg-white/3 transition-colors border border-transparent hover:border-white/5">
                         <div className="flex items-baseline gap-2 mb-1">
-                            <span className="text-base font-semibold text-slate-200">{entry.term}</span>
+                            <span className="text-base font-semibold text-zinc-200">{entry.term}</span>
                             {entry.abbr && (
-                                <span className="text-xs text-slate-500">({entry.abbr})</span>
+                                <span className="text-xs text-zinc-500">({entry.abbr})</span>
                             )}
-                            <span className="text-[11px] text-slate-700 ml-auto">{entry.category}</span>
+                            <span className="text-[11px] text-zinc-700 ml-auto">{entry.category}</span>
                         </div>
-                        <p className="text-sm text-slate-400 leading-relaxed">{entry.definition}</p>
+                        <p className="text-sm text-zinc-400 leading-relaxed">{entry.definition}</p>
                         <div className="mt-1.5 flex gap-1.5 flex-wrap">
                             {entry.chapters.map(ch => {
                                 const found = chapterMap[ch];
-                                if (!found) return <span key={ch} className="text-[11px] text-slate-600">{ch}장</span>;
+                                if (!found) return <span key={ch} className="text-[11px] text-zinc-600">{ch}장</span>;
                                 return (
                                     <Link
                                         key={ch}

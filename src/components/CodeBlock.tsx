@@ -149,7 +149,7 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
         <div className="relative group">
             <button
                 onClick={handleCopy}
-                className="absolute right-2 top-2 z-10 px-2 py-1 text-xs rounded bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                className="absolute right-2 top-2 z-10 px-2 py-1 text-xs rounded bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
                 aria-label="코드 복사"
             >
                 {copied ? '복사됨' : '복사'}
@@ -160,7 +160,7 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
                     dangerouslySetInnerHTML={{ __html: html }}
                 />
             ) : (
-                <pre className="p-4 text-base text-slate-300 overflow-x-auto m-0 font-mono leading-relaxed">
+                <pre className="p-4 text-base text-zinc-300 overflow-x-auto m-0 font-mono leading-relaxed">
                     <code>{code}</code>
                 </pre>
             )}
@@ -178,8 +178,8 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
                 : 'border-zinc-800 bg-[#1c1c1e]'
         }`}>
             {label && (
-                <div className="flex items-center justify-between px-5 py-3 text-sm font-mono bg-slate-900/60 border-b border-slate-800">
-                    <span className="text-slate-400">{label}</span>
+                <div className="flex items-center justify-between px-5 py-3 text-sm font-mono bg-zinc-900/60 border-b border-zinc-800">
+                    <span className="text-zinc-400">{label}</span>
                 </div>
             )}
             {innerContent}

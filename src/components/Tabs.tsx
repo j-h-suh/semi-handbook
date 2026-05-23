@@ -52,15 +52,15 @@ export function Tabs({ children }: { children: ReactNode }) {
     if (items.length === 0) return null;
 
     return (
-        <div className="not-prose my-4 rounded-lg overflow-hidden border border-slate-800 bg-[#1c1c1e]">
-            <div className="flex border-b border-slate-800 bg-slate-900/60 overflow-x-auto overflow-y-hidden">
+        <div className="not-prose my-4 rounded-lg overflow-hidden border border-zinc-800 bg-[#1c1c1e]">
+            <div className="flex border-b border-zinc-800 bg-zinc-900/60 overflow-x-auto overflow-y-hidden">
                 {items.map((item, i) => (
                     <button
                         key={i}
                         onClick={() => setActive(i)}
                         className={`px-5 py-3 text-sm font-mono border-b-2 -mb-px transition-colors cursor-pointer whitespace-nowrap ${active === i
-                            ? 'border-[#00d4a4] text-[#00d4a4] bg-slate-800/40'
-                            : 'border-transparent text-slate-500 hover:text-slate-300'
+                            ? 'border-[#00d4a4] text-[#00d4a4] bg-zinc-800/40'
+                            : 'border-transparent text-zinc-500 hover:text-zinc-300'
                             }`}
                     >
                         {item.label}

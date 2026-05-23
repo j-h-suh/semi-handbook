@@ -52,12 +52,12 @@ function BookRow({ book, meta }: { book: BookMeta; meta: string }) {
             <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2 mb-1 flex-wrap">
                     <h2 className="text-lg font-bold text-white">{book.fullLabel}</h2>
-                    <p className="text-xs text-slate-500">{book.subtitle}</p>
+                    <p className="text-xs text-zinc-500">{book.subtitle}</p>
                 </div>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-zinc-400 leading-relaxed">
                     {book.description}
                 </p>
-                <span className="text-xs text-slate-600">{meta}</span>
+                <span className="text-xs text-zinc-600">{meta}</span>
             </div>
         </Link>
     );
@@ -81,7 +81,7 @@ export default function HomeClient({ bookMetas }: Props) {
                             핸드북 시리즈
                         </span>
                     </h1>
-                    <p className="text-lg text-slate-500 max-w-xl mx-auto">
+                    <p className="text-lg text-zinc-500 max-w-xl mx-auto">
                         기술과 제품을 만드는 모두를 위한 핸드북 시리즈
                     </p>
                 </div>

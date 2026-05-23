@@ -94,19 +94,19 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
 
     return (
         <aside
-            className={`w-72 h-full flex flex-col border-r border-slate-800 glass-panel md:shrink-0 md:static fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} ${isDesktopHidden ? 'md:hidden' : 'md:translate-x-0'}`}
+            className={`w-72 h-full flex flex-col border-r border-zinc-800 glass-panel md:shrink-0 md:static fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} ${isDesktopHidden ? 'md:hidden' : 'md:translate-x-0'}`}
         >
             <div className="relative">
                 <Link
                     href="/"
                     onClick={onClose}
-                    className="p-6 border-b border-slate-800 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
+                    className="p-6 border-b border-zinc-800 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
                 >
                     <div className="w-10 h-10 rounded-xl bg-[#00d4a4]/10 border border-[#00d4a4]/20 flex items-center justify-center text-[#00d4a4] shrink-0">
                         <BookOpen size={20} />
                     </div>
                     <div>
-                        <h1 className="text-sm font-bold text-slate-200 whitespace-normal leading-snug">
+                        <h1 className="text-sm font-bold text-zinc-200 whitespace-normal leading-snug">
                             반도체를 여행하는<br />세미에이아이를 위한<br />핸드북 시리즈
                         </h1>
                     </div>
@@ -114,7 +114,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 {/* 모바일 닫기 버튼 */}
                 <button
                     onClick={onClose}
-                    className="md:hidden absolute top-3 right-3 p-2 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800/50 transition-colors"
+                    className="md:hidden absolute top-3 right-3 p-2 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50 transition-colors"
                     aria-label="메뉴 닫기"
                 >
                     <X size={18} />
@@ -122,7 +122,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 {/* 데스크탑 접기 버튼 */}
                 <button
                     onClick={onCollapse}
-                    className="hidden md:block absolute top-3 right-3 p-2 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800/50 transition-colors"
+                    className="hidden md:block absolute top-3 right-3 p-2 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50 transition-colors"
                     aria-label="사이드바 접기"
                 >
                     <PanelLeftClose size={18} />
@@ -130,24 +130,24 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
             </div>
 
             {/* Book Selector — N 핸드북 자연 확장 dropdown */}
-            <div className="px-4 py-3 border-b border-slate-800">
+            <div className="px-4 py-3 border-b border-zinc-800">
                 <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none">
                         <ActiveIcon size={16} />
                     </div>
                     <select
                         value={activeBook}
                         onChange={(e) => handleBookChange(e.target.value as Book)}
                         aria-label="핸드북 선택"
-                        className="w-full appearance-none bg-slate-900/60 border border-slate-700 hover:border-slate-600 focus:border-slate-500 rounded-lg pl-10 pr-9 py-2 text-sm text-slate-200 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-slate-500"
+                        className="w-full appearance-none bg-zinc-900/60 border border-zinc-700 hover:border-zinc-600 focus:border-zinc-500 rounded-lg pl-10 pr-9 py-2 text-sm text-zinc-200 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-zinc-500"
                     >
                         {BOOKS.map((book) => (
-                            <option key={book.id} value={book.id} className="bg-slate-900 text-slate-200">
+                            <option key={book.id} value={book.id} className="bg-zinc-900 text-zinc-200">
                                 {book.fullLabel}
                             </option>
                         ))}
                     </select>
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none">
                         <ChevronDown size={16} />
                     </div>
                 </div>
@@ -160,7 +160,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                         <div key={part} className="mb-2">
                             <button
                                 onClick={() => togglePart(part)}
-                                className="w-full flex items-center justify-between px-2 py-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-300 transition-colors cursor-pointer"
+                                className="w-full flex items-center justify-between px-2 py-1.5 text-xs font-bold text-zinc-500 uppercase tracking-wider hover:text-zinc-300 transition-colors cursor-pointer"
                             >
                                 {part}
                                 <ChevronDown size={14} className={`transition-transform duration-200 ${isOpenPart ? '' : '-rotate-90'}`} />
@@ -177,7 +177,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                                                     onClick={onClose}
                                                     className={`block px-3 py-2 text-sm rounded-lg transition-all duration-200 ${isActive
                                                         ? `${accentClass} font-medium border`
-                                                        : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                                                        : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200'
                                                     }`}
                                                 >
                                                     {chapter.title.split('—')[0].trim()}
@@ -192,28 +192,28 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 })}
             </div>
 
-            <div className="p-4 border-t border-slate-800 space-y-1">
+            <div className="p-4 border-t border-zinc-800 space-y-1">
                 <button
                     onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors cursor-pointer"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 rounded-lg transition-colors cursor-pointer"
                 >
                     <Search size={16} />
                     <span>검색</span>
-                    <kbd className="ml-auto text-[10px] text-slate-600 bg-slate-800/50 px-1.5 py-0.5 rounded border border-slate-700/50">⌘K</kbd>
+                    <kbd className="ml-auto text-[10px] text-zinc-600 bg-zinc-800/50 px-1.5 py-0.5 rounded border border-zinc-700/50">⌘K</kbd>
                 </button>
                 <Link
                     href="/glossary"
                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
                         pathname === '/glossary'
                             ? 'bg-[#00d4a4]/10 text-[#00d4a4] font-medium border border-[#00d4a4]/20'
-                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                            : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
                     }`}
                 >
                     <BookText size={16} />
                     <span>용어 사전</span>
                 </Link>
                 <button
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 rounded-lg transition-colors"
                     onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
                 >
                     <Settings size={16} />

@@ -229,11 +229,11 @@ export default function QnAPanel() {
             <div className="p-4 border-b border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Bot className="text-cyan-400" size={20} />
-                    <h2 className="font-bold text-slate-200">AI Assistant</h2>
+                    <h2 className="font-bold text-zinc-200">AI Assistant</h2>
                 </div>
                 <button
                     onClick={() => window.history.back()}
-                    className="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
+                    className="text-zinc-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
                 </button>
@@ -244,7 +244,7 @@ export default function QnAPanel() {
                 className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"
             >
                 {messages.length === 0 && (
-                    <div className="text-center text-slate-500 my-10 text-sm">
+                    <div className="text-center text-zinc-500 my-10 text-sm">
                         문서를 읽다가 궁금한 점을 질문해보세요!<br />
                         (현재 보고 계시는 페이지의 내용을 AI가 참조하여 답변합니다.)
                     </div>
@@ -268,7 +268,7 @@ export default function QnAPanel() {
 
                             {/* Waiting indicator when neither thinking nor content has started */}
                             {msg.role === 'model' && msg.isStreaming && !msg.thinking && !msg.content && (
-                                <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-slate-400">
+                                <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-zinc-400">
                                     <Brain className="animate-pulse" size={16} />
                                     <span className="text-xs">생각 중...</span>
                                 </div>
@@ -310,7 +310,7 @@ export default function QnAPanel() {
                     <button
                         type="submit"
                         disabled={isLoading || messages.some(m => m.isStreaming) || !input.trim()}
-                        className="absolute right-2 top-2 p-1.5 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-full disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+                        className="absolute right-2 top-2 p-1.5 text-zinc-400 hover:text-cyan-400 hover:bg-white/5 rounded-full disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
                     >
                         <Send size={18} />
                     </button>

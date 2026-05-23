@@ -229,7 +229,7 @@ export default function BoardClient() {
         switch (cat) {
             case '질문': return 'text-amber-400 bg-amber-500/10 border-amber-500/20';
             case '수정요청': return 'text-rose-400 bg-rose-500/10 border-rose-500/20';
-            default: return 'text-slate-400 bg-white/5 border-white/10';
+            default: return 'text-zinc-400 bg-white/5 border-white/10';
         }
     };
 
@@ -241,7 +241,7 @@ export default function BoardClient() {
                         <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
                             게시판
                         </h1>
-                        <p className="mt-3 text-sm text-slate-500">
+                        <p className="mt-3 text-sm text-zinc-500">
                             질문, 수정 요청, 자유 의견을 남겨주세요.
                         </p>
                     </div>
@@ -272,7 +272,7 @@ export default function BoardClient() {
                                             : book === '공통'
                                                 ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400 font-medium'
                                                 : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
-                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
+                                    : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300 hover:border-white/15'
                             }`}
                         >
                             {book}
@@ -288,7 +288,7 @@ export default function BoardClient() {
                             className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
                                 activeCategory === cat
                                     ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
-                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
+                                    : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300 hover:border-white/15'
                             }`}
                         >
                             {cat}{(categoryCounts[cat] ?? 0) > 0 && <span className="ml-1 opacity-60">({categoryCounts[cat]})</span>}
@@ -299,9 +299,9 @@ export default function BoardClient() {
 
             {/* Posts list */}
             {loading ? (
-                <div className="py-12 text-center text-sm text-slate-600">불러오는 중...</div>
+                <div className="py-12 text-center text-sm text-zinc-600">불러오는 중...</div>
             ) : posts.length === 0 ? (
-                <div className="py-12 text-center text-sm text-slate-600">
+                <div className="py-12 text-center text-sm text-zinc-600">
                     아직 글이 없습니다. 첫 번째 글을 작성해보세요!
                 </div>
             ) : (
@@ -327,19 +327,19 @@ export default function BoardClient() {
                                 <span className={`text-[11px] px-2 py-0.5 rounded-md border ${categoryColor(post.category)}`}>
                                     {post.category}
                                 </span>
-                                <span className="text-base font-medium text-slate-200 line-clamp-1">{post.title}</span>
+                                <span className="text-base font-medium text-zinc-200 line-clamp-1">{post.title}</span>
                                 {post.status && (post.category === '질문' || post.category === '수정요청') && (
                                     <span className={`flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-md border shrink-0 ${
                                         post.status === '완료'
                                             ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-                                            : 'text-slate-500 bg-white/5 border-white/10'
+                                            : 'text-zinc-500 bg-white/5 border-white/10'
                                     }`}>
                                         {post.status === '완료' && <CheckCircle2 size={10} />}
                                         {post.status}
                                     </span>
                                 )}
                             </div>
-                            <div className="flex items-center gap-3 text-xs text-slate-600">
+                            <div className="flex items-center gap-3 text-xs text-zinc-600">
                                 <span>{post.nickname}</span>
                                 <span className="flex items-center gap-1"><Clock size={11} />{formatDate(post.created_at)}</span>
                                 {(commentCounts[post.id] ?? 0) > 0 && (
@@ -358,7 +358,7 @@ export default function BoardClient() {
                 <div className="fixed inset-0 z-[90] flex items-center justify-center" onClick={() => setSelectedPost(null)}>
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
                     <div className="relative w-full max-w-lg mx-4 bg-[#0f1729] border border-white/10 rounded-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => setSelectedPost(null)} className="absolute top-4 right-4 text-slate-600 hover:text-slate-400 cursor-pointer">
+                        <button onClick={() => setSelectedPost(null)} className="absolute top-4 right-4 text-zinc-600 hover:text-zinc-400 cursor-pointer">
                             <X size={18} />
                         </button>
                         <div className="flex items-center gap-2 mb-3">
@@ -369,20 +369,20 @@ export default function BoardClient() {
                                 <span className={`flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-md border ${
                                     selectedPost.status === '완료'
                                         ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-                                        : 'text-slate-500 bg-white/5 border-white/10'
+                                        : 'text-zinc-500 bg-white/5 border-white/10'
                                 }`}>
                                     {selectedPost.status === '완료' && <CheckCircle2 size={10} />}
                                     {selectedPost.status}
                                 </span>
                             )}
-                            <span className="text-xs text-slate-600">{selectedPost.nickname} · {formatDate(selectedPost.created_at)}</span>
+                            <span className="text-xs text-zinc-600">{selectedPost.nickname} · {formatDate(selectedPost.created_at)}</span>
                         </div>
                         <h2 className="text-lg font-bold text-white mb-4">{selectedPost.title}</h2>
-                        <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap mb-4">{selectedPost.content}</p>
+                        <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap mb-4">{selectedPost.content}</p>
 
                         {/* Comments section */}
                         <div className="border-t border-white/5 pt-4 mb-4">
-                            <h3 className="flex items-center gap-1.5 text-xs font-bold text-slate-400 mb-3">
+                            <h3 className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 mb-3">
                                 <MessageCircle size={13} />댓글 {comments.length > 0 && `(${comments.length})`}
                             </h3>
                             {comments.length > 0 && (
@@ -390,21 +390,21 @@ export default function BoardClient() {
                                     {comments.map(c => (
                                         <div key={c.id} className="text-xs bg-white/3 rounded-lg px-3 py-2 group">
                                             <div className="flex items-center gap-2 mb-0.5">
-                                                <span className="font-medium text-slate-300">{c.nickname}</span>
-                                                <span className="text-slate-700">{formatDate(c.created_at)}</span>
+                                                <span className="font-medium text-zinc-300">{c.nickname}</span>
+                                                <span className="text-zinc-700">{formatDate(c.created_at)}</span>
                                                 <div className="ml-auto opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity">
-                                                    <button onClick={() => { setCommentPwPrompt({ action: 'edit', comment: c }); setCommentPwInput(''); setCommentPwError(''); }} className="text-slate-600 hover:text-slate-400 cursor-pointer"><Pencil size={10} /></button>
-                                                    <button onClick={() => { setCommentPwPrompt({ action: 'delete', comment: c }); setCommentPwInput(''); setCommentPwError(''); }} className="text-slate-600 hover:text-rose-400 cursor-pointer"><Trash2 size={10} /></button>
+                                                    <button onClick={() => { setCommentPwPrompt({ action: 'edit', comment: c }); setCommentPwInput(''); setCommentPwError(''); }} className="text-zinc-600 hover:text-zinc-400 cursor-pointer"><Pencil size={10} /></button>
+                                                    <button onClick={() => { setCommentPwPrompt({ action: 'delete', comment: c }); setCommentPwInput(''); setCommentPwError(''); }} className="text-zinc-600 hover:text-rose-400 cursor-pointer"><Trash2 size={10} /></button>
                                                 </div>
                                             </div>
                                             {editingComment?.id === c.id ? (
                                                 <div className="flex gap-1 mt-1">
-                                                    <input value={editCommentContent} onChange={e => setEditCommentContent(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleCommentEditSave()} className="flex-1 px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-slate-200 focus:outline-none" autoFocus />
+                                                    <input value={editCommentContent} onChange={e => setEditCommentContent(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleCommentEditSave()} className="flex-1 px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-zinc-200 focus:outline-none" autoFocus />
                                                     <button onClick={handleCommentEditSave} className="px-2 py-1 bg-cyan-500/10 text-cyan-400 rounded text-[10px] cursor-pointer">저장</button>
-                                                    <button onClick={() => setEditingComment(null)} className="px-2 py-1 bg-white/5 text-slate-500 rounded text-[10px] cursor-pointer">취소</button>
+                                                    <button onClick={() => setEditingComment(null)} className="px-2 py-1 bg-white/5 text-zinc-500 rounded text-[10px] cursor-pointer">취소</button>
                                                 </div>
                                             ) : (
-                                                <p className="text-slate-400">{c.content}</p>
+                                                <p className="text-zinc-400">{c.content}</p>
                                             )}
                                         </div>
                                     ))}
@@ -416,14 +416,14 @@ export default function BoardClient() {
                                     placeholder="닉네임"
                                     value={commentForm.nickname}
                                     onChange={e => setCommentForm(f => ({ ...f, nickname: e.target.value }))}
-                                    className="w-20 px-2 py-1.5 bg-white/5 border border-white/8 rounded-lg text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/30"
+                                    className="w-20 px-2 py-1.5 bg-white/5 border border-white/8 rounded-lg text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/30"
                                 />
                                 <input
                                     type="password"
                                     placeholder="비밀번호"
                                     value={commentForm.password}
                                     onChange={e => setCommentForm(f => ({ ...f, password: e.target.value }))}
-                                    className="w-20 px-2 py-1.5 bg-white/5 border border-white/8 rounded-lg text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/30"
+                                    className="w-20 px-2 py-1.5 bg-white/5 border border-white/8 rounded-lg text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/30"
                                 />
                                 <input
                                     type="text"
@@ -431,7 +431,7 @@ export default function BoardClient() {
                                     value={commentForm.content}
                                     onChange={e => setCommentForm(f => ({ ...f, content: e.target.value }))}
                                     onKeyDown={e => e.key === 'Enter' && handleCommentSubmit()}
-                                    className="flex-1 px-3 py-1.5 bg-white/5 border border-white/8 rounded-lg text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/30"
+                                    className="flex-1 px-3 py-1.5 bg-white/5 border border-white/8 rounded-lg text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/30"
                                 />
                                 <button
                                     onClick={handleCommentSubmit}
@@ -450,7 +450,7 @@ export default function BoardClient() {
                                     onClick={() => { setStatusPrompt(selectedPost); setStatusPwInput(''); setStatusPwError(''); }}
                                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer mr-auto ${
                                         selectedPost.status === '완료'
-                                            ? 'text-slate-400 bg-white/5 border border-white/8 hover:bg-white/10'
+                                            ? 'text-zinc-400 bg-white/5 border border-white/8 hover:bg-white/10'
                                             : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20'
                                     }`}
                                 >
@@ -460,7 +460,7 @@ export default function BoardClient() {
                             )}
                             <button
                                 onClick={() => { setPwPrompt({ action: 'edit', post: selectedPost }); setPwInput(''); setPwError(''); }}
-                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 bg-white/5 hover:bg-white/10 border border-white/8 rounded-lg transition-colors cursor-pointer"
+                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 bg-white/5 hover:bg-white/10 border border-white/8 rounded-lg transition-colors cursor-pointer"
                             >
                                 <Pencil size={12} />수정
                             </button>
@@ -489,14 +489,14 @@ export default function BoardClient() {
                             value={pwInput}
                             onChange={e => { setPwInput(e.target.value); setPwError(''); }}
                             onKeyDown={e => e.key === 'Enter' && handlePasswordAction()}
-                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40 mb-2"
+                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40 mb-2"
                             autoFocus
                         />
                         {pwError && <p className="text-xs text-rose-400 mb-2">{pwError}</p>}
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setPwPrompt(null)}
-                                className="flex-1 px-3 py-2 text-xs text-slate-400 bg-white/5 border border-white/8 rounded-lg cursor-pointer"
+                                className="flex-1 px-3 py-2 text-xs text-zinc-400 bg-white/5 border border-white/8 rounded-lg cursor-pointer"
                             >
                                 취소
                             </button>
@@ -529,14 +529,14 @@ export default function BoardClient() {
                             value={commentPwInput}
                             onChange={e => { setCommentPwInput(e.target.value); setCommentPwError(''); }}
                             onKeyDown={e => e.key === 'Enter' && handleCommentPwAction()}
-                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40 mb-2"
+                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40 mb-2"
                             autoFocus
                         />
                         {commentPwError && <p className="text-xs text-rose-400 mb-2">{commentPwError}</p>}
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setCommentPwPrompt(null)}
-                                className="flex-1 px-3 py-2 text-xs text-slate-400 bg-white/5 border border-white/8 rounded-lg cursor-pointer"
+                                className="flex-1 px-3 py-2 text-xs text-zinc-400 bg-white/5 border border-white/8 rounded-lg cursor-pointer"
                             >
                                 취소
                             </button>
@@ -563,8 +563,8 @@ export default function BoardClient() {
                         <h3 className="text-sm font-bold text-white mb-3">
                             관리자 비밀번호 확인
                         </h3>
-                        <p className="text-xs text-slate-500 mb-3">
-                            상태를 <span className="text-slate-300">{statusPrompt.status === '완료' ? '대기' : '완료'}</span>(으)로 변경합니다.
+                        <p className="text-xs text-zinc-500 mb-3">
+                            상태를 <span className="text-zinc-300">{statusPrompt.status === '완료' ? '대기' : '완료'}</span>(으)로 변경합니다.
                         </p>
                         <input
                             type="password"
@@ -588,14 +588,14 @@ export default function BoardClient() {
                                     fetchPosts();
                                 }
                             }}
-                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40 mb-2"
+                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40 mb-2"
                             autoFocus
                         />
                         {statusPwError && <p className="text-xs text-rose-400 mb-2">{statusPwError}</p>}
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setStatusPrompt(null)}
-                                className="flex-1 px-3 py-2 text-xs text-slate-400 bg-white/5 border border-white/8 rounded-lg cursor-pointer"
+                                className="flex-1 px-3 py-2 text-xs text-zinc-400 bg-white/5 border border-white/8 rounded-lg cursor-pointer"
                             >
                                 취소
                             </button>
@@ -629,7 +629,7 @@ export default function BoardClient() {
                 <div className="fixed inset-0 z-[90] flex items-center justify-center" onClick={() => { setShowWrite(false); setEditingPost(null); }}>
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
                     <div className="relative w-full max-w-lg mx-4 bg-[#0f1729] border border-white/10 rounded-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => { setShowWrite(false); setEditingPost(null); }} className="absolute top-4 right-4 text-slate-600 hover:text-slate-400 cursor-pointer">
+                        <button onClick={() => { setShowWrite(false); setEditingPost(null); }} className="absolute top-4 right-4 text-zinc-600 hover:text-zinc-400 cursor-pointer">
                             <X size={18} />
                         </button>
                         <h2 className="text-lg font-bold text-white mb-5">{editingPost ? '수정하기' : '글쓰기'}</h2>
@@ -640,7 +640,7 @@ export default function BoardClient() {
                                 placeholder="닉네임 (비워두면 '익명')"
                                 value={form.nickname}
                                 onChange={e => setForm(f => ({ ...f, nickname: e.target.value }))}
-                                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40"
+                                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40"
                             />
                             <div className="space-y-2">
                                 <div className="flex gap-2">
@@ -657,7 +657,7 @@ export default function BoardClient() {
                                                             : book === '공통'
                                                                 ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400 font-medium'
                                                                 : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
-                                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300'
+                                                    : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300'
                                             }`}
                                         >
                                             {book}
@@ -672,7 +672,7 @@ export default function BoardClient() {
                                             className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
                                                 form.category === cat
                                                     ? categoryColor(cat) + ' font-medium'
-                                                    : 'bg-white/3 border-white/8 text-slate-500 hover:text-slate-300'
+                                                    : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300'
                                             }`}
                                         >
                                             <Tag size={11} />{cat}
@@ -685,14 +685,14 @@ export default function BoardClient() {
                                 placeholder="제목"
                                 value={form.title}
                                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40"
+                                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40"
                             />
                             <textarea
                                 placeholder="내용"
                                 rows={5}
                                 value={form.content}
                                 onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-                                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40 resize-none"
+                                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40 resize-none"
                             />
                             {!editingPost && (
                                 <input
@@ -700,7 +700,7 @@ export default function BoardClient() {
                                     placeholder="비밀번호 (수정/삭제 시 필요)"
                                     value={form.password}
                                     onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/40"
+                                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40"
                                 />
                             )}
                             <button

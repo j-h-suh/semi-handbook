@@ -102,16 +102,16 @@ export default function SearchModal({ searchData }: Props) {
             >
                 {/* Search input */}
                 <div className="flex items-center gap-3 px-5 py-4 border-b border-white/8">
-                    <Search size={18} className="text-slate-500 shrink-0" />
+                    <Search size={18} className="text-zinc-500 shrink-0" />
                     <input
                         ref={inputRef}
                         type="text"
                         placeholder="핸드북 내용 검색..."
                         value={query}
                         onChange={e => setQuery(e.target.value)}
-                        className="flex-1 bg-transparent text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none"
+                        className="flex-1 bg-transparent text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none"
                     />
-                    <button onClick={() => setOpen(false)} className="text-slate-600 hover:text-slate-400 transition-colors">
+                    <button onClick={() => setOpen(false)} className="text-zinc-600 hover:text-zinc-400 transition-colors">
                         <X size={16} />
                     </button>
                 </div>
@@ -119,7 +119,7 @@ export default function SearchModal({ searchData }: Props) {
                 {/* Results */}
                 <div className="max-h-[50vh] overflow-y-auto custom-scrollbar">
                     {query.trim().length >= 2 && results.length === 0 && (
-                        <div className="px-5 py-8 text-center text-sm text-slate-600">
+                        <div className="px-5 py-8 text-center text-sm text-zinc-600">
                             검색 결과가 없습니다.
                         </div>
                     )}
@@ -135,7 +135,7 @@ export default function SearchModal({ searchData }: Props) {
                                 </span>
                                 <span className="text-xs text-[#00d4a4] font-medium">{r.chapterTitle}</span>
                             </div>
-                            <div className="text-sm text-slate-400 leading-relaxed">
+                            <div className="text-sm text-zinc-400 leading-relaxed">
                                 {highlightMatch(r.snippet, query)}
                             </div>
                         </button>
@@ -143,21 +143,21 @@ export default function SearchModal({ searchData }: Props) {
                 </div>
 
                 {/* Pagination + Footer */}
-                <div className="px-5 py-2.5 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-700">
+                <div className="px-5 py-2.5 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-700">
                     {results.length > PER_PAGE ? (
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setPage(p => Math.max(0, p - 1))}
                                 disabled={page === 0}
-                                className="px-2 py-0.5 rounded border border-slate-700/50 text-slate-500 hover:text-slate-300 disabled:opacity-30 disabled:cursor-default cursor-pointer"
+                                className="px-2 py-0.5 rounded border border-zinc-700/50 text-zinc-500 hover:text-zinc-300 disabled:opacity-30 disabled:cursor-default cursor-pointer"
                             >←</button>
-                            <span className="text-slate-500">{page + 1} / {totalPages}</span>
+                            <span className="text-zinc-500">{page + 1} / {totalPages}</span>
                             <button
                                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                                 disabled={page >= totalPages - 1}
-                                className="px-2 py-0.5 rounded border border-slate-700/50 text-slate-500 hover:text-slate-300 disabled:opacity-30 disabled:cursor-default cursor-pointer"
+                                className="px-2 py-0.5 rounded border border-zinc-700/50 text-zinc-500 hover:text-zinc-300 disabled:opacity-30 disabled:cursor-default cursor-pointer"
                             >→</button>
-                            <span className="text-slate-600 ml-1">({results.length}건)</span>
+                            <span className="text-zinc-600 ml-1">({results.length}건)</span>
                         </div>
                     ) : (
                         <span>{results.length > 0 ? `${results.length}건` : 'ESC 닫기'}</span>

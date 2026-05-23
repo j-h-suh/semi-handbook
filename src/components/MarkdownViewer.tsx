@@ -82,7 +82,7 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
                     {mainTitle.trim()}
                 </h1>
                 {subtitle && (
-                    <p className="mt-3 text-lg sm:text-xl text-slate-400 font-normal tracking-tight">
+                    <p className="mt-3 text-lg sm:text-xl text-zinc-400 font-normal tracking-tight">
                         {subtitle}
                     </p>
                 )}
@@ -90,18 +90,18 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
                     <div className="mt-3">
                         <button
                             onClick={() => setShowHistory(!showHistory)}
-                            className="text-sm text-slate-500 hover:text-slate-400 transition-colors cursor-pointer"
+                            className="text-sm text-zinc-500 hover:text-zinc-400 transition-colors cursor-pointer"
                         >
                             최종 수정: {lastUpdated} {commitHistory && commitHistory.length > 0 && (
-                                <span className="ml-1 text-slate-600">{showHistory ? '▲' : '▼'}</span>
+                                <span className="ml-1 text-zinc-600">{showHistory ? '▲' : '▼'}</span>
                             )}
                         </button>
                         {showHistory && commitHistory && commitHistory.length > 0 && (
-                            <ul className="mt-2 space-y-1 text-xs text-slate-600 border-l-2 border-slate-800 pl-3">
+                            <ul className="mt-2 space-y-1 text-xs text-zinc-600 border-l-2 border-zinc-800 pl-3">
                                 {commitHistory.slice(0, 5).map((c, i) => (
                                     <li key={i}>
-                                        <span className="text-slate-500">{c.date}</span>
-                                        <span className="mx-1.5 text-slate-700">—</span>
+                                        <span className="text-zinc-500">{c.date}</span>
+                                        <span className="mx-1.5 text-zinc-700">—</span>
                                         <span>{c.message}</span>
                                     </li>
                                 ))}

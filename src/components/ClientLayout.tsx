@@ -52,15 +52,15 @@ export default function ClientLayout({ children, searchData, chaptersByBook }: P
     return (
         <QnAPanelProvider>
             {/* 모바일 헤더 (md 미만에서만 표시) */}
-            <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 flex items-center px-4 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
+            <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 flex items-center px-4 border-b border-zinc-800 bg-zinc-950/95 backdrop-blur">
                 <button
                     onClick={openMobileDrawer}
-                    className="p-2 -ml-2 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/50 transition-colors"
+                    className="p-2 -ml-2 rounded-lg text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors"
                     aria-label="메뉴 열기"
                 >
                     <Menu size={20} />
                 </button>
-                <span className="ml-2 text-sm font-bold text-slate-200">세미에이아이 핸드북</span>
+                <span className="ml-2 text-sm font-bold text-zinc-200">세미에이아이 핸드북</span>
             </header>
 
             {/* 모바일 백드롭 */}
@@ -76,7 +76,7 @@ export default function ClientLayout({ children, searchData, chaptersByBook }: P
             {desktopHidden && (
                 <button
                     onClick={expandDesktopSidebar}
-                    className="hidden md:flex fixed top-4 left-4 z-30 p-2 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/50 transition-colors border border-slate-800 bg-slate-950/95 backdrop-blur"
+                    className="hidden md:flex fixed top-4 left-4 z-30 p-2 rounded-lg text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors border border-zinc-800 bg-zinc-950/95 backdrop-blur"
                     aria-label="사이드바 열기"
                 >
                     <PanelLeftOpen size={18} />
