@@ -167,18 +167,7 @@ export default function MarkdownViewer({ title, content, lastUpdated, commitHist
                             );
                         },
 
-                        // 2c. Blockquote (콜아웃) — 첫 글자 (💡/⚠️/⚙️) 인식 → data-variant.
-                        // globals.css 의 .prose blockquote[data-variant="..."] 셀렉터로 종류별 색 적용.
-                        blockquote({ children, ...props }) {
-                            const text = extractTextFromChildren(children).trimStart();
-                            let variant: 'tip' | 'warn' | 'note' | undefined;
-                            if (text.startsWith('💡')) variant = 'tip';
-                            else if (text.startsWith('⚠️') || text.startsWith('⚠')) variant = 'warn';
-                            else if (text.startsWith('⚙️') || text.startsWith('⚙')) variant = 'note';
-                            return <blockquote data-variant={variant} {...props}>{children}</blockquote>;
-                        },
-
-                        // 2d. `:::tabs` directive (via remarkTabs plugin → <div class="tabs-directive">)
+                        // 2c. `:::tabs` directive (via remarkTabs plugin → <div class="tabs-directive">)
                         div({ className, children, ...props }) {
                             if (typeof className === 'string' && className.includes('tabs-directive')) {
                                 return <Tabs>{children}</Tabs>;

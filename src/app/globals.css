@@ -131,9 +131,11 @@ body {
   margin-bottom: 2em;
 }
 
-/* Blockquote (콜아웃) — Mintlify 결: 카드 결로 (배경 + padding + radius + 좌측 보더).
-   Tailwind Typography 의 자동 이탤릭·자동 따옴표는 제거 (이모지 마커가 종류 신호). */
-.prose blockquote {
+/* Blockquote + Deep Dive (콜아웃) — 단일 카드 결.
+   _이모지가 색 신호_ (💡 / ⚠️ / ⚙️ / 🔬). 시각 결 자체는 하나 — radius/padding/보더 동일.
+   Tailwind Typography 의 자동 이탤릭·자동 따옴표는 제거. */
+.prose blockquote,
+.prose details {
   font-style: normal;
   font-weight: normal;
   border-radius: 0.5rem;
@@ -147,18 +149,15 @@ body {
   content: none;
 }
 
-/* 콜아웃 종류별 색 — MarkdownViewer 의 blockquote 인터셉터가 이모지 첫 글자로 data-variant 분기 */
-.prose blockquote[data-variant="tip"] {
-  background: rgba(0, 212, 164, 0.05);
-  border-left-color: #00d4a4;
+/* Deep Dive (`<details><summary>🔬 ...`) — 콜아웃과 같은 카드 결 + 접힘 기능만 차이.
+   브라우저 기본 마커 (▶/▼) 유지 — 접힘/펼침 상태 신호. */
+.prose summary {
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
 }
-.prose blockquote[data-variant="warn"] {
-  background: rgba(195, 125, 13, 0.06);
-  border-left-color: #c37d0d;
-}
-.prose blockquote[data-variant="note"] {
-  background: rgba(168, 168, 170, 0.05);
-  border-left-color: #888888;
+.prose details > *:not(summary) {
+  margin-top: 0.75rem;
 }
 
 /* 본문 링크 — 시그니처 그린 + 부드러운 밑줄 (Tailwind Typography invert 의 cyan 기본 override) */
