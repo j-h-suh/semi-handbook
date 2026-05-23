@@ -11,6 +11,7 @@
 - 팀 메모리 + secret guard → OUT (향후 확장)
 - 13 개 컨텍스트 격리 슬라이더 → ``messages=[]`` + contextvars 한 줄
 """
+
 from __future__ import annotations
 import asyncio
 from dataclasses import dataclass, field
@@ -21,9 +22,7 @@ from .base import Tool, ToolContext
 from ..agents import AgentSpec
 from ..messages import ConversationState
 from ..teams import (
-    MailboxMessage,
     TeammateIdentity,
-    deliver,
     ensure_mailbox,
     get_coordinator,
     reset_identity,
@@ -49,6 +48,7 @@ class TeamToolInput(BaseModel):
 def _query_lazy():
     """순환 import 회피 — query 가 query 를 부르는 구조 (10.5 AgentTool 과 같은 트릭)."""
     from ..agent import query
+
     return query
 
 
@@ -123,8 +123,7 @@ class TeamTool:
         """
         if spec is None:
             return [
-                t for t in self.parent_tools
-                if t.is_read_only() and t.name != self.name
+                t for t in self.parent_tools if t.is_read_only() and t.name != self.name
             ]
 
         disallowed = set(spec.disallowed_tools)
@@ -182,7 +181,8 @@ class TeamTool:
                     continue
                 blocks = msg.get("content", [])
                 texts = [
-                    b.get("text", "") for b in blocks
+                    b.get("text", "")
+                    for b in blocks
                     if isinstance(b, dict) and b.get("type") == "text"
                 ]
                 if texts:
@@ -243,11 +243,11 @@ class TeamTool:
 
         # lead 메일박스에 도착한 idle 알림도 부록으로 — *어떤 순서로 끝났는지* 보여주기
         from ..teams import drain_mailbox  # 지연 import — 함수 내부에서만 필요
+
         lead_box = drain_mailbox(lead_id)
         if lead_box:
             notes = "\n".join(
-                f"- [{m.kind}] {m.sender}: {m.text[:80]}"
-                for m in lead_box
+                f"- [{m.kind}] {m.sender}: {m.text[:80]}" for m in lead_box
             )
             sections.append(f"=== mailbox (lead) ===\n{notes}")
 

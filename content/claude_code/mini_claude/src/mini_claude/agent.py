@@ -1,5 +1,4 @@
 from __future__ import annotations
-import asyncio
 from dataclasses import dataclass
 from typing import Any, AsyncIterator
 from .tools.base import Tool, ToolContext, find_tool, tool_to_anthropic_schema
@@ -15,12 +14,14 @@ from . import teams
 @dataclass
 class TextDelta:
     """진행 중인 텍스트 한 조각."""
+
     text: str
 
 
 @dataclass
 class ToolUseStarted:
     """도구 호출이 시작됐다는 알림."""
+
     name: str
     input: dict[str, Any]
 
@@ -28,6 +29,7 @@ class ToolUseStarted:
 @dataclass
 class TurnDone:
     """한 턴이 끝났다는 신호."""
+
     stop_reason: str
 
 
@@ -124,15 +126,17 @@ async def query(
                     cwd=cwd, tool_name=tool.name, tool_input=block["input"]
                 )
                 if pre_resp and pre_resp.permission_decision == "deny":
-                    tool_results.append({
-                        "type": "tool_result",
-                        "tool_use_id": block["id"],
-                        "content": (
-                            "Permission denied by hook: "
-                            f"{pre_resp.permission_decision_reason or '(no reason)'}"
-                        ),
-                        "is_error": True,
-                    })
+                    tool_results.append(
+                        {
+                            "type": "tool_result",
+                            "tool_use_id": block["id"],
+                            "content": (
+                                "Permission denied by hook: "
+                                f"{pre_resp.permission_decision_reason or '(no reason)'}"
+                            ),
+                            "is_error": True,
+                        }
+                    )
                     continue
                 if pre_resp and pre_resp.updated_input is not None:
                     block["input"] = pre_resp.updated_input
@@ -164,12 +168,14 @@ async def query(
                     result_text = f"Error: {e}"
                     is_error = True
 
-            tool_results.append({
-                "type": "tool_result",
-                "tool_use_id": block["id"],
-                "content": result_text,
-                **({"is_error": True} if is_error else {}),
-            })
+            tool_results.append(
+                {
+                    "type": "tool_result",
+                    "tool_use_id": block["id"],
+                    "content": result_text,
+                    **({"is_error": True} if is_error else {}),
+                }
+            )
 
             # ── Hook (10.3) — PostToolUse: additional_context 누적 ─────
             if hooks and not is_error:
@@ -189,10 +195,12 @@ async def query(
         # ── 메시지 큐 (10.7) — 외부에서 push 된 항목을 다음 LLM 호출에 attachment ──
         queued = message_queue.drain()
         for item in queued:
-            tool_results.append({
-                "type": "text",
-                "text": f"[queued/{item.source}] {item.content}",
-            })
+            tool_results.append(
+                {
+                    "type": "text",
+                    "text": f"[queued/{item.source}] {item.content}",
+                }
+            )
 
         state.add_user(tool_results)
         # while 루프의 다음 iteration → 다음 LLM 호출
@@ -209,7 +217,8 @@ def _last_assistant_text(state: ConversationState) -> str:
             continue
         blocks = msg.get("content", [])
         texts = [
-            b.get("text", "") for b in blocks
+            b.get("text", "")
+            for b in blocks
             if isinstance(b, dict) and b.get("type") == "text"
         ]
         if texts:
