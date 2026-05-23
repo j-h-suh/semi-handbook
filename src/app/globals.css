@@ -61,10 +61,10 @@ body {
   letter-spacing: -0.015em;
 }
 
-/* Accent for inline code — teal-300 (#5eead4): 시안보다 채도 ↓, 본문에서 덜 자극 */
+/* Accent for inline code — Mintlify brand-green-soft (#7cebcb): 시그니처 결로 통일 */
 .prose code {
-  color: #5eead4;
-  background: rgba(94, 234, 212, 0.08);
+  color: #7cebcb;
+  background: rgba(124, 235, 203, 0.08);
   font-weight: 500;
   font-size: 88%;
   padding: 0.15em 0.4em;
