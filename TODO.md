@@ -903,3 +903,50 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 14: 핸드북 나열 UX 재설계 (3 → 6~8 → 10+ 자연 확장) *(✅ 완료)*
+
+2026-05-23 사용자 _다음 페이즈 UX 고민_ 요청 — "지금 3개라 상관없지만 4개가 되면 깨질 것 같아요". 옵션 비교 (drop down vs 그리드 vs 다른) 후 옵션 _G (세로 리스트 + 사이드창 dropdown)_ 채택 — _Notion / Vercel docs / Stripe Guides_ 의 검증된 패턴, _N 핸드북 자연 확장_ (스크롤만 늘어남), _Tailwind safelist 회피_.
+
+### 14-1. 데이터 분리 — Client/Server (commit `eef5677`, `2443810`)
+
+- [x] **`src/lib/books.ts` 신설** — Client + Server 공통 UI 메타 (BOOKS / BookMeta / IconName / AccentName / getBookMeta). server-only 의존성 (fs/path/execSync/matter) 0
+- [x] **`src/lib/markdown.ts`** — server-only 자리 (SERVER_CONFIGS: contentDir/excludePattern/getPartFromId/imageRewrite) 만 보존. `getBookConfig` 시그니처 → `BookServerConfig` 반환. 기존 _getSortedChapters / getChapter / getMiniClaudeSetupData / getSortedClaudeChaptersWithSetup_ 인터페이스 모두 보존 (Phase 12 의 사이드바 노출 변경 인터페이스)
+- [x] **빌드 검증** — 초기 commit 1 (UI 메타 markdown.ts 합치기) 후 _"Module not found" — Client Component 가 server-only 의존성 import_ 빌드 깨짐 발견. commit 4 (Client/Server 분리) 로 해결. `npm run build` 통과 (Static/SSG/Dynamic)
+
+### 14-2. 첫 화면 카드 그리드 → 세로 리스트 (commit `7876dae`)
+
+- [x] **`HomeClient.tsx`** — `grid grid-cols-1 md:grid-cols-3 gap-6` → `flex flex-col gap-3`. 3 카드 하드코딩 → `BOOKS.map((book) => <BookRow ... />)`. 4 / 8 / 50+ 핸드북 모두 시각 비례 일관
+- [x] **`BookRow` 컴포넌트** (HomeClient.tsx 내) — 가로 배치 (아이콘 왼쪽 / 제목+부제+설명+메타 가운데 / 읽기→ 오른쪽). 기존 색상·hover·iconText 유지 + Tailwind safelist 회피 (ACCENT_CLASSES lookup table)
+- [x] **`max-w-4xl` → `max-w-3xl`** — 세로 리스트는 좁힐 때 가독성 ↑
+- [x] **`page.tsx` Props 통일** — `chapterCounts: Record<Book, number>` (Object.fromEntries(BOOKS.map)) + `bookMetas: Record<Book, string>` 만 전달
+
+### 14-3. 사이드창 상단 탭 → dropdown (commit `acbe9dc`)
+
+- [x] **`Sidebar.tsx`** — `flex border-b border-slate-800` + `flex-1` 3 등분 탭 → 네이티브 `<select>` + 좌측 활성 책 아이콘 + 우측 ChevronDown. N 핸드북 자연 확장 (10+ 까지). aria-label="핸드북 선택"
+- [x] **내부 데이터도 BOOKS / getBookMeta 기반** — `BookTab` → `Book` (books.ts), `BOOK_META` 로컬 Record 제거 → BOOKS 순회 + 컴포넌트 측 ICON_MAP / CHAPTER_ACTIVE_CLASSES, `detectedBook` 도 BOOKS.route prefix 매칭으로 일반화
+- [x] **`ClientLayout.tsx` + `layout.tsx` Props 통일** — `semiChapters / statsChapters / claudeChapters` 3 자리 → `chaptersByBook: Record<Book, ChapterMeta[]>` 하나. claude 의 SETUP.md 합류는 _그 자리에서_ `getSortedClaudeChaptersWithSetup()` 조건 분기로 보존
+
+### 14-4. 검증
+
+- [x] **TS check** — `tsc --noEmit` clean
+- [x] **빌드** — `npm run build` 통과 (Static / SSG / Dynamic 모두 prerendered)
+- [x] **SSR HTML 검증** — `curl localhost:3010/` 와 `curl localhost:3010/claude/...` 둘 다 `<select aria-label="핸드북 선택">` + `<option value="semi/stats/claude" selected>` + `<h2>...핸드북` BookRow 정상 출력. 첫 화면 selected=semi (URL=/ 기본값), 챕터 페이지 selected=claude (URL detect 작동)
+
+### 14-5. 4 번째 핸드북 추가 시 _자리 한 곳_
+
+- [x] **`src/lib/books.ts`** — `BOOKS` 배열에 한 객체 + `Book` 유니온에 한 자리
+- [x] **`src/lib/markdown.ts`** — `SERVER_CONFIGS` Record 에 한 객체
+- [x] **`src/app/page.tsx`** — `bookMetas` Record 에 한 자리 (카드 footer 문자열 — `${chapterCounts.xxx}개 챕터` 등)
+- [x] **`src/app/(new-book)/[id]/page.tsx`** — 새 라우트 디렉토리
+
+총 _3~4 자리_ — HomeClient / Sidebar / ClientLayout / layout 은 _BOOKS.map / Object.fromEntries(BOOKS.map)_ 으로 _자동 반영_.
+
+### 14-6. 후행 자리 (이번 라운드 _이후_)
+
+- _F 카테고리화_ — 4~6 핸드북 도달 시 재고려
+- _검색 (Cmd+K)_ — 30+ 도달 시
+- _진행률 표시_ — `BookRow` 에 _학습자 진행 추적_ (사용자 요청 시)
+- _카드 정보 밀도 보강_ — chapterCount/subtitle/lastUpdated 등 메타 _점진 추가_
+
+---
+
