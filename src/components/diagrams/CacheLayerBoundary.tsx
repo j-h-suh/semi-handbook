@@ -107,7 +107,7 @@ export default function CacheLayerBoundary() {
                     textAlign: 'center',
                 }}
             >
-                CLAUDE.md 는 _사용자별 달라_ ☆ 자리. ★ 에 두면 _공유 효과 사라짐_
+                CLAUDE.md 는 사용자별 달라 ☆ 자리. ★ 에 두면 공유 효과 사라짐
             </div>
         </div>
     );

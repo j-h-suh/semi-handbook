@@ -18,7 +18,7 @@ export default function FileReadFlow() {
                 FileRead 의 3 단계 — 순서 = 보안
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 12 }}>
-                사용자가 본 0.3 초 안에 _순서대로_ 일어나는 일
+                사용자가 본 0.3 초 안에 순서대로 일어나는 일
             </p>
 
             <div style={{ width: '100%', maxWidth: 540, fontFamily: MONO }}>

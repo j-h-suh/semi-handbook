@@ -57,7 +57,7 @@ export default function TeamMailboxFlow() {
                 팀원 mailbox 흐름 — 발신/수신 분리
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 12 }}>
-                디스크 jsonl 이 공통 매체 — 발신자는 수신자의 프로세스를 _몰라도_ 됨
+                디스크 jsonl 이 공통 매체 — 발신자는 수신자의 프로세스를 몰라도 됨
             </p>
 
             <div style={{ width: '100%', maxWidth: 520, fontFamily: MONO }}>
@@ -88,7 +88,7 @@ export default function TeamMailboxFlow() {
                         textAlign: 'center',
                     }}
                 >
-                    (이하 _기본 큐-루프 모델_ 그대로)
+                    (이하 기본 큐-루프 모델 그대로)
                 </div>
                 <div style={stepStyle}>④ query loop 가 다음 turn 시작 시 큐에서 꺼냄</div>
                 <div style={stepStyle}>⑤ 히스토리에 append → API call</div>

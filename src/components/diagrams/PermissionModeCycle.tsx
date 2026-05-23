@@ -22,7 +22,7 @@ export default function PermissionModeCycle() {
                 권한 모드 4 가지 — Shift+Tab 순환
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 12 }}>
-                `mode` 한 글자가 같은 도구·같은 입력을 _전혀 다른 시스템처럼_ 동작시킨다
+                `mode` 한 글자가 같은 도구·같은 입력을 전혀 다른 시스템처럼 동작시킨다
             </p>
 
             <div

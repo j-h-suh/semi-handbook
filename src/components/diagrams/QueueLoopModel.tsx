@@ -29,7 +29,7 @@ export default function QueueLoopModel() {
                 메시지 큐 + query 루프 모델
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 8 }}>
-                큐에 누적되는 메시지를 _매 turn 시작 시_ 꺼내 컨텍스트에 합류
+                큐에 누적되는 메시지를 매 turn 시작 시 꺼내 컨텍스트에 합류
             </p>
 
             {/* query loop — 큰 박스 */}
@@ -57,7 +57,7 @@ export default function QueueLoopModel() {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <div style={stepStyle}>① await queue.get() — 큐가 비면 _대기_ (idle)</div>
+                    <div style={stepStyle}>① await queue.get() — 큐가 비면 대기 (idle)</div>
                     <div style={{ ...stepStyle, color: COLOR.textDim, fontSize: FONT.min }}>
                         [메시지 enqueue 됨 → await resume]
                     </div>

@@ -47,7 +47,7 @@ export default function VirtualScrollViewport() {
                 가상 스크롤 — 보이는 부분만 mount
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 12 }}>
-                27,000 메시지 중 _viewport + overscan 80 rows × 2_ 만 (~200~300 개) mount
+                27,000 메시지 중 viewport + overscan 80 rows × 2 만 (~200~300 개) mount
             </p>
 
             <div style={{ display: 'flex', alignItems: 'stretch', gap: 12, width: '100%', maxWidth: 600 }}>

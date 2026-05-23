@@ -16,10 +16,10 @@ export default function RecoveryPaths() {
     return (
         <div className="mt-8 mb-12" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h3 style={{ color: COLOR.textBright, fontSize: FONT.title, fontWeight: 700, marginBottom: 2 }}>
-                내부 루프 _복구 경로_ — 4 자리
+                내부 루프 복구 경로 — 4 자리
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 12 }}>
-                단순한 `while True` 가 아니라 _상태 머신_ — 한 루프 안에서 일어날 수 있음
+                단순한 `while True` 가 아니라 상태 머신 — 한 루프 안에서 일어날 수 있음
             </p>
 
             <div

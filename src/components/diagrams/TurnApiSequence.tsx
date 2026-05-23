@@ -32,7 +32,7 @@ const CALLS: {
     {
         n: 4,
         response: '"변경 사항을 정리하면..." + 추천 커밋 메시지',
-        after: ['stop_reason = "end_turn"', '내부 루프 종료 → 한 턴 끝'],
+        after: ['stopreason = "endturn"', '내부 루프 종료 → 한 턴 끝'],
         endTurn: true,
     },
 ];
@@ -61,7 +61,7 @@ export default function TurnApiSequence() {
                     <div
                         key={c.n}
                         style={{
-                            border: `1px solid ${c.endTurn ? CLAUDE_COLOR.accent : CLAUDE_COLOR.accentBorder}`,
+                            border: `1px solid ${c.endTurn ? CLAUDECOLOR.accent : CLAUDECOLOR.accentBorder}`,
                             background: CLAUDE_COLOR.accentBg,
                             borderRadius: 8,
                             padding: '10px 14px',

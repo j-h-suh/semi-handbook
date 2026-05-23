@@ -52,7 +52,7 @@ export default function AppStateSelectorPattern() {
                 AppState 의 selector 분기 패턴
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 8 }}>
-                거대 단일 스토어 → 컴포넌트별 _자기 슬라이스_ 구독 (Object.is 비교 → 리렌더 최소화)
+                거대 단일 스토어 → 컴포넌트별 자기 슬라이스 구독 (Object.is 비교 → 리렌더 최소화)
             </p>
 
             {/* AppState 박스 */}
@@ -126,7 +126,7 @@ export default function AppStateSelectorPattern() {
                     textAlign: 'center',
                 }}
             >
-                푸터의 `model` 이 바뀌어도 — _Header / PermDialog 안 다시 그려짐_
+                푸터의 `model` 이 바뀌어도 — Header / PermDialog 안 다시 그려짐
             </div>
         </div>
     );

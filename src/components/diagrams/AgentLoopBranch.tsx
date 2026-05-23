@@ -50,7 +50,7 @@ export default function AgentLoopBranch() {
                 에이전트 루프 (단순 버전)
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 8 }}>
-                응답이 _도구 호출이면 다시_, _텍스트면 종료_
+                응답이 도구 호출이면 다시, 텍스트면 종료
             </p>
 
             <div style={{ ...boxStyle, width: 220 }}>사용자 입력</div>

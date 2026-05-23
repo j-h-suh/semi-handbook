@@ -86,7 +86,7 @@ export default function BashCommandSplit() {
                     maxWidth: 480,
                 }}
             >
-                둘. 권한 시스템은 _둘 다 검사_ — 통째 매칭 시 `Bash(git *)` 룰 우회 위험
+                둘. 권한 시스템은 둘 다 검사 — 통째 매칭 시 `Bash(git *)` 룰 우회 위험
             </p>
         </div>
     );

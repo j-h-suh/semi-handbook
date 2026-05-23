@@ -32,7 +32,7 @@ const SLASH_STEPS: Step[] = [
     { label: '↓', muted: true },
     { label: "type: 'prompt' 명령 확인" },
     { label: '↓', muted: true },
-    { label: 'getPromptForCommand("") 호출 → 진짜 프롬프트가 _생성됨_', tag: '치환' },
+    { label: 'getPromptForCommand("") 호출 → 진짜 프롬프트가 생성됨', tag: '치환' },
     { label: '↓', muted: true },
     {
         label: '생성된 프롬프트: ## Context · git status / diff / log · ## Git Safety · ## Your task …',
@@ -114,7 +114,7 @@ export default function ChatVsSlashFlow({ kind }: { kind: 'chat' | 'slash' }) {
             <div className="mt-8 mb-12" style={{ display: 'flex', justifyContent: 'center' }}>
                 <FlowColumn
                     title="일반 채팅"
-                    subtitle="입력 _투명_ — 친 텍스트 = LLM 이 보는 텍스트"
+                    subtitle="입력 투명 — 친 텍스트 = LLM 이 보는 텍스트"
                     steps={CHAT_STEPS}
                 />
             </div>
@@ -124,7 +124,7 @@ export default function ChatVsSlashFlow({ kind }: { kind: 'chat' | 'slash' }) {
         <div className="mt-8 mb-12" style={{ display: 'flex', justifyContent: 'center' }}>
             <FlowColumn
                 title="슬래시 명령 (/commit)"
-                subtitle="입력 _불투명_ — 친 텍스트 ≠ LLM 이 보는 텍스트"
+                subtitle="입력 불투명 — 친 텍스트 ≠ LLM 이 보는 텍스트"
                 steps={SLASH_STEPS}
             />
         </div>

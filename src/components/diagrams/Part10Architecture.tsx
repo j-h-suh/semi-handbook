@@ -58,7 +58,7 @@ export default function Part10Architecture() {
                 Part 10 의 골격 — 9.1 위의 8 확장
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 8 }}>
-                9.1 의 박스를 _깨뜨리지 않고_ 곁에 확장만 더한다 — `┊ 10.x` 가 확장 자리
+                9.1 의 박스를 깨뜨리지 않고 곁에 확장만 더한다 — `┊ 10.x` 가 확장 자리
             </p>
 
             {/* main.py */}
@@ -91,7 +91,7 @@ export default function Part10Architecture() {
                     </div>
                     <div style={arrowStyle}>↓</div>
                     <div style={{ ...subBoxStyle, background: 'transparent', border: 'none', padding: '4px 12px' }}>
-                        ② tool_use 블록 파싱 <span style={noteStyle}>(stop_reason 분기)</span>
+                        ② tooluse 블록 파싱 <span style={noteStyle}>(stopreason 분기)</span>
                     </div>
                     <div style={arrowStyle}>↓</div>
                     <div style={{ ...subBoxStyle, background: 'transparent', border: 'none', padding: '4px 12px' }}>
@@ -130,7 +130,7 @@ export default function Part10Architecture() {
             </div>
 
             <div style={{ marginTop: 16, color: COLOR.textDim, fontSize: FONT.small, fontFamily: MONO }}>
-                (query 간 공유 채널 — 직렬 흐름 _아님_)
+                (query 간 공유 채널 — 직렬 흐름 아님)
             </div>
             <div style={{ ...boxStyle, width: 320 }}>
                 <span style={{ fontWeight: 600 }}>message_queue</span>
