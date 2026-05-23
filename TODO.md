@@ -1476,3 +1476,38 @@ claudeRegistry 6 자리 누적.
 
 ---
 
+## Phase 29: claude 다이어그램 batch 5 — 4 자리 *(✅ 완료)*
+
+2026-05-23 사용자 _"넵"_ — 남은 10 자리 발굴 후 _진짜 다이어그램 4 자리만_ 변환 (5 자리는 TUI 시뮬, 보존).
+
+### 29-1. 변환 (commit `0bd7d44`)
+
+| 자리 | 컴포넌트 | 내용 |
+|---|---|---|
+| 06_1 line 211 (8 줄) | `CacheLayerBoundary.tsx` | 시스템 프롬프트 (★ global / ☆ org) + 메시지 영역 (☆ org) |
+| 06_2 line 84 (26 줄) | `AppStateCategories.tsx` | AppState ~85 필드 5 카테고리 (10+15+5+20+50) |
+| 05_3 line 46 (23 줄) | `VirtualScrollViewport.tsx` | top spacer + viewport (overscan 80 rows) + bottom spacer (27,000 중 ~200~300 만 mount) |
+| 08_4 line 457 (18 줄) | `TeamMailboxFlow.tsx` | 발신자 ① → 디스크 jsonl → 수신자 ② watcher ③ enqueue ④ query loop ⑤ append |
+
+### 29-2. 보존 결정 — 5 자리 (TUI 시뮬, ASCII 가 자연)
+
+- 04_2 line 32 — `/config` Settings UI
+- 04_3 line 21 — `Permission required` 다이얼로그
+- 05_1 line 19 — Settings UI
+- 06_3 line 89 — `Permission required` 다이얼로그
+- 06_4 — `/permissions` 다이얼로그
+
+이들은 _실제 터미널 화면 모양_ 자체이라 _ASCII 코드 폰트가 시각 의미_. React 변환 시 _시각 손실_.
+
+### 29-3. 누적 다이어그램 15 자리
+
+`09_1` / `02_1` / `00_1×2` / `03_1` / `03_2` / `10_1` / `05_2` / `10_3` / `10_5` / `08_4×2` / `06_1` / `06_2` / `05_3`
+
+### 29-4. 남은 자리
+
+- 10_2 / 10_4 / 10_6 / 10_7 / 10_8 — 추가 발굴 필요
+- 10_3 의 _나머지 3 박스_ — 발굴 필요 (현재 grep 의 _hook lifecycle_ 만 4 자리로 카운트)
+- 07_x — 미확인
+
+---
+
