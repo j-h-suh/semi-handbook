@@ -1,6 +1,6 @@
 # mini-claude
 
-Claude Code 핸드북 Part 9~10의 동반 코드. ~500~570줄의 미니 에이전트로 진짜 Claude Code 의 99% 사용 시나리오를 구현한다.
+Claude Code 핸드북 Part 9~10의 동반 코드. ~500~570줄의 미니 클로드로 진짜 Claude Code 의 99% 사용 시나리오를 구현한다.
 
 ## 셋업
 

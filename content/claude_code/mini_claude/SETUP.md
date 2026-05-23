@@ -1,12 +1,12 @@
 # 9.0 학습자 환경 설정 — Vertex 첫 호출까지의 최소 셋업
 
-Anthropic API 키 없이 mini_claude 를 GCP Vertex AI 의 Claude 모델로 실행하려면 _Service Account JSON 키_ 한 개와 환경변수 네 개만 있으면 됩니다.
+Anthropic API 키 없이 미니 클로드를 GCP Vertex AI 의 Claude 모델로 실행하려면 _Service Account JSON 키_ 한 개와 환경변수 네 개만 있으면 됩니다.
 
 ## 왜 Vertex 의 Claude 인가 — 큰 그림
 
-LLM API 는 _공급자_ (Anthropic / GCP / AWS / Azure / OpenAI / Google) 와 _인터페이스 모양_ (Anthropic / OpenAI / Google 세 가족) 두 레이어가 따로 움직입니다. mini 는 _GCP Vertex AI 의 Claude 모델_ — _공급자는 Google Cloud_, _인터페이스는 Anthropic 가족_ — 을 _기본_ 으로 씁니다. 학습자가 _Anthropic 직접 API 키_ 없이도 _GCP project + Service Account JSON_ 만 있으면 시작 가능하기 때문.
+LLM API 는 _공급자_ (Anthropic / GCP / AWS / Azure / OpenAI / Google) 와 _인터페이스 모양_ (Anthropic / OpenAI / Google 세 가족) 두 레이어가 따로 움직입니다. 미니 클로드는 _GCP Vertex AI 의 Claude 모델_ — _공급자는 Google Cloud_, _인터페이스는 Anthropic 가족_ — 을 _기본_ 으로 씁니다. 학습자가 _Anthropic 직접 API 키_ 없이도 _GCP project + Service Account JSON_ 만 있으면 시작 가능하기 때문.
 
-> 💡 **다른 옵션의 전체 매트릭스** (Bedrock / Azure Foundry / vLLM 자체 호스팅 / Gemini / OpenAI 직접 등) 와 _3 인터페이스 가족 비교_ 는 [§10.5 §0 "LLM API 가족 — 한 장 정리"](/claude/10_5_API_클라이언트) 참조. 이번 9.0 은 _mini 의 기본 자리_ — Vertex 의 Claude — 셋업에 집중.
+> 💡 **다른 옵션의 전체 매트릭스** (Bedrock / Azure Foundry / vLLM 자체 호스팅 / Gemini / OpenAI 직접 등) 와 _3 인터페이스 가족 비교_ 는 [§10.5 §0 "LLM API 가족 — 한 장 정리"](/claude/10_5_API_클라이언트) 참조. 이번 9.0 은 _미니 클로드의 기본 자리_ — Vertex 의 Claude — 셋업에 집중.
 
 ## 전제
 
@@ -94,7 +94,7 @@ mini-claude 시작 (Ctrl+D로 종료)
 ## 비용 안내
 
 - Vertex 의 Anthropic Claude 는 _per-token 과금_ — _free tier 없음_
-- _짧은 prompt + 짧은 max_tokens_ 권장 (mini_claude 기본 `max_tokens=4096`)
+- _짧은 prompt + 짧은 max_tokens_ 권장 (미니 클로드 기본 `max_tokens=4096`)
 - 사용량은 GCP Console → Billing 에서 확인
 
 ---

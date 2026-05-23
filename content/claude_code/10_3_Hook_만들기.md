@@ -7,7 +7,7 @@
 - 9.4 의 *정적 권한 규칙* 만으로 막을 수 없는 자리가 있다 — 컨텍스트 의존 결정, 동적 입력 변조, 외부 시스템 통합.
 - Hook 은 **이벤트 + 외부 프로세스 + stdin/stdout JSON** 세 가지 부품으로 그 자리를 채운다.
 - 6.4 의 와일드카드 매칭 코드(`matches_rule`)를 그대로 재활용해서 *matcher + if* 두 단계 필터링을 만든다.
-- mini_claude 에 5 개 이벤트(`PreToolUse`·`PostToolUse`·`Stop`·`SessionStart`·`UserPromptSubmit`)를 *약 280줄* 로 얹는다.
+- 미니 클로드에 5 개 이벤트(`PreToolUse`·`PostToolUse`·`Stop`·`SessionStart`·`UserPromptSubmit`)를 *약 280줄* 로 얹는다.
 - Hook 이 9.4 권한 게이트와 *어떻게 합산되는지* — `deny` 가 절대 우선, `updatedInput` 이 입력을 교체.
 
 ---
@@ -22,13 +22,13 @@
 
 **둘째, 동적 입력 변조.** "에이전트가 `Edit` 호출할 때 `file_path` 가 상대 경로면 절대 경로로 바꿔라." 막는 게 아니라 *교체*. 정적 규칙으로는 표현할 수 없는 동작.
 
-**셋째, 외부 시스템과의 통합.** "`Write` 가 호출될 때마다 외부 lint 서버에 보내서 컨벤션을 검사. 위반이면 차단." mini_claude 내부에 lint 로직을 박을 게 아니라 *외부 프로세스* 가 결정을 내려야 한다.
+**셋째, 외부 시스템과의 통합.** "`Write` 가 호출될 때마다 외부 lint 서버에 보내서 컨벤션을 검사. 위반이면 차단." 미니 클로드 내부에 lint 로직을 박을 게 아니라 *외부 프로세스* 가 결정을 내려야 한다.
 
 세 자리 모두 *사용자 코드가 도구 실행 흐름에 끼어드는* 자리다. 그게 Hook 이다.
 
 > 💡 **Hook 의 한 줄 정의**: 이벤트가 발생할 때 외부 프로세스를 호출하고, 그 프로세스의 stdout JSON 으로 *결정 / 입력 교체 / 컨텍스트 보강* 을 받는 메커니즘. 도구 실행의 *전·후·세션 전이* 같은 자리에 끼어든다.
 
-진짜 Claude Code 의 Hook 시스템은 6.5 에서 본 그대로 — `executeHooks` (`hooks.ts:2143`) 가 async generator 로 매칭된 hook 들을 *병렬* 로 돌리고, 첫 결과를 즉시 흘려보내고, `permissionDecision` / `updatedInput` / `additionalContext` 같은 필드로 결정을 합산한다. mini 는 이걸 *축약* 해서 가져온다.
+진짜 Claude Code 의 Hook 시스템은 6.5 에서 본 그대로 — `executeHooks` (`hooks.ts:2143`) 가 async generator 로 매칭된 hook 들을 *병렬* 로 돌리고, 첫 결과를 즉시 흘려보내고, `permissionDecision` / `updatedInput` / `additionalContext` 같은 필드로 결정을 합산한다. 미니 클로드는 이걸 *축약* 해서 가져온다.
 
 ---
 
@@ -91,7 +91,7 @@ for pattern, name in patterns:
 sys.exit(0)
 ```
 
-세 줄짜리 패턴 매칭에 한 줄 JSON 응답. 그 줄을 mini_claude 가 *덱시전 으로* 해석한다.
+세 줄짜리 패턴 매칭에 한 줄 JSON 응답. 그 줄을 미니 클로드가 *덱시전 으로* 해석한다.
 
 ### ③ 실행 흐름
 
@@ -104,7 +104,7 @@ Permission denied by hook: blocked: AWS access key in command
 
 9.4 의 권한 게이트는 *통과* 한다 (`Bash:echo *` 는 deny 룰에 없으니까). Hook 이 *그 뒤에서 한 번 더* 검사해서 차단했다. **정적 규칙으로는 잡을 수 없는 secret 노출** 을 외부 스크립트가 잡아낸 자리.
 
-> ⚙️ **왜 fail-open 디자인인가**: `guard.py` 가 깨지거나 timeout 나거나 비-JSON 을 뱉어도 mini_claude 는 *통과* 시킨다. Hook 이 시스템의 *부속물* 이라는 뜻 — 깨져도 본체는 살아 있어야 한다. 명시적 차단(`exit code != 0` 또는 `permissionDecision: "deny"`) 만 deny 로 해석.
+> ⚙️ **왜 fail-open 디자인인가**: `guard.py` 가 깨지거나 timeout 나거나 비-JSON 을 뱉어도 미니 클로드는 *통과* 시킨다. Hook 이 시스템의 *부속물* 이라는 뜻 — 깨져도 본체는 살아 있어야 한다. 명시적 차단(`exit code != 0` 또는 `permissionDecision: "deny"`) 만 deny 로 해석.
 
 이걸 어떻게 만들지가 챕터의 나머지다.
 
@@ -693,7 +693,7 @@ fi
 
 :::
 
-*프로토콜 경계* 가 *프로세스 경계* 라서, 언어를 강요하지 않는다. mini_claude 가 Python 으로 짜여 있어도 hook 은 Node 일 수 있고, Go 일 수도 있고, awk 한 줄일 수도 있다. 이게 Hook 의 *철학적 가치* — *내부* 와 *외부* 의 경계를 분명히 그어두는 디자인.
+*프로토콜 경계* 가 *프로세스 경계* 라서, 언어를 강요하지 않는다. 미니 클로드가 Python 으로 짜여 있어도 hook 은 Node 일 수 있고, Go 일 수도 있고, awk 한 줄일 수도 있다. 이게 Hook 의 *철학적 가치* — *내부* 와 *외부* 의 경계를 분명히 그어두는 디자인.
 
 ### `updatedInput` 의 입력 변조 능력
 
@@ -867,7 +867,7 @@ chmod +x ~/.mini_claude/guard.py
 
 세 파일이 다. `mkdir` + `cat > heredoc` + `chmod`. shell 다섯 줄.
 
-### 2. mini_claude 실행
+### 2. 미니 클로드 실행
 
 ```bash
 cd content/claude_code/mini_claude
