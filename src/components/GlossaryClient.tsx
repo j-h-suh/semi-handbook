@@ -38,7 +38,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                     용어 사전
                 </h1>
                 <p className="mt-3 text-sm text-zinc-500">
-                    핸드북에서 사용된 핵심 키워드 {glossary.length}개
+                    안내서에서 사용된 핵심 키워드 {glossary.length}개
                 </p>
             </header>
 

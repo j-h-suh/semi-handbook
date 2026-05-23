@@ -106,7 +106,7 @@ export default function SearchModal({ searchData }: Props) {
                     <input
                         ref={inputRef}
                         type="text"
-                        placeholder="핸드북 내용 검색..."
+                        placeholder="안내서 내용 검색..."
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                         className="flex-1 bg-transparent text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none"

@@ -60,7 +60,7 @@ export default function ClientLayout({ children, searchData, chaptersByBook }: P
                 >
                     <Menu size={20} />
                 </button>
-                <span className="ml-2 text-sm font-bold text-zinc-200">SemiAI 핸드북</span>
+                <span className="ml-2 text-sm font-bold text-zinc-200">SemiAI 안내서</span>
             </header>
 
             {/* 모바일 백드롭 */}

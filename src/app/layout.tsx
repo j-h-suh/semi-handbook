@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
 
 export const metadata: Metadata = {
-  title: '반도체를 여행하는 SemiAI를 위한 핸드북 시리즈',
+  title: '반도체를 여행하는 SemiAI를 위한 안내서 시리즈',
   description: 'Semiconductor & Statistics Handbook for AI/ML Engineers',
 };
 

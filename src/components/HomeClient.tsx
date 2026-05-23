@@ -60,15 +60,15 @@ export default function HomeClient({ bookMetas }: Props) {
                     <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl mb-6 leading-snug">
                         반도체를 여행하는<br />
                         <span className="bg-gradient-to-r from-[#00d4a4] to-[#7cebcb] bg-clip-text text-transparent">
-                            SemiAI를 위한 핸드북
+                            SemiAI를 위한 안내서
                         </span>
                     </h1>
                     <p className="text-lg text-zinc-500 max-w-xl mx-auto">
-                        기술과 제품을 만드는 모두를 위한 핸드북 시리즈
+                        기술과 제품을 만드는 모두를 위한 안내서 시리즈
                     </p>
                 </div>
 
-                {/* Book Rows — 세로 리스트, N 핸드북 자연 확장 */}
+                {/* Book Rows — 세로 리스트, N 안내서 자연 확장 */}
                 <div className="flex flex-col gap-3 mb-12">
                     {BOOKS.map((book) => (
                         <BookRow key={book.id} book={book} meta={bookMetas[book.id]} />
