@@ -52,7 +52,7 @@ export function Tabs({ children }: { children: ReactNode }) {
     if (items.length === 0) return null;
 
     return (
-        <div className="not-prose my-4 rounded-lg overflow-hidden border border-slate-800 bg-[#0d1117]">
+        <div className="not-prose my-4 rounded-lg overflow-hidden border border-slate-800 bg-[#1c1c1e]">
             <div className="flex border-b border-slate-800 bg-slate-900/60 overflow-x-auto overflow-y-hidden">
                 {items.map((item, i) => (
                     <button

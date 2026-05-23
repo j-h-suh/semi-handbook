@@ -97,7 +97,7 @@ export default function SearchModal({ searchData }: Props) {
 
             {/* Modal */}
             <div
-                className="relative w-full max-w-xl mx-4 bg-[#0f1729] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
+                className="relative w-full max-w-xl mx-4 bg-[#1c1c1e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Search input */}

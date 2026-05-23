@@ -142,6 +142,9 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
 
     const label = filename || LANG_LABEL[effectiveLang] || (effectiveLang === 'text' ? '' : effectiveLang);
 
+    // ASCII 다이어그램 (lang === 'text') 은 코드와 시각 구분 — 부드러운 surface 결로.
+    const isAscii = effectiveLang === 'text';
+
     const innerContent = (
         <div className="relative group">
             <button
@@ -169,7 +172,11 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
     }
 
     return (
-        <div className="not-prose my-4 rounded-lg overflow-hidden border border-slate-800 bg-[#0d1117]">
+        <div className={`not-prose my-4 rounded-lg overflow-hidden border ${
+            isAscii
+                ? 'border-zinc-800/50 bg-zinc-900/40'
+                : 'border-zinc-800 bg-[#1c1c1e]'
+        }`}>
             {label && (
                 <div className="flex items-center justify-between px-5 py-3 text-sm font-mono bg-slate-900/60 border-b border-slate-800">
                     <span className="text-slate-400">{label}</span>
