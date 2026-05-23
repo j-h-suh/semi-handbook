@@ -1277,3 +1277,41 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 23: claude 핸드북 ASCII → React 다이어그램 변환 시작 *(🚧 진행 중)*
+
+2026-05-23 사용자 — Phase 21 의 _박스 11→4 카테고리 압축_ 후 _ASCII → React 변환_ 결정. 사용자 선택: **B (React 전면, semi 패턴)** + **시범 자리 09_1 미니 클로드 골격**.
+
+### 23-1. 인프라 구축 (commit `842dfd4`)
+
+- `diagramTokens.ts` — `CLAUDE_COLOR` 추가 (`accent #00d4a4` 시그니처 그린 가족)
+- `claudeRegistry.ts` 신설 — claude 핸드북 전용 registry
+- `diagramRegistry.ts` — `claudeDiagramRegistry` spread 추가 (semi/stats 와 일관)
+- key 패턴: `/content/claude_code/images/[chapter]/[name].svg` (semi 와 일관 — _실제 파일 없어도 _registry 매칭으로 React 컴포넌트 대체_)
+
+### 23-2. 첫 변환 — 09_1 미니 클로드 골격
+
+- 41 줄 ASCII (5 박스 + 내부 4 단계 + 6 화살표) → `MiniClaudeArchitecture.tsx` React 컴포넌트
+- 구조: main → query() (내부 ①LLM ②파싱 ③권한 ④도구 + while 루프) → streaming → tools/agent (AgentTool 재귀)
+- 챕터 매핑 태그 (9.2 / 9.3 / 9.4 / 9.5) 시그니처 그린 칩으로 강조
+- Geist Mono 폰트 + zinc 톤 박스 + Mintlify brand-green 보더
+
+### 23-3. 남은 자리 (점진 진행)
+
+claude 의 ASCII 자리 (chapter 별 박스 개수 — 33 자리, 총 ~80+ 박스):
+
+| 우선순위 | 챕터 | 자리 수 | 비고 |
+|---|---|---|---|
+| 1 | 09_1 | 53 | _첫 변환 완료_, 나머지 자리도 점진 |
+| 2 | 06_6 Hook 실전 | 46 | 실행 흐름 — _시퀀스 패턴_ |
+| 3 | 03_2 Tool 47 필드 | 44 | 필드 매트릭스 — _표/카드 패턴_ |
+| 4 | 08_4 Agent Teams | 35 | 구조도 |
+| 5 | 10_1 슬래시 명령 | 34 | 명령 구조 |
+| ... | (생략) | ~80 | 점진 전환 |
+
+### 23-4. 변환 _완료 후_
+
+- CodeBlock 의 `lang === 'text'` 분기 _제거_ (Phase 19 의 ASCII wrapper)
+- 박스 종류 _3 카테고리_ (코드 / 다이어그램 / 콜아웃 / 표 → 코드 / 다이어그램 / 콜아웃 / 표; ASCII wrapper 자리 _완전 제거_)
+
+---
+
