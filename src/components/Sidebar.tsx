@@ -100,7 +100,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 <Link
                     href="/"
                     onClick={onClose}
-                    className="p-6 border-b border-zinc-800 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
+                    className="m-3 p-4 rounded-xl border border-[#00d4a4]/15 bg-[#00d4a4]/[0.04] flex items-center gap-3 hover:bg-[#00d4a4]/[0.07] hover:border-[#00d4a4]/25 transition-all"
                 >
                     <div className="w-10 h-10 rounded-xl bg-[#00d4a4]/10 border border-[#00d4a4]/20 flex items-center justify-center text-[#00d4a4] shrink-0">
                         <BookOpen size={20} />
@@ -130,16 +130,16 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
             </div>
 
             {/* Book Selector — N 핸드북 자연 확장 dropdown */}
-            <div className="px-4 py-3 border-b border-zinc-800">
+            <div className="px-3 py-3 border-b border-zinc-800/60">
                 <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#00d4a4] pointer-events-none">
                         <ActiveIcon size={16} />
                     </div>
                     <select
                         value={activeBook}
                         onChange={(e) => handleBookChange(e.target.value as Book)}
                         aria-label="핸드북 선택"
-                        className="w-full appearance-none bg-zinc-900/60 border border-zinc-700 hover:border-zinc-600 focus:border-zinc-500 rounded-lg pl-10 pr-9 py-2 text-sm text-zinc-200 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                        className="w-full appearance-none bg-[#00d4a4]/[0.05] border border-[#00d4a4]/20 hover:border-[#00d4a4]/35 focus:border-[#00d4a4] rounded-lg pl-10 pr-9 py-2 text-sm text-zinc-100 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-[#00d4a4]"
                     >
                         {BOOKS.map((book) => (
                             <option key={book.id} value={book.id} className="bg-zinc-900 text-zinc-200">
