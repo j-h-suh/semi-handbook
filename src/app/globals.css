@@ -148,6 +148,14 @@ body {
 .prose blockquote p:last-of-type::after {
   content: none;
 }
+/* 콜아웃 안 첫/마지막 p 의 기본 margin 제거 — padding 만 남겨 _첫 줄 위 / 마지막 줄 아래_ 여백 없음. */
+.prose blockquote > p:first-child,
+.prose blockquote > p:last-child,
+.prose details > p:first-of-type,
+.prose details > p:last-of-type {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 
 /* Deep Dive (`<details><summary>🔬 ...`) — 콜아웃과 같은 카드 결 + 접힘 기능만 차이.
    브라우저 기본 마커 (▶/▼) 유지 — 접힘/펼침 상태 신호. */
