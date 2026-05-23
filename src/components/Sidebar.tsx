@@ -95,7 +95,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                     className="p-5 hover:bg-white/[0.02] transition-colors block"
                 >
                     <h1 className="text-sm font-bold text-zinc-200 whitespace-normal leading-snug">
-                        반도체를 여행하는<br />SemiAI를 위한<br />핸드북 시리즈
+                        반도체를 여행하는<br />SemiAI를 위한 핸드북
                     </h1>
                 </Link>
                 {/* 모바일 닫기 버튼 */}

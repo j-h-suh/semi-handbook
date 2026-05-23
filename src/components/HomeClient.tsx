@@ -59,9 +59,8 @@ export default function HomeClient({ bookMetas }: Props) {
                 <div className="text-center mb-12 md:mb-16">
                     <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl mb-6 leading-snug">
                         반도체를 여행하는<br />
-                        SemiAI를 위한<br />
                         <span className="bg-gradient-to-r from-[#00d4a4] to-[#7cebcb] bg-clip-text text-transparent">
-                            핸드북 시리즈
+                            SemiAI를 위한 핸드북
                         </span>
                     </h1>
                     <p className="text-lg text-zinc-500 max-w-xl mx-auto">
