@@ -1139,3 +1139,46 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 19: ASCII 다이어그램 wrapper + site-wide 파란 톤 제거 *(✅ 완료)*
+
+2026-05-23 사용자 — _claude 핸드북의 ASCII 그림과 코드 포맷이 다른 것 의도냐_ 질문 + _코드 공간 + 사이드바에 클로드 핸드북이 파란색 계열_ 지적. 진단: ① CodeBlock 컴포넌트 자체는 공통이지만 _claude 가 ASCII 80+ 자리_ 라 _lang === 'text'_ 의 _색 없는 톤_ 이 _semi 의 Mermaid 또는 python 코드_ 와 _시각 결로 다름_, ② Tailwind _slate-_ (#0f172a, 살짝 푸름) 가 _site-wide 127 자리_ + _GitHub dark `#0d1117`_ + _SearchModal `#0f1729`_ 가 _파란 인식의 근원_.
+
+### 19-1. ASCII 다이어그램 wrapper 분리 (옵션 A, commit `c5bff94`)
+
+- `CodeBlock.tsx` — `effectiveLang === 'text'` 분기:
+  - ASCII: `border-zinc-800/50 bg-zinc-900/40` (부드러운 surface, 코드와 시각 구분)
+  - 코드: `border-zinc-800 bg-[#1c1c1e]` (Mintlify surface-code, 진한 charcoal)
+- `Tabs.tsx`: `bg-[#0d1117]` → `bg-[#1c1c1e]`
+- `SearchModal.tsx`: `bg-[#0f1729]` → `bg-[#1c1c1e]` (단일 검정 톤)
+
+### 19-2. site-wide slate-* → zinc-* (commit `b30a520`)
+
+- `find src -type f \( -name '*.tsx' -o -name '*.ts' -o -name '*.css' \) -exec sed -i '' 's/slate-\([0-9]\)/zinc-\1/g' {} +`
+- 16 파일 124 자리 일괄 매핑 — Sidebar / HomeClient / MarkdownViewer / SearchModal / SettingsModal / QnAPanel / BoardClient / GlossaryClient / ClientLayout / CodeBlock / Tabs / [book]/[id]/page.tsx / layout / globals
+- Tailwind slate (#0f172a — R=15 G=23 B=42, 파랑 우세) → zinc (#18181b — R=G=B 거의 같음, 진짜 중립)
+- 남은 _slate-_ grep 매칭은 `translate-x/y` 의 _-late-_ false positive (3 자리)
+
+### 19-3. 검증
+
+- TS check — clean
+- `npm run build` — 통과
+- _공유 dev hot reload_:
+  - 코드 블록 배경 — 푸르스름 검정 (#0d1117) → 진짜 charcoal (#1c1c1e)
+  - ASCII 다이어그램 — _부드러운 surface_ 결로 _코드와 시각 구분_
+  - 사이드바 / 모든 페이지 — 푸름 → _진짜 중립 회색_
+
+### 19-4. 변경 _안 함_
+
+- `content/` 의 _slate-_ 매칭 16 자리 — _claude_code/code_repository/web/_ 안의 _분석 대상 소스_ (우리 사이트 렌더링 대상 아님). _자기 코드 자리 보존_.
+- `globals.css` 의 `--color-main-bg: #18181b` (zinc-900) — _이미 중립_, 변경 _불필요_
+- Shiki `github-dark` 테마 — 코드 신택스 자체는 _보존_ (외곽 wrapper 만 charcoal 통일)
+- Mintlify _라이트 모드 토글_ — Phase 16 후행 누적 자리, _별도 라운드_
+
+### 19-5. 후행 자리
+
+- _Shiki 테마_ — `github-dark` → _더 차분한 theme_ (예: `vitesse-dark`, `material-theme-darker`) 검토
+- _Mintlify_ 의 _3 컬럼 (우측 TOC)_ — Phase 16 후행 누적
+- _라이트 모드 토글_ — Mintlify dual-mode 시그니처
+
+---
+
