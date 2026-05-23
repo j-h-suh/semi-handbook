@@ -506,6 +506,20 @@ class HookEngine:
 
 `query()` 안에 hook 호출을 끼울 *세 자리* 가 있다. 9.5 의 흐름을 깨지 않으면서 추가.
 
+먼저 `query()` *시그니처에 한 파라미터 추가*:
+
+```python
+# src/mini_claude/agent.py — query() 시그니처
+async def query(
+    *,
+    # ... 9.5 의 기존 인자들 ...
+    hooks: HookEngine | None = None,   # ← *10.3 에서 추가*. None 이면 hook 비활성 (9.5 동작 동일)
+) -> AsyncIterator[QueryChunk]:
+    ...
+```
+
+`None` default 라 _9.5 까지의 호출은 변경 없음_. main.py 에서 `hooks=HookEngine.from_file()` 로 주입하면 활성화.
+
 ### 자리 ①: 도구 실행 *직전* (PreToolUse)
 
 `yield ToolUseStarted` 직후, 9.4 의 권한 게이트 직전.
