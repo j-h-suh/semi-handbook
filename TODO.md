@@ -764,3 +764,47 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
+## Phase 11: Part 9/10 통독 발견 + 코드–본문 정합성 일제 점검
+
+2026-05-23 Part 9 (5장) + Part 10 (8장) 통독 결과 발견된 잔여 이슈와, mini_claude 코드 베이스의 docstring/주석이 _Anthropic API 직접만_ 가정하는 옛 표현으로 남아 있을 가능성에 대한 일제 점검. Phase 10 의 _SETUP 단순화 + Vertex 기본_ 정책이 _본문·코드 전 자리_ 에 일관되게 반영됐는지 확인하는 라운드.
+
+### 11-1. 즉시 픽스 — 환경변수 통일 잔여 (Phase 10-1 의 누락분)
+
+- [x] **9.5 본문 line 561-564** — `_make_vertex_client()` (또는 query() 안 내장 client 생성 자리) 의 env 이름: `GOOGLE_CLOUD_PROJECT` → `VERTEX_PROJECT_ID`, `CLOUD_ML_REGION` → `VERTEX_LOCATION`. 9.2 line 301-302 는 갱신됐는데 9.5 만 옛 이름 잔존. 학습자가 9.5 본문 그대로 따라 쓰면 9.2 의 환경 변수와 _불일치_.
+- [x] **10.3 본문 line 860** — `export GOOGLE_CLOUD_PROJECT=<your-gcp-project>   # + gcloud auth application-default login` 두 가지 문제 동시: (1) 옛 env 이름, (2) Phase 10 에서 _SA JSON 한 길_ 로 통일한 _gcloud ADC 표현_ 의 잔존. _SA JSON + `.env` 흐름_ 으로 갱신 — `uv run mini-claude   # .env 가 준비됐다고 가정 — SETUP.md 참조` 한 줄로 압축.
+
+### 11-2. 챕터 끝 잔존 줄 (챕터 순서 재배치 흔적)
+
+- [ ] **10.5 본문 line 598** — `*Part 10 끝.*` 제거. 10.5 는 더 이상 Part 10 의 마지막 챕터가 아님 (10.6/10.7/10.8 이 뒤). _챕터 순서 재배치_ (191630b) 의 잔존물. 10.8 line 1047 의 `*Part 10 끝.*` 만 진짜.
+
+### 11-3. 본문 보강 라운드 (Part 9/10 통독 발견)
+
+- [ ] **10.7 ↔ 10.8 시스템 관계 명시화** — 10.7 의 모듈 싱글턴 큐 (`message_queue.drain()` 매 iteration) 와 10.8 의 격리 메일박스 (`asyncio.Queue` per agent_id) 가 _공존_ 하는지 _대체_ 하는지 한 단락. 특히 팀원 task 안에서 `message_queue` 모듈 싱글턴이 _부모와 공유_ 되는 사실의 의미 (10.7 본문의 한계 콜아웃이 10.8 에서 어떻게 해소되는지).
+- [ ] **10.8 시나리오 출력의 "사실성" 표시** — researcher/writer/reviewer 예시 출력 (lines 156-178) 의 첫 등장 시점에 "(가상 예시 — 평행 spawn 의 의도된 약한 자리는 §"진짜로 팀을 구성해 보기" 참조)" 마커 추가. reviewer 가 "researcher 의 다섯 마일스톤 모두 반영됨" 이라고 응답하는 게 _평행 spawn 디자인과 충돌_ 한다는 사실이 line 1006-1018 까지 가야 비로소 드러나는 혼란.
+- [ ] **10.6 description 추출 코드 중복의 근거** — `load_agent` 의 frontmatter 파서가 10.1 의 `load_markdown_command` 와 _동일 패턴_. 10.6 본문이 "PyYAML 의존성 회피" 를 명시하지만, _10.1 코드를 import 할 수 있는데 왜 다시 짰는가_ 가 한 줄로 짚히면 좋음 (예: spec 모델이 다름, _Skill 의 디렉토리 형식_ vs _Agent 의 디렉토리 형식_ 차이 등).
+- [ ] **10.6 → 10.8 티저 강화** — 10.6 line 519 의 마지막 줄 "다음 흐름 — 10.7 메시지 큐 → 10.8 에이전트 팀" 이 약속을 살짝만 던짐. _10.6 의 analyzer 한 명이 10.8 에서 팀에 들어가는 동일 파일_ 이라는 strong promise 한 줄 추가.
+
+### 11-4. mini_claude 코드–본문 정합성 일제 점검
+
+1차 grep 으로 식별된 자리 (8개) — Anthropic API 단독 가정 / 옛 환경변수 / 옛 모델명 흔적:
+
+**옛 환경변수 fallback 의 의도 — 명시적으로 _안전망_ 임을 표현**
+- [ ] **`src/mini_claude/clients/__init__.py` line 56-66** — `GCLOUD_PROJECT` / `GOOGLE_CLOUD_PROJECT` / `CLOUD_ML_REGION` fallback 이 _Anthropic SDK 표준 호환_ 의 의도임은 docstring 에 잘 적혀 있음 (line 35-36). 정상 — _이 자리는 두는 것이 맞음_, 다만 본문 (10.5) 의 인용에서 이 _fallback 의 의도_ 가 _옛 이름이 살아 있다는 의미가 아님_ 을 명시.
+
+**docstring 표현 다듬기 (학습자 혼동 줄이기, 우선순위 낮음)**
+- [ ] **`src/mini_claude/messages.py:21`** — `"""Anthropic API가 받는 형식 — 우리는 이미 그 형식으로 저장 중."""` 표현. _Vertex/vLLM 어댑터도 같은 인터페이스_ 라는 사실이 9.2/10.5 에 가야 드러남. 짧게 "(Anthropic 인터페이스 — Vertex/vLLM 도 같은 형식)" 보강 검토.
+- [ ] **`src/mini_claude/tools/base.py:20, 26, 54`** — "Anthropic API한테 보이는", "Anthropic API가 받는 형식" 표현이 _도구 스키마 형식_ 의 사실 진술임은 정확. 그러나 학습자가 _Anthropic 직접 API 키 = Anthropic API_ 로 혼동할 여지. 표현 다듬기 (예: "LLM API한테 보이는 — Anthropic 형식이지만 Vertex/vLLM 어댑터도 같은 형식 흉내").
+
+**진짜 누락 / 옛 표현 일제 점검 — 28 파일 전수**
+- [ ] **모든 docstring + 주석** 에서 _옛 표현_ 흔적 일제 점검:
+    - `Anthropic API` 단독 (Vertex/vLLM 미언급) — 위 1차 grep 외 추가 자리
+    - `ANTHROPIC_API_KEY` 단독 가정 (provider 분기 미고려)
+    - 옛 환경변수 (`GOOGLE_CLOUD_PROJECT`, `CLOUD_ML_REGION`) — fallback 이 아닌 _기본 가정_ 자리
+    - `gcloud` ADC 표현의 잔존 (`gcloud auth application-default login` 등)
+    - 옛 모델명 (`claude-opus-4-6` 외의 _구버전_ 모델명, `@20250805` 접미 없는 자리 등)
+    - `AsyncAnthropic` 직접 import (Vertex 가 기본 자리에서 _안전망 없이_ 직접 호출)
+- [ ] **본문 챕터 (00 ~ 11) 도 동일 grep** — Phase 10 의 _Vertex 기본 + .env_ 정책이 _본문 다른 자리_ 에도 일관되게 반영됐는지. 11-1/11-2 가 통독으로 발견된 자리고, 일제 grep 으로 _못 찾은 미세한 자리_ 가 있을 가능성.
+- [ ] **누적 검증** — 위 픽스 후 학습자 시뮬 (`$CLAUDE_JOB_DIR/learner_sim`) 재실행 — Phase 9 의 13 챕터 시나리오 + Phase 10 의 4 변수 환경이 _여전히 4/4 PASS_ 인지 확인.
+
+---
+

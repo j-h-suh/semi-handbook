@@ -857,8 +857,7 @@ chmod +x ~/.mini_claude/guard.py
 
 ```bash
 cd content/claude_code/mini_claude
-export GOOGLE_CLOUD_PROJECT=<your-gcp-project>   # + gcloud auth application-default login
-uv run mini-claude
+uv run mini-claude   # .env (VERTEX_PROJECT_ID + GOOGLE_APPLICATION_CREDENTIALS 등) 가 준비됐다고 가정 — SETUP.md 참조
 ```
 
 시작하면 SessionStart hook 이 먼저 발동 (현재는 등록 안 했으니 아무 일 없음). 그 다음 프롬프트.
