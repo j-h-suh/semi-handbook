@@ -1095,3 +1095,47 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 18: 콜아웃 카드 결 + 종류별 색 + 본문 링크 그린 *(✅ 완료)*
+
+2026-05-23 사용자 — Mintlify quickstart 스크린샷 보고 _콜아웃 2 가지 색_ + _소제목_ 발견. 우리 자리 점검 결과: ① `.prose a` 가 Tailwind invert 의 _cyan-400 잔존_ (Phase 17 _누락_), ② blockquote 가 _좌측 보더만_ — _카드 결_ 부족, ③ 콜아웃 _이모지로만_ 구분 + _색 단일_.
+
+### 18-1. blockquote 인터셉터 + 종류별 색 (commit `3519b1f`)
+
+- `MarkdownViewer.tsx` — `blockquote` 인터셉터 추가, 첫 글자 인식 → `data-variant`:
+  - `💡` → `tip`
+  - `⚠️` (or `⚠`) → `warn`
+  - `⚙️` (or `⚙`) → `note`
+- `globals.css` — `.prose blockquote` 카드 결 (배경 + padding 0.875rem 1.125rem + radius 0.5rem + 좌측 보더 3px)
+- variant 별 색:
+  - tip: 배경 `rgba(0,212,164,.05)` + 보더 `#00d4a4`
+  - warn: 배경 `rgba(195,125,13,.06)` + 보더 `#c37d0d`
+  - note: 배경 `rgba(168,168,170,.05)` + 보더 `#888888`
+
+### 18-2. 본문 링크 → 시그니처 그린 (Phase 17 누락 보완)
+
+- `.prose a` 색: Tailwind invert 의 cyan → `#00d4a4`
+- 부드러운 밑줄 (`text-decoration-color rgba(0,212,164,.4)`, hover 시 진한 `#00d4a4`)
+
+### 18-3. CLAUDE.md 색 매핑 추가
+
+- `## 8. 강조와 콜아웃` 표에 _색_ 컬럼 추가 — 작성자가 _이모지가 종류 신호_ 임을 _즉시 알 수 있게_
+- _별도 마크업 불필요_ — 이모지 자체가 신호
+
+### 18-4. 검증
+
+- TS check — clean
+- `npm run build` — 통과
+- _공유 dev hot reload_:
+  - 콜아웃 (💡/⚠️/⚙️) _카드 결로_ 도드라지고 종류별로 _다른 보더 색_
+  - 본문 링크가 시안 → 그린 통일 (인라인 코드 결과 일관)
+
+### 18-5. 후행 자리
+
+- _Mintlify quickstart_ 스크린샷에서 추가 발견:
+  - 우측 TOC (3 컬럼) — Phase 16 후행 자리 누적
+  - H2 하단 hairline 또는 좌측 accent — 섹션 구분 강화 옵션
+- 콜아웃에 _아이콘_ 위치 명시 (현재 이모지가 본문 첫 글자) — _별도 라운드_ 자리
+- 기존 본문 (`content/`) 의 _💡/⚠️/⚙️ 미적용 콜아웃_ 자리 — 자연 통일됨 (이모지 인식)
+
+---
+
