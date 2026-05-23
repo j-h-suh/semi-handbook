@@ -1413,3 +1413,33 @@ claudeRegistry 6 자리 누적.
 
 ---
 
+## Phase 27: claude 다이어그램 batch 3 — 00_1 누락 + 05_2 *(✅ 완료)*
+
+2026-05-23 사용자 지적 — _00_1 의 _"사용자 (터미널 / IDE)" 로 시작하는 자리_ 누락 발견_. 변환 + 05_2 selector 분기 자리 같이.
+
+### 27-1. 변환 (commit `5b55658`)
+
+| 자리 | 컴포넌트 | 내용 |
+|---|---|---|
+| 00_1 line 187~224 (37 줄) | `ClaudeCodeArchitecture.tsx` | 6 레이어 — 사용자/터미널 → 입력·응답·확장 (3 박스) → 도구+권한 → 메모리+컨텍스트 → 마이크로커널 query.ts (강조) → Claude API |
+| 05_2 line 203~223 (20 줄) | `AppStateSelectorPattern.tsx` | AppState 단일 스토어 → 3 selector 분기 → Header/Footer/PermDialog |
+
+### 27-2. 진단 (변환 _안 함_)
+
+- **06_6 BLOCK 1** (8 줄, Hook 7 단계) — _숫자 리스트_, ASCII 다이어그램 _아님_, 보존
+- **06_6 awk BLOCK 2 (line 532)** — _file 486 줄_ → awk false positive
+- **05_2 awk BLOCK 2 (line 295)** — Python 클래스 메서드 코드 — false positive
+
+### 27-3. 누적 다이어그램 8 자리
+
+`09_1` / `02_1` / `00_1 (loop)` / `03_1` / `03_2` / `10_1` / `00_1 (architecture)` / `05_2`
+
+### 27-4. 남은 우선순위
+
+- **chap 전체 ASCII 자리 정확 분석** — awk 가 lang 자리 _스킵 실패_ 빈발, _수동 검토_ 필요 자리 많음
+- 10_2~10_8 시리즈 — Part 10 확장 자리들
+- 09_1 디렉토리 트리 — 보존 결정
+- _작은 자리 누적_ — 점진
+
+---
+
