@@ -59,7 +59,7 @@ export function Tabs({ children }: { children: ReactNode }) {
                         key={i}
                         onClick={() => setActive(i)}
                         className={`px-5 py-3 text-sm font-mono border-b-2 -mb-px transition-colors cursor-pointer whitespace-nowrap ${active === i
-                            ? 'border-cyan-400 text-cyan-300 bg-slate-800/40'
+                            ? 'border-[#00d4a4] text-[#00d4a4] bg-slate-800/40'
                             : 'border-transparent text-slate-500 hover:text-slate-300'
                             }`}
                     >

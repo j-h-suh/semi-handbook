@@ -11,7 +11,7 @@ const ICON_MAP: Record<IconName, LucideIcon> = {
     'terminal': Terminal,
 };
 
-// Tailwind safelist 회피 — 모든 클래스 문자열을 _완전한 형태_ 로 명시.
+// Tailwind safelist 회피 — 단일 시그니처 Mintlify brand-green #00d4a4 .
 const ACCENT_CLASSES: Record<AccentName, {
     cardBorder: string;
     cardBg: string;
@@ -22,35 +22,15 @@ const ACCENT_CLASSES: Record<AccentName, {
     iconText: string;
     linkText: string;
 }> = {
-    cyan: {
-        cardBorder: 'border-cyan-500/10',
-        cardBg: 'bg-cyan-500/[0.03]',
-        cardHoverBg: 'hover:bg-cyan-500/[0.06]',
-        cardHoverBorder: 'hover:border-cyan-500/25',
-        iconBg: 'bg-cyan-500/10',
-        iconBorder: 'border-cyan-500/20',
-        iconText: 'text-cyan-400',
-        linkText: 'text-cyan-400',
-    },
-    emerald: {
-        cardBorder: 'border-emerald-500/10',
-        cardBg: 'bg-emerald-500/[0.03]',
-        cardHoverBg: 'hover:bg-emerald-500/[0.06]',
-        cardHoverBorder: 'hover:border-emerald-500/25',
-        iconBg: 'bg-emerald-500/10',
-        iconBorder: 'border-emerald-500/20',
-        iconText: 'text-emerald-400',
-        linkText: 'text-emerald-400',
-    },
-    violet: {
-        cardBorder: 'border-violet-500/10',
-        cardBg: 'bg-violet-500/[0.03]',
-        cardHoverBg: 'hover:bg-violet-500/[0.06]',
-        cardHoverBorder: 'hover:border-violet-500/25',
-        iconBg: 'bg-violet-500/10',
-        iconBorder: 'border-violet-500/20',
-        iconText: 'text-violet-400',
-        linkText: 'text-violet-400',
+    green: {
+        cardBorder: 'border-[#00d4a4]/15',
+        cardBg: 'bg-[#00d4a4]/[0.03]',
+        cardHoverBg: 'hover:bg-[#00d4a4]/[0.06]',
+        cardHoverBorder: 'hover:border-[#00d4a4]/30',
+        iconBg: 'bg-[#00d4a4]/10',
+        iconBorder: 'border-[#00d4a4]/20',
+        iconText: 'text-[#00d4a4]',
+        linkText: 'text-[#00d4a4]',
     },
 };
 
@@ -91,13 +71,13 @@ export default function HomeClient({ bookMetas }: Props) {
 
                 {/* Hero */}
                 <div className="text-center mb-12 md:mb-16">
-                    <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 mb-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#00d4a4]/10 border border-[#00d4a4]/20 text-[#00d4a4] mb-6">
                         <BookOpen size={32} className="md:w-9 md:h-9" />
                     </div>
                     <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl mb-6 leading-snug">
                         반도체를 여행하는<br />
                         세미에이아이를 위한<br />
-                        <span className="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-[#00d4a4] to-[#7cebcb] bg-clip-text text-transparent">
                             핸드북 시리즈
                         </span>
                     </h1>

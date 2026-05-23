@@ -130,16 +130,10 @@ export default function SearchModal({ searchData }: Props) {
                             className="w-full text-left px-5 py-3 hover:bg-white/5 transition-colors border-b border-white/3 cursor-pointer"
                         >
                             <div className="flex items-center gap-2 mb-1">
-                                <span className={`text-[9px] px-1.5 py-0.5 rounded border font-medium ${
-                                    r.book === 'stats'
-                                        ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-                                        : r.book === 'claude'
-                                            ? 'text-violet-400 bg-violet-500/10 border-violet-500/20'
-                                            : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
-                                }`}>
+                                <span className="text-[9px] px-1.5 py-0.5 rounded border font-medium text-[#00d4a4] bg-[#00d4a4]/10 border-[#00d4a4]/20">
                                     {r.book === 'stats' ? '통계' : r.book === 'claude' ? 'Claude Code' : '반도체'}
                                 </span>
-                                <span className="text-xs text-cyan-500 font-medium">{r.chapterTitle}</span>
+                                <span className="text-xs text-[#00d4a4] font-medium">{r.chapterTitle}</span>
                             </div>
                             <div className="text-sm text-slate-400 leading-relaxed">
                                 {highlightMatch(r.snippet, query)}
@@ -182,7 +176,7 @@ function highlightMatch(text: string, query: string) {
     const parts = text.split(regex);
     return parts.map((part, i) =>
         regex.test(part)
-            ? <mark key={i} className="bg-cyan-500/25 text-cyan-300 rounded px-0.5">{part}</mark>
+            ? <mark key={i} className="bg-[#00d4a4]/25 text-[#00d4a4] rounded px-0.5">{part}</mark>
             : part
     );
 }

@@ -4,7 +4,8 @@
 export type Book = 'semi' | 'stats' | 'claude';
 
 export type IconName = 'cpu' | 'trending-up' | 'terminal';
-export type AccentName = 'cyan' | 'emerald' | 'violet';
+// 단일 시그니처 — Mintlify brand-green. 향후 다른 색 도입 시 union 확장.
+export type AccentName = 'green';
 
 export interface BookMeta {
   id: Book;
@@ -28,7 +29,7 @@ export const BOOKS: BookMeta[] = [
     landingHref: '/semi/00_00_들어가며',
     route: '/semi',
     iconKey: 'cpu',
-    accent: 'cyan',
+    accent: 'green',
   },
   {
     id: 'stats',
@@ -39,7 +40,7 @@ export const BOOKS: BookMeta[] = [
     landingHref: '/stats/00_00_들어가며',
     route: '/stats',
     iconKey: 'trending-up',
-    accent: 'emerald',
+    accent: 'green',
   },
   {
     id: 'claude',
@@ -50,7 +51,7 @@ export const BOOKS: BookMeta[] = [
     landingHref: '/claude/00_0_왜_이_책을_썼는가',
     route: '/claude',
     iconKey: 'terminal',
-    accent: 'violet',
+    accent: 'green',
   },
 ];
 

@@ -53,10 +53,10 @@ export default function SettingsModal() {
                             value={geminiKey}
                             onChange={(e) => setGeminiKey(e.target.value)}
                             placeholder="AIzaSy..."
-                            className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+                            className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-[#00d4a4] focus:ring-1 focus:ring-[#00d4a4] transition-all"
                         />
                         <p className="text-xs text-slate-500 mt-2">
-                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-[#00d4a4] hover:underline">
                                 Google AI Studio에서 무료 발급받기 &rarr;
                             </a>
                         </p>
@@ -64,7 +64,7 @@ export default function SettingsModal() {
 
                     <button
                         onClick={handleSave}
-                        className="w-full mt-4 bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2 rounded-lg transition-colors"
+                        className="w-full mt-4 bg-[#00b48a] hover:bg-[#00d4a4] text-white font-medium py-2 rounded-lg transition-colors"
                     >
                         Save Key
                     </button>

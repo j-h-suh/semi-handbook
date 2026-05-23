@@ -30,7 +30,7 @@ export default function RootLayout({
 
   return (
     <html lang="ko" className="dark">
-      <body className={`${inter.className} ${geistMono.variable} bg-slate-950 text-slate-200 antialiased overflow-hidden selection:bg-cyan-500/30`}>
+      <body className={`${inter.className} ${geistMono.variable} bg-slate-950 text-slate-200 antialiased overflow-hidden selection:bg-[#00d4a4]/30`}>
         {/* Main Application Container */}
         <div className="flex h-screen w-screen overflow-hidden">
           <ClientLayout searchData={buildSearchData()} chaptersByBook={chaptersByBook}>

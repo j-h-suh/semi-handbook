@@ -14,11 +14,9 @@ const ICON_MAP: Record<IconName, LucideIcon> = {
     'terminal': Terminal,
 };
 
-// Tailwind safelist 회피 — 챕터 활성 자리의 색상 lookup
+// Tailwind safelist 회피 — 단일 시그니처 Mintlify brand-green #00d4a4 .
 const CHAPTER_ACTIVE_CLASSES: Record<AccentName, string> = {
-    cyan: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-    emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    violet: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
+    green: 'bg-[#00d4a4]/10 text-[#00d4a4] border-[#00d4a4]/20',
 };
 
 interface Props {
@@ -104,7 +102,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                     onClick={onClose}
                     className="p-6 border-b border-slate-800 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
                 >
-                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-[#00d4a4]/10 border border-[#00d4a4]/20 flex items-center justify-center text-[#00d4a4] shrink-0">
                         <BookOpen size={20} />
                     </div>
                     <div>
@@ -207,7 +205,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                     href="/glossary"
                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
                         pathname === '/glossary'
-                            ? 'bg-cyan-500/10 text-cyan-400 font-medium border border-cyan-500/20'
+                            ? 'bg-[#00d4a4]/10 text-[#00d4a4] font-medium border border-[#00d4a4]/20'
                             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                     }`}
                 >
