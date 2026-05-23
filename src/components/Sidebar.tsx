@@ -100,7 +100,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 <Link
                     href="/"
                     onClick={onClose}
-                    className="m-3 p-4 rounded-xl border border-[#00d4a4]/15 bg-[#00d4a4]/[0.04] flex items-center gap-3 hover:bg-[#00d4a4]/[0.07] hover:border-[#00d4a4]/25 transition-all"
+                    className="p-5 flex items-center gap-3 hover:bg-white/[0.02] transition-colors"
                 >
                     <div className="w-10 h-10 rounded-xl bg-[#00d4a4]/10 border border-[#00d4a4]/20 flex items-center justify-center text-[#00d4a4] shrink-0">
                         <BookOpen size={20} />
