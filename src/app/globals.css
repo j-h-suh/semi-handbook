@@ -131,15 +131,47 @@ body {
   margin-bottom: 2em;
 }
 
-/* Blockquote: 인용문/콜아웃 모두 명시적 마커(""나 💡/⚠️)로 표현하므로
-   Tailwind Typography 의 자동 이탤릭·자동 따옴표는 제거. 좌측 보더만 유지. */
+/* Blockquote (콜아웃) — Mintlify 결: 카드 결로 (배경 + padding + radius + 좌측 보더).
+   Tailwind Typography 의 자동 이탤릭·자동 따옴표는 제거 (이모지 마커가 종류 신호). */
 .prose blockquote {
   font-style: normal;
   font-weight: normal;
+  border-radius: 0.5rem;
+  padding: 0.875rem 1.125rem;
+  background: rgba(255, 255, 255, 0.025);
+  border-left: 3px solid rgba(255, 255, 255, 0.15);
+  margin: 1.5em 0;
 }
 .prose blockquote p:first-of-type::before,
 .prose blockquote p:last-of-type::after {
   content: none;
+}
+
+/* 콜아웃 종류별 색 — MarkdownViewer 의 blockquote 인터셉터가 이모지 첫 글자로 data-variant 분기 */
+.prose blockquote[data-variant="tip"] {
+  background: rgba(0, 212, 164, 0.05);
+  border-left-color: #00d4a4;
+}
+.prose blockquote[data-variant="warn"] {
+  background: rgba(195, 125, 13, 0.06);
+  border-left-color: #c37d0d;
+}
+.prose blockquote[data-variant="note"] {
+  background: rgba(168, 168, 170, 0.05);
+  border-left-color: #888888;
+}
+
+/* 본문 링크 — 시그니처 그린 + 부드러운 밑줄 (Tailwind Typography invert 의 cyan 기본 override) */
+.prose a {
+  color: #00d4a4;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(0, 212, 164, 0.4);
+  transition: text-decoration-color 0.15s ease;
+}
+.prose a:hover {
+  text-decoration-color: #00d4a4;
 }
 
 /* Center images by default */
