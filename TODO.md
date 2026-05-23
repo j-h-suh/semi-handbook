@@ -1182,3 +1182,37 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 20: 사이드바 헤드 + 드랍다운 콜아웃 그린 결로 *(✅ 완료)*
+
+2026-05-23 사용자 — Phase 19 의 _site-wide slate→zinc_ 후 확인. _헤드와 드랍다운 윈도우는 중립 회색보단, 다른 콜아웃이랑 같은 색을 적용하는게 좋지 않을까요?_ 의 자리. _브랜드 앵커 강조_ + _Phase 18 콜아웃 tip (#00d4a4)_ 의 _결 통일_.
+
+### 20-1. Sidebar.tsx 두 자리 (commit `8845f39`)
+
+| 자리 | 기존 | 새 |
+|---|---|---|
+| 헤드 (`<Link href="/">` 로고 + 핸드북 시리즈) | `p-6 border-b border-zinc-800 hover:bg-white/[0.02]` (하단 보더만) | `m-3 p-4 rounded-xl border border-[#00d4a4]/15 bg-[#00d4a4]/[0.04] hover:bg-[#00d4a4]/[0.07] hover:border-[#00d4a4]/25` (카드 결로) |
+| 드랍다운 wrapper | `px-4 py-3 border-b border-zinc-800` | `px-3 py-3 border-b border-zinc-800/60` (얇아진 구분선) |
+| 드랍다운 select | `bg-zinc-900/60 border border-zinc-700 hover:border-zinc-600 focus:border-zinc-500 focus:ring-zinc-500` | `bg-[#00d4a4]/[0.05] border border-[#00d4a4]/20 hover:border-[#00d4a4]/35 focus:border-[#00d4a4] focus:ring-[#00d4a4]` |
+| 드랍다운 좌측 아이콘 (ActiveIcon) | `text-zinc-400` | `text-[#00d4a4]` (책 아이콘 강조) |
+
+콜아웃 _💡 tip_ 결 (`rgba(0,212,164,.05)` 배경 + `#00d4a4` 보더) 과 _일관_.
+
+### 20-2. 변경 _안 함_
+
+- 챕터 활성 자리 (`CHAPTER_ACTIVE_CLASSES`) — _이미 그린_ (Phase 17)
+- 챕터 _비활성_ hover — _zinc 중립 유지_ (그린 과도 방지)
+- 사이드바 푸터 (검색 / 용어 사전 / API Settings) — _보존_ (Phase 17 에서 _용어 사전 활성_ 만 그린)
+- 드랍다운 ChevronDown 아이콘 — _zinc 중립_ (시각 균형)
+
+### 20-3. 검증
+
+- TS check — clean
+- _공유 dev hot reload_ — 사이드바 상단 _두 자리_ 가 _콜아웃 결로_ 강조
+
+### 20-4. 후행 자리
+
+- _데스크탑 사이드바 접기 / 모바일 닫기 버튼_ 의 _절대 위치_ — 헤드 카드 결로 떨어진 후 _위치 미세 조정_ 필요할 수 있음 (현재는 _aside 최상단 top-3 right-3_ 으로 _헤드 카드 위_ 12px 자리에 _자연 안착_)
+- _Mintlify 의 _outline 그린 글로우_ on focus_ — 더 진한 자리 가능
+
+---
+
