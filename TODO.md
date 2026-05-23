@@ -1036,3 +1036,62 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 17: 단일 시그니처 컬러 — Mintlify brand-green *(✅ 완료)*
+
+2026-05-23 사용자 — _UI 할일 정리_ 요청 + _핸드북 별 컬러 정체성_ 자리. Explore 보고로 _현재 액센트 노출 불균형_ 발견 (semi=cyan 8/12, stats=emerald 3/12, claude=violet 3/12 — _공용 자리는 모두 cyan_, _stats/claude 정체성 부재_). 사용자 결정: _단일 시그니처_ + _Mintlify brand-green #00d4a4 그대로_ + _hero 그라데이션 정체성 유지 불필요_.
+
+### 17-1. 단일 시그니처 데이터 모델 (`books.ts`)
+
+- `AccentName = 'cyan' | 'emerald' | 'violet'` → `AccentName = 'green'` (필드 _보존_, 단일 값. 향후 _다른 색_ 도입 자리 _열려 있음_)
+- 3 책 (semi/stats/claude) 모두 `accent: 'green'` 통일
+
+### 17-2. Lookup table + 컴포넌트 색 통일 (commit `d377ddd`)
+
+12 파일 약 30 자리 cyan/emerald/violet → `#00d4a4` (그라데이션 자리는 `#00d4a4 → #7cebcb` 의 _brand-green → brand-green-soft_):
+
+| 자리 | 변경 |
+|---|---|
+| `HomeClient` | `ACCENT_CLASSES` 3 키 → 1 키 + hero icon + 그라데이션 span (cyan→indigo → green→green-soft) |
+| `Sidebar` | `CHAPTER_ACTIVE_CLASSES` 단일화 + 로고 + 용어 사전 활성 |
+| `Tabs.tsx:62` | 하드코딩 cyan 탭 → green |
+| `SettingsModal` | 버튼 + input focus + 링크 (3 자리) |
+| `SearchModal` | 책별 동적 라벨 lookup → 고정 green + chapter title + highlight `<mark>` |
+| `glossary/board` | 배경 글로우 cyan+indigo → green+green-soft |
+| `layout.tsx:32` | `selection:bg-cyan-500/30` → green |
+| `[book]/[id]` 세 자리 | 글로우 (semi=cyan+indigo, stats=emerald+teal, claude=violet+purple) + navigation hover (책별 색) 모두 green |
+
+### 17-3. 인라인 코드 액센트 (commit `3251012`)
+
+`globals.css .prose code` color teal-300 `#5eead4` → Mintlify _brand-green-soft_ `#7cebcb`. Phase 16 의 _본문 자극 ↓_ 유지 + 사이트 전체 시그니처 일관성.
+
+### 17-4. 책 구분 — 색 없이 유지
+
+- 사이드창 dropdown 의 _아이콘_ (cpu/trending-up/terminal) + _부제_ + _책 이름_ 으로 구분
+- 검색 모달의 _책 라벨 텍스트_ (반도체 / 통계 / Claude Code) 로 구분 — 색은 통일
+- 챕터 페이지 자체에는 _책 표시자_ 없음 (사이드창 에서 활성 책으로 충분)
+
+### 17-5. 검증
+
+- TS check — clean
+- `npm run build` — 통과 (Tailwind v4 의 arbitrary value `bg-[#00d4a4]/10` 정상 컴파일)
+- _공유 dev hot reload_ — 모든 책의 사이드창 활성, 카드, hover, 글로우, 인라인 코드, 선택 모두 green 통일
+
+### 17-6. 후행 자리 (Phase 18+)
+
+**미등재 13 UI 자리** (이번 라운드 OUT):
+- 검색 모달 결과/내용 시각 계층 강화
+- 사이드바 푸터 — "다음 챕터" / 진행률 / 읽기 시간
+- 글로서리 필터/카테고리
+- 챕터 메타 (lastUpdated / readTime)
+- 모바일 반응형 추가 테스트
+
+**Phase 16 후행 (누적)**:
+- 라이트 모드 토글 (dual-mode 시그니처)
+- 3 컬럼 (우측 TOC)
+- Shiki 코드 블록 배경/보더 (`#1c1c1e` surface-code)
+- Mintlify neutral 토큰 (slate/steel/stone) CSS variable 등록
+
+**Phase 15 후행**: BYOK / Q&A 패널 정리
+
+---
+
