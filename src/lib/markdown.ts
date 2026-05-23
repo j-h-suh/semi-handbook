@@ -7,15 +7,33 @@ import matter from 'gray-matter';
 
 export type Book = 'semi' | 'stats' | 'claude';
 
-interface BookConfig {
+// UI 메타 — Client 컴포넌트로 직렬화 가능한 _문자열 토큰_ 만.
+// 아이콘은 IconName 으로, 색상은 AccentName 으로 받아 컴포넌트 측에서 매핑.
+// (Tailwind safelist 회피를 위해 동적 클래스 빌더는 컴포넌트 측 lookup table 사용.)
+export type IconName = 'cpu' | 'trending-up' | 'terminal';
+export type AccentName = 'cyan' | 'emerald' | 'violet';
+
+export interface BookConfig {
+  // ─── 데이터 / SSR 자리 ───
+  id: Book;
   contentDir: string;
-  imageRewrite: string;        // images/ → 이 경로로 치환
+  imageRewrite: string;
   excludePattern: (file: string) => boolean;
   getPartFromId: (id: string) => string;
+  // ─── UI 메타 (Client 직렬화 가능) ───
+  label: string;            // 사이드창 dropdown / 짧은 이름 (예: "반도체")
+  fullLabel: string;        // 카드 제목 (예: "반도체 핸드북")
+  subtitle: string;         // 카드 작은 부제 (예: "포토리소그래피 & AI 제조")
+  description: string;      // 카드 본문 (한두 줄)
+  landingHref: string;      // 카드 클릭 시 첫 챕터로
+  route: string;            // 사이드창 prefix (예: '/semi')
+  iconKey: IconName;
+  accent: AccentName;
 }
 
-const BOOK_CONFIGS: Record<Book, BookConfig> = {
-  semi: {
+export const BOOKS: BookConfig[] = [
+  {
+    id: 'semi',
     contentDir: path.join(process.cwd(), 'content', 'semi'),
     imageRewrite: '/content/semi/images/',
     excludePattern: (f) => f === 'handbook-toc.md' || f === 'handbook-review.md',
@@ -28,8 +46,17 @@ const BOOK_CONFIGS: Record<Book, BookConfig> = {
       if (id.startsWith('05_')) return 'Part 5: 실무 레퍼런스';
       return '기타';
     },
+    label: '반도체',
+    fullLabel: '반도체 핸드북',
+    subtitle: '포토리소그래피 & AI 제조',
+    description: '반도체 제조 공정부터 수율 공학, AI 적용까지 — 업계 선배가 전하는 실무 안내서',
+    landingHref: '/semi/00_00_들어가며',
+    route: '/semi',
+    iconKey: 'cpu',
+    accent: 'cyan',
   },
-  stats: {
+  {
+    id: 'stats',
     contentDir: path.join(process.cwd(), 'content', 'stats'),
     imageRewrite: '/content/images/stats/',
     excludePattern: (f) => f.startsWith('00_기획'),
@@ -43,8 +70,17 @@ const BOOK_CONFIGS: Record<Book, BookConfig> = {
       if (id.startsWith('06_')) return 'Part 6: 실전 응용';
       return '기타';
     },
+    label: '통계학',
+    fullLabel: '통계학 핸드북',
+    subtitle: '데이터로 일하는 모두를 위한 통계',
+    description: '기술통계부터 베이지안, 인과추론까지 — 실무에서 바로 쓰는 통계학 가이드',
+    landingHref: '/stats/00_00_들어가며',
+    route: '/stats',
+    iconKey: 'trending-up',
+    accent: 'emerald',
   },
-  claude: {
+  {
+    id: 'claude',
     contentDir: path.join(process.cwd(), 'content', 'claude_code'),
     imageRewrite: '/content/images/claude_code/',
     excludePattern: () => false,
@@ -64,12 +100,28 @@ const BOOK_CONFIGS: Record<Book, BookConfig> = {
       if (id.startsWith('11_')) return '에필로그';
       return '기타';
     },
+    label: '클로드',
+    fullLabel: '클로드 핸드북',
+    subtitle: 'AI 코딩 에이전트 심층 분석',
+    description: '부트스트랩부터 멀티 에이전트까지 — Claude Code의 내부 구조를 해부하는 기술 핸드북',
+    landingHref: '/claude/00_0_왜_이_책을_썼는가',
+    route: '/claude',
+    iconKey: 'terminal',
+    accent: 'violet',
   },
-};
+];
+
+// 배열에서 derived — id 로 lookup 할 때.
+const BOOK_BY_ID: Record<Book, BookConfig> = Object.fromEntries(
+  BOOKS.map((b) => [b.id, b]),
+) as Record<Book, BookConfig>;
 
 export function getBookConfig(book: Book): BookConfig {
-  return BOOK_CONFIGS[book];
+  return BOOK_BY_ID[book];
 }
+
+// 하위 호환 — 기존 BOOK_CONFIGS 참조를 BOOK_BY_ID 로 alias
+const BOOK_CONFIGS = BOOK_BY_ID;
 
 /* ─── 공통 타입 ─── */
 
