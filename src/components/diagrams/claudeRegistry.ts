@@ -19,6 +19,8 @@ const CacheLayerBoundary = dynamic(() => import('./CacheLayerBoundary'), { ssr: 
 const AppStateCategories = dynamic(() => import('./AppStateCategories'), { ssr: false });
 const VirtualScrollViewport = dynamic(() => import('./VirtualScrollViewport'), { ssr: false });
 const TeamMailboxFlow = dynamic(() => import('./TeamMailboxFlow'), { ssr: false });
+const EventLoopAlgorithm = dynamic(() => import('./EventLoopAlgorithm'), { ssr: false });
+const PermissionModeCycle = dynamic(() => import('./PermissionModeCycle'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
@@ -36,4 +38,6 @@ export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/06_2/appstate_categories.svg': AppStateCategories,
     '/content/claude_code/images/05_3/virtual_scroll_viewport.svg': VirtualScrollViewport,
     '/content/claude_code/images/08_4/mailbox_flow.svg': TeamMailboxFlow,
+    '/content/claude_code/images/00_2/event_loop_algorithm.svg': EventLoopAlgorithm,
+    '/content/claude_code/images/06_3/permission_mode_cycle.svg': PermissionModeCycle,
 };
