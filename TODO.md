@@ -996,3 +996,43 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 16: Mintlify 결 가독성 톤 다운 *(✅ 완료)*
+
+2026-05-23 사용자 — _UI 가 나쁘지 않은데 눈이 좀 아프다_ + getdesign.md 참고 요청. _큐레이션 사이트_ (71 개 기업의 DESIGN.md 카탈로그) 확인 후 Mintlify (_문서 사이트 그 자체_) 선택. _이번 라운드는 즉시 효과 5 가지만_ (다크 유지) 합의.
+
+### 16-1. Mintlify DESIGN.md 추출 (`VoltAgent/awesome-design-md` raw)
+
+- canvas / ink / muted / brand-green (#00d4a4) + Inter / Geist Mono + 3 컬럼 + 헤딩 letter-spacing
+- _브랜드 충돌_ — Mintlify 의 _시그니처 그린_ 은 우리 _시안/인디고 그라데이션_ (홈 hero) 과 다름. _그린 도입은 보류_, _구조/타이포/간격_ 만 가져옴.
+
+### 16-2. 5 자리 적용 (commit `9e7fb3a`)
+
+| 자리 | 변경 |
+|---|---|
+| 폰트 | `next/font` 의 `Geist_Mono` 추가 + `globals.css` body font override 제거 → Inter (이미 import) 자연 적용 |
+| 본문 line-height | 1.6 → 1.7 (호흡 ↑) |
+| 헤딩 letter-spacing | -0.025em (h1) / -0.015em (h2/h3) |
+| 인라인 코드 액센트 | 시안 #67e8f9 → teal-300 #5eead4 (채도 ↓, 본문 자극 ↓) |
+| 홈 폭 | `max-w-3xl` → `max-w-4xl` (호흡 ↑) |
+
+### 16-3. 변경 _안 함_ (이번 라운드 OUT)
+
+- _라이트 모드 토글_ — Mintlify dual-mode 시그니처 자리. 다음 라운드 옵션
+- _3 컬럼 (우측 TOC)_ — 닥스 표준 자리. 다음 라운드 옵션
+- _배경 / 본문 색_ — 다크 톤 자체는 유지 (브랜드 톤 + Notion dark feel 보존)
+- _완전 그린 액센트 전환_ — 브랜드 시안/인디고 정체성 보존
+
+### 16-4. 검증
+
+- TS check — clean
+- `npm run build` — 통과 (Geist_Mono 가 `next/font/google` 의 _real_ 한 폰트로 로드)
+- _공유 dev (port 3000)_ 가 main hot reload 로 즉시 시각 확인
+
+### 16-5. 후행 자리
+
+- 사용자 _hot reload 시각 확인_ 후 _추가 톤 다운_ 또는 _라이트 모드 토글_ 필요 자리 발굴
+- _코드 블록 (Shiki) 배경/보더_ 도 Mintlify `surface-code` (#1c1c1e) 와 비교해 _차분한 자리_ 가능
+- BYOK / Q&A 패널 정리 (Phase 15 에서 _다음에 정리_ 합의 자리)
+
+---
+
