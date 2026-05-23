@@ -1511,3 +1511,43 @@ claudeRegistry 6 자리 누적.
 
 ---
 
+## Phase 30: claude 다이어그램 전수 발굴 종결 *(✅ 완료)*
+
+2026-05-23 사용자 _"쭈우욱 다 진행합시다"_ — 전체 chap 발굴 + 모든 진짜 다이어그램 변환 완료 선언.
+
+### 30-1. 발굴 결과 — 변환 가능 자리 _0_
+
+- `┌` box-drawing 자리 + `+-+` 형식 + 화살표 흐름 패턴 모두 grep
+- _진짜 다이어그램 자리_: 모두 변환됨 (15 자리)
+- _보존 결정 자리_: 7 자리
+  - TUI 시뮬 6 자리 (Settings / Permission required / Permissions 다이얼로그) — _실제 터미널 화면 모양_ 자체
+  - 09_1 디렉토리 트리 (`├── └──`) — 트리 패턴이 코드 폰트와 자연
+- 10_2 / 10_4 / 10_6 / 10_7 / 10_8 / 07_x / 09_2~09_5 / 11 등 — _ASCII 박스 자리 없음_ (모두 코드 블록 또는 텍스트만)
+
+### 30-2. 누적 다이어그램 15 자리
+
+| Part | 자리 | 컴포넌트 |
+|---|---|---|
+| 0 | 00_1 | AgentLoopBranch · ClaudeCodeArchitecture |
+| 2 | 02_1 | TwoLayerAgentLoop |
+| 3 | 03_1 / 03_2 | ToolAsMicroservice · ToolInterface47Fields |
+| 5 | 05_2 / 05_3 | AppStateSelectorPattern · VirtualScrollViewport |
+| 6 | 06_1 / 06_2 | CacheLayerBoundary · AppStateCategories |
+| 8 | 08_4 × 2 | QueueLoopModel · TeamMailboxFlow |
+| 9 | 09_1 | MiniClaudeArchitecture |
+| 10 | 10_1 / 10_3 / 10_5 | Part10Architecture · HookLifecycle · APIClientAdapter |
+
+### 30-3. ASCII wrapper 분기 _보존_ (Phase 19 후행 갱신)
+
+Phase 19 의 _후행_ 에서 _"변환 완료 후 lang === 'text' 분기 제거"_ 명시. 단, _TUI 시뮬 7 자리는 영구 보존_ 결정으로 _분기 유지_:
+
+- `\`\`\`text` (또는 lang 없는 자리) 의 _surface 결로_ 가 _TUI 시뮬 시각 신호_ — _영구 보존_
+- 박스 _카테고리_: 코드 / 다이어그램 / 콜아웃 / 표 (4 종) + _ASCII wrapper_ 는 _코드 블록의 _시각 변종_
+
+### 30-4. 후행 자리 (Phase 31+)
+
+- _ML/통계 / 반도체 핸드북_ 의 _후행 ASCII 자리_ — claude 패턴 적용 가능 시
+- _diagramTokens.CLAUDE_COLOR 재사용_ — 다른 핸드북도 _브랜드 일관 그린 결로_ 가능 (이미 statsRegistry/semiRegistry 자기 토큰)
+
+---
+
