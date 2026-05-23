@@ -12,6 +12,9 @@ const ToolInterface47Fields = dynamic(() => import('./ToolInterface47Fields'), {
 const Part10Architecture = dynamic(() => import('./Part10Architecture'), { ssr: false });
 const ClaudeCodeArchitecture = dynamic(() => import('./ClaudeCodeArchitecture'), { ssr: false });
 const AppStateSelectorPattern = dynamic(() => import('./AppStateSelectorPattern'), { ssr: false });
+const HookLifecycle = dynamic(() => import('./HookLifecycle'), { ssr: false });
+const APIClientAdapter = dynamic(() => import('./APIClientAdapter'), { ssr: false });
+const QueueLoopModel = dynamic(() => import('./QueueLoopModel'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
@@ -22,4 +25,7 @@ export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/10_1/part10_architecture.svg': Part10Architecture,
     '/content/claude_code/images/00_1/claude_code_architecture.svg': ClaudeCodeArchitecture,
     '/content/claude_code/images/05_2/selector_pattern.svg': AppStateSelectorPattern,
+    '/content/claude_code/images/10_3/hook_lifecycle.svg': HookLifecycle,
+    '/content/claude_code/images/10_5/client_adapter.svg': APIClientAdapter,
+    '/content/claude_code/images/08_4/queue_loop_model.svg': QueueLoopModel,
 };

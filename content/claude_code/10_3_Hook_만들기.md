@@ -114,33 +114,7 @@ Permission denied by hook: blocked: AWS access key in command
 
 이벤트 한 개가 발생하면 *세 단계* 가 순차적으로 일어난다.
 
-```text
-  ┌─────────────────────────────────────────────┐
-  │  Event triggered                             │
-  │  (PreToolUse / PostToolUse / Stop / …)      │
-  └────────────────────┬────────────────────────┘
-                       │
-                       ▼
-  ┌─────────────────────────────────────────────┐
-  │  1. 매칭 — registry.find_matching()         │
-  │     event + (도구 이름) → 매칭된 spec 들    │
-  └────────────────────┬────────────────────────┘
-                       │
-                       ▼
-  ┌─────────────────────────────────────────────┐
-  │  2. 실행 — execute_hook()                    │
-  │     subprocess.shell + stdin JSON →          │
-  │       wait_for(timeout) → stdout JSON        │
-  └────────────────────┬────────────────────────┘
-                       │
-                       ▼
-  ┌─────────────────────────────────────────────┐
-  │  3. 반영 — agent.py / main.py 의 자리        │
-  │     permissionDecision: deny ⇒ 차단         │
-  │     updatedInput: 입력 교체                  │
-  │     additionalContext: 결과 보강            │
-  └─────────────────────────────────────────────┘
-```
+![Hook 의 생명주기 — 3 단계](/content/claude_code/images/10_3/hook_lifecycle.svg)
 
 **1 단계 매칭** 은 *두 축* 으로 본다. 이벤트 이름 (`PreToolUse`, `Stop` 등) + 도구 이름 (PreToolUse / PostToolUse 에 한해). 둘 다 만족하는 spec 만 살아남는다.
 
