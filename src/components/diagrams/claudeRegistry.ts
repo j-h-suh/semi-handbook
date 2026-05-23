@@ -21,6 +21,10 @@ const VirtualScrollViewport = dynamic(() => import('./VirtualScrollViewport'), {
 const TeamMailboxFlow = dynamic(() => import('./TeamMailboxFlow'), { ssr: false });
 const EventLoopAlgorithm = dynamic(() => import('./EventLoopAlgorithm'), { ssr: false });
 const PermissionModeCycle = dynamic(() => import('./PermissionModeCycle'), { ssr: false });
+const TurnTokenFlow = dynamic(() => import('./TurnTokenFlow'), { ssr: false });
+const RecoveryPaths = dynamic(() => import('./RecoveryPaths'), { ssr: false });
+const QueryCallStack = dynamic(() => import('./QueryCallStack'), { ssr: false });
+const TurnApiSequence = dynamic(() => import('./TurnApiSequence'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
@@ -40,4 +44,8 @@ export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/08_4/mailbox_flow.svg': TeamMailboxFlow,
     '/content/claude_code/images/00_2/event_loop_algorithm.svg': EventLoopAlgorithm,
     '/content/claude_code/images/06_3/permission_mode_cycle.svg': PermissionModeCycle,
+    '/content/claude_code/images/02_1/turn_token_flow.svg': TurnTokenFlow,
+    '/content/claude_code/images/02_1/recovery_paths.svg': RecoveryPaths,
+    '/content/claude_code/images/02_1/query_call_stack.svg': QueryCallStack,
+    '/content/claude_code/images/02_1/turn_api_sequence.svg': TurnApiSequence,
 };
