@@ -10,6 +10,8 @@ const AgentLoopBranch = dynamic(() => import('./AgentLoopBranch'), { ssr: false 
 const ToolAsMicroservice = dynamic(() => import('./ToolAsMicroservice'), { ssr: false });
 const ToolInterface47Fields = dynamic(() => import('./ToolInterface47Fields'), { ssr: false });
 const Part10Architecture = dynamic(() => import('./Part10Architecture'), { ssr: false });
+const ClaudeCodeArchitecture = dynamic(() => import('./ClaudeCodeArchitecture'), { ssr: false });
+const AppStateSelectorPattern = dynamic(() => import('./AppStateSelectorPattern'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
@@ -18,4 +20,6 @@ export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/03_1/tool_as_microservice.svg': ToolAsMicroservice,
     '/content/claude_code/images/03_2/tool_47_fields.svg': ToolInterface47Fields,
     '/content/claude_code/images/10_1/part10_architecture.svg': Part10Architecture,
+    '/content/claude_code/images/00_1/claude_code_architecture.svg': ClaudeCodeArchitecture,
+    '/content/claude_code/images/05_2/selector_pattern.svg': AppStateSelectorPattern,
 };

@@ -200,27 +200,7 @@ const model = useAppState(s => s.mainLoopModel)
 
 이게 거대한 단일 스토어가 효율적일 수 있는 이유다. AppState는 수십 개 필드를 가진 거대한 객체지만, 각 컴포넌트는 자기에게 관심 있는 슬라이스만 구독한다. 푸터는 `model`만, 권한 다이얼로그는 `toolPermissionContext`만, 토큰 카운터는 `mainLoopModel.usage`만.
 
-```
-                    ┌───────────────────────┐
-                    │      AppState         │
-                    │  ┌──────────────────┐ │
-                    │  │ verbose: false   │ │
-                    │  │ model: opus-4-6  │ │
-                    │  │ tasks: {...}     │ │
-                    │  │ permissions: {}  │ │
-                    │  │ ... 50개 더       │ │
-                    │  └──────────────────┘ │
-                    └─────┬──────┬──────┬───┘
-                          │      │      │
-              selector ┌──┘      │      └──┐
-                       │         │         │
-              s=>s.verbose  s=>s.model  s=>s.permissions
-                       │         │         │
-                       ▼         ▼         ▼
-              ┌──────────┐ ┌─────────┐ ┌──────────────┐
-              │ Header   │ │ Footer  │ │ PermDialog   │
-              └──────────┘ └─────────┘ └──────────────┘
-```
+![AppState 의 selector 분기 패턴](/content/claude_code/images/05_2/selector_pattern.svg)
 
 푸터의 `model`이 바뀌어도 — **Header와 PermDialog는 안 다시 그려진다**. 각자 자기 selector가 같은 값을 돌려주니까.
 
