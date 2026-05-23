@@ -101,12 +101,15 @@ mini-claude 시작 (Ctrl+D로 종료)
 
 ## 다른 백엔드
 
-vLLM (OpenAI 호환, 로컬) 로 가려면:
+vLLM (OpenAI 호환, 로컬) 로 가려면 `.env` 를 vLLM 모양으로 편집:
 
 ```bash
-export MINI_LLM_PROVIDER=vllm
-export MINI_LLM_MODEL=meta-llama/Llama-3.1-70B-Instruct
-export VLLM_BASE_URL=http://localhost:8000/v1
+# mini_claude/.env
+MINI_LLM_PROVIDER=vllm
+MINI_LLM_MODEL=meta-llama/Llama-3.1-70B-Instruct
+VLLM_BASE_URL=http://localhost:8000/v1
+# VLLM_API_KEY=dummy           # 기본값 — vLLM 은 보통 키 검증 안 함
+# VERTEX_PROJECT_ID / GOOGLE_APPLICATION_CREDENTIALS 는 제거 또는 주석 처리
 ```
 
-자세한 내용은 핸드북 **10.5 API 클라이언트** 챕터.
+`python-dotenv` 가 `mini-claude` 시작 시 `.env` 를 자동 로드 — 별도 `export` 불필요. 자세한 내용은 핸드북 **10.5 API 클라이언트** 챕터.

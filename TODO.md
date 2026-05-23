@@ -802,3 +802,51 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 
 ---
 
+## Phase 12: LLM API 가족 정리 + .env 흐름 일제 통일 *(✅ 완료)*
+
+2026-05-23 진행. Phase 11-4 의 Explore 본문 grep 이 _Anthropic API_ 표현 잔존을 못 잡았던 미스 (gcloud / 옛 환경변수 / 옛 모델명 중심으로만 grep) 를 사용자가 _9.1 파이썬으로 옮기며_ 주석에서 직접 발견. 이를 계기로 _6 가지 용어 (Anthropic / Claude / Vertex / vLLM / OpenAI / Gemini API)_ 가 _공급자 / 인터페이스 모양 / SDK_ 3 레이어로 혼재된 _개념적 큰 그림_ 정리까지 확장. 환경변수 설정도 _export → .env_ 일제 통일. 사용자와의 plan/AskUserQuestion 대화로 자리 결정 (옵션 B: 9.0 짧게 + 10.5 §0 상세). 6 commit + 1 마무리.
+
+### 12-1. 본문 Anthropic API 표현 LLM API 일반화 (`9eef23a`)
+
+Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 + 내러티브_ 까지는 안 갔던 누락분 보완.
+
+- [x] **카테고리 A — 코드 인용 docstring/주석 7 자리**: 9.1 line 234/250/277, 9.2 line 67, 9.3 line 124/130/154. mini_claude 코드 (commit `98955a8`) 와 동일 모양으로 동기화.
+- [x] **카테고리 B — 내러티브 진술 ~15 자리**: 9.1 line 64/202, 9.2 line 8/39/76/120/139/493/494/496, 9.3 line 86/98/694, 10.3 line 787, 10.7 line 84. `Anthropic API` → `LLM API (Anthropic 인터페이스)` 또는 `LLM API (Anthropic 표준)`.
+- [x] **카테고리 C — 유지** (5 자리): 9.1 line 414 (`Anthropic SDK 패키지`), 10.3 line 78/840 (secret 패턴 — 진짜 키 이름), 10.5 line 5/39 (`Anthropic 직접 API 키` — 직접 서비스 의미).
+
+### 12-2. 10.5 §0 "LLM API 가족 — 한 장 정리" 신설 (`4b14d56`, +94 줄)
+
+- [x] _3 레이어 혼재_ 표 — 6 용어 × 3 레이어 (서비스 / 인터페이스 / SDK)
+- [x] _인터페이스 가족 3 개_ 비교 — Anthropic / OpenAI / Google. endpoint, system 처리, messages 구조, tool 형식 차이
+- [x] _공급자 × 인터페이스_ 매트릭스 8 행 — Claude 호스팅 4 (Anthropic 직접 / Vertex / Bedrock / Foundry), Gemini 2 (Vertex Gemini / AI Studio), OpenAI/vLLM 2
+- [x] ⚠️ Vertex 두 모양 공존 — Claude 코너 (Anthropic 인터페이스) + Gemini 코너 (Google 인터페이스), 같은 GCP project / SA JSON
+- [x] _카페 메뉴판_ 비유 — 직영점 / 스타벅스 / 제휴 카페, 스타벅스 안 _두 코너_
+- [x] mini 결정 (두 family) + ⚙️ Gemini 향후 확장 (vLLM 어댑터 패턴 그대로 _Google 모양 → Anthropic 모양_ 변환 시 추가 가능)
+
+### 12-3. 9.0 SETUP 큰 그림 단락 + 10.5 §0 링크 (`a92cbd3`)
+
+- [x] SETUP.md 의 _## 왜 Vertex 의 Claude 인가 — 큰 그림_ 한 단락 추가 (전제 직전)
+- [x] LLM API 두 레이어 (공급자 vs 인터페이스) 짧은 설명 + mini 기본 결정 근거 (Anthropic 직접 API 키 없이도 GCP project + SA JSON 으로 시작 가능)
+- [x] 💡 콜아웃 — _다른 옵션 매트릭스는 §10.5 §0 참조_ 링크
+
+### 12-4. §0 시각화 ASCII → 표 (`5676783`, `c66f2f6`)
+
+- [x] _인터페이스 가족은 3 개_ 의 ASCII 박스 3 칸 → markdown 표 7 행 × 3 가족 (`5676783`). 행 단위 _같은 차원_ 비교 가능. 11+/16-
+- [x] _혼동 자리 — Vertex 두 코너_ 의 ASCII 중첩 박스 → markdown 표 4 행 × 2 코너 + `publisher 경로` 행 보강 (`c66f2f6`). _Model Garden opt-in_ 명시. 8+/16-
+
+### 12-5. 환경변수 export → .env 통일 (`b68e8a9` + 이번 commit)
+
+- [x] **mini_claude 코드** — `main.py _check_environment()` 의 3 에러 메시지 (Vertex / vLLM / Anthropic) `export ...` → `.env 파일에 추가 (SETUP.md §2 참조)` + 변수 들여쓰기
+- [x] **본문 6 자리** — 9.1 line 367-373 (stub 에러), 10.5 line 131-134/152-154 (시나리오 ①/②), 10.5 line 442-445 (`_check_environment` 인용), 10.5 line 619-621/647-650 (진짜 Vertex/vLLM 시나리오). 시나리오 셸 = `cat mini_claude/.env` + 변수 + `uv run mini-claude` (python-dotenv 자동 로드 주석)
+- [x] **GOOGLE_APPLICATION_CREDENTIALS 상대 경로** — `/path/to/sa.json` 또는 `/Users/me/keys/sa.json` → `secrets/your-sa-key.json` (Phase 10-3 의 _프로젝트 내 secrets/_ 정책)
+- [x] **SETUP.md vLLM 섹션** — 마지막 잔존 (line 104-110) `.env` 흐름으로 정리 (이번 commit)
+
+### 12-6. 정합성 점검 결과 + 후행 기록
+
+- [x] `grep "export [A-Z_]*=" content/claude_code/{09,10}_*.md` — 0 잔존
+- [x] `uv run ruff check src/` — All checks passed (코드 회귀 없음)
+- [x] 1차 + 후행 grep + 본문 통독 후 잔존 자리 모두 픽스 (`gcloud` / `GOOGLE_CLOUD_PROJECT` / `CLOUD_ML_REGION` 의 남은 자리는 모두 _fallback chain 정상_ 또는 _Anthropic SDK fallback 의도 설명_)
+- [x] **TODO 등재** — 이 Phase 12 섹션 자체 (이번 commit)
+
+---
+
