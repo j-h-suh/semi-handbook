@@ -850,3 +850,56 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 13: 학습자 누적 시뮬 13/13 PASS + 1:1 diff 검증 + 본문 막힘 자리 픽스 *(✅ 완료)*
+
+2026-05-23 사용자 _학습자 누적 시뮬 재실행_ 요청. 처음에는 _현재 mini_claude 코드 베이스_ 의 _대표 7 시나리오_ 만 실행 (sanity) — 사용자가 _"끝까지 가본 건가요?"_ 지적 → _13 챕터 진짜 누적_ (각 시점에 _본문에서 발췌한 코드_ 만으로 mini_claude/ 디렉토리 누적 + 실행) 으로 재진행. 13/13 PASS 후 사용자가 _불완전_ 의 뜻을 물으며 _1:1 diff 검증_ 까지 진행 — agent 가 _누적 카피하면서 본문과 다른 _최종 코드_ 를 가져온 자리_ = _학습자 막힘 후보_ 분류.
+
+### 13-1. 학습자 누적 시뮬 13 시점 PASS
+
+- [x] **9.1 stub NotImplementedError** — main.py + agent.py(NotImplementedError + yield stub) + 7 파일 스캐폴드 + .env + secrets symlink + uv sync → query() async for → NotImplementedError 의도된 에러
+- [x] **9.2 단순 응답** — messages.py 교체 (add_user/add_assistant), tools/base.py 단순화 (input_schema dict), EchoTool 신규, agent.py 본격 구현, main.py 정리 → Vertex "한 줄 인사" → end_turn (turns=2)
+- [x] **9.3 Bash 도구** — tools/{read,write,bash,edit}.py 4 신규 + Pydantic input_model + ToolContext.read_files → 4 도구 등록 + Read read_only=True
+- [x] **9.4 권한 게이트** — permissions.py 4단계 check (deny → allow → auto-read → ask) + ToolContext.permissions → 4 분기 모두
+- [x] **9.5 스트리밍 + AgentTool** — query() async generator + TextDelta/ToolUseStarted/TurnDone + AgentTool sub-agent
+- [x] **10.1 슬래시 명령** — frontmatter 파싱 + $1/$ARGUMENTS/$name 치환 → /hello Alice 시나리오
+- [x] **10.2 Skills/SkillTool** — Skill 디렉토리 + listing/call + when_to_use 노출
+- [x] **10.3 Hook** — HookEngine 빈/실 registry + PreToolUse deny + alias
+- [x] **10.4 MCP** — MCPToolDef→Pydantic + create_mcp_tool (Tool Protocol) + load_mcp_config
+- [x] **10.5 make_client** — vertex/vllm/unknown 분기 + get_default_model + agent 의 client/model 인자
+- [x] **10.6 AGENT.md spec** — AgentSpec dataclass + AgentTool 메뉴 + 도구 필터
+- [x] **10.7 message_queue** — push/drain FIFO + agent.py 합류 자리
+- [x] **10.8 teams** — coordinator(빈 wait_all_idle + singleton) + mailbox(deliver/drain/history) + identity(ContextVar 격리) + TeamTool import
+- [x] **진행 방식** — 9.1, 9.2, 10.8 은 메인 직접; 9.3 ~ 10.7 은 general-purpose agent 위임 (10 챕터 × 본문 발췌 + 누적 + sim 스크립트, 22 분 240 tool uses)
+
+### 13-2. 1:1 diff 검증 — 카테고리 A 학습자 막힘 자리 발견 (commit `796d823`, `784db0b`)
+
+- [x] _누적 디렉토리 (작동 PASS) ↔ 본문 코드 블록_ 1:1 일치 검증 (agent 위임, 70+ 자리 비교, 9 분 115 tool uses)
+- [x] **카테고리 A 진단 4 건** + 메인 직접 verify (3 자리는 본문 코드 _진짜 깨짐_, 1 건은 분류 오류 — 진짜는 카테고리 B):
+  - 10.4 `MCPToolWrapper` NameError — _dataclass + 동명 클로저 default_ 가 Python class body scope 함정 → import 즉시 NameError. `python3 -c "..."` 실험 확인. 회피 = alias 변수 (_input_model 등) + 일반 class. ⚠️ 콜아웃 추가 (commit `796d823`)
+  - 9.5 `ToolContext(cwd=cwd)` — 9.4 본문이 ToolContext 정의 변경 + 생성 변경 _코드로 명시 안 함_ (주석만). _권한 위임 깨짐_ 우려. 9.4 본문 _코드 블록 두 자리_ 추가 (정의 + 생성) + 9.5 본문도 permissions 인자 합류
+  - 9.5 `state.add_assistant(response.content)` — SDK Pydantic 객체 직접 (9.2~9.4 의 dict 패턴과 불일치). SDK 가 양쪽 받아 운 좋게 작동했지만 일관성 깨짐. content_blocks 변환 + dict 접근 모두 통일 (commit `784db0b`)
+
+### 13-3. 카테고리 B 보강 — 학습자 추론 부담 자리 (commit `679e0d3`)
+
+- [x] **10.3** query() 시그니처 변경 명시 (`hooks: HookEngine | None = None`) — 기존엔 본문 _다른 자리에 짧게 언급_ 만, _코드 블록 없음_
+- [x] **10.5** Part 10 main.py 누적 안내 (10.1~10.8 각 챕터가 _변경분만_ 보여줌; 통합본은 `mini_claude/src/mini_claude/main.py` 한 자리 — 학습자가 _누적 결과_ 참조 가능)
+- [x] **10.6** agents/__init__.py 패키지 export 코드 블록 (tools/agent.py 가 `from ..agents import AgentSpec` 로 가져갈 수 있도록)
+- [x] **10.6** AgentTool description 의 _9.5 그대로_ 문자열 명시 (기존 `...` 줄임 풀기)
+- [x] **10.6** AgentTool.call() 의 ⑥ 결과 회수 코드 완전 (기존 `...` 풀기 — fallback 텍스트 블록 합치기 11 줄)
+- [x] **10.8** `_last_assistant_text()` 헬퍼 코드 블록 추가 (`_notify_lead_on_idle` 가 호출하는데 정의가 본문에 _누락_ 됐던 자리)
+- [x] **10.8** TeamTool 보조 메서드 (__post_init__/_find_spec/_filter_tools/permission_summary/is_read_only/is_destructive) 가 _10.6 AgentTool 시그니처 그대로_ 임 명시 + 전체 모양은 `mini_claude/src/mini_claude/tools/team.py` 참조 안내
+
+### 13-4. 수정 후 시뮬 재검증
+
+- [x] **10.4 sim 재실행** — 누적 모양 = 수정된 본문 모양 → PASS 유지 (수정된 본문 그대로 학습자가 만들면 작동 확인)
+- [x] **9.5 sim 재실행** — PASS 유지
+
+### 13-5. 종합
+
+- [x] **카테고리 A (학습자 막힘) 1 건** = 10.4 NameError 만 _진짜 import 실패_. 나머지 _SDK 양쪽 받기_ 같은 자리는 _운 좋게 작동_ 이지만 _일관성 깨짐_ 으로 같이 정리
+- [x] **카테고리 B (학습자 추론 부담) 6 자리** 본문 보강
+- [x] **카테고리 C (formatter / docstring / 공백) ~25 자리** 무시 — 작동 영향 없음
+- [x] worktree 정리 (시뮬 worktree `learner-sim-cumulative` remove, 작업 worktree `book-coverage-fix` 는 push 후 정리)
+
+---
+
