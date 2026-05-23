@@ -30,6 +30,7 @@ const FileReadFlow = dynamic(() => import('./FileReadFlow'), { ssr: false });
 const BashCommandSplit = dynamic(() => import('./BashCommandSplit'), { ssr: false });
 const ChatInputFlow = dynamic(() => import('./ChatInputFlow'), { ssr: false });
 const SlashCommandFlow = dynamic(() => import('./SlashCommandFlow'), { ssr: false });
+const AsyncGeneratorMerge = dynamic(() => import('./AsyncGeneratorMerge'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
@@ -58,4 +59,5 @@ export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/03_5/bash_command_split.svg': BashCommandSplit,
     '/content/claude_code/images/04_1/chat_input_flow.svg': ChatInputFlow,
     '/content/claude_code/images/04_1/slash_command_flow.svg': SlashCommandFlow,
+    '/content/claude_code/images/00_2/async_generator_merge.svg': AsyncGeneratorMerge,
 };
