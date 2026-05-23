@@ -266,10 +266,41 @@ export async function getMiniClaudeSetupData(): Promise<Chapter> {
   return {
     id: 'setup',
     title,
-    part: 'mini_claude',
+    part: 'Part 9: 미니 Claude Code',
     content: fixedBoldContent,
     lastUpdated,
     commitHistory,
     ...matterResult.data,
   };
+}
+
+/* ─── claude 사이드바: SETUP.md 를 Part 9 첫 자리(9.0) 로 끼워넣기 ─── */
+
+export function getSortedClaudeChaptersWithSetup(): ChapterMeta[] {
+  const chapters = getSortedChapters('claude');
+
+  // SETUP.md 의 H1 에서 title 추출 (사이드바 표시용)
+  let setupTitle = '9.0 학습자 환경 설정';
+  try {
+    const setupPath = path.join(
+      process.cwd(),
+      'content', 'claude_code', 'mini_claude', 'SETUP.md'
+    );
+    const setupContents = fs.readFileSync(setupPath, 'utf8');
+    const match = setupContents.match(/^#\s+(.*)/m);
+    if (match) setupTitle = match[1].trim();
+  } catch {
+    // SETUP.md 가 없으면 기본 title 그대로
+  }
+
+  const setupMeta: ChapterMeta = {
+    id: 'setup',
+    title: setupTitle,
+    part: 'Part 9: 미니 Claude Code',
+  };
+
+  // 09_ 첫 자리 *직전* 에 삽입 — Part 9 그룹 안의 첫 항목이 됨
+  const idx = chapters.findIndex(c => c.id.startsWith('09_'));
+  if (idx === -1) return [...chapters, setupMeta];
+  return [...chapters.slice(0, idx), setupMeta, ...chapters.slice(idx)];
 }

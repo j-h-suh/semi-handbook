@@ -4,7 +4,7 @@ import './globals.css';
 import 'katex/dist/katex.min.css';
 import ClientLayout from '@/components/ClientLayout';
 import { buildSearchData } from '@/lib/searchIndex';
-import { getSortedChapters } from '@/lib/markdown';
+import { getSortedChapters, getSortedClaudeChaptersWithSetup } from '@/lib/markdown';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   const semiChapters = getSortedChapters('semi');
   const statsChapters = getSortedChapters('stats');
-  const claudeChapters = getSortedChapters('claude');
+  const claudeChapters = getSortedClaudeChaptersWithSetup();
 
   return (
     <html lang="ko" className="dark">
