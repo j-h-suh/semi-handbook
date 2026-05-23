@@ -1551,3 +1551,45 @@ Phase 19 의 _후행_ 에서 _"변환 완료 후 lang === 'text' 분기 제거"_
 
 ---
 
+## Phase 31: 숨은 ASCII 모식도 발굴 — 00_2 + 06_3 *(✅ 완료, 후행 자리 큼)*
+
+2026-05-23 사용자 지적 — _box-drawing 외 형식_ (숫자 흐름 / 화살표 시퀀스) 의 _ASCII 모식도_ 가 _여기저기 숨어 있음_. Phase 30 의 _box-drawing grep_ 만 했던 자리 _재발굴_.
+
+### 31-1. 발굴 결과 — 진짜 다이어그램 후보 ~20 자리
+
+| 챕터 | 자리 | 우선순위 | 상태 |
+|---|---|---|---|
+| 00_2 | line 65 이벤트 루프 5 단계 무한 반복 | ★★★ | ✅ 변환 (`EventLoopAlgorithm`) |
+| 06_3 | line 21 권한 모드 4 순환 (Default → Accept → Plan → Bypass) | ★★★ | ✅ 변환 (`PermissionModeCycle`) |
+| 02_1 | line 25 _10 단계 한 턴_ (숫자 리스트 + 토큰 흐름) | ★★ | _다음 batch_ |
+| 02_1 | line 79 _내부 루프 복구 경로_ (4 자리 list) | ★★ | _다음 batch_ |
+| 02_1 | line 105 _호출 관계_ (사용자 입력 → query.ts → ...) | ★★ | _다음 batch_ |
+| 02_1 | line 160 _턴 시퀀스_ ([API 호출 1] → [도구] → [API 호출 2] → …) | ★★ | _다음 batch_ |
+| 02_2 | line 119 _스트리밍 [API 서버]_ | ★★ | _다음 batch_ |
+| 02_2 | line 463 _query() wrapper 레이어_ | ★★ | _다음 batch_ |
+| 02_3 | line 219 _원본 메시지 (200K 토큰) 압축 자리_ | ★★ | _다음 batch_ |
+| 03_4 | line 18 _FileRead 사용자 본 것/내부_ | ★★ | _다음 batch_ |
+| 03_5 | line 21 _BashTool 분류 (읽기/쓰기/위험)_ | ★ | _다음 batch_ |
+| 04_1 | line 45, 64 _플로우 자리_ | ★ | _다음 batch_ |
+| 04_2 | line 253 _명령 타입 (prompt / local-jsx / local) 호출 흐름_ | ★★ | _다음 batch_ |
+| 04_2 | line 396 _결정 트리 (질문 1~3)_ | ★★ | _다음 batch_ |
+| 04_3 | line 183 _allowedTools 턴별 슬롯 갱신_ | ★★ | _다음 batch_ |
+| 05_1 | line 58 _Ink diff 파이프라인_ | ★★ | _다음 batch_ |
+| 05_1 | line 211 _Reconcile → Yoga 노드 부착 → Diff → Flush_ | ★★ | _다음 batch_ |
+| 05_4 | line 137 _prev / next diff_ | ★ | _다음 batch_ |
+| 05_4 | line 185 _캐시 hit/miss_ | ★ | _다음 batch_ |
+| 06_6 | line 533 _executePreToolHooks 7 단계_ | ★★ | _다음 batch_ |
+| 11 | _아직 미확인_ | ? | _다음 batch_ |
+
+→ **~18 자리 더** 가능. _점진 batch_ 로 진행.
+
+### 31-2. 변환 (commit `593c993`)
+
+- 00_2 EventLoopAlgorithm + 06_3 PermissionModeCycle. claudeRegistry 17 자리 누적.
+
+### 31-3. 누적 17 자리
+
+기존 15 + 이번 2 = **17 자리**
+
+---
+
