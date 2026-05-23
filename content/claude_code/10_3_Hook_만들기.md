@@ -784,7 +784,7 @@ mini 는 셋 다 OUT.
 
 ### 결과 머지 — `addToolResultSystemMessage`
 
-PostToolUse 의 `additionalContext` 는 *시스템 메시지* 로 추가된다 (`hooks.ts:1834`). 이게 *다음 LLM 호출의 messages 배열에* `{role: "system", content: "..."}` 형식으로 끼어든다. 진짜 messages 배열의 *중간* 에 끼는 게 가능한 건 Anthropic API 의 *messages 배열에 system 역할이 허용되는 일부 모드* 가 있어서. mini 는 도구 결과 안에 prepend 하는 단순한 방식.
+PostToolUse 의 `additionalContext` 는 *시스템 메시지* 로 추가된다 (`hooks.ts:1834`). 이게 *다음 LLM 호출의 messages 배열에* `{role: "system", content: "..."}` 형식으로 끼어든다. 진짜 messages 배열의 *중간* 에 끼는 게 가능한 건 LLM API (Anthropic 인터페이스) 의 *messages 배열에 system 역할이 허용되는 일부 모드* 가 있어서. mini 는 도구 결과 안에 prepend 하는 단순한 방식.
 
 ### 압축 비율 정리
 
