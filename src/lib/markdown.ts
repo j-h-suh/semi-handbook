@@ -62,7 +62,7 @@ const SERVER_CONFIGS: Record<Book, BookServerConfig> = {
       if (id.startsWith('06_')) return 'Part 6: 설정·권한·Hook';
       if (id.startsWith('07_')) return 'Part 7: 외부 연결';
       if (id.startsWith('08_')) return 'Part 8: 멀티 에이전트';
-      if (id.startsWith('09_')) return 'Part 9: 미니 Claude Code';
+      if (id.startsWith('09_')) return 'Part 9: 미니 클로드';
       if (id.startsWith('10_')) return 'Part 10: 확장하기';
       if (id.startsWith('11_')) return '에필로그';
       return '기타';
@@ -272,7 +272,7 @@ export async function getMiniClaudeSetupData(): Promise<Chapter> {
   return {
     id: 'setup',
     title,
-    part: 'Part 9: 미니 Claude Code',
+    part: 'Part 9: 미니 클로드',
     content: fixedBoldContent,
     lastUpdated,
     commitHistory,
@@ -302,7 +302,7 @@ export function getSortedClaudeChaptersWithSetup(): ChapterMeta[] {
   const setupMeta: ChapterMeta = {
     id: 'setup',
     title: setupTitle,
-    part: 'Part 9: 미니 Claude Code',
+    part: 'Part 9: 미니 클로드',
   };
 
   // 09_ 첫 자리 *직전* 에 삽입 — Part 9 그룹 안의 첫 항목이 됨
