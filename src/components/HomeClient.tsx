@@ -87,7 +87,7 @@ export default function HomeClient({ bookMetas }: Props) {
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 w-full">
             <div className="min-h-full flex flex-col justify-center">
-                <div className="max-w-3xl mx-auto w-full px-4 py-8 md:px-8 md:py-16 lg:px-12">
+                <div className="max-w-4xl mx-auto w-full px-4 py-8 md:px-8 md:py-16 lg:px-12">
 
                 {/* Hero */}
                 <div className="text-center mb-12 md:mb-16">

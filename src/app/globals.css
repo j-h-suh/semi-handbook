@@ -17,7 +17,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  /* font-family 는 layout.tsx 의 next/font (Inter) 가 className 으로 적용. */
 }
 
 /* Custom Scrollbar */
@@ -49,19 +49,27 @@ body {
 /* Markdown Typography - Notion Style */
 .prose {
   color: #d4d4d8;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
+/* 헤딩 — Mintlify 결: 타이트한 letter-spacing 으로 단단한 톤 */
+.prose h1 {
+  letter-spacing: -0.025em;
+}
+.prose h2,
+.prose h3 {
+  letter-spacing: -0.015em;
+}
 
-/* Accent for inline code (Option B: Cyan accent) */
+/* Accent for inline code — teal-300 (#5eead4): 시안보다 채도 ↓, 본문에서 덜 자극 */
 .prose code {
-  color: #67e8f9;
-  background: rgba(103, 232, 249, 0.08);
+  color: #5eead4;
+  background: rgba(94, 234, 212, 0.08);
   font-weight: 500;
   font-size: 88%;
   padding: 0.15em 0.4em;
   border-radius: 4px;
-  font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+  font-family: var(--font-geist-mono), "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
 }
 
 /* Tailwind Typography 의 디폴트로 인라인 코드 앞뒤에 backtick 이 붙는데, 가독성 저해되므로 제거. */
@@ -188,7 +196,7 @@ body {
   background-color: transparent !important;
   font-size: 1rem;
   line-height: 1.65;
-  font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+  font-family: var(--font-geist-mono), "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
 }
 
 .shiki-wrapper pre.shiki code {

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import 'katex/dist/katex.min.css';
 import ClientLayout from '@/components/ClientLayout';
@@ -8,6 +8,7 @@ import { getSortedChapters, getSortedClaudeChaptersWithSetup, type ChapterMeta }
 import { BOOKS, type Book } from '@/lib/books';
 
 const inter = Inter({ subsets: ['latin'] });
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
 
 export const metadata: Metadata = {
   title: '반도체를 여행하는 세미에이아이를 위한 핸드북 시리즈',
@@ -29,7 +30,7 @@ export default function RootLayout({
 
   return (
     <html lang="ko" className="dark">
-      <body className={`${inter.className} bg-slate-950 text-slate-200 antialiased overflow-hidden selection:bg-cyan-500/30`}>
+      <body className={`${inter.className} ${geistMono.variable} bg-slate-950 text-slate-200 antialiased overflow-hidden selection:bg-cyan-500/30`}>
         {/* Main Application Container */}
         <div className="flex h-screen w-screen overflow-hidden">
           <ClientLayout searchData={buildSearchData()} chaptersByBook={chaptersByBook}>
