@@ -950,3 +950,49 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
+## Phase 15: 미니 클로드 이름 통일 (한글 우선) *(✅ 완료)*
+
+2026-05-23 사용자 — _mini-claude / mini_claude / mini Claude / 미니 에이전트 / 미니_ 등 _다양한 변형_ 호칭의 _통일_ 요청. 사용자 결정: _영어가 필요없는 자리에는 한글만_ + _챕터 이름, 파트 이름 포함 핸드북 전체_.
+
+### 15-1. 표기 규칙 — 4 줄
+
+| 자리 | 표기 |
+|---|---|
+| 내러티브 / 본문 / 챕터 제목 / Part 이름 | **미니 클로드** (조사 자유) |
+| CLI 명령 인용 (실행할 명령) | `` `mini-claude` `` (코드 폰트) |
+| import / 디렉토리 / 파일 경로 인용 | `` `mini_claude/` `` / `` `from mini_claude.agent import query` `` (코드 폰트) |
+| 코드 블록 내부 (`````python` 안) | 변경 _없음_ — 코드 그대로 |
+
+### 15-2. 본문 19 파일 145 자리 통일 (commit `eea5dec`)
+
+- general-purpose agent 위임 (~25 분, 219 tool uses)
+- Part 0/06/09/10/11 + mini_claude/SETUP.md + mini_claude/README.md
+- 변경 자리:
+  - `mini Claude` (공백+대문자) 2 자리 → _미니 클로드_
+  - `미니 에이전트` 6 자리 → _미니 클로드_ (09_1 H1 제목 포함)
+  - _내러티브 자리_ 의 `mini-claude` / `mini_claude` / 기타 `미니` → _미니 클로드_
+- 변경 _안 함_:
+  - 코드 폰트 / 코드 블록 / pyproject / 디렉토리 / import / `~/.mini_claude/` 컨벤션 / `print("mini-claude 시작 ...")` _사용자 친화 출력_
+  - _부사적 "X의 미니 버전"_ (예: createSubagentContext 의 미니 버전, Python 미니 버전) — _미니 클로드와 무관한 축소판 의미_
+
+### 15-3. markdown.ts Part 9 이름 3 자리 (commit `7311a9b`)
+
+- `getPartFromId('09_')` 분기 (line 65)
+- `getMiniClaudeSetupData()` 의 `part` 필드 (line 275)
+- `getSortedClaudeChaptersWithSetup()` 의 setupChapter `part` 필드 (line 305)
+
+모두 `'Part 9: 미니 Claude Code'` → `'Part 9: 미니 클로드'`. 사이드창 part 헤더 통일.
+
+### 15-4. 검증
+
+- 잔존 grep — `mini Claude` / `미니 에이전트` / `미니 Claude Code` 모두 _0 자리_
+- TS check — clean
+- 회귀 — 코드 자리 변경 _없음_ → `uv run mini-claude` 실행 영향 _없음_
+
+### 15-5. 후행 자리
+
+- _영문 브릿지 도입_ (예: `**미니 클로드** (mini-claude)`) — 학습자 피드백으로 _명령과 연결 안 됨_ 발견 시 _첫 등장 자리에만_ 추가
+- _부사적 "미니 버전" 자리_ — 81 자리 중 _대부분 보존_, 학습자 피드백 따라 _문맥 보강_ 가능
+
+---
+
