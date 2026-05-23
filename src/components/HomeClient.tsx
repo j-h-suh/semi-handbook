@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, ArrowRight, Cpu, TrendingUp, Terminal } from 'lucide-react';
+import { BookOpen, Cpu, TrendingUp, Terminal } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { BOOKS, type Book, type IconName, type AccentName, type BookMeta } from '@/lib/books';
 
@@ -79,9 +79,6 @@ function BookRow({ book, meta }: { book: BookMeta; meta: string }) {
                 </p>
                 <span className="text-xs text-slate-600">{meta}</span>
             </div>
-            <span className={`text-sm ${c.linkText} group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0`}>
-                읽기 <ArrowRight size={14} />
-            </span>
         </Link>
     );
 }

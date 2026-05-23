@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal, X, PanelLeftClose } from 'lucide-react';
+import { BookOpen, Settings, BookText, Search, ChevronDown, Cpu, TrendingUp, Terminal, X, PanelLeftClose } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { BOOKS, getBookMeta, type Book, type IconName, type AccentName } from '@/lib/books';
 import type { ChapterMeta } from '@/lib/markdown';
@@ -213,17 +213,6 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 >
                     <BookText size={16} />
                     <span>용어 사전</span>
-                </Link>
-                <Link
-                    href="/board"
-                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
-                        pathname === '/board'
-                            ? 'bg-cyan-500/10 text-cyan-400 font-medium border border-cyan-500/20'
-                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                    }`}
-                >
-                    <MessageSquare size={16} />
-                    <span>게시판</span>
                 </Link>
                 <button
                     className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors"
