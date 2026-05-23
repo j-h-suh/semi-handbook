@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BookOpen, Settings, BookText, Search, MessageSquare, ChevronDown, Cpu, TrendingUp, Terminal, X, PanelLeftClose } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { BOOKS, getBookConfig, type Book, type ChapterMeta, type IconName, type AccentName } from '@/lib/markdown';
+import { BOOKS, getBookMeta, type Book, type IconName, type AccentName } from '@/lib/books';
+import type { ChapterMeta } from '@/lib/markdown';
 
 const ICON_MAP: Record<IconName, LucideIcon> = {
     'cpu': Cpu,
@@ -49,7 +50,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
     }, [pathname, onClose]);
     const activeBook: Book = userOverride ?? detectedBook ?? BOOKS[0].id;
 
-    const activeBookConfig = getBookConfig(activeBook);
+    const activeBookConfig = getBookMeta(activeBook);
     const chapters = chaptersByBook[activeBook] ?? [];
     const routePrefix = activeBookConfig.route;
     const ActiveIcon = ICON_MAP[activeBookConfig.iconKey];

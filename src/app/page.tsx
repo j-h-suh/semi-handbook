@@ -1,4 +1,5 @@
-import { BOOKS, getSortedChapters, type Book } from '@/lib/markdown';
+import { getSortedChapters } from '@/lib/markdown';
+import { BOOKS, type Book } from '@/lib/books';
 import glossary from '@/lib/glossary';
 import HomeClient from '@/components/HomeClient';
 import path from 'path';

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { BookOpen, ArrowRight, Cpu, TrendingUp, Terminal } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { BOOKS, type Book, type IconName, type AccentName, type BookConfig } from '@/lib/markdown';
+import { BOOKS, type Book, type IconName, type AccentName, type BookMeta } from '@/lib/books';
 
 const ICON_MAP: Record<IconName, LucideIcon> = {
     'cpu': Cpu,
@@ -58,7 +58,7 @@ interface Props {
     bookMetas: Record<Book, string>;  // 각 책별 카드 footer 문자열 (예: "32개 챕터 · 120개 용어")
 }
 
-function BookRow({ book, meta }: { book: BookConfig; meta: string }) {
+function BookRow({ book, meta }: { book: BookMeta; meta: string }) {
     const Icon = ICON_MAP[book.iconKey];
     const c = ACCENT_CLASSES[book.accent];
     return (

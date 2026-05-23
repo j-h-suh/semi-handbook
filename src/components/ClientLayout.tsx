@@ -8,7 +8,8 @@ import SettingsModal from '@/components/SettingsModal';
 import SearchModal from '@/components/SearchModal';
 import Sidebar from '@/components/Sidebar';
 import type { SearchEntry } from '@/lib/searchIndex';
-import type { Book, ChapterMeta } from '@/lib/markdown';
+import type { Book } from '@/lib/books';
+import type { ChapterMeta } from '@/lib/markdown';
 
 interface Props {
     children: React.ReactNode;

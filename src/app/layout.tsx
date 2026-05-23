@@ -4,7 +4,8 @@ import './globals.css';
 import 'katex/dist/katex.min.css';
 import ClientLayout from '@/components/ClientLayout';
 import { buildSearchData } from '@/lib/searchIndex';
-import { BOOKS, getSortedChapters, getSortedClaudeChaptersWithSetup, type Book, type ChapterMeta } from '@/lib/markdown';
+import { getSortedChapters, getSortedClaudeChaptersWithSetup, type ChapterMeta } from '@/lib/markdown';
+import { BOOKS, type Book } from '@/lib/books';
 
 const inter = Inter({ subsets: ['latin'] });
 
