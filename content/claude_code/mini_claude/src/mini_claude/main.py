@@ -110,9 +110,10 @@ def _check_environment() -> None:
         if not has_project:
             raise SystemExit(
                 "Vertex 사용 시 VERTEX_PROJECT_ID 환경변수 필수.\n"
-                "  export VERTEX_PROJECT_ID=<your-gcp-project>\n"
-                "  export VERTEX_LOCATION=us-east5  # (선택) Claude region\n"
-                "  export GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json"
+                "  .env 파일에 추가 (SETUP.md §2 참조 — cp .env.example .env 후 편집):\n"
+                "    VERTEX_PROJECT_ID=<your-gcp-project>\n"
+                "    VERTEX_LOCATION=us-east5  # (선택) Claude region\n"
+                "    GOOGLE_APPLICATION_CREDENTIALS=secrets/your-sa-key.json"
             )
         return
 
@@ -120,9 +121,10 @@ def _check_environment() -> None:
         if "MINI_LLM_MODEL" not in os.environ:
             raise SystemExit(
                 "vLLM 사용 시 MINI_LLM_MODEL 환경변수 필수.\n"
-                "  export MINI_LLM_MODEL=<vllm 서버의 모델 이름>\n"
-                "  export VLLM_BASE_URL=http://localhost:8000/v1  # (선택)\n"
-                "  export VLLM_API_KEY=dummy  # (선택)"
+                "  .env 파일에 추가:\n"
+                "    MINI_LLM_MODEL=<vllm 서버의 모델 이름>\n"
+                "    VLLM_BASE_URL=http://localhost:8000/v1  # (선택)\n"
+                "    VLLM_API_KEY=dummy  # (선택)"
             )
         return
 
@@ -131,7 +133,7 @@ def _check_environment() -> None:
             raise SystemExit(
                 "Anthropic 직접 사용 시 ANTHROPIC_API_KEY 환경 변수 필수.\n"
                 "  https://console.anthropic.com 에서 키 발급 후 "
-                "`export ANTHROPIC_API_KEY=sk-ant-...` 로 설정."
+                ".env 파일에 `ANTHROPIC_API_KEY=sk-ant-...` 추가."
             )
         return
 
