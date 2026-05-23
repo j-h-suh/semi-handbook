@@ -6,8 +6,12 @@ import type { ComponentType } from 'react';
 
 const MiniClaudeArchitecture = dynamic(() => import('./MiniClaudeArchitecture'), { ssr: false });
 const TwoLayerAgentLoop = dynamic(() => import('./TwoLayerAgentLoop'), { ssr: false });
+const AgentLoopBranch = dynamic(() => import('./AgentLoopBranch'), { ssr: false });
+const ToolAsMicroservice = dynamic(() => import('./ToolAsMicroservice'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
     '/content/claude_code/images/02_1/two_layer_loop.svg': TwoLayerAgentLoop,
+    '/content/claude_code/images/00_1/agent_loop_branch.svg': AgentLoopBranch,
+    '/content/claude_code/images/03_1/tool_as_microservice.svg': ToolAsMicroservice,
 };
