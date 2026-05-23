@@ -18,7 +18,7 @@ class ConversationState:
         self.messages.append({"role": "assistant", "content": content})
 
     def to_api_format(self) -> list[dict[str, Any]]:
-        """Anthropic API가 받는 형식 — 우리는 이미 그 형식으로 저장 중."""
+        """LLM API가 받는 형식 (Anthropic 표준; Vertex/vLLM 어댑터도 동일) — 우리는 이미 그 형식으로 저장 중."""
         return self.messages
 
     def __len__(self) -> int:

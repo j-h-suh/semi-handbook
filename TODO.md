@@ -789,22 +789,16 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 1차 grep 으로 식별된 자리 (8개) — Anthropic API 단독 가정 / 옛 환경변수 / 옛 모델명 흔적:
 
 **옛 환경변수 fallback 의 의도 — 명시적으로 _안전망_ 임을 표현**
-- [ ] **`src/mini_claude/clients/__init__.py` line 56-66** — `GCLOUD_PROJECT` / `GOOGLE_CLOUD_PROJECT` / `CLOUD_ML_REGION` fallback 이 _Anthropic SDK 표준 호환_ 의 의도임은 docstring 에 잘 적혀 있음 (line 35-36). 정상 — _이 자리는 두는 것이 맞음_, 다만 본문 (10.5) 의 인용에서 이 _fallback 의 의도_ 가 _옛 이름이 살아 있다는 의미가 아님_ 을 명시.
+- [x] **`src/mini_claude/clients/__init__.py` line 56-66** — `GCLOUD_PROJECT` / `GOOGLE_CLOUD_PROJECT` / `CLOUD_ML_REGION` fallback 이 _Anthropic SDK 표준 호환_ 의 의도임은 docstring 에 잘 적혀 있음 (line 35-36). 정상 — _이 자리는 두는 것이 맞음_. 10.5 본문 (line 217 직후) 에 ⚙️ 콜아웃 한 줄로 _fallback chain 의 의도_ (gcloud CLI / Cloud Run / Cloud Functions 가 각자 다른 GCP 환경변수 이름을 쓰는 현실 흡수) 명시.
 
 **docstring 표현 다듬기 (학습자 혼동 줄이기, 우선순위 낮음)**
-- [ ] **`src/mini_claude/messages.py:21`** — `"""Anthropic API가 받는 형식 — 우리는 이미 그 형식으로 저장 중."""` 표현. _Vertex/vLLM 어댑터도 같은 인터페이스_ 라는 사실이 9.2/10.5 에 가야 드러남. 짧게 "(Anthropic 인터페이스 — Vertex/vLLM 도 같은 형식)" 보강 검토.
-- [ ] **`src/mini_claude/tools/base.py:20, 26, 54`** — "Anthropic API한테 보이는", "Anthropic API가 받는 형식" 표현이 _도구 스키마 형식_ 의 사실 진술임은 정확. 그러나 학습자가 _Anthropic 직접 API 키 = Anthropic API_ 로 혼동할 여지. 표현 다듬기 (예: "LLM API한테 보이는 — Anthropic 형식이지만 Vertex/vLLM 어댑터도 같은 형식 흉내").
+- [x] **`src/mini_claude/messages.py:21`** — `"Anthropic API"` → `"LLM API"` + `"(Anthropic 표준; Vertex/vLLM 어댑터도 동일)"` 보강.
+- [x] **`src/mini_claude/tools/base.py:20, 26, 54`** — 세 자리 모두 `"Anthropic API"` → `"LLM API"` 치환. line 20 + 54 는 `"(Anthropic 형식, Vertex/vLLM 동일)"` 보강.
 
 **진짜 누락 / 옛 표현 일제 점검 — 28 파일 전수**
-- [ ] **모든 docstring + 주석** 에서 _옛 표현_ 흔적 일제 점검:
-    - `Anthropic API` 단독 (Vertex/vLLM 미언급) — 위 1차 grep 외 추가 자리
-    - `ANTHROPIC_API_KEY` 단독 가정 (provider 분기 미고려)
-    - 옛 환경변수 (`GOOGLE_CLOUD_PROJECT`, `CLOUD_ML_REGION`) — fallback 이 아닌 _기본 가정_ 자리
-    - `gcloud` ADC 표현의 잔존 (`gcloud auth application-default login` 등)
-    - 옛 모델명 (`claude-opus-4-6` 외의 _구버전_ 모델명, `@20250805` 접미 없는 자리 등)
-    - `AsyncAnthropic` 직접 import (Vertex 가 기본 자리에서 _안전망 없이_ 직접 호출)
-- [ ] **본문 챕터 (00 ~ 11) 도 동일 grep** — Phase 10 의 _Vertex 기본 + .env_ 정책이 _본문 다른 자리_ 에도 일관되게 반영됐는지. 11-1/11-2 가 통독으로 발견된 자리고, 일제 grep 으로 _못 찾은 미세한 자리_ 가 있을 가능성.
-- [ ] **누적 검증** — 위 픽스 후 학습자 시뮬 (`$CLAUDE_JOB_DIR/learner_sim`) 재실행 — Phase 9 의 13 챕터 시나리오 + Phase 10 의 4 변수 환경이 _여전히 4/4 PASS_ 인지 확인.
+- [x] **모든 docstring + 주석** 에서 _옛 표현_ 흔적 일제 점검 — Explore 에이전트 grep 결과 _새 잔존 0건_. 1차 grep 으로 식별된 4 자리 (messages.py:21, tools/base.py:20/26/54) 외 추가 자리 없음. gcloud / 옛 모델명 / ANTHROPIC_API_KEY 단독 가정 / 옛 환경변수 기본 가정 / AsyncAnthropic 단독 import — 모두 _발견 없음_ 또는 _정상 안전망_.
+- [x] **본문 챕터 (09 ~ 11 + SETUP.md) 동일 grep** — Explore 에이전트 grep 결과 _진짜 잔존 0건_. 11-1/11-2 픽스 (commit `67ba225`, `da1e5f4`) 로 모든 잔존 정리됨. Phase 10 정책 _전면 일관_ — Vertex 기본, .env + SA JSON, MINI_LLM_PROVIDER 분기. 00~08 챕터는 _배경지식 / 진짜 Claude Code 분석_ 으로 이 라운드 범위 밖.
+- [x] **누적 검증 (가벼운 sanity check)** — `uv run python -c "from mini_claude.* import ..."` import 검증 OK + `default_tool_pool()` 4 도구 / 4 스키마 정상 생성. _진짜 Vertex 호출 검증_ (Phase 9 의 13 챕터 시나리오) 은 _이번 변경이 docstring + 본문 콜아웃 뿐 (기능 불변)_ 이라 별도 라운드. ruff 3 errors (teams 모듈 unused import) 는 _이번 변경과 무관_, _별도 라운드 후보_.
 
 ---
 
