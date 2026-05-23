@@ -63,7 +63,7 @@ export default function AsyncGeneratorMerge() {
                 여러 비동기 흐름 → query.ts (yield*) → UI
             </h3>
             <p style={{ color: COLOR.textDim, fontSize: FONT.subtitle, marginBottom: 12 }}>
-                에이전트 루프 전체를 단 하나의 비동기 제너레이터 로 — 소비자는 값의 흐름만 본다
+                에이전트 루프 전체를 단 하나의 비동기 제너레이터로 — 소비자는 값의 흐름만 본다
             </p>
 
             <div
