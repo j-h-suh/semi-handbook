@@ -61,7 +61,7 @@ export default function TurnApiSequence() {
                     <div
                         key={c.n}
                         style={{
-                            border: `1px solid ${c.endTurn ? CLAUDECOLOR.accent : CLAUDECOLOR.accentBorder}`,
+                            border: `1px solid ${c.endTurn ? CLAUDE_COLOR.accent : CLAUDE_COLOR.accentBorder}`,
                             background: CLAUDE_COLOR.accentBg,
                             borderRadius: 8,
                             padding: '10px 14px',
