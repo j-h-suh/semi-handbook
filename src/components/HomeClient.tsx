@@ -2,22 +2,95 @@
 
 import Link from 'next/link';
 import { BookOpen, ArrowRight, Cpu, TrendingUp, Terminal } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { BOOKS, type Book, type IconName, type AccentName, type BookConfig } from '@/lib/markdown';
+
+const ICON_MAP: Record<IconName, LucideIcon> = {
+    'cpu': Cpu,
+    'trending-up': TrendingUp,
+    'terminal': Terminal,
+};
+
+// Tailwind safelist 회피 — 모든 클래스 문자열을 _완전한 형태_ 로 명시.
+const ACCENT_CLASSES: Record<AccentName, {
+    cardBorder: string;
+    cardBg: string;
+    cardHoverBg: string;
+    cardHoverBorder: string;
+    iconBg: string;
+    iconBorder: string;
+    iconText: string;
+    linkText: string;
+}> = {
+    cyan: {
+        cardBorder: 'border-cyan-500/10',
+        cardBg: 'bg-cyan-500/[0.03]',
+        cardHoverBg: 'hover:bg-cyan-500/[0.06]',
+        cardHoverBorder: 'hover:border-cyan-500/25',
+        iconBg: 'bg-cyan-500/10',
+        iconBorder: 'border-cyan-500/20',
+        iconText: 'text-cyan-400',
+        linkText: 'text-cyan-400',
+    },
+    emerald: {
+        cardBorder: 'border-emerald-500/10',
+        cardBg: 'bg-emerald-500/[0.03]',
+        cardHoverBg: 'hover:bg-emerald-500/[0.06]',
+        cardHoverBorder: 'hover:border-emerald-500/25',
+        iconBg: 'bg-emerald-500/10',
+        iconBorder: 'border-emerald-500/20',
+        iconText: 'text-emerald-400',
+        linkText: 'text-emerald-400',
+    },
+    violet: {
+        cardBorder: 'border-violet-500/10',
+        cardBg: 'bg-violet-500/[0.03]',
+        cardHoverBg: 'hover:bg-violet-500/[0.06]',
+        cardHoverBorder: 'hover:border-violet-500/25',
+        iconBg: 'bg-violet-500/10',
+        iconBorder: 'border-violet-500/20',
+        iconText: 'text-violet-400',
+        linkText: 'text-violet-400',
+    },
+};
 
 interface Props {
-    semiChapterCount: number;
-    statsChapterCount: number;
-    claudeChapterCount: number;
-    totalTerms: number;
-    totalDiagrams: number;
+    bookMetas: Record<Book, string>;  // 각 책별 카드 footer 문자열 (예: "32개 챕터 · 120개 용어")
 }
 
-export default function HomeClient({
-    semiChapterCount, statsChapterCount, claudeChapterCount, totalTerms, totalDiagrams,
-}: Props) {
+function BookRow({ book, meta }: { book: BookConfig; meta: string }) {
+    const Icon = ICON_MAP[book.iconKey];
+    const c = ACCENT_CLASSES[book.accent];
+    return (
+        <Link
+            href={book.landingHref}
+            className={`group flex items-center gap-4 p-5 rounded-2xl border ${c.cardBorder} ${c.cardBg} ${c.cardHoverBg} ${c.cardHoverBorder} transition-all`}
+        >
+            <div className={`w-12 h-12 rounded-xl ${c.iconBg} border ${c.iconBorder} flex items-center justify-center ${c.iconText} shrink-0`}>
+                <Icon size={24} />
+            </div>
+            <div className="flex-1 min-w-0">
+                <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                    <h2 className="text-lg font-bold text-white">{book.fullLabel}</h2>
+                    <p className="text-xs text-slate-500">{book.subtitle}</p>
+                </div>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                    {book.description}
+                </p>
+                <span className="text-xs text-slate-600">{meta}</span>
+            </div>
+            <span className={`text-sm ${c.linkText} group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0`}>
+                읽기 <ArrowRight size={14} />
+            </span>
+        </Link>
+    );
+}
+
+export default function HomeClient({ bookMetas }: Props) {
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 w-full">
             <div className="min-h-full flex flex-col justify-center">
-                <div className="max-w-4xl mx-auto w-full px-4 py-8 md:px-8 md:py-16 lg:px-12">
+                <div className="max-w-3xl mx-auto w-full px-4 py-8 md:px-8 md:py-16 lg:px-12">
 
                 {/* Hero */}
                 <div className="text-center mb-12 md:mb-16">
@@ -36,85 +109,14 @@ export default function HomeClient({
                     </p>
                 </div>
 
-                {/* Book Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    {/* Semi Handbook */}
-                    <Link
-                        href="/semi/00_00_들어가며"
-                        className="group p-6 rounded-2xl border border-cyan-500/10 bg-cyan-500/[0.03] hover:bg-cyan-500/[0.06] hover:border-cyan-500/25 transition-all"
-                    >
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-                                <Cpu size={24} />
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-bold text-white">반도체 핸드북</h2>
-                                <p className="text-xs text-slate-500">포토리소그래피 & AI 제조</p>
-                            </div>
-                        </div>
-                        <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                            반도체 제조 공정부터 수율 공학, AI 적용까지 — 업계 선배가 전하는 실무 안내서
-                        </p>
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs text-slate-600">{semiChapterCount}개 챕터 · {totalTerms}개 용어</span>
-                            <span className="text-sm text-cyan-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                                읽기 <ArrowRight size={14} />
-                            </span>
-                        </div>
-                    </Link>
-
-                    {/* Stats Handbook */}
-                    <Link
-                        href="/stats/00_00_들어가며"
-                        className="group p-6 rounded-2xl border border-emerald-500/10 bg-emerald-500/[0.03] hover:bg-emerald-500/[0.06] hover:border-emerald-500/25 transition-all"
-                    >
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                                <TrendingUp size={24} />
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-bold text-white">통계학 핸드북</h2>
-                                <p className="text-xs text-slate-500">데이터로 일하는 모두를 위한 통계</p>
-                            </div>
-                        </div>
-                        <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                            기술통계부터 베이지안, 인과추론까지 — 실무에서 바로 쓰는 통계학 가이드
-                        </p>
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs text-slate-600">{statsChapterCount}개 챕터 · {totalDiagrams}개 다이어그램</span>
-                            <span className="text-sm text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                                읽기 <ArrowRight size={14} />
-                            </span>
-                        </div>
-                    </Link>
-
-                    {/* Claude Code Handbook */}
-                    <Link
-                        href="/claude/00_0_왜_이_책을_썼는가"
-                        className="group p-6 rounded-2xl border border-violet-500/10 bg-violet-500/[0.03] hover:bg-violet-500/[0.06] hover:border-violet-500/25 transition-all"
-                    >
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
-                                <Terminal size={24} />
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-bold text-white">클로드 핸드북</h2>
-                                <p className="text-xs text-slate-500">AI 코딩 에이전트 심층 분석</p>
-                            </div>
-                        </div>
-                        <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                            부트스트랩부터 멀티 에이전트까지 — Claude Code의 내부 구조를 해부하는 기술 핸드북
-                        </p>
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs text-slate-600">{claudeChapterCount}개 챕터</span>
-                            <span className="text-sm text-violet-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                                읽기 <ArrowRight size={14} />
-                            </span>
-                        </div>
-                    </Link>
+                {/* Book Rows — 세로 리스트, N 핸드북 자연 확장 */}
+                <div className="flex flex-col gap-3 mb-12">
+                    {BOOKS.map((book) => (
+                        <BookRow key={book.id} book={book} meta={bookMetas[book.id]} />
+                    ))}
+                </div>
 
                 </div>
-            </div>
             </div>
         </div>
     );
