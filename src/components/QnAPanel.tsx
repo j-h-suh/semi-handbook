@@ -207,13 +207,14 @@ export default function QnAPanel() {
 
     if (!isOpen) {
         return (
-            <div className="fixed bottom-4 right-4 md:top-6 md:right-6 md:bottom-auto z-50">
+            <div className="fixed bottom-4 right-4 md:top-3 md:right-3 md:bottom-auto z-50">
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-2 px-4 py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-2xl shadow-xl hover:bg-cyan-500/20 transition-all backdrop-blur-md"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00d4a4]/[0.08] border border-[#00d4a4]/25 text-[#00d4a4] rounded-lg hover:bg-[#00d4a4]/[0.15] hover:border-[#00d4a4]/40 transition-all"
+                    aria-label="AI 도움"
                 >
-                    <Bot size={20} />
-                    <span className="font-semibold text-sm">AI Assistant</span>
+                    <Bot size={14} />
+                    <span className="font-medium text-xs">AI 도움</span>
                 </button>
             </div>
         );
@@ -224,11 +225,11 @@ export default function QnAPanel() {
             {/* Resize handle */}
             <div
                 onMouseDown={handleMouseDown}
-                className="absolute left-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-cyan-500/30 transition-colors z-50"
+                className="absolute left-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-[#00d4a4]/30 transition-colors z-50"
             />
             <div className="p-4 border-b border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <Bot className="text-cyan-400" size={20} />
+                    <Bot className="text-[#00d4a4]" size={20} />
                     <h2 className="font-bold text-zinc-200">AI Assistant</h2>
                 </div>
                 <button
@@ -252,7 +253,7 @@ export default function QnAPanel() {
 
                 {messages.map((msg, idx) => (
                     <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-indigo-500/20 text-indigo-400' : 'bg-cyan-500/20 text-cyan-400'
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-[#00b48a]/25 text-[#00d4a4]' : 'bg-[#00d4a4]/15 text-[#00d4a4]'
                             }`}>
                             {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
                         </div>
@@ -278,7 +279,7 @@ export default function QnAPanel() {
                             {msg.content && (
                                 <div
                                     className={`px-4 py-2 rounded-2xl text-sm leading-relaxed prose prose-invert max-w-none prose-p:my-1 prose-pre:my-2 prose-h3:text-sm prose-h3:mt-3 prose-h3:mb-1 ${msg.role === 'user'
-                                        ? 'bg-indigo-600 text-white rounded-tr-sm'
+                                        ? 'bg-[#00b48a] text-white rounded-tr-sm'
                                         : 'bg-zinc-800 text-zinc-300 rounded-tl-sm border border-white/5'
                                         }`}
                                 >
@@ -305,12 +306,12 @@ export default function QnAPanel() {
                         onChange={(e) => setInput(e.target.value)}
                         disabled={isLoading || messages.some(m => m.isStreaming)}
                         placeholder="질문을 입력하세요..."
-                        className="w-full bg-black/50 border border-white/10 rounded-full pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all disabled:opacity-50"
+                        className="w-full bg-black/50 border border-white/10 rounded-full pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-[#00d4a4] focus:ring-1 focus:ring-[#00d4a4] transition-all disabled:opacity-50"
                     />
                     <button
                         type="submit"
                         disabled={isLoading || messages.some(m => m.isStreaming) || !input.trim()}
-                        className="absolute right-2 top-2 p-1.5 text-zinc-400 hover:text-cyan-400 hover:bg-white/5 rounded-full disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+                        className="absolute right-2 top-2 p-1.5 text-zinc-400 hover:text-[#00d4a4] hover:bg-white/5 rounded-full disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
                     >
                         <Send size={18} />
                     </button>

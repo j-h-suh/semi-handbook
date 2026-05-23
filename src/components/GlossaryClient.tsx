@@ -49,7 +49,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                     placeholder="용어 검색..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20 transition-colors"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-[#00d4a4]/40 focus:ring-1 focus:ring-[#00d4a4]/20 transition-colors"
                 />
                 <div className="flex gap-2 flex-wrap">
                     {CATEGORIES.map(cat => (
@@ -58,7 +58,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                             onClick={() => setActiveCategory(cat)}
                             className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
                                 activeCategory === cat
-                                    ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 font-medium'
+                                    ? 'bg-[#00d4a4]/15 border-[#00d4a4]/30 text-[#00d4a4] font-medium'
                                     : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300 hover:border-white/15'
                             }`}
                         >
@@ -91,7 +91,7 @@ export default function GlossaryClient({ chapterMap }: Props) {
                                     <Link
                                         key={ch}
                                         href={`/semi/${found.id}`}
-                                        className="text-[11px] text-cyan-600 hover:text-cyan-400 transition-colors"
+                                        className="text-[11px] text-[#00d4a4] hover:text-[#00d4a4] transition-colors"
                                         title={found.title}
                                     >
                                         {ch}장
