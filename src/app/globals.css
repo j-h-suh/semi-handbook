@@ -140,8 +140,8 @@ body {
   font-weight: normal;
   border-radius: 0.5rem;
   padding: 0.875rem 1.125rem;
-  background: rgba(255, 255, 255, 0.025);
-  border-left: 3px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 212, 164, 0.045);
+  border-left: 3px solid #00d4a4;
   margin: 1.5em 0;
 }
 .prose blockquote p:first-of-type::before,

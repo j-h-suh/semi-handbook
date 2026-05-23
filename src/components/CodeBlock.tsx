@@ -178,8 +178,8 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
                 : 'border-zinc-800 bg-[#1c1c1e]'
         }`}>
             {label && (
-                <div className="flex items-center justify-between px-5 py-3 text-sm font-mono bg-zinc-900/60 border-b border-zinc-800">
-                    <span className="text-zinc-400">{label}</span>
+                <div className="flex items-center justify-between px-5 py-3 text-sm font-mono bg-[#00d4a4]/[0.06] border-b border-[#00d4a4]/15">
+                    <span className="text-[#00d4a4]/80">{label}</span>
                 </div>
             )}
             {innerContent}
