@@ -95,7 +95,7 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                     className="p-5 hover:bg-white/[0.02] transition-colors block"
                 >
                     <h1 className="text-sm font-bold text-zinc-200 whitespace-normal leading-snug">
-                        반도체를 여행하는<br />SemiAI를 위한 안내서
+                        반도체를 여행하는<br />SemiAI를 위한 핸드북
                     </h1>
                 </Link>
                 {/* 모바일 닫기 버튼 */}
@@ -116,13 +116,13 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                 </button>
             </div>
 
-            {/* Book Selector — N 안내서 자연 확장 dropdown */}
+            {/* Book Selector — N 핸드북 자연 확장 dropdown */}
             <div className="px-3 py-3 border-b border-zinc-800/60">
                 <div className="relative">
                     <select
                         value={activeBook}
                         onChange={(e) => handleBookChange(e.target.value as Book)}
-                        aria-label="안내서 선택"
+                        aria-label="핸드북 선택"
                         className="w-full appearance-none bg-[#00d4a4]/[0.05] border border-[#00d4a4]/20 hover:border-[#00d4a4]/35 focus:border-[#00d4a4] rounded-lg pl-3 pr-9 py-2 text-sm text-zinc-100 cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-[#00d4a4]"
                     >
                         {BOOKS.map((book) => (

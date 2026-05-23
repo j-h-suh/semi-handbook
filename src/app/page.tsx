@@ -25,7 +25,7 @@ export default function Home() {
     );
     const totalDiagrams = allDiagramFiles.length + countTsx(semiDiagramDir) + countTsx(statsDiagramDir);
 
-    // 각 책별 카드 footer — 4 번째 안내서 추가 시 _이 자리에 한 줄_
+    // 각 책별 카드 footer — 4 번째 핸드북 추가 시 _이 자리에 한 줄_
     const bookMetas: Record<Book, string> = {
         semi: `${chapterCounts.semi}개 챕터 · ${totalTerms}개 용어`,
         stats: `${chapterCounts.stats}개 챕터 · ${totalDiagrams}개 다이어그램`,

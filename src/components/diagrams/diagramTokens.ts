@@ -42,7 +42,7 @@ export const COLOR = {
     cardBg: 'rgba(255,255,255,0.02)',
 } as const;
 
-/* ─── 클로드 안내서 액센트 컬러 (Mintlify brand-green 가족) ─── */
+/* ─── 클로드 핸드북 액센트 컬러 (Mintlify brand-green 가족) ─── */
 export const CLAUDE_COLOR = {
     /** 주 액센트 (Mintlify brand-green) */
     accent: '#00d4a4',
@@ -54,7 +54,7 @@ export const CLAUDE_COLOR = {
     accentBorderSoft: 'rgba(0, 212, 164, 0.12)',
 } as const;
 
-/* ─── 통계학 안내서 액센트 컬러 ─── */
+/* ─── 통계학 핸드북 액센트 컬러 ─── */
 export const STATS_COLOR = {
     /** 주 액센트 (에메랄드) */
     accent: '#34d399',
