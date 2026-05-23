@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import { semiDiagramRegistry } from './semiRegistry';
 import { statsDiagramRegistry } from './statsRegistry';
+import { claudeDiagramRegistry } from './claudeRegistry';
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -9,8 +10,10 @@ import { statsDiagramRegistry } from './statsRegistry';
  *
  * Semi diagrams: ./semiRegistry.ts
  * Stats diagrams: ./statsRegistry.ts
+ * Claude diagrams: ./claudeRegistry.ts
  */
 export const diagramRegistry: Record<string, ComponentType> = {
     ...semiDiagramRegistry,
     ...statsDiagramRegistry,
+    ...claudeDiagramRegistry,
 };
