@@ -454,24 +454,7 @@ class QueryLoop:
 
 다만 `writeToMailbox` 는 **디스크에 쓰기만 한다** — _수신자의 메모리 큐에 직접 enqueue 하지 않는다_. **발신자와 수신자가 분리된 단계로 작동**하기 때문이다. 전체 흐름:
 
-```
-[발신자 측]
-  ① writeToMailbox(recipient, message)
-       │ jsonl 한 줄 append
-       ▼
-  ┌─────────────────────────────────────────────┐
-  │  ~/.claude/teams/<team>/<recipient>.jsonl   │  ← 발신자/수신자 공통 매체
-  └─────────────────────────────────────────────┘
-       │
-[수신자 측]
-       ▼
-  ② watcher (또는 polling) 가 자기 메일박스 파일의 변경 감지
-  ③ 새 메시지를 *자기 commandQueue (메모리 큐)* 에 enqueue
-       │
-       ▼  (이하 *기본 큐-루프 모델* 그대로)
-  ④ query loop 가 다음 turn 시작 시 큐에서 꺼냄
-  ⑤ 히스토리에 append → API call
-```
+![팀원 mailbox 흐름 — 발신/수신 분리](/content/claude_code/images/08_4/mailbox_flow.svg)
 
 이 분리 덕에 **디스크가 발신자/수신자의 공통 매체** 가 된다. 발신자는 _수신자의 프로세스/위치를 몰라도_ `writeToMailbox` 한 번이면 끝 — 수신자가 같은 프로세스의 다른 async 트리든, 사용자가 다른 터미널에서 띄운 별도 프로세스든, 메일은 _디스크에 도착해 있다_. 수신자 측의 _watcher_ 가 _디스크 → 자기 메모리 큐_ 의 bridge 역할 — 그 뒤는 _기본 큐-루프 모델_ 흐름 그대로. 메일박스의 _rendezvous as filesystem_ 의 진짜 의미가 이 _발신/수신 분리_ 에 있다. `teammateMailbox.ts` 가 1184 줄로 큰 이유도 _쓰기 (writeToMailbox)_ 보다 _읽기/watcher/메모리 큐 합류_ 의 디스크→메모리 변환 로직이 대부분이기 때문.
 

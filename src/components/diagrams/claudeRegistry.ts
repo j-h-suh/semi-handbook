@@ -15,6 +15,10 @@ const AppStateSelectorPattern = dynamic(() => import('./AppStateSelectorPattern'
 const HookLifecycle = dynamic(() => import('./HookLifecycle'), { ssr: false });
 const APIClientAdapter = dynamic(() => import('./APIClientAdapter'), { ssr: false });
 const QueueLoopModel = dynamic(() => import('./QueueLoopModel'), { ssr: false });
+const CacheLayerBoundary = dynamic(() => import('./CacheLayerBoundary'), { ssr: false });
+const AppStateCategories = dynamic(() => import('./AppStateCategories'), { ssr: false });
+const VirtualScrollViewport = dynamic(() => import('./VirtualScrollViewport'), { ssr: false });
+const TeamMailboxFlow = dynamic(() => import('./TeamMailboxFlow'), { ssr: false });
 
 export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/09_1/architecture.svg': MiniClaudeArchitecture,
@@ -28,4 +32,8 @@ export const claudeDiagramRegistry: Record<string, ComponentType> = {
     '/content/claude_code/images/10_3/hook_lifecycle.svg': HookLifecycle,
     '/content/claude_code/images/10_5/client_adapter.svg': APIClientAdapter,
     '/content/claude_code/images/08_4/queue_loop_model.svg': QueueLoopModel,
+    '/content/claude_code/images/06_1/cache_layer_boundary.svg': CacheLayerBoundary,
+    '/content/claude_code/images/06_2/appstate_categories.svg': AppStateCategories,
+    '/content/claude_code/images/05_3/virtual_scroll_viewport.svg': VirtualScrollViewport,
+    '/content/claude_code/images/08_4/mailbox_flow.svg': TeamMailboxFlow,
 };

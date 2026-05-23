@@ -80,33 +80,7 @@ class AppState:
 
 **약 85개** top-level 필드. 다 외울 필요 없다. **5개 카테고리**로 묶으면 머릿속에 들어온다.
 
-```
-┌─────────────────────────────────────────────────┐
-│  AppState (~85개 필드)                           │
-│                                                 │
-│  1️⃣ 설정/모델       (10개)                       │
-│     settings, verbose, mainLoopModel,          │
-│     thinkingEnabled, ...                       │
-│                                                 │
-│  2️⃣ 도구/플러그인    (15개)                      │
-│     mcp, plugins, agentDefinitions,            │
-│     sessionHooks, ...                          │
-│                                                 │
-│  3️⃣ 권한/안전        (5개)                       │
-│     toolPermissionContext, fileHistory,        │
-│     workerSandboxPermissions, ...              │
-│                                                 │
-│  4️⃣ 실행 상태        (20개)                      │
-│     tasks, todos, agentNameRegistry,           │
-│     foregroundedTaskId, speculation, ...       │
-│                                                 │
-│  5️⃣ UI/네트워크 상태  (50개)                     │
-│     footerSelection, expandedView,             │
-│     statusLineText, replBridge*,               │
-│     remoteConnectionStatus, notifications, ... │
-│                                                 │
-└─────────────────────────────────────────────────┘
-```
+![AppState 의 5 카테고리 (~85 필드)](/content/claude_code/images/06_2/appstate_categories.svg)
 
 5개 카테고리. 3.2에서 Tool 인터페이스를 5개 카테고리로 묶었던 것과 같은 사고. 큰 객체는 카테고리로 나눠야 다룰 수 있다.
 
