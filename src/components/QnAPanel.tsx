@@ -254,16 +254,13 @@ export default function QnAPanel() {
                                         <button
                                             key={opt.id}
                                             onClick={() => handleModelSelect(opt.id)}
-                                            className={`w-full text-left px-3 py-2 transition-colors ${isSelected
+                                            className={`w-full text-left px-3 py-2 flex items-center justify-between transition-colors ${isSelected
                                                 ? 'bg-[#00d4a4]/10 text-[#00d4a4]'
                                                 : 'text-zinc-300 hover:bg-zinc-700/50'
                                                 }`}
                                         >
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-sm font-medium">{opt.label}</span>
-                                                {isSelected && <Check size={14} />}
-                                            </div>
-                                            <p className="text-xs text-zinc-500 mt-0.5">{opt.description}</p>
+                                            <span className="text-sm font-medium">{opt.label}</span>
+                                            {isSelected && <Check size={14} />}
                                         </button>
                                     );
                                 })}
