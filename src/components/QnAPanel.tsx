@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Bot, User, ChevronDown, ChevronRight, Brain } from 'lucide-react';
+import { Send, Bot, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { DEFAULT_MODEL_ID, MODEL_OPTIONS } from '@/lib/llm';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -14,10 +15,11 @@ import 'katex/dist/katex.min.css';
 interface ChatMessage {
     role: 'user' | 'model';
     content: string;
-    thinking?: string;
-    isStreaming?: boolean; // true while this message is still being streamed
+    isStreaming?: boolean;
 }
 import { useQnAContext } from './QnAContext';
+
+const MODEL_STORAGE_KEY = 'chat-model';
 
 export default function QnAPanel() {
     const { documentContext: currentDocumentContext } = useQnAContext();
@@ -30,14 +32,13 @@ export default function QnAPanel() {
     const [panelWidth, setPanelWidth] = useState(420);
     const isResizing = useRef(false);
 
-    // Auto scroll to bottom
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages, isLoading, isOpen]);
 
-    // 패널이 열려 있는 동안 history entry를 추가해서 뒤로 가기로 닫을 수 있게 함
+    // 패널이 열려 있는 동안 history entry 를 추가해 뒤로 가기로 닫을 수 있게 함
     useEffect(() => {
         if (!isOpen) return;
         window.history.pushState({ qnaOpen: true }, '');
@@ -46,7 +47,6 @@ export default function QnAPanel() {
         return () => window.removeEventListener('popstate', handlePopState);
     }, [isOpen]);
 
-    // Resize handler
     const handleMouseDown = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         isResizing.current = true;
@@ -71,39 +71,48 @@ export default function QnAPanel() {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
 
-        const apiKey = localStorage.getItem('gemini-api-key');
-        if (!apiKey) {
-            window.dispatchEvent(new CustomEvent('open-settings'));
-            alert("API 키를 먼저 입력해주세요!");
-            return;
-        }
+        // 선택된 모델 — localStorage 에 없으면 default
+        const storedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+        const model = storedModel && MODEL_OPTIONS.some((m) => m.id === storedModel)
+            ? storedModel
+            : DEFAULT_MODEL_ID;
 
         const userMsg = input.trim();
         setInput('');
-        // Add user message + empty AI message placeholder immediately
-        setMessages(prev => [
+
+        // 직전 메시지 history (placeholder / streaming 자리 제외)
+        const history = messages
+            .filter((m) => !m.isStreaming && m.content)
+            .map((m) => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }));
+
+        setMessages((prev) => [
             ...prev,
             { role: 'user', content: userMsg },
-            { role: 'model', content: '', thinking: '', isStreaming: true }
+            { role: 'model', content: '', isStreaming: true },
         ]);
+
+        setIsLoading(true);
 
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({
                     message: userMsg,
                     context: currentDocumentContext,
-                    history: messages.map(m => ({ role: m.role, parts: [{ text: m.content }] }))
-                })
+                    history,
+                    model,
+                }),
             });
 
             if (!response.ok) {
                 let errMsg = 'Failed to fetch response';
-                try { const err = await response.json(); errMsg = err.error || errMsg; } catch { }
+                try {
+                    const err = await response.json();
+                    errMsg = err.error || errMsg;
+                } catch { }
                 throw new Error(errMsg);
             }
 
@@ -112,9 +121,7 @@ export default function QnAPanel() {
             if (!reader) throw new Error('No response stream');
 
             let accumulatedText = '';
-            let accumulatedThinking = '';
             let buffer = '';
-            let stillThinking = true;
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -128,81 +135,55 @@ export default function QnAPanel() {
                     if (!line.trim()) continue;
                     try {
                         const parsed = JSON.parse(line);
-                        if (parsed.type === 'thinking') {
-                            accumulatedThinking += parsed.content;
-                        } else if (parsed.type === 'text') {
-                            stillThinking = false;
+                        if (parsed.type === 'text' && parsed.content) {
                             accumulatedText += parsed.content;
                         }
                     } catch {
                         accumulatedText += line;
-                        stillThinking = false;
                     }
                 }
 
-                // Update the last message (AI placeholder) in place
-                setMessages(prev => {
+                setMessages((prev) => {
                     const updated = [...prev];
                     updated[updated.length - 1] = {
                         role: 'model',
                         content: accumulatedText,
-                        thinking: accumulatedThinking,
-                        isStreaming: stillThinking
+                        isStreaming: true,
                     };
                     return updated;
                 });
             }
 
-            // Mark streaming as done
-            setMessages(prev => {
+            setMessages((prev) => {
                 const updated = [...prev];
                 updated[updated.length - 1] = {
                     ...updated[updated.length - 1],
-                    isStreaming: false
+                    isStreaming: false,
                 };
                 return updated;
             });
 
-            // Log Q&A to Supabase
             const chapterMatch = decodeURIComponent(pathname).match(/\/chapter\/(.+)/);
             supabase.from('qna_logs').insert({
                 chapter_id: chapterMatch ? chapterMatch[1] : null,
                 question: userMsg,
                 answer: accumulatedText,
-            }).then(() => {});  // fire-and-forget
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
+            }).then(() => { });
+        } catch (error: unknown) {
+            const errMsg = error instanceof Error ? error.message : String(error);
             console.error(error);
-            setMessages(prev => {
+            setMessages((prev) => {
                 const updated = [...prev];
-                // Update the placeholder message with error
                 if (updated.length > 0 && updated[updated.length - 1].role === 'model' && updated[updated.length - 1].isStreaming) {
-                    updated[updated.length - 1] = { role: 'model', content: `Error: ${error.message}`, isStreaming: false };
+                    updated[updated.length - 1] = { role: 'model', content: `Error: ${errMsg}`, isStreaming: false };
                 } else {
-                    updated.push({ role: 'model', content: `Error: ${error.message}` });
+                    updated.push({ role: 'model', content: `Error: ${errMsg}` });
                 }
                 return updated;
             });
+        } finally {
             setIsLoading(false);
         }
-    };
-
-    // Title: always show the LATEST bold heading (updates live as new sections stream in)
-    const getThinkingTitle = (thinking: string) => {
-        const lines = thinking.split('\n').filter(l => l.trim());
-        // Find the last bold heading (line starting with **)
-        const headings = lines.filter(l => l.trim().startsWith('**'));
-        if (headings.length > 0) {
-            const lastHeading = headings[headings.length - 1];
-            const cleaned = lastHeading.replace(/\*\*/g, '').trim();
-            return cleaned.length > 40 ? cleaned.slice(0, 40) + '…' : cleaned;
-        }
-        // Fallback
-        if (lines.length === 0) return '사고 중';
-        const lastLine = lines[lines.length - 1];
-        const cleaned = lastLine.replace(/\*\*/g, '').replace(/\*/g, '').trim();
-        return cleaned.length > 40 ? cleaned.slice(0, 40) + '…' : cleaned;
     };
 
     if (!isOpen) {
@@ -210,11 +191,11 @@ export default function QnAPanel() {
             <div className="fixed bottom-4 right-4 md:top-3 md:right-3 md:bottom-auto z-50">
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00d4a4]/[0.08] border border-[#00d4a4]/25 text-[#00d4a4] rounded-lg hover:bg-[#00d4a4]/[0.15] hover:border-[#00d4a4]/40 transition-all"
-                    aria-label="AI 도움"
+                    className="p-2 bg-[#00d4a4]/[0.08] border border-[#00d4a4]/25 text-[#00d4a4] rounded-lg hover:bg-[#00d4a4]/[0.15] hover:border-[#00d4a4]/40 transition-all"
+                    aria-label="AI 도움 패널 열기"
+                    title="AI 도움"
                 >
-                    <Bot size={14} />
-                    <span className="font-medium text-xs">AI 도움</span>
+                    <Bot size={16} />
                 </button>
             </div>
         );
@@ -235,6 +216,7 @@ export default function QnAPanel() {
                 <button
                     onClick={() => window.history.back()}
                     className="text-zinc-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
+                    aria-label="패널 닫기"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
                 </button>
@@ -258,24 +240,12 @@ export default function QnAPanel() {
                             {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
                         </div>
                         <div className={`max-w-[85%] ${msg.role === 'user' ? '' : 'space-y-2'}`}>
-                            {/* Thinking block — inside the message, always above content */}
-                            {msg.role === 'model' && msg.thinking && (
-                                <ThinkingBlock
-                                    title={getThinkingTitle(msg.thinking)}
-                                    content={msg.thinking}
-                                    isLive={!!msg.isStreaming}
-                                />
-                            )}
-
-                            {/* Waiting indicator when neither thinking nor content has started */}
-                            {msg.role === 'model' && msg.isStreaming && !msg.thinking && !msg.content && (
+                            {msg.role === 'model' && msg.isStreaming && !msg.content && (
                                 <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-zinc-400">
-                                    <Brain className="animate-pulse" size={16} />
                                     <span className="text-xs">생각 중...</span>
                                 </div>
                             )}
 
-                            {/* Main response — always below thinking */}
                             {msg.content && (
                                 <div
                                     className={`px-4 py-2 rounded-2xl text-sm leading-relaxed prose prose-invert max-w-none prose-p:my-1 prose-pre:my-2 prose-h3:text-sm prose-h3:mt-3 prose-h3:mb-1 ${msg.role === 'user'
@@ -294,8 +264,6 @@ export default function QnAPanel() {
                         </div>
                     </div>
                 ))}
-
-
             </div>
 
             <div className="p-4 border-t border-white/5 bg-zinc-900/50">
@@ -304,69 +272,20 @@ export default function QnAPanel() {
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        disabled={isLoading || messages.some(m => m.isStreaming)}
+                        disabled={isLoading || messages.some((m) => m.isStreaming)}
                         placeholder="질문을 입력하세요..."
                         className="w-full bg-black/50 border border-white/10 rounded-full pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-[#00d4a4] focus:ring-1 focus:ring-[#00d4a4] transition-all disabled:opacity-50"
                     />
                     <button
                         type="submit"
-                        disabled={isLoading || messages.some(m => m.isStreaming) || !input.trim()}
+                        disabled={isLoading || messages.some((m) => m.isStreaming) || !input.trim()}
                         className="absolute right-2 top-2 p-1.5 text-zinc-400 hover:text-[#00d4a4] hover:bg-white/5 rounded-full disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+                        aria-label="질문 전송"
                     >
                         <Send size={18} />
                     </button>
                 </form>
             </div>
         </div>
-    );
-}
-
-/** Thinking block — used for both live (streaming) and completed states */
-function ThinkingBlock({ title, content, isLive }: { title: string; content: string; isLive: boolean }) {
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    // Auto-collapse when streaming finishes (isLive → false)
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (!isLive) setIsExpanded(false);
-    }, [isLive]);
-
-    return (
-        <div className={`rounded-xl border overflow-hidden ${isLive
-            ? 'border-purple-500/30 bg-purple-500/5'
-            : 'border-purple-500/20 bg-purple-500/5'
-            }`}>
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-purple-300 hover:bg-purple-500/10 transition-colors"
-            >
-                <Brain size={13} className={`shrink-0 ${isLive ? 'animate-pulse' : ''}`} />
-                <span className="truncate text-left flex-1 font-medium">
-                    {title}{isLive && <AnimatedDots />}
-                </span>
-                {isExpanded ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
-            </button>
-            {isExpanded && (
-                <div className="px-3 pb-3 text-xs text-purple-200/50 leading-relaxed border-t border-purple-500/10 max-h-[250px] overflow-y-auto custom-scrollbar prose prose-invert max-w-none prose-p:my-0.5 prose-pre:my-1">
-                    <ReactMarkdown
-                        remarkPlugins={[remarkGfm, remarkMath]}
-                        rehypePlugins={[rehypeKatex]}
-                    >
-                        {content}
-                    </ReactMarkdown>
-                </div>
-            )}
-        </div>
-    );
-}
-
-/** Animated dots: each dot fades in/out with staggered delay */
-function AnimatedDots() {
-    return (
-        <span className="inline-flex ml-1 gap-[2px]">
-            <span className="w-[3px] h-[3px] rounded-full bg-purple-400 animate-bounce" style={{ animationDuration: '0.8s', animationDelay: '0s' }} />
-            <span className="w-[3px] h-[3px] rounded-full bg-purple-400 animate-bounce" style={{ animationDuration: '0.8s', animationDelay: '0.15s' }} />
-            <span className="w-[3px] h-[3px] rounded-full bg-purple-400 animate-bounce" style={{ animationDuration: '0.8s', animationDelay: '0.3s' }} />
-        </span>
     );
 }
