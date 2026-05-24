@@ -210,11 +210,11 @@ export default function QnAPanel() {
             <div className="fixed bottom-4 right-4 md:top-3 md:right-3 md:bottom-auto z-50">
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00d4a4]/[0.08] border border-[#00d4a4]/25 text-[#00d4a4] rounded-lg hover:bg-[#00d4a4]/[0.15] hover:border-[#00d4a4]/40 transition-all"
-                    aria-label="AI 도움"
+                    className="p-2 bg-[#00d4a4]/[0.08] border border-[#00d4a4]/25 text-[#00d4a4] rounded-lg hover:bg-[#00d4a4]/[0.15] hover:border-[#00d4a4]/40 transition-all"
+                    aria-label="AI 도움 패널 열기"
+                    title="AI 도움"
                 >
-                    <Bot size={14} />
-                    <span className="font-medium text-xs">AI 도움</span>
+                    <Bot size={16} />
                 </button>
             </div>
         );
