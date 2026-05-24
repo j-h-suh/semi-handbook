@@ -1,6 +1,5 @@
 import { getSortedChapters } from '@/lib/markdown';
 import { BOOKS, type Book } from '@/lib/books';
-import glossary from '@/lib/glossary';
 import HomeClient from '@/components/HomeClient';
 import path from 'path';
 import fs from 'fs';
@@ -10,27 +9,29 @@ export default function Home() {
         BOOKS.map((b) => [b.id, getSortedChapters(b.id).length]),
     ) as Record<Book, number>;
 
-    const totalTerms = glossary.length;
-
+    // 책별 다이어그램 카운트 — registry 파일의 매핑 entry 직접 카운트
     const diagramDir = path.join(process.cwd(), 'src/components/diagrams');
-    const semiDiagramDir = path.join(diagramDir, 'semi');
-    const statsDiagramDir = path.join(diagramDir, 'stats');
-    const countTsx = (dir: string) => {
-        try { return fs.readdirSync(dir).filter(f => f.endsWith('.tsx')).length; }
-        catch { return 0; }
+    const countRegistryEntries = (file: string): number => {
+        try {
+            const txt = fs.readFileSync(path.join(diagramDir, file), 'utf-8');
+            return (txt.match(/^\s+'\//gm) || []).length;
+        } catch {
+            return 0;
+        }
+    };
+    const diagramCounts: Record<Book, number> = {
+        semi: countRegistryEntries('semiRegistry.ts'),
+        stats: countRegistryEntries('statsRegistry.ts'),
+        claude: countRegistryEntries('claudeRegistry.ts'),
     };
 
-    const allDiagramFiles = fs.readdirSync(diagramDir).filter(
-        f => f.endsWith('.tsx') && !f.toLowerCase().includes('registry') && !f.toLowerCase().includes('tokens')
-    );
-    const totalDiagrams = allDiagramFiles.length + countTsx(semiDiagramDir) + countTsx(statsDiagramDir);
-
-    // 각 책별 카드 footer — 4 번째 핸드북 추가 시 _이 자리에 한 줄_
-    const bookMetas: Record<Book, string> = {
-        semi: `${chapterCounts.semi}개 챕터 · ${totalTerms}개 용어`,
-        stats: `${chapterCounts.stats}개 챕터 · ${totalDiagrams}개 다이어그램`,
-        claude: `${chapterCounts.claude}개 챕터`,
-    };
+    // 각 책별 카드 footer — 챕터 + 다이어그램 통일
+    const bookMetas: Record<Book, string> = Object.fromEntries(
+        BOOKS.map((b) => [
+            b.id,
+            `${chapterCounts[b.id]}개 챕터 · ${diagramCounts[b.id]}개 다이어그램`,
+        ]),
+    ) as Record<Book, string>;
 
     return (
         <main className="h-full w-full flex overflow-hidden relative">
