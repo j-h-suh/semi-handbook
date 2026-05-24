@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Bot, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { DEFAULT_MODEL_ID, MODEL_OPTIONS } from '@/lib/llm';
+import { DEFAULT_MODEL_ID, MODEL_OPTIONS } from '@/lib/llm/models';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
