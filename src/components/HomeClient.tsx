@@ -27,7 +27,7 @@ const ACCENT_CLASSES: Record<AccentName, {
 };
 
 interface Props {
-    bookMetas: Record<Book, string>;  // 각 책별 카드 footer 문자열 (예: "32개 챕터 · 120개 용어")
+    bookMetas: Record<Book, string>;  // 각 책별 카드 footer 문자열 (예: "32개 챕터 · 28개 다이어그램")
 }
 
 function BookRow({ book, meta }: { book: BookMeta; meta: string }) {
