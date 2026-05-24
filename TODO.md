@@ -1701,3 +1701,182 @@ Phase 19 의 _후행_ 에서 _"변환 완료 후 lang === 'text' 분기 제거"_
 
 ---
 
+## Phase 36: TODO 동기화 (Phase 23 상태 + Phase 33~35 등재) *(✅ 완료)*
+
+2026-05-24 사용자 _"TODO.md 에 남아있는게 있나요?"_ — 미완료 자리 0, Phase 23 만 _진행 중_ 표시 (실제는 Phase 32 에서 종결) + Phase 33~35 미등재.
+
+- Phase 23 자리 `(🚧 진행 중)` → `(✅ 완료 — Phase 32 에서 전수 종결)`
+- Phase 33~35 자리 등재 (랜딩 카드 chevron / meta 통일 / 글로우 그린 + AI 아이콘)
+
+---
+
+## Phase 37: BYOK Vertex AI 전환 + 모델 선택 *(✅ 완료)*
+
+2026-05-24 사용자 _"BYOK 를 vertex ai json 키로 변환 + Opus / Gemini-3.5-Flash 선택"_ — paper-reader (`server/src/lib/llm/{anthropic,gemini}.js`) 패턴 포팅.
+
+### 37-1. 자격증명 자리 (commit `219c644`)
+
+- `.gitignore` 에 `secrets/` 등재 + `.env.example` (GOOGLE_CLOUD_PROJECT / CLOUD_ML_REGION / GOOGLE_APPLICATION_CREDENTIALS)
+- `secrets/semi-handbook.json` 자리 사용자 로컬, 원격 배포 자리 _의도적 비활성_
+
+### 37-2. LLM adapter (commit `219c644`)
+
+`src/lib/llm/` 신설:
+- `anthropic.ts` — AnthropicVertex (region='global' baseURL override), MessageStream → async iterator, abort handling
+- `gemini.ts` — GoogleGenAI vertexai 모드, role 변환 (assistant→model)
+- `types.ts` / `index.ts` — generic streamText + provider 분기 (claude-*/gemini-*)
+- `models.ts` — MODEL_OPTIONS / DEFAULT_MODEL_ID (client safe)
+
+### 37-3. UI 자리 (commit `219c644`)
+
+- `/api/chat/route.ts` — Bearer 자리 제거, body { model, message, context, history }, text-only streaming
+- `SettingsModal.tsx` — API Key 입력 자리 제거, 모델 선택 UI 자리
+- `QnAPanel.tsx` — Bearer 제거 + thinking parts 제거 + model body
+- `npm install @anthropic-ai/vertex-sdk@^0.16.1`
+
+### 37-4. client/server import 분리 fix (commit `70755ad`)
+
+`SettingsModal` ('use client') 자리 `@/lib/llm` import 결로 Anthropic Vertex SDK 자리 SSR 번들에 끌려와 500 발생.
+
+- `src/lib/llm/models.ts` 분리 (server SDK 의존 없음)
+- 'use client' 자리 자리 `@/lib/llm/models` 만 import, server 만 `@/lib/llm` 결로 streamText import
+
+---
+
+## Phase 38: 모델 dropdown 헤더 + BYOK 자리 제거 *(✅ 완료)*
+
+2026-05-24 사용자 _"API Settings 좌측 아래 삭제, 모델 선택은 채팅창 dropdown 결로"_ — SettingsModal + Sidebar BYOK 자리 자리 모두 제거 + QnAPanel 헤더 dropdown 결.
+
+### 38-1. 제거 (commit `3dd86d4`)
+
+- Sidebar — Settings icon import + API Settings 버튼 제거
+- ClientLayout — SettingsModal import + mount 제거
+- `SettingsModal.tsx` — 파일 삭제
+
+### 38-2. QnAPanel 헤더 dropdown (commit `52e3306`)
+
+- 헤더 자리 `AI Assistant` 자리 자리 → 모델 dropdown
+- ChevronDown / Check icon + useState model + localStorage 'chat-model' 읽기/저장
+- useRef + mousedown outside listener 결로 dropdown close
+
+---
+
+## Phase 39: 메시지 UI Paper Reader 결로 *(✅ 완료)*
+
+2026-05-24 사용자 _"메세지 UI 가 별로네요. Paper Reader UI 한번 참고해주세요"_ — Linear/Vercel 결, 시각 노이즈 최소.
+
+### 39-1. UI 조정 (commit `ab12afe`)
+
+- **아바타 제거** (Bot/User 둘 다)
+- **Assistant**: `self-stretch`, padding/background/border 0, prose 본문 결로 자연 flow
+- **User**: `self-end max-w-[80%] bg-zinc-800/60 + border` 작은 절제 카드 (그린 채움 X)
+- **TypingDots**: 첫 chunk 전 3 점 staggered bounce
+- `globals.css` 에 `@keyframes typing-dot` 추가
+
+---
+
+## Phase 40: dropdown description 제거 *(✅ 완료)*
+
+2026-05-24 사용자 _"모델 아래에 Anthropic 최상위... 는 삭제"_ — 한 줄 라벨만.
+
+### 40-1. (commit `ad86935`)
+
+- `models.ts` ModelOption.description 필드 제거
+- QnAPanel dropdown option 자리 자리 `<p>` description 자리 제거
+
+---
+
+## Phase 41: 글로서리 멀티북 확장 + draft 추출 *(✅ 완료)*
+
+2026-05-24 사용자 _"용어 사전 정리 — 통계학 / 클로드 자리 누락"_ — 데이터 모델 확장 + 자동 추출 결로 draft 자리 등재.
+
+### 41-1. 데이터 모델 (commit `bf10ce0`)
+
+- `GlossaryEntry.book: Book` 필드 추가 (필수)
+- 기존 87 entries 자리 자리 `book: 'semi'` 자동 마킹
+
+### 41-2. 자동 추출 (commit `bf10ce0`)
+
+`scripts/extract-glossary.mjs` 결로 마크다운 자리 `**한국어(영어)**` 패턴 자리 추출:
+- stats: 151 entries (definition 빈, draft)
+- claude: 51 entries (definition 빈, draft)
+
+### 41-3. UI 확장 (commit `bf10ce0`)
+
+`GlossaryClient.tsx`:
+- 카테고리 chip 자리 자리 → 책 필터 chip (전체 / 반도체 / 통계 / 클로드)
+- chapter 링크 자리 `/${book}/${id}` 분기
+- chapter 라벨 자리 책 아이콘 (cpu / trending-up / terminal) prefix
+- chapterMap 자리 책별 분리 (`Record<Book, ...>`)
+
+---
+
+## Phase 42: glossary v2 — definition 자동 추출 + false positive 필터 *(✅ 완료)*
+
+2026-05-24 사용자 _"제거하고, 채웁시다"_ — draft 정제 + 자동 추출 결로 definition draft.
+
+### 42-1. v2 스크립트 (commit `54304a8`)
+
+`scripts/extract-glossary-v2.mjs`:
+- term + 이후 같은 line 자리 캡처해 definition 자동 (첫 마침표 자리 자리 자름)
+- 일반 영어 단어 자동 제거:
+  - abbr stopwords (function/interface/peak/rate/frequency 등)
+  - abbr 단일 소문자 영어 단어
+  - term 자리 길이 12 + 공백 2+ (문장 가능성)
+
+결과:
+- stats: 151 → 115 (-36, def 114/115)
+- claude: 51 → 28 (-23, def 28/28)
+
+자동 definition 정확도 자리 ~60% — 사용자 검수 + AI 보강 후행.
+
+---
+
+## Phase 43: Vertex Opus 결로 definition 일괄 생성 *(✅ 완료)*
+
+2026-05-24 사용자 _"AI 결로 일괄 생성"_ — Opus 4.7 결로 chapter context + term 결로 한 줄 정의.
+
+### 43-1. AI 생성 스크립트 (commit `f2dd93e`)
+
+`scripts/generate-defs.mjs`:
+- AnthropicVertex claude-opus-4-7 결로 호출
+- chapter context (term 자리 자리 ±1000 chars) + system prompt 결로 한 줄 정의
+- 병렬 5 결로 142 entries 처리
+- 재개 가능 (`done` set 결로 기존 entries 건너뛰기)
+
+### 43-2. patch 스크립트 (commit `f2dd93e`)
+
+`scripts/patch-defs.mjs` — JSONL 결로 book::term key 매칭, glossary.ts in-place 교체. 142/143 patched.
+
+품질 자리 예시:
+- 비강건 → "통계량이 이상치 같은 소수의 극단값에 의해 크게 흔들리는 성질"
+- 변동계수 → "표준편차를 평균으로 나눈 값(s/x̄)으로, 단위가 다른 변수들의 상대적 변동성을 비교할 수 있게 해주는 무차원 지표"
+
+---
+
+## Phase 44: claude v3 확장 — 28 → 225 entries *(✅ 완료)*
+
+2026-05-24 사용자 _"용어를 좀 더 찾을까요? 너무 적은 거 아닌가"_ — claude 자리 챕터당 0.5 결로 _확실히 적음_. v3 패턴 자리 _영어 단독_ 추가.
+
+### 44-1. v3 스크립트 (commit `7932586`)
+
+`scripts/extract-claude-v3.mjs`:
+- **한국어(영어)** 패턴 (기존) + **영어** 단독 패턴 자리
+- stopwords (JS 키워드 / 일반 동사 / 색 / 단축키 등) 자동 제외
+- 약어 자리 자리 대문자만 2자 (AI/ML/CLI) 보존
+- definition 자리 자리 빔 → Opus 결로 일괄 재생성
+
+### 44-2. ROOT 자리 process.cwd() 결로 (commit `7932586`)
+
+`scripts/{generate,patch}-defs.mjs` 자리 자리 하드코딩 ROOT (phase-43) 자리 자리 worktree 자리 결로 — `process.cwd()` 결로 변경.
+
+### 44-3. 결과
+
+- claude: 28 → 225 (+197)
+- total: 87 + 115 + 225 = **427 entries**
+- chapter당 평균: claude 4.3 (이전 0.5)
+
+일부 자리 자리 _부정확_ — 예: `하네스 (harness)` 자리 _배선 다발_ 결로 (claude code 의 _CLI runtime harness_ 자리). 후행 자리 _수동 보정_ 결로.
+
+---
+
