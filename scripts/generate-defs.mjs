@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { AnthropicVertex } from '@anthropic-ai/vertex-sdk';
 
-const ROOT = '/Users/jenghun.suh/projects/semi-handbook/.claude/worktrees/phase-43-ai-definitions';
+const ROOT = process.cwd();
 const OUT = '/Users/jenghun.suh/.claude/jobs/bfb20354/defs.jsonl';
 const CONCURRENCY = 5;
 

@@ -2,7 +2,7 @@
 // defs.jsonl 자리 자리 → glossary.ts 자리 entries 자리 definition 교체
 import fs from 'fs';
 
-const ROOT = '/Users/jenghun.suh/projects/semi-handbook/.claude/worktrees/phase-43-ai-definitions';
+const ROOT = process.cwd();
 const JSONL = '/Users/jenghun.suh/.claude/jobs/bfb20354/defs.jsonl';
 const TS = `${ROOT}/src/lib/glossary.ts`;
 
