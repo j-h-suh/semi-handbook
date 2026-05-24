@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Bot, User, ChevronDown, Check } from 'lucide-react';
+import { Send, Bot, ChevronDown, Check } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { DEFAULT_MODEL_ID, MODEL_OPTIONS } from '@/lib/llm/models';
@@ -282,35 +282,28 @@ export default function QnAPanel() {
 
             <div
                 ref={scrollRef}
-                className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"
+                className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-5 custom-scrollbar"
             >
                 {messages.length === 0 && (
-                    <div className="text-center text-zinc-500 my-10 text-sm">
+                    <div className="self-center my-auto text-center text-zinc-500 text-sm">
                         문서를 읽다가 궁금한 점을 질문해보세요!<br />
                         (현재 보고 계시는 페이지의 내용을 AI가 참조하여 답변합니다.)
                     </div>
                 )}
 
                 {messages.map((msg, idx) => (
-                    <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-[#00b48a]/25 text-[#00d4a4]' : 'bg-[#00d4a4]/15 text-[#00d4a4]'
-                            }`}>
-                            {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
+                    msg.role === 'user' ? (
+                        <div
+                            key={idx}
+                            className="self-end max-w-[80%] px-3 py-2 bg-zinc-800/60 border border-white/10 rounded-lg text-zinc-200 text-sm leading-relaxed whitespace-pre-wrap break-words"
+                        >
+                            {msg.content}
                         </div>
-                        <div className={`max-w-[85%] ${msg.role === 'user' ? '' : 'space-y-2'}`}>
-                            {msg.role === 'model' && msg.isStreaming && !msg.content && (
-                                <div className="px-4 py-3 rounded-2xl bg-zinc-800 rounded-tl-sm border border-white/5 flex items-center gap-2 text-zinc-400">
-                                    <span className="text-xs">생각 중...</span>
-                                </div>
-                            )}
-
+                    ) : (
+                        <div key={idx} className="self-stretch text-zinc-300 text-sm leading-relaxed">
+                            {msg.isStreaming && !msg.content && <TypingDots />}
                             {msg.content && (
-                                <div
-                                    className={`px-4 py-2 rounded-2xl text-sm leading-relaxed prose prose-invert max-w-none prose-p:my-1 prose-pre:my-2 prose-h3:text-sm prose-h3:mt-3 prose-h3:mb-1 ${msg.role === 'user'
-                                        ? 'bg-[#00b48a] text-white rounded-tr-sm'
-                                        : 'bg-zinc-800 text-zinc-300 rounded-tl-sm border border-white/5'
-                                        }`}
-                                >
+                                <div className="prose prose-invert prose-sm max-w-none prose-p:my-2 prose-pre:my-2 prose-h3:text-sm prose-h3:mt-3 prose-h3:mb-1">
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm, remarkMath]}
                                         rehypePlugins={[rehypeKatex]}
@@ -320,7 +313,7 @@ export default function QnAPanel() {
                                 </div>
                             )}
                         </div>
-                    </div>
+                    )
                 ))}
             </div>
 
@@ -345,5 +338,20 @@ export default function QnAPanel() {
                 </form>
             </div>
         </div>
+    );
+}
+
+/** paper-reader 결 typing dots — 첫 chunk 도착 전까지 표시. */
+function TypingDots() {
+    const dotStyle = (delay: string): React.CSSProperties => ({
+        animation: 'typing-dot 1.3s ease-in-out infinite both',
+        animationDelay: delay,
+    });
+    return (
+        <span className="inline-flex items-center gap-1.5 py-1.5">
+            <i className="block w-1.5 h-1.5 rounded-full bg-zinc-500" style={dotStyle('0s')} />
+            <i className="block w-1.5 h-1.5 rounded-full bg-zinc-500" style={dotStyle('0.18s')} />
+            <i className="block w-1.5 h-1.5 rounded-full bg-zinc-500" style={dotStyle('0.36s')} />
+        </span>
     );
 }
