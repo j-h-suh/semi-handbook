@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
-import { MODEL_OPTIONS, DEFAULT_MODEL_ID } from '@/lib/llm';
+import { MODEL_OPTIONS, DEFAULT_MODEL_ID } from '@/lib/llm/models';
 
 const STORAGE_KEY = 'chat-model';
 

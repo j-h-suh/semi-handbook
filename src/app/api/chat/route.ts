@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { streamText, DEFAULT_MODEL_ID, type ChatMessage } from '@/lib/llm';
+import { streamText, type ChatMessage } from '@/lib/llm';
+import { DEFAULT_MODEL_ID } from '@/lib/llm/models';
 
 const MAX_TOKENS = 4096;
 
