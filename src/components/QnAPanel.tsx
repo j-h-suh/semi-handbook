@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, ChevronDown, Check } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { DEFAULT_MODEL_ID, MODEL_OPTIONS } from '@/lib/llm/models';
@@ -31,6 +31,35 @@ export default function QnAPanel() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [panelWidth, setPanelWidth] = useState(420);
     const isResizing = useRef(false);
+
+    // 모델 선택 (헤더 dropdown)
+    const [model, setModel] = useState<string>(DEFAULT_MODEL_ID);
+    const [modelOpen, setModelOpen] = useState(false);
+    const modelDropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const stored = localStorage.getItem(MODEL_STORAGE_KEY);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (stored && MODEL_OPTIONS.some((m) => m.id === stored)) setModel(stored);
+    }, []);
+
+    // dropdown 바깥 클릭 시 close
+    useEffect(() => {
+        if (!modelOpen) return;
+        const onClick = (ev: MouseEvent) => {
+            if (modelDropdownRef.current && !modelDropdownRef.current.contains(ev.target as Node)) {
+                setModelOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', onClick);
+        return () => document.removeEventListener('mousedown', onClick);
+    }, [modelOpen]);
+
+    const handleModelSelect = (id: string) => {
+        setModel(id);
+        localStorage.setItem(MODEL_STORAGE_KEY, id);
+        setModelOpen(false);
+    };
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -70,12 +99,6 @@ export default function QnAPanel() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
-
-        // 선택된 모델 — localStorage 에 없으면 default
-        const storedModel = localStorage.getItem(MODEL_STORAGE_KEY);
-        const model = storedModel && MODEL_OPTIONS.some((m) => m.id === storedModel)
-            ? storedModel
-            : DEFAULT_MODEL_ID;
 
         const userMsg = input.trim();
         setInput('');
@@ -211,7 +234,42 @@ export default function QnAPanel() {
             <div className="p-4 border-b border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Bot className="text-[#00d4a4]" size={20} />
-                    <h2 className="font-bold text-zinc-200">AI Assistant</h2>
+                    <div ref={modelDropdownRef} className="relative">
+                        <button
+                            onClick={() => setModelOpen(!modelOpen)}
+                            className="flex items-center gap-1.5 text-sm font-bold text-zinc-200 hover:text-white transition-colors"
+                            aria-label="모델 선택"
+                        >
+                            <span>{MODEL_OPTIONS.find((m) => m.id === model)?.label ?? model}</span>
+                            <ChevronDown
+                                size={14}
+                                className={`text-zinc-400 transition-transform ${modelOpen ? 'rotate-180' : ''}`}
+                            />
+                        </button>
+                        {modelOpen && (
+                            <div className="absolute top-full left-0 mt-2 w-60 bg-zinc-800 border border-white/10 rounded-lg shadow-2xl overflow-hidden z-50">
+                                {MODEL_OPTIONS.map((opt) => {
+                                    const isSelected = model === opt.id;
+                                    return (
+                                        <button
+                                            key={opt.id}
+                                            onClick={() => handleModelSelect(opt.id)}
+                                            className={`w-full text-left px-3 py-2 transition-colors ${isSelected
+                                                ? 'bg-[#00d4a4]/10 text-[#00d4a4]'
+                                                : 'text-zinc-300 hover:bg-zinc-700/50'
+                                                }`}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-sm font-medium">{opt.label}</span>
+                                                {isSelected && <Check size={14} />}
+                                            </div>
+                                            <p className="text-xs text-zinc-500 mt-0.5">{opt.description}</p>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <button
                     onClick={() => window.history.back()}
