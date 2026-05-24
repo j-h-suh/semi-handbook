@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Bot, ChevronDown, Check } from 'lucide-react';
+import { Send, Bot, ChevronDown, Check, RotateCcw } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { DEFAULT_MODEL_ID, MODEL_OPTIONS } from '@/lib/llm/models';
@@ -268,13 +268,24 @@ export default function QnAPanel() {
                         )}
                     </div>
                 </div>
-                <button
-                    onClick={() => window.history.back()}
-                    className="text-zinc-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
-                    aria-label="패널 닫기"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
-                </button>
+                <div className="flex items-center gap-1">
+                    <button
+                        onClick={() => setMessages([])}
+                        disabled={messages.length === 0 || isLoading || messages.some((m) => m.isStreaming)}
+                        className="text-zinc-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-zinc-400"
+                        aria-label="대화 리셋"
+                        title="대화 리셋"
+                    >
+                        <RotateCcw size={16} />
+                    </button>
+                    <button
+                        onClick={() => window.history.back()}
+                        className="text-zinc-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
+                        aria-label="패널 닫기"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                    </button>
+                </div>
             </div>
 
             <div
