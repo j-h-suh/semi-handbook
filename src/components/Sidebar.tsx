@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings, BookText, Search, ChevronDown, X, PanelLeftClose } from 'lucide-react';
+import { BookText, Search, ChevronDown, X, PanelLeftClose } from 'lucide-react';
 import { BOOKS, getBookMeta, type Book, type AccentName } from '@/lib/books';
 import type { ChapterMeta } from '@/lib/markdown';
 
@@ -196,13 +196,6 @@ export default function Sidebar({ chaptersByBook, isOpen = false, onClose, isDes
                     <BookText size={16} />
                     <span>용어 사전</span>
                 </Link>
-                <button
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 rounded-lg transition-colors"
-                    onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
-                >
-                    <Settings size={16} />
-                    <span>API Settings (BYOK)</span>
-                </button>
             </div>
         </aside>
     );

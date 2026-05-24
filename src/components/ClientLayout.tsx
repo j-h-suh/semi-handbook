@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { Menu, PanelLeftOpen } from 'lucide-react';
 import { QnAPanelProvider } from '@/components/QnAContext';
 import QnAPanel from '@/components/QnAPanel';
-import SettingsModal from '@/components/SettingsModal';
 import SearchModal from '@/components/SearchModal';
 import Sidebar from '@/components/Sidebar';
 import type { SearchEntry } from '@/lib/searchIndex';
@@ -98,7 +97,6 @@ export default function ClientLayout({ children, searchData, chaptersByBook }: P
             </main>
 
             <QnAPanel />
-            <SettingsModal />
             <SearchModal searchData={searchData} />
         </QnAPanelProvider>
     );
