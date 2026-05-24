@@ -35,6 +35,7 @@ yarn-error.log*
 !.env.example
 
 # service account keys / 자격증명 (절대 commit 금지)
+secrets/
 content/claude_code/mini_claude/secrets/
 
 # claude code (토큰/개인 설정)
