@@ -37,14 +37,26 @@ function BookRow({ book, meta }: { book: BookMeta; meta: string }) {
             href={book.landingHref}
             className={`group block p-5 rounded-2xl border ${c.cardBorder} ${c.cardBg} ${c.cardHoverBg} ${c.cardHoverBorder} transition-all`}
         >
-            <div className="flex items-baseline gap-2 mb-1 flex-wrap">
-                <h2 className="text-lg font-bold text-white">{book.fullLabel}</h2>
-                <p className="text-xs text-zinc-500">{book.subtitle}</p>
+            <div className="flex items-center gap-4">
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                        <h2 className="text-lg font-bold text-white">{book.fullLabel}</h2>
+                        <p className="text-xs text-zinc-500">{book.subtitle}</p>
+                    </div>
+                    <p className="text-sm text-zinc-400 leading-relaxed mb-1">
+                        {book.description}
+                    </p>
+                    <div className="flex justify-end">
+                        <span className="text-xs text-zinc-600">{meta}</span>
+                    </div>
+                </div>
+                <span
+                    aria-hidden="true"
+                    className={`text-3xl font-light ${c.iconText} opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0 leading-none`}
+                >
+                    ›
+                </span>
             </div>
-            <p className="text-sm text-zinc-400 leading-relaxed">
-                {book.description}
-            </p>
-            <span className="text-xs text-zinc-600">{meta}</span>
         </Link>
     );
 }
