@@ -1,16 +1,22 @@
-import { getSortedChaptersData } from '@/lib/markdown';
+import { getSortedChapters } from '@/lib/markdown';
+import { BOOKS, type Book } from '@/lib/books';
 import GlossaryClient from '@/components/GlossaryClient';
 
 export default function GlossaryPage() {
-    const allChapters = getSortedChaptersData();
-
-    // Build lookup: "2.4" → { id: "02_04_스캐너와_트랙", title: "..." }
-    const chapterMap: Record<string, { id: string; title: string }> = {};
-    for (const ch of allChapters) {
-        const match = ch.id.match(/^(\d+)_(\d+)/);
-        if (match) {
-            const key = `${parseInt(match[1])}.${parseInt(match[2])}`;
-            chapterMap[key] = { id: ch.id, title: ch.title };
+    // 책별 chapterMap — "2.4" → { id: "02_04_xxx", title: "..." }
+    const chapterMap: Record<Book, Record<string, { id: string; title: string }>> = {
+        semi: {},
+        stats: {},
+        claude: {},
+    };
+    for (const book of BOOKS) {
+        const chapters = getSortedChapters(book.id);
+        for (const ch of chapters) {
+            const match = ch.id.match(/^(\d+)_(\d+)/);
+            if (match) {
+                const key = `${parseInt(match[1])}.${parseInt(match[2])}`;
+                chapterMap[book.id][key] = { id: ch.id, title: ch.title };
+            }
         }
     }
 
