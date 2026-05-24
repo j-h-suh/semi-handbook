@@ -1277,7 +1277,7 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ---
 
-## Phase 23: claude 핸드북 ASCII → React 다이어그램 변환 시작 *(🚧 진행 중)*
+## Phase 23: claude 핸드북 ASCII → React 다이어그램 변환 시작 *(✅ 완료 — Phase 32 에서 전수 종결)*
 
 2026-05-23 사용자 — Phase 21 의 _박스 11→4 카테고리 압축_ 후 _ASCII → React 변환_ 결정. 사용자 선택: **B (React 전면, semi 패턴)** + **시범 자리 09_1 미니 클로드 골격**.
 
@@ -1640,6 +1640,64 @@ Phase 19 의 _후행_ 에서 _"변환 완료 후 lang === 'text' 분기 제거"_
 ### 32-5. claude 다이어그램 진짜 종결
 
 26 자리 변환 + 모든 chap 전수 발굴 완료. `lang === 'text'` 분기 (Phase 19) _영구 보존_ — TUI 시뮬 자리 보호.
+
+---
+
+## Phase 33: 랜딩 카드 우측 chevron + meta 우측 정렬 *(✅ 완료)*
+
+2026-05-24 사용자 _"랜딩페이지 아래에 3 개의 카드의 오른쪽이 좀 여유로워요"_ — 책 아이콘 삭제 (Phase 17 후속) 이후 카드 내부 콘텐츠가 좌측 1/3 만 차지, 우측 60% 가 빈 자리.
+
+### 33-1. BookRow 카드 구조 변경 (commit `c0a1efc`)
+
+`HomeClient.tsx` — 카드 내부를 flex 2-column 으로:
+
+- 좌측 (`flex-1 min-w-0`): 제목 + 부제 + 설명 + meta(우측 정렬 `flex justify-end`)
+- 우측 (`flex-shrink-0`): chevron `›`, `text-3xl font-light` + 시그니처 그린, hover 시 `opacity-50 → 100` + `translate-x-1` 강조
+
+사용자 선택 (preview) — 카드 폭 줄이기 / chevron + meta / 카드 내부 2 컬럼 _3 옵션_ 중 _chevron + meta_.
+
+---
+
+## Phase 34: 카드 meta 챕터 + 다이어그램 통일 *(✅ 완료)*
+
+2026-05-24 사용자 _"챕터, 용어, 다이어그램이 중구난방이네요. 용어는 빼고. 챕터랑 다이어그램이 얼마나 있는지만 표시합시다"_ — semi=챕터+용어 / stats=챕터+전체다이어그램 / claude=챕터만 자리 불일치.
+
+### 34-1. page.tsx 카운트 결 재정렬 (commit `45632c0`)
+
+`src/app/page.tsx`:
+
+- `glossary import` 제거 + `totalTerms` 자리 제거
+- 다이어그램 카운트를 _registry 파일 entry 정규식 카운트_ 결로:
+  - `semiRegistry.ts` → semi: 192 자리
+  - `statsRegistry.ts` → stats: 28 자리
+  - `claudeRegistry.ts` → claude: 27 자리
+- `bookMetas` 자리 _세 책 모두_ `${chapter}개 챕터 · ${diagram}개 다이어그램` 결로 통일
+
+`HomeClient.tsx` 의 _주석 자리_ 도 _용어 → 다이어그램_ 으로 동기화.
+
+---
+
+## Phase 35: 랜딩 글로우 그린 통일 + AI 도움 버튼 아이콘 전용 *(✅ 완료)*
+
+2026-05-24 사용자 _"AI 도움 글자를 제거할까요"_ + _"랜딩페이지 화면 배경이랑 핸드북 배경이 상이한데, 의도된 것일까요"_ — Phase 17 단일 시그니처 적용 시 랜딩만 누락 자리.
+
+### 35-1. 랜딩 배경 글로우 그린 통일 (commit `4b0095d`)
+
+`src/app/page.tsx`:
+
+- 상단 글로우 `bg-cyan-500/10` → `bg-[#00d4a4]/10`
+- 하단 글로우 `bg-indigo-500/10` → `bg-[#7cebcb]/8`
+
+→ 챕터 페이지 (semi/stats/claude `[id]/page.tsx`) 의 _이미 적용된 그린 글로우 자리_ 와 _일관_.
+
+### 35-2. QnAPanel 토글 버튼 아이콘 전용
+
+`src/components/QnAPanel.tsx`:
+
+- 글자 `AI 도움` 제거, `Bot` 아이콘 단독
+- 크기 `size={14}` → `size={16}`, padding 균일 `p-2`
+- `title="AI 도움"` 추가 — hover tooltip 으로 _기능 명확_ 자리 유지
+- `aria-label` `AI 도움 패널 열기` 결로 _접근성_ 명시
 
 ---
 
