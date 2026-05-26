@@ -10,7 +10,7 @@ LLM API 는 _공급자_ (Anthropic / GCP / AWS / Azure / OpenAI / Google) 와 _�
 
 ## 전제
 
-학습자가 _이미 갖추고 있어야_ 하는 것:
+학습자가 _이미 갖추고 있어야_ 하는 것은 **GCP 자격증명** 한 묶음뿐입니다:
 
 - **GCP project** + 결제(billing) 활성화
 - **Vertex AI API** 가 enable 된 project
@@ -20,14 +20,43 @@ LLM API 는 _공급자_ (Anthropic / GCP / AWS / Azure / OpenAI / Google) 와 _�
 
 > 위 전제가 안 갖춰져 있으면 _그것부터_ 해결하세요. project 부터 시작한다면 [GCP 공식 가이드 — Use Claude](https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude) 의 _Before you begin_ 절을 따르면 됩니다.
 
+_개발 환경 (Python / uv / git / repo clone)_ 자리 자리 자리 아래 §0 에서 처음부터 안내합니다.
+
+---
+
+## 0. 개발 환경 준비 — 빈 머신부터 시작하는 경우
+
+이미 repo 가 clone 되어 있고 `uv` 가 설치된 상태라면 §1 로 건너뛰어도 됩니다.
+
+### 0-1. 필요한 도구 설치
+
+| 도구 | 최소 버전 | 설치 (macOS / Linux) |
+|---|---|---|
+| Python | 3.12 | `brew install python@3.12` 또는 시스템 패키지 매니저 (`uv` 가 자동 관리 가능) |
+| uv | 최신 | `curl -LsSf https://astral.sh/uv/install.sh \| sh` 또는 `brew install uv` |
+| git | 2.x | `brew install git` (대부분 OS 에 기본 설치) |
+
+> 💡 **Python 자체 설치가 부담스러우면 `uv` 만 깔아도 됩니다.** `uv sync` 가 `pyproject.toml` 의 `requires-python` 을 보고 _자동으로_ Python 3.12 를 download / pin 해줍니다 (`uv python install 3.12` 도 명시적으로 가능).
+
+### 0-2. 저장소 clone
+
+```bash
+# 사내 Azure DevOps 저장소 (실제 URL 은 팀에서 받은 결로)
+git clone git@ssh.dev.azure.com:v3/<org>/<project>/semi-handbook
+cd semi-handbook/content/claude_code/mini_claude
+```
+
+이 디렉토리가 _이번 챕터 내내 작업 cwd_ 입니다. 이후의 `secrets/` / `.env` / `uv sync` 모두 여기 기준.
+
+> 💡 **SSH key 등록 안 됐으면** HTTPS 결로 clone (`git clone https://...`) 한 뒤 PAT 입력. SSH key 등록은 Azure DevOps → User settings → SSH public keys.
+
 ---
 
 ## 1. JSON 키 안전한 자리에 두기
 
-프로젝트 디렉토리 안에 `secrets/` 폴더를 만들어 키를 옮깁니다:
+작업 cwd (`content/claude_code/mini_claude/`) 에 `secrets/` 폴더를 만들어 키를 옮깁니다:
 
 ```bash
-cd content/claude_code/mini_claude
 mkdir -p secrets
 mv ~/Downloads/your-sa-key.json secrets/
 chmod 600 secrets/your-sa-key.json
@@ -39,10 +68,9 @@ chmod 600 secrets/your-sa-key.json
 
 ## 2. `.env` 파일 만들기
 
-`mini_claude/` 디렉토리의 `.env.example` 을 복사:
+작업 cwd 의 `.env.example` 을 복사:
 
 ```bash
-cd content/claude_code/mini_claude
 cp .env.example .env
 ```
 
@@ -63,10 +91,11 @@ MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
 ## 3. 첫 실행
 
 ```bash
-cd content/claude_code/mini_claude
 uv sync                          # pyproject.toml + anthropic[vertex] extra 설치
 uv run mini-claude
 ```
+
+`uv sync` 가 처음 실행되면 `.venv/` 가 생성되고 `pyproject.toml` + `uv.lock` 에 명시된 의존성 (`anthropic[vertex]` + `pydantic` + `rich` + `python-dotenv`) 이 설치됩니다. 이후 실행은 `uv run mini-claude` 한 줄.
 
 기대 출력:
 
