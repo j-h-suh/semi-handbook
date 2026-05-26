@@ -26,7 +26,7 @@ _개발 환경 (Python / uv / git / repo clone)_ 자리 자리 자리 아래 §0
 
 ## 0. 개발 환경 준비 — 빈 머신부터 시작하는 경우
 
-이미 repo 가 clone 되어 있고 `uv` 가 설치된 상태라면 §1 로 건너뛰어도 됩니다.
+이미 작업 디렉토리가 있고 `uv` 가 설치된 상태라면 §1 로 건너뛰어도 됩니다.
 
 ### 0-1. 필요한 도구 설치
 
@@ -34,27 +34,27 @@ _개발 환경 (Python / uv / git / repo clone)_ 자리 자리 자리 아래 §0
 |---|---|---|
 | Python | 3.12 | `brew install python@3.12` 또는 시스템 패키지 매니저 (`uv` 가 자동 관리 가능) |
 | uv | 최신 | `curl -LsSf https://astral.sh/uv/install.sh \| sh` 또는 `brew install uv` |
-| git | 2.x | `brew install git` (대부분 OS 에 기본 설치) |
 
 > 💡 **Python 자체 설치가 부담스러우면 `uv` 만 깔아도 됩니다.** `uv sync` 가 `pyproject.toml` 의 `requires-python` 을 보고 _자동으로_ Python 3.12 를 download / pin 해줍니다 (`uv python install 3.12` 도 명시적으로 가능).
 
-### 0-2. 저장소 clone
+### 0-2. 작업 디렉토리 만들기
+
+학습자 본인의 빈 디렉토리에서 시작합니다:
 
 ```bash
-# 사내 Azure DevOps 저장소 (실제 URL 은 팀에서 받은 결로)
-git clone git@ssh.dev.azure.com:v3/<org>/<project>/semi-handbook
-cd semi-handbook/content/claude_code/mini_claude
+mkdir -p ~/mini-claude
+cd ~/mini-claude
 ```
 
 이 디렉토리가 _이번 챕터 내내 작업 cwd_ 입니다. 이후의 `secrets/` / `.env` / `uv sync` 모두 여기 기준.
 
-> 💡 **SSH key 등록 안 됐으면** HTTPS 결로 clone (`git clone https://...`) 한 뒤 PAT 입력. SSH key 등록은 Azure DevOps → User settings → SSH public keys.
+> 💡 **`pyproject.toml` 이나 소스 코드는 _복사해 오는 자리가 아닙니다_.** 9.1 부터 디렉토리 구조 / `pyproject.toml` / Python 파일 자리 자리 자리 _하나씩 손으로_ 작성하면서 미니 클로드를 완성해 갑니다. 9.0 (지금) 은 _코드를 쓰기 전 환경 자리 자리 자리만 준비_ 하는 단계.
 
 ---
 
 ## 1. JSON 키 안전한 자리에 두기
 
-작업 cwd (`content/claude_code/mini_claude/`) 에 `secrets/` 폴더를 만들어 키를 옮깁니다:
+작업 cwd 에 `secrets/` 폴더를 만들어 키를 옮깁니다:
 
 ```bash
 mkdir -p secrets
@@ -78,7 +78,7 @@ cp .env.example .env
 
 ```bash
 # .env
-GOOGLE_APPLICATION_CREDENTIALS=secrets/your-sa-key.json   # §1 에서 옮긴 키 (mini_claude/ cwd 기준 상대 경로)
+GOOGLE_APPLICATION_CREDENTIALS=secrets/your-sa-key.json   # §1 에서 옮긴 키 (작업 cwd 기준 상대 경로)
 VERTEX_PROJECT_ID=your-gcp-project       # SA JSON 의 project_id 와 같아야 함
 VERTEX_LOCATION=global                    # 기본값. global / us-east5 / europe-west1 등
 MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
@@ -86,9 +86,11 @@ MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
 
 > 💡 **JSON 의 `project_id` 와 `VERTEX_PROJECT_ID` 가 다르면 403/404**. JSON 파일을 열어 `project_id` 필드를 확인하세요.
 
-> 💡 **`.env` 는 git 에 안 올라감** — `.gitignore` 의 `.env*` + `!.env.example` 패턴 덕에 _학습자 본인의 `.env`_ 만 무시되고 _`.env.example` 템플릿_ 은 추적됩니다. `mini-claude` 가 시작할 때 `python-dotenv` 가 `.env` 를 자동으로 읽어 환경변수로 올립니다. `MINI_LLM_PROVIDER` 는 미설정 시 `vertex` 가 기본값이라 `.env` 에 안 적어도 됩니다.
+> 💡 **`.env.example` 자체는 9.1 에서 직접 작성합니다.** 9.0 (지금) 단계에서는 _아직 파일이 없으니_ 위 `cp` 명령은 _9.1 자리 자리 자리 .env.example 자리 자리 작성한 뒤_ 에 다시 돌아와 실행하면 됩니다. `python-dotenv` 가 `mini-claude` 시작 시 `.env` 를 자동으로 읽어 환경변수로 올립니다. `MINI_LLM_PROVIDER` 는 미설정 시 `vertex` 가 기본값.
 
 ## 3. 첫 실행
+
+> ⚠️ **9.1 / 9.2 코드 자리 자리 자리 작성한 뒤에 실행됩니다.** 9.0 단계만 끝낸 상태에서는 `pyproject.toml` / `main.py` / `agent.py` 자리 자리 자리 존재하지 않아 `uv sync` 와 `uv run mini-claude` 가 실패합니다. 9.1 자리 자리 자리 디렉토리 구조 + `pyproject.toml` + 스캐폴드를 작성하고, 9.2 자리 자리 자리 핵심 루프를 채우면 그제서야 아래 두 줄 자리 자리 자리 _첫 응답_ 을 받습니다.
 
 ```bash
 uv sync                          # pyproject.toml + anthropic[vertex] extra 설치
@@ -133,7 +135,7 @@ mini-claude 시작 (Ctrl+D로 종료)
 vLLM (OpenAI 호환, 로컬) 로 가려면 `.env` 를 vLLM 모양으로 편집:
 
 ```bash
-# mini_claude/.env
+# .env (작업 cwd)
 MINI_LLM_PROVIDER=vllm
 MINI_LLM_MODEL=meta-llama/Llama-3.1-70B-Instruct
 VLLM_BASE_URL=http://localhost:8000/v1
