@@ -91,6 +91,8 @@ MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
 ## 3. 첫 실행
 
 > ⚠️ **9.1 / 9.2 코드가 작성된 뒤에야 실행됩니다.** 9.0 단계만 끝낸 상태에서는 `pyproject.toml` / `main.py` / `agent.py` 가 존재하지 않아 `uv sync` 와 `uv run mini-claude` 가 실패합니다. 9.1 에서 디렉토리 구조 + `pyproject.toml` + 스캐폴드를 작성하고, 9.2 에서 핵심 루프를 채우면 그제서야 아래 두 줄로 _첫 응답_ 을 받습니다.
+>
+> **최소 요구 — `uv sync` 만 통과시키려면**: `pyproject.toml` + `src/mini_claude/__init__.py` (빈 파일이라도) 두 개만 있으면 됩니다. hatchling 이 `name = "mini-claude"` 를 `mini_claude` 결로 normalize 해 `src/mini_claude/` 디렉토리를 wheel 콘텐츠로 찾기 때문. 둘 중 하나라도 빠지면 `ValueError: Unable to determine which files to ship inside the wheel` 로 막힙니다.
 
 ```bash
 uv sync                          # pyproject.toml + anthropic[vertex] extra 설치
