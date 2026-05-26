@@ -61,7 +61,7 @@ Claude Code의 내부 구조를 소스코드 레벨에서 해부하는 AI 코딩
 - **애니메이션**: Framer Motion
 - **수식**: KaTeX
 - **다이어그램**: Mermaid + 커스텀 React SVG 컴포넌트
-- **AI 채팅**: Gemini API (사이드바 내장)
+- **AI 채팅**: Vertex AI (Anthropic Claude Opus 4.7 / Google Gemini 3.5 Flash 선택, `@anthropic-ai/vertex-sdk` + `@google/genai`)
 - **배포**: Vercel
 
 ## 시작하기
@@ -75,6 +75,53 @@ npm run dev
 ```
 
 [http://localhost:3000](http://localhost:3000) 에서 확인할 수 있습니다.
+
+## AI 챗봇 설정 (Q&A 패널)
+
+Q&A 패널은 Vertex AI 자격증명이 있는 환경에서만 작동합니다. 자격증명이 없어도 본문 / 다이어그램 / 용어 사전 등 다른 기능은 모두 정상 동작합니다 — **원격 배포 환경에서는 의도적으로 비활성**.
+
+### 1. Google Cloud 사전 준비
+
+Vertex AI 가 활성화된 GCP 프로젝트와 Service Account 가 필요합니다.
+
+- IAM 역할: `Vertex AI User` (`roles/aiplatform.user`)
+- 호출하는 모델 (예: `claude-opus-4-7@...`, `gemini-...`) 이 해당 프로젝트의 Model Garden 에서 활성화 / 구독되어 있어야 함
+
+### 2. Service Account JSON 배치
+
+발급받은 키 파일을 다음 위치에 둡니다 (이미 `.gitignore` 등재됨):
+
+```
+secrets/semi-handbook.json
+```
+
+`secrets/` 디렉토리 전체가 `.gitignore` 결로 보호되므로 실수로 commit 될 위험 없음. 다른 경로를 쓰려면 아래 `GOOGLE_APPLICATION_CREDENTIALS` 만 바꾸면 됩니다.
+
+### 3. `.env.local` 작성
+
+프로젝트 루트에 `.env.local` 파일을 만들고 (`.env.example` 템플릿 참고):
+
+```bash
+GOOGLE_CLOUD_PROJECT=your-gcp-project-id
+CLOUD_ML_REGION=global
+GOOGLE_APPLICATION_CREDENTIALS=./secrets/semi-handbook.json
+```
+
+- `CLOUD_ML_REGION=global` 권장 (Vertex 의 global endpoint, 가장 넓은 가용성). `us-central1` 등 region 자리 자리 모델 가용성에 따라 변경 가능
+- `.env*` 패턴이 `.gitignore` 결로 보호됨
+
+### 4. 모델 선택
+
+- 우상단 Q&A 패널 헤더의 dropdown 결로 _Claude Opus 4.7_ / _Gemini 3.5 Flash_ 선택
+- 선택은 `localStorage.chat-model` 에 저장됨
+
+### 5. 모델 / 자격 추가
+
+새 모델을 추가하거나 다른 region 결로 호출하려면:
+
+- `src/lib/llm/models.ts` — UI dropdown 에 노출할 모델 ID / 라벨
+- `src/lib/llm/index.ts` — 모델 ID prefix 결로 provider 분기 (`claude-` → `anthropic.ts`, `gemini-` → `gemini.ts`)
+- `src/lib/llm/{anthropic,gemini}.ts` — 실제 Vertex SDK 호출 (region / baseURL 결로 커스터마이즈)
 
 ## 콘텐츠 디렉토리 구조
 
@@ -120,7 +167,13 @@ src/
 │   ├── QnAPanel.tsx          # AI 사이드바 (공유)
 │   └── Sidebar.tsx           # 책별 독립 TOC
 └── lib/
-    └── markdown.ts           # 마크다운 파싱 (책별 분기)
+    ├── markdown.ts           # 마크다운 파싱 (책별 분기)
+    ├── glossary.ts           # 책별 통합 용어 사전
+    └── llm/                  # Vertex AI 어댑터 (Q&A 백엔드)
+        ├── anthropic.ts      #   Claude Opus 자리 (AnthropicVertex)
+        ├── gemini.ts         #   Gemini Flash 자리 (GoogleGenAI vertexai)
+        ├── models.ts         #   UI dropdown 노출 모델 목록 (client safe)
+        └── index.ts          #   prefix 결로 provider 분기 + streamText
 ```
 
 ## 아키텍처 결정 사항
