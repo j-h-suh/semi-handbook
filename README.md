@@ -1,4 +1,4 @@
-# 세미에이아이 핸드북 시리즈
+# SemiAI 핸드북 시리즈
 
 > AI/ML 엔지니어를 위한 인터랙티브 기술 핸드북 플랫폼
 
@@ -41,37 +41,49 @@ Claude Code의 내부 구조를 소스코드 레벨에서 해부하는 AI 코딩
 
 | Part | 내용 | 챕터 수 |
 |------|------|---------|
-| 들어가며 | 왜 이 책을 썼는가 | 2 |
+| 들어가며 | 왜 이 책을 썼는가 + JS/TS·React 사전 지식 | 6 |
 | Part 1 | 부트스트랩 | 2 |
 | Part 2 | 에이전트 루프 | 3 |
 | Part 3 | 도구 시스템 | 5 |
 | Part 4 | 슬래시 명령 | 3 |
 | Part 5 | 터미널 UI | 4 |
 | Part 6 | 설정·권한·Hook | 6 |
-| Part 7 | 외부 연결 | 4 |
+| Part 7 | 외부 연결 | 5 |
 | Part 8 | 멀티 에이전트 | 4 |
 | Part 9 | 미니 Claude Code | 5 |
-| Part 10 | 확장하기 | 3 |
+| Part 10 | 확장하기 | 8 |
 | 에필로그 | 마무리 | 1 |
 
 ## 기술 스택
 
-- **프레임워크**: Next.js 16 (Turbopack)
+- **프레임워크**: Next.js 16 (Turbopack), React 19
 - **차트**: Recharts
+- **3D 시각화**: React Three Fiber (`@react-three/fiber` + `@react-three/drei` + `three`)
 - **애니메이션**: Framer Motion
 - **수식**: KaTeX
+- **코드 하이라이트**: Shiki (+ `@shikijs/transformers`)
 - **다이어그램**: Mermaid + 커스텀 React SVG 컴포넌트
+- **검색 (⌘K)**: FlexSearch
+- **게시판 / Q&A 로그**: Supabase
 - **AI 채팅**: Vertex AI (Anthropic Claude Opus 4.7 / Google Gemini 3.5 Flash 선택, `@anthropic-ai/vertex-sdk` + `@google/genai`)
-- **배포**: Vercel
+- **저장소 / 배포**: Azure DevOps 사내 저장소, 사내 배포 환경 전환 중
 
 ## 시작하기
+
+Node.js 20+ 권장 (Next.js 16 요구사항).
 
 ```bash
 # 의존성 설치
 npm install
 
-# 개발 서버 실행
+# 개발 서버 실행 (Turbopack)
 npm run dev
+
+# 프로덕션 빌드
+npm run build && npm run start
+
+# 린트
+npm run lint
 ```
 
 [http://localhost:3000](http://localhost:3000) 에서 확인할 수 있습니다.
@@ -169,7 +181,7 @@ public/content/
         └── ...
 ```
 
-각 핸드북의 이미지는 `public/content/{book}/images/` 에 위치하며, `markdown.ts`의 `imageRewrite` 설정으로 마크다운 내 상대 경로가 절대 경로로 변환됩니다.
+반도체 핸드북의 이미지는 `public/content/semi/images/` 에 위치하며, `markdown.ts`의 `imageRewrite` 설정으로 마크다운 내 상대 경로가 절대 경로로 변환됩니다. 통계학·클로드 핸드북은 별도 이미지 자산 없이 **React SVG 컴포넌트** 결로 다이어그램을 렌더링합니다 (`src/components/diagrams/` 참조).
 
 ## 프로젝트 구조
 
@@ -181,11 +193,16 @@ src/
 │   ├── stats/[id]/           # 통계 챕터 페이지
 │   ├── claude/[id]/          # 클로드 챕터 페이지
 │   ├── board/                # 통합 게시판
-│   └── glossary/             # 용어 사전
+│   ├── glossary/             # 용어 사전
+│   └── api/chat/             # Q&A 백엔드 (Vertex AI)
 ├── components/
 │   ├── diagrams/
-│   │   ├── semi/             # 반도체 다이어그램
-│   │   └── stats/            # 통계 다이어그램
+│   │   ├── *.tsx             #   반도체·클로드 다이어그램 (플랫)
+│   │   ├── stats/            #   통계 다이어그램 (서브 디렉토리)
+│   │   ├── semiRegistry.ts   #   책별 매핑 — semi
+│   │   ├── statsRegistry.ts  #   책별 매핑 — stats
+│   │   ├── claudeRegistry.ts #   책별 매핑 — claude
+│   │   └── diagramTokens.ts  #   공유 디자인 토큰
 │   ├── MarkdownViewer.tsx
 │   ├── QnAPanel.tsx          # AI 사이드바 (공유)
 │   └── Sidebar.tsx           # 책별 독립 TOC
@@ -193,9 +210,10 @@ src/
     ├── markdown.ts           # 마크다운 파싱 (책별 분기)
     ├── glossary.ts           # 책별 통합 용어 사전
     └── llm/                  # Vertex AI 어댑터 (Q&A 백엔드)
-        ├── anthropic.ts      #   Claude Opus 자리 (AnthropicVertex)
-        ├── gemini.ts         #   Gemini Flash 자리 (GoogleGenAI vertexai)
+        ├── anthropic.ts      #   Claude Opus 어댑터 (AnthropicVertex)
+        ├── gemini.ts         #   Gemini Flash 어댑터 (GoogleGenAI vertexai)
         ├── models.ts         #   UI dropdown 노출 모델 목록 (client safe)
+        ├── types.ts          #   ChatMessage / StreamTextArgs 등 타입
         └── index.ts          #   prefix 결로 provider 분기 + streamText
 ```
 
@@ -207,8 +225,4 @@ src/
 - **컴포넌트 공유**: MarkdownViewer, QnAPanel, Sidebar, SearchModal은 공유. 다이어그램 레지스트리와 파트 매핑은 책별 분리
 - **게시판**: 통합 유지 + 책별 카테고리 태그
 - **검색 (⌘K)**: 전체 핸드북 범위에서 검색, 결과에 책별 배지 표시
-- **콘텐츠 디렉토리**: 각 핸드북은 `content/{book}/` 아래에 독립적으로 관리. 이미지는 `public/content/{book}/images/`에서 정적 서빙
-
-## 라이선스
-
-MIT
+- **콘텐츠 디렉토리**: 각 핸드북은 `content/{book}/` 아래에 독립적으로 관리. 반도체는 `public/content/semi/images/` 결로 이미지 정적 서빙, 통계학·클로드는 React SVG 컴포넌트 결로 인라인 렌더링
