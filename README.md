@@ -97,7 +97,17 @@ secrets/semi-handbook.json
 
 `secrets/` 디렉토리 전체가 `.gitignore` 결로 보호되므로 실수로 commit 될 위험 없음. 다른 경로를 쓰려면 아래 `GOOGLE_APPLICATION_CREDENTIALS` 만 바꾸면 됩니다.
 
-### 3. `.env.local` 작성
+### 3. 환경변수 주입
+
+서버 사이드 (API route) 에서 `process.env.*` 결로 다음 3 개 키를 읽습니다. 환경에 따라 주입 방식이 다릅니다.
+
+| 키 | 의미 |
+|---|---|
+| `GOOGLE_CLOUD_PROJECT` | GCP 프로젝트 ID |
+| `CLOUD_ML_REGION` | Vertex 리전 (`global` 권장 — 가장 넓은 가용성. `us-central1` 등 모델 가용성에 따라 변경) |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Service Account JSON 의 _런타임 절대 / 상대 경로_ |
+
+#### 3-A. 로컬 개발
 
 프로젝트 루트에 `.env.local` 파일을 만들고 (`.env.example` 템플릿 참고):
 
@@ -107,8 +117,21 @@ CLOUD_ML_REGION=global
 GOOGLE_APPLICATION_CREDENTIALS=./secrets/semi-handbook.json
 ```
 
-- `CLOUD_ML_REGION=global` 권장 (Vertex 의 global endpoint, 가장 넓은 가용성). `us-central1` 등 region 자리 자리 모델 가용성에 따라 변경 가능
-- `.env*` 패턴이 `.gitignore` 결로 보호됨
+- `.env*` 패턴이 `.gitignore` 결로 보호됨 (commit 안 됨)
+- Next.js 가 dev server 기동 시 자동으로 `process.env` 에 로드
+
+#### 3-B. 사내 배포
+
+`.env.local` 파일을 그대로 옮기는 결이 아니라, **동일 키들을 런타임 환경변수 결로 주입** 합니다. SA JSON 도 컨테이너 / 서버에 함께 배치해 `GOOGLE_APPLICATION_CREDENTIALS` 가 _배포된 경로_ 를 가리키도록 합니다.
+
+| 배포 환경 | 주입 방식 (예시) |
+|---|---|
+| Docker | `docker run --env-file env.list -v /host/sa.json:/app/secrets/semi-handbook.json` |
+| docker-compose | `environment:` + `volumes:` 결로 SA JSON 마운트 |
+| Kubernetes | ConfigMap (project ID / region) + Secret (SA JSON) → `volumeMount` |
+| PM2 / systemd | ecosystem 파일 또는 `Environment=` directive |
+
+> 배포 인프라가 확정되면 이 절을 _구체 절차_ 로 보충합니다.
 
 ### 4. 모델 선택
 
