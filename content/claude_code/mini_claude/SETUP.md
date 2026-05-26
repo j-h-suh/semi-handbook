@@ -20,7 +20,7 @@ LLM API 는 _공급자_ (Anthropic / GCP / AWS / Azure / OpenAI / Google) 와 _�
 
 > 위 전제가 안 갖춰져 있으면 _그것부터_ 해결하세요. project 부터 시작한다면 [GCP 공식 가이드 — Use Claude](https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude) 의 _Before you begin_ 절을 따르면 됩니다.
 
-_개발 환경 (Python / uv / git / repo clone)_ 자리 자리 자리 아래 §0 에서 처음부터 안내합니다.
+_개발 환경 (Python / uv)_ 은 아래 §0 에서 처음부터 안내합니다.
 
 ---
 
@@ -48,7 +48,7 @@ cd ~/mini-claude
 
 이 디렉토리가 _이번 챕터 내내 작업 cwd_ 입니다. 이후의 `secrets/` / `.env` / `uv sync` 모두 여기 기준.
 
-> 💡 **`pyproject.toml` 이나 소스 코드는 _복사해 오는 자리가 아닙니다_.** 9.1 부터 디렉토리 구조 / `pyproject.toml` / Python 파일 자리 자리 자리 _하나씩 손으로_ 작성하면서 미니 클로드를 완성해 갑니다. 9.0 (지금) 은 _코드를 쓰기 전 환경 자리 자리 자리만 준비_ 하는 단계.
+> 💡 **`pyproject.toml` 이나 소스 코드는 _복사해 오는 것이 아닙니다_.** 9.1 부터 디렉토리 구조 / `pyproject.toml` / Python 파일을 _하나씩 손으로_ 작성하면서 미니 클로드를 완성해 갑니다. 9.0 (지금) 은 _코드를 쓰기 전 환경만 준비_ 하는 단계.
 
 ---
 
@@ -86,11 +86,11 @@ MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
 
 > 💡 **JSON 의 `project_id` 와 `VERTEX_PROJECT_ID` 가 다르면 403/404**. JSON 파일을 열어 `project_id` 필드를 확인하세요.
 
-> 💡 **`.env.example` 자체는 9.1 에서 직접 작성합니다.** 9.0 (지금) 단계에서는 _아직 파일이 없으니_ 위 `cp` 명령은 _9.1 자리 자리 자리 .env.example 자리 자리 작성한 뒤_ 에 다시 돌아와 실행하면 됩니다. `python-dotenv` 가 `mini-claude` 시작 시 `.env` 를 자동으로 읽어 환경변수로 올립니다. `MINI_LLM_PROVIDER` 는 미설정 시 `vertex` 가 기본값.
+> 💡 **`.env.example` 자체는 9.1 에서 직접 작성합니다.** 9.0 (지금) 단계에서는 _아직 파일이 없으니_ 위 `cp` 명령은 _9.1 에서 `.env.example` 을 작성한 뒤_ 에 다시 돌아와 실행하면 됩니다. `python-dotenv` 가 `mini-claude` 시작 시 `.env` 를 자동으로 읽어 환경변수로 올립니다. `MINI_LLM_PROVIDER` 는 미설정 시 `vertex` 가 기본값.
 
 ## 3. 첫 실행
 
-> ⚠️ **9.1 / 9.2 코드 자리 자리 자리 작성한 뒤에 실행됩니다.** 9.0 단계만 끝낸 상태에서는 `pyproject.toml` / `main.py` / `agent.py` 자리 자리 자리 존재하지 않아 `uv sync` 와 `uv run mini-claude` 가 실패합니다. 9.1 자리 자리 자리 디렉토리 구조 + `pyproject.toml` + 스캐폴드를 작성하고, 9.2 자리 자리 자리 핵심 루프를 채우면 그제서야 아래 두 줄 자리 자리 자리 _첫 응답_ 을 받습니다.
+> ⚠️ **9.1 / 9.2 코드가 작성된 뒤에야 실행됩니다.** 9.0 단계만 끝낸 상태에서는 `pyproject.toml` / `main.py` / `agent.py` 가 존재하지 않아 `uv sync` 와 `uv run mini-claude` 가 실패합니다. 9.1 에서 디렉토리 구조 + `pyproject.toml` + 스캐폴드를 작성하고, 9.2 에서 핵심 루프를 채우면 그제서야 아래 두 줄로 _첫 응답_ 을 받습니다.
 
 ```bash
 uv sync                          # pyproject.toml + anthropic[vertex] extra 설치
@@ -109,7 +109,7 @@ mini-claude 시작 (Ctrl+D로 종료)
 
 ---
 
-## 흔한 막힘 자리
+## 흔한 막힘
 
 | 에러 | 원인 | 해결 |
 |---|---|---|
