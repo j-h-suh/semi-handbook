@@ -844,7 +844,7 @@ chmod +x ~/.mini_claude/guard.py
 ### 2. 미니 클로드 실행
 
 ```bash
-cd content/claude_code/mini_claude
+cd ~/mini-claude     # 학습자 작업 cwd (9.0 SETUP.md §0-2 에서 만든 디렉토리)
 uv run mini-claude   # .env (VERTEX_PROJECT_ID + GOOGLE_APPLICATION_CREDENTIALS 등) 가 준비됐다고 가정 — SETUP.md 참조
 ```
 

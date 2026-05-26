@@ -703,7 +703,7 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [x] 10.5 API 클라이언트 신규 챕터 + mini_claude clients 모듈 (Vertex + vLLM 어댑터) (commit `4832510`)
 
 **Vertex 실행 보장**:
-- [x] mini_claude/SETUP.md + `anthropic[vertex]` extra — google.auth import 보장 (commit `3416d0e`)
+- [x] mini-claude/SETUP.md + `anthropic[vertex]` extra — google.auth import 보장 (commit `3416d0e`)
 - [x] Vertex region/model 기본값 학습자 환경 표준에 맞춤 — `claude-opus-4-7` alias + `global` region + `CLOUD_ML_REGION` fallback (commit `b25b356`)
 
 **9.x + 10.3 본문 코드 Vertex 화**:
@@ -747,9 +747,9 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [x] 학습자 누적 시뮬로 검증 — `VERTEX_PROJECT_ID` + `VERTEX_LOCATION` + `GOOGLE_APPLICATION_CREDENTIALS` + `MINI_LLM_MODEL` 4 개만으로 (1) `_check_environment()` 통과 (2) 9.2 `_make_vertex_client()` 객체 생성 (3) 10.5 `make_client()` + `get_default_model()` 작동 (4) `VERTEX_PROJECT_ID` 누락 시 친절 에러 — 4/4 PASS
 
 ### 10-2. `.env` 흐름 도입
-- [x] `mini_claude/pyproject.toml` — `python-dotenv>=1.0.0` 의존성 추가 + `uv sync`
-- [x] `mini_claude/src/mini_claude/main.py` — `from dotenv import load_dotenv` + `main()` 첫 줄에 `load_dotenv()` 호출 (Write 로 file 전체 한 번에 — ruff hook 의 중간상태 F401 회피)
-- [x] `mini_claude/.env.example` 신규 — 학습자 템플릿 (4 변수 + vLLM 주석)
+- [x] `mini-claude/pyproject.toml` — `python-dotenv>=1.0.0` 의존성 추가 + `uv sync`
+- [x] `mini-claude/src/mini_claude/main.py` — `from dotenv import load_dotenv` + `main()` 첫 줄에 `load_dotenv()` 호출 (Write 로 file 전체 한 번에 — ruff hook 의 중간상태 F401 회피)
+- [x] `mini-claude/.env.example` 신규 — 학습자 템플릿 (4 변수 + vLLM 주석)
 - [x] 저장소 root `.gitignore` — `.env*` 옆에 `!.env.example` negation 추가
 - [x] SETUP.md §2 재작성 — _shell rc export_ → `cp .env.example .env` + 편집 흐름. 💡 콜아웃에 `.env` git 제외 + dotenv 자동 로드 설명
 - [x] 9.1 본문 — pyproject.toml 의존성 _세 줄→네 줄_ + main.py stub 의 `from dotenv import load_dotenv` + `main()` 의 `load_dotenv()` 호출
@@ -757,10 +757,10 @@ semi/stats 대비 claude_code에서 드문 표기를 보강/정리합니다.
 - [x] `.env` 자동 로드 시뮬 검증 — tmpdir 의 `.env` → `load_dotenv()` → `_check_environment()` 통과 → `make_client()` 작동 (4/4 PASS) + 진짜 `mini-claude` CLI 가 _.env 만으로_ REPL 진입 확인
 
 ### 10-3. SA JSON 위치 — HOME → 프로젝트 내 `secrets/`
-- [x] 저장소 `.gitignore` 에 `content/claude_code/mini_claude/secrets/` 명시적 추가 — 사용자 글로벌 `~/.gitignore_global` 의존성 제거, 다른 학습자 clone 시에도 보호
+- [x] 저장소 `.gitignore` 에 `content/claude_code/mini-claude/secrets/` 명시적 추가 — 사용자 글로벌 `~/.gitignore_global` 의존성 제거, 다른 학습자 clone 시에도 보호
 - [x] SETUP.md §1 재작성 — `~/.config/gcp/` → `cd content/claude_code/mini_claude && mkdir -p secrets && mv ... secrets/` + `chmod 600` 흐름. 💡 (gitignore 보호 + 공유 시 주의) + ⚠️ (`chmod 600` 의 역할) 콜아웃 추가
-- [x] `.env.example` + SETUP.md §2 의 `GOOGLE_APPLICATION_CREDENTIALS` 값을 `secrets/your-sa-key.json` (mini_claude/ cwd 기준 상대 경로) 으로 갱신
-- [x] 시뮬 검증 — `mini_claude/secrets/your-sa-key.json` 가짜 키 + `.env` 의 상대 경로로 진짜 `mini-claude` CLI 가 REPL 진입 (`.env` 자동 로드 + `_check_environment()` 통과). `git check-ignore` 로 `secrets/` 와 `.env` 모두 무시 패턴 매칭 확인
+- [x] `.env.example` + SETUP.md §2 의 `GOOGLE_APPLICATION_CREDENTIALS` 값을 `secrets/your-sa-key.json` (mini-claude/ cwd 기준 상대 경로) 으로 갱신
+- [x] 시뮬 검증 — `mini-claude/secrets/your-sa-key.json` 가짜 키 + `.env` 의 상대 경로로 진짜 `mini-claude` CLI 가 REPL 진입 (`.env` 자동 로드 + `_check_environment()` 통과). `git check-ignore` 로 `secrets/` 와 `.env` 모두 무시 패턴 매칭 확인
 
 ---
 
@@ -837,7 +837,7 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 ### 12-5. 환경변수 export → .env 통일 (`b68e8a9` + 이번 commit)
 
 - [x] **mini_claude 코드** — `main.py _check_environment()` 의 3 에러 메시지 (Vertex / vLLM / Anthropic) `export ...` → `.env 파일에 추가 (SETUP.md §2 참조)` + 변수 들여쓰기
-- [x] **본문 6 자리** — 9.1 line 367-373 (stub 에러), 10.5 line 131-134/152-154 (시나리오 ①/②), 10.5 line 442-445 (`_check_environment` 인용), 10.5 line 619-621/647-650 (진짜 Vertex/vLLM 시나리오). 시나리오 셸 = `cat mini_claude/.env` + 변수 + `uv run mini-claude` (python-dotenv 자동 로드 주석)
+- [x] **본문 6 자리** — 9.1 line 367-373 (stub 에러), 10.5 line 131-134/152-154 (시나리오 ①/②), 10.5 line 442-445 (`_check_environment` 인용), 10.5 line 619-621/647-650 (진짜 Vertex/vLLM 시나리오). 시나리오 셸 = `cat mini-claude/.env` + 변수 + `uv run mini-claude` (python-dotenv 자동 로드 주석)
 - [x] **GOOGLE_APPLICATION_CREDENTIALS 상대 경로** — `/path/to/sa.json` 또는 `/Users/me/keys/sa.json` → `secrets/your-sa-key.json` (Phase 10-3 의 _프로젝트 내 secrets/_ 정책)
 - [x] **SETUP.md vLLM 섹션** — 마지막 잔존 (line 104-110) `.env` 흐름으로 정리 (이번 commit)
 
@@ -852,7 +852,7 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 
 ## Phase 13: 학습자 누적 시뮬 13/13 PASS + 1:1 diff 검증 + 본문 막힘 자리 픽스 *(✅ 완료)*
 
-2026-05-23 사용자 _학습자 누적 시뮬 재실행_ 요청. 처음에는 _현재 mini_claude 코드 베이스_ 의 _대표 7 시나리오_ 만 실행 (sanity) — 사용자가 _"끝까지 가본 건가요?"_ 지적 → _13 챕터 진짜 누적_ (각 시점에 _본문에서 발췌한 코드_ 만으로 mini_claude/ 디렉토리 누적 + 실행) 으로 재진행. 13/13 PASS 후 사용자가 _불완전_ 의 뜻을 물으며 _1:1 diff 검증_ 까지 진행 — agent 가 _누적 카피하면서 본문과 다른 _최종 코드_ 를 가져온 자리_ = _학습자 막힘 후보_ 분류.
+2026-05-23 사용자 _학습자 누적 시뮬 재실행_ 요청. 처음에는 _현재 mini_claude 코드 베이스_ 의 _대표 7 시나리오_ 만 실행 (sanity) — 사용자가 _"끝까지 가본 건가요?"_ 지적 → _13 챕터 진짜 누적_ (각 시점에 _본문에서 발췌한 코드_ 만으로 mini-claude/ 디렉토리 누적 + 실행) 으로 재진행. 13/13 PASS 후 사용자가 _불완전_ 의 뜻을 물으며 _1:1 diff 검증_ 까지 진행 — agent 가 _누적 카피하면서 본문과 다른 _최종 코드_ 를 가져온 자리_ = _학습자 막힘 후보_ 분류.
 
 ### 13-1. 학습자 누적 시뮬 13 시점 PASS
 
@@ -882,12 +882,12 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 ### 13-3. 카테고리 B 보강 — 학습자 추론 부담 자리 (commit `679e0d3`)
 
 - [x] **10.3** query() 시그니처 변경 명시 (`hooks: HookEngine | None = None`) — 기존엔 본문 _다른 자리에 짧게 언급_ 만, _코드 블록 없음_
-- [x] **10.5** Part 10 main.py 누적 안내 (10.1~10.8 각 챕터가 _변경분만_ 보여줌; 통합본은 `mini_claude/src/mini_claude/main.py` 한 자리 — 학습자가 _누적 결과_ 참조 가능)
+- [x] **10.5** Part 10 main.py 누적 안내 (10.1~10.8 각 챕터가 _변경분만_ 보여줌; 통합본은 `mini-claude/src/mini_claude/main.py` 한 자리 — 학습자가 _누적 결과_ 참조 가능)
 - [x] **10.6** agents/__init__.py 패키지 export 코드 블록 (tools/agent.py 가 `from ..agents import AgentSpec` 로 가져갈 수 있도록)
 - [x] **10.6** AgentTool description 의 _9.5 그대로_ 문자열 명시 (기존 `...` 줄임 풀기)
 - [x] **10.6** AgentTool.call() 의 ⑥ 결과 회수 코드 완전 (기존 `...` 풀기 — fallback 텍스트 블록 합치기 11 줄)
 - [x] **10.8** `_last_assistant_text()` 헬퍼 코드 블록 추가 (`_notify_lead_on_idle` 가 호출하는데 정의가 본문에 _누락_ 됐던 자리)
-- [x] **10.8** TeamTool 보조 메서드 (__post_init__/_find_spec/_filter_tools/permission_summary/is_read_only/is_destructive) 가 _10.6 AgentTool 시그니처 그대로_ 임 명시 + 전체 모양은 `mini_claude/src/mini_claude/tools/team.py` 참조 안내
+- [x] **10.8** TeamTool 보조 메서드 (__post_init__/_find_spec/_filter_tools/permission_summary/is_read_only/is_destructive) 가 _10.6 AgentTool 시그니처 그대로_ 임 명시 + 전체 모양은 `mini-claude/src/mini_claude/tools/team.py` 참조 안내
 
 ### 13-4. 수정 후 시뮬 재검증
 
@@ -960,13 +960,13 @@ Phase 11-4 의 _코드_ docstring 만 다뤘던 부분이 _본문 코드 인용 
 |---|---|
 | 내러티브 / 본문 / 챕터 제목 / Part 이름 | **미니 클로드** (조사 자유) |
 | CLI 명령 인용 (실행할 명령) | `` `mini-claude` `` (코드 폰트) |
-| import / 디렉토리 / 파일 경로 인용 | `` `mini_claude/` `` / `` `from mini_claude.agent import query` `` (코드 폰트) |
+| import / 디렉토리 / 파일 경로 인용 | `` `mini-claude/` `` / `` `from mini_claude.agent import query` `` (코드 폰트) |
 | 코드 블록 내부 (`````python` 안) | 변경 _없음_ — 코드 그대로 |
 
 ### 15-2. 본문 19 파일 145 자리 통일 (commit `eea5dec`)
 
 - general-purpose agent 위임 (~25 분, 219 tool uses)
-- Part 0/06/09/10/11 + mini_claude/SETUP.md + mini_claude/README.md
+- Part 0/06/09/10/11 + mini-claude/SETUP.md + mini-claude/README.md
 - 변경 자리:
   - `mini Claude` (공백+대문자) 2 자리 → _미니 클로드_
   - `미니 에이전트` 6 자리 → _미니 클로드_ (09_1 H1 제목 포함)
