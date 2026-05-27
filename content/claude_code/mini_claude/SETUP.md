@@ -54,7 +54,7 @@ cd ~/mini-claude
 
 ## 1. JSON 키 안전한 자리에 두기
 
-작업 cwd 에 `secrets/` 폴더를 만들어 키를 옮깁니다:
+작업 cwd 에 `secrets/` 폴더를 만들어 키를 옮깁니다 (HOME 이 아니라 프로젝트 내에 두는 이유는 _프로젝트와 키가 같이 묶이는_ 인지적 명확함):
 
 ```bash
 mkdir -p secrets
@@ -62,61 +62,50 @@ mv ~/Downloads/your-sa-key.json secrets/
 chmod 600 secrets/your-sa-key.json
 ```
 
-> 💡 **`secrets/` 는 저장소 `.gitignore` 에 등록되어 있어 commit 안 됨**. _프로젝트와 키가 같이 묶이는_ 인지적 명확함을 위해 HOME (`~/.config/gcp/`) 이 아닌 프로젝트 내에 둡니다. 단 _프로젝트 폴더를 압축해 공유_ 하거나 _백업 도구가 통째로 백업_ 할 때 키도 같이 가니, _공유 전 반드시 `secrets/` 제외_.
+`chmod 600` 으로 _파일 권한_ 은 본인만 읽기·쓰기로 좁혔지만, 학습자가 _프로젝트 폴더를 git 에 올리거나 압축해 공유_ 할 때 키가 같이 따라가는 사고는 별도로 막아야 합니다. 작업 cwd 에서 git 을 초기화하고 `.gitignore` 에 두 줄을 추가합니다 (git 을 안 쓰는 학습자는 이 단락을 건너뛰어도 되지만 _공유 전 반드시 `secrets/` 제외_ 는 직접 신경 써야 합니다):
+
+```bash
+git init
+cat > .gitignore <<'EOF'
+secrets/
+.env
+EOF
+```
+
+이 두 줄로 `secrets/` 안의 SA JSON 과 9.1 에서 만들 `.env` 둘 다 _git add 대상에서 제외_ 됩니다. 같이 만들 `.env.example` 은 _정확 매칭이 아니라_ 그대로 git 에 들어갑니다 — 학습자/팀이 _어떤 변수가 필요한지_ 보는 _구조 문서_ 역할.
 
 > ⚠️ **`chmod 600` 의 역할**: 파일 권한을 _본인만 읽기·쓰기_ 로 좁힙니다 (`rw-------`). SA JSON 은 자격증명이라 _시스템의 다른 사용자_ 가 못 읽게 막아야 합니다. google-auth 라이브러리도 권한이 넓으면 경고를 띄웁니다.
 
-## 2. `.env` 파일 만들기
+> 💡 **두 안전망의 역할 분담**: `chmod 600` 은 _시스템의 다른 사용자_ 로부터, `.gitignore` 는 _저장소 공유 사고_ 로부터 키를 보호합니다.
 
-작업 cwd 의 `.env.example` 을 복사:
+## 2. 환경 변수 — `.env` 가 받을 4 개의 의미
 
-```bash
-cp .env.example .env
-```
+미니 클로드는 `python-dotenv` 가 시작 시 작업 cwd 의 `.env` 를 자동 로드해 아래 4 변수를 환경 변수로 올립니다. _실제 파일 작성과 첫 실행은 9.1 끝_ 에서 진행합니다. 여기서는 _각 변수가 무엇을 받는지_ 만 미리 알아둡니다.
 
-`.env` 파일을 본인 값으로 편집:
+| 변수 | 받는 값 | 예시 |
+|---|---|---|
+| `GOOGLE_APPLICATION_CREDENTIALS` | §1 에서 옮긴 SA JSON 의 _작업 cwd 기준 상대 경로_ | `secrets/your-sa-key.json` |
+| `VERTEX_PROJECT_ID` | SA JSON 의 `project_id` 필드와 _동일한_ GCP project ID | `your-gcp-project` |
+| `VERTEX_LOCATION` | Vertex region | `global` (기본) / `us-east5` / `europe-west1` |
+| `MINI_LLM_MODEL` | Model Garden 에서 enable 한 모델 alias | `claude-opus-4-7` |
 
-```bash
-# .env
-GOOGLE_APPLICATION_CREDENTIALS=secrets/your-sa-key.json   # §1 에서 옮긴 키 (작업 cwd 기준 상대 경로)
-VERTEX_PROJECT_ID=your-gcp-project       # SA JSON 의 project_id 와 같아야 함
-VERTEX_LOCATION=global                    # 기본값. global / us-east5 / europe-west1 등
-MINI_LLM_MODEL=claude-opus-4-7            # Model Garden 에서 enable 한 alias
-```
+> 💡 **JSON 의 `project_id` 와 `VERTEX_PROJECT_ID` 가 다르면 403/404**. SA JSON 파일을 열어 `project_id` 필드를 확인하세요.
 
-> 💡 **JSON 의 `project_id` 와 `VERTEX_PROJECT_ID` 가 다르면 403/404**. JSON 파일을 열어 `project_id` 필드를 확인하세요.
+> 💡 **vLLM 등 다른 백엔드를 쓰려면** `MINI_LLM_PROVIDER=vllm` 과 다른 변수 묶음이 필요합니다. 이 챕터의 _주 흐름은 Vertex_ 라 §"다른 백엔드" 절에 따로 안내합니다.
 
-> 💡 **`.env.example` 자체는 9.1 에서 직접 작성합니다.** 9.0 (지금) 단계에서는 _아직 파일이 없으니_ 위 `cp` 명령은 _9.1 에서 `.env.example` 을 작성한 뒤_ 에 다시 돌아와 실행하면 됩니다. `python-dotenv` 가 `mini-claude` 시작 시 `.env` 를 자동으로 읽어 환경변수로 올립니다. `MINI_LLM_PROVIDER` 는 미설정 시 `vertex` 가 기본값.
-
-## 3. 첫 실행
-
-> ⚠️ **9.1 / 9.2 코드가 작성된 뒤에야 실행됩니다.** 9.0 단계만 끝낸 상태에서는 `pyproject.toml` / `main.py` / `agent.py` 가 존재하지 않아 `uv sync` 와 `uv run mini-claude` 가 실패합니다. 9.1 에서 디렉토리 구조 + `pyproject.toml` + 스캐폴드를 작성하고, 9.2 에서 핵심 루프를 채우면 그제서야 아래 두 줄로 _첫 응답_ 을 받습니다.
->
-> **최소 요구 — `uv sync` 만 통과시키려면**: `pyproject.toml` + `src/mini_claude/__init__.py` (빈 파일이라도) 두 개만 있으면 됩니다. hatchling 이 `name = "mini-claude"` 를 `mini_claude` 결로 normalize 해 `src/mini_claude/` 디렉토리를 wheel 콘텐츠로 찾기 때문. 둘 중 하나라도 빠지면 `ValueError: Unable to determine which files to ship inside the wheel` 로 막힙니다.
-
-```bash
-uv sync                          # pyproject.toml + anthropic[vertex] extra 설치
-uv run mini-claude
-```
-
-`uv sync` 가 처음 실행되면 `.venv/` 가 생성되고 `pyproject.toml` + `uv.lock` 에 명시된 의존성 (`anthropic[vertex]` + `pydantic` + `rich` + `python-dotenv`) 이 설치됩니다. 이후 실행은 `uv run mini-claude` 한 줄.
-
-기대 출력:
-
-```
-mini-claude 시작 (Ctrl+D로 종료)
-> 안녕
-안녕하세요! 무엇을 도와드릴까요?
-```
+여기까지가 _코드를 쓰기 전 환경_ 입니다. 이어지는 **9.1 설계 — 미니 클로드의 골격** 에서 디렉토리 구조 / `pyproject.toml` / Python 스캐폴드를 손으로 작성한 뒤, 그 챕터 끝에서 `.env.example` 작성 → `cp .env.example .env` → 값 편집 → `uv sync` → `uv run mini-claude` 첫 실행까지 한 흐름으로 진행합니다.
 
 ---
 
 ## 흔한 막힘
 
+> 아래 에러는 _9.1 끝 첫 실행_ 또는 _9.2 이후 진짜 응답 호출_ 시 만나는 것들. 실행 단계에서 막히면 이 표로 돌아와 참조하세요.
+
 | 에러 | 원인 | 해결 |
 |---|---|---|
 | `DefaultCredentialsError` | `GOOGLE_APPLICATION_CREDENTIALS` 미설정 / 경로 오타 | §1·§2 다시 |
 | `RuntimeError: Could not import google.auth` | `anthropic[vertex]` extra 미설치 | `uv sync` (또는 `uv add 'anthropic[vertex]'`) |
+| `ValueError: Unable to determine which files to ship inside the wheel` | `src/mini_claude/__init__.py` 누락 — `pyproject.toml` 의 `name = "mini-claude"` 를 hatchling 이 `mini_claude` 디렉토리로 찾는데 없음 | `mkdir -p src/mini_claude && touch src/mini_claude/__init__.py` (스캐폴드 작성 전 우회) |
 | `403 PERMISSION_DENIED` | SA 에 `roles/aiplatform.user` 없음 | _전제_ 의 IAM 역할 부여 |
 | `404 model not found` (region) | region 불일치 | Model Garden 에서 enable 한 region 으로 `VERTEX_LOCATION` 수정 |
 | `404 model not found` (model_id) | 모델 ID 부정확 | Model Garden 에서 본 정확한 alias 로 `MINI_LLM_MODEL` 수정 |
