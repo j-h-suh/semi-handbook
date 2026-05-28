@@ -71,8 +71,11 @@ body {
   border-radius: 4px;
   font-family: var(--font-geist-mono), "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
   /* Geist Mono 의 coding ligature (`...`, `=>`, `!=` 등 합성 글리프) 비활성 —
-     학습자가 코드를 글자 그대로 따라 만드는 학습 의도에 맞춤. pre code 도 같은 selector 매칭. */
+     학습자가 코드를 글자 그대로 따라 만드는 학습 의도에 맞춤. pre code 도 같은 selector 매칭.
+     font-variant-ligatures 만으로는 일부 브라우저가 calt 를 못 꺼서 font-feature-settings
+     도 같이 명시 (liga / calt / dlig / hlig 모두 0). */
   font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0, "dlig" 0, "hlig" 0;
 }
 
 /* Tailwind Typography 의 디폴트로 인라인 코드 앞뒤에 backtick 이 붙는데, 가독성 저해되므로 제거. */
