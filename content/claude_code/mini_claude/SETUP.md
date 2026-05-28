@@ -37,18 +37,29 @@ _개발 환경 (Python / uv)_ 은 아래 §0 에서 처음부터 안내합니다
 
 > 💡 **Python 자체 설치가 부담스러우면 `uv` 만 깔아도 됩니다.** `uv sync` 가 `pyproject.toml` 의 `requires-python` 을 보고 _자동으로_ Python 3.12 를 download / pin 해줍니다 (`uv python install 3.12` 도 명시적으로 가능).
 
-### 0-2. 작업 디렉토리 만들기
+### 0-2. 작업 디렉토리 만들기 + uv 프로젝트 초기화
 
-학습자 본인의 빈 디렉토리에서 시작합니다:
+학습자 본인의 빈 디렉토리에서 `uv init` 으로 프로젝트 골격을 만듭니다:
 
 ```bash
 mkdir -p ~/mini-claude
 cd ~/mini-claude
+uv init
 ```
 
 이 디렉토리가 _이번 챕터 내내 작업 cwd_ 입니다. 이후의 `secrets/` / `.env` / `uv sync` 모두 여기 기준.
 
-> 💡 **`pyproject.toml` 이나 소스 코드는 _복사해 오는 것이 아닙니다_.** 9.1 부터 디렉토리 구조 / `pyproject.toml` / Python 파일을 _하나씩 손으로_ 작성하면서 미니 클로드를 완성해 갑니다. 9.0 (지금) 은 _코드를 쓰기 전 환경만 준비_ 하는 단계.
+`uv init` 이 자동으로 만드는 파일은 여섯 개입니다:
+
+| 파일 | 역할 | 9.1 에서 |
+|---|---|---|
+| `.git/` + `.gitignore` | git 초기화 + Python 표준 ignore (`.venv`, `__pycache__` 등) | `.gitignore` 에 두 줄 추가 (§1) |
+| `pyproject.toml` | _빈 dependencies_ 의 프로젝트 manifest | _덮어쓰기_ — 4 의존성 + `[project.scripts]` + `[build-system]` 추가 |
+| `main.py` | 빈 hello world | 사용 안 됨 (진짜 진입점은 `src/mini_claude/main.py`) |
+| `README.md` | 빈 README | 학습자 자유 |
+| `.python-version` | `requires-python` 의 Python 버전 pin | 그대로 유지 |
+
+> 💡 **`uv init` 의 _뼈대_ 위에 _살을 붙이는_ 흐름**. 9.1 부터 디렉토리 구조 / `pyproject.toml` 내용 / Python 스캐폴드를 _하나씩_ 채워 갑니다 — `uv init` 이 준 빈 골격 일부 (`pyproject.toml`) 는 _덮어쓰기_, 나머지 (`src/mini_claude/agent.py`, `messages.py`, `tools/...`) 는 _새로 작성_, root `main.py` 는 _그대로 두거나 삭제_.
 
 ---
 
@@ -62,11 +73,12 @@ mv ~/Downloads/your-sa-key.json secrets/
 chmod 600 secrets/your-sa-key.json
 ```
 
-`chmod 600` 으로 _파일 권한_ 은 본인만 읽기·쓰기로 좁혔지만, 학습자가 _프로젝트 폴더를 git 에 올리거나 압축해 공유_ 할 때 키가 같이 따라가는 사고는 별도로 막아야 합니다. 작업 cwd 에서 git 을 초기화하고 `.gitignore` 에 두 줄을 추가합니다 (git 을 안 쓰는 학습자는 이 단락을 건너뛰어도 되지만 _공유 전 반드시 `secrets/` 제외_ 는 직접 신경 써야 합니다):
+`chmod 600` 으로 _파일 권한_ 은 본인만 읽기·쓰기로 좁혔지만, 학습자가 _프로젝트 폴더를 git 에 올리거나 압축해 공유_ 할 때 키가 같이 따라가는 사고는 별도로 막아야 합니다. §0-2 의 `uv init` 이 만든 `.gitignore` 에 _두 줄_ 을 추가합니다:
 
 ```bash
-git init
-cat > .gitignore <<'EOF'
+cat >> .gitignore <<'EOF'
+
+# 학습 환경 추가분
 secrets/
 .env
 EOF
