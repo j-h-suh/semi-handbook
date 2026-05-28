@@ -4,107 +4,98 @@
 
 ## 이 챕터에서 배우는 것
 
-- 9.4 의 *정적 권한 규칙* 만으로 막을 수 없는 자리가 있다 — 컨텍스트 의존 결정, 동적 입력 변조, 외부 시스템 통합.
+- 9.5 까지의 미니 클로드에 **사용자 코드가 도구 흐름에 끼어드는 자리** 를 5 이벤트로 연다 — lint·typecheck·컨텍스트 주입·세션 로드·알림·위험 매처.
 - Hook 은 **이벤트 + 외부 프로세스 + stdin/stdout JSON** 세 가지 부품으로 그 자리를 채운다.
 - 6.4 의 와일드카드 매칭 코드(`matches_rule`)를 그대로 재활용해서 *matcher + if* 두 단계 필터링을 만든다.
 - 미니 클로드에 5 개 이벤트(`PreToolUse`·`PostToolUse`·`Stop`·`SessionStart`·`UserPromptSubmit`)를 *약 280줄* 로 얹는다.
-- Hook 이 9.4 권한 게이트와 *어떻게 합산되는지* — `deny` 가 절대 우선, `updatedInput` 이 입력을 교체.
+- **fail-open** 디자인 — 깨진 hook 은 통과, 명시적 deny 만 차단. Hook 이 시스템의 부속물.
 
 ---
 
-## 9.4 가 못 푸는 자리
+## Hook 의 자리 — 도구 흐름에 끼어드는 사용자 코드
 
-9.4 권한 시스템은 *정적 규칙* 으로 도구 호출을 막거나 통과시킨다. `Bash:rm -rf *` 를 deny 룰에 박아두면 모델이 `rm -rf /` 를 시도해도 즉시 차단된다. 단순하고 강력하다.
+9.5 까지의 미니 클로드는 _내부 코드_ 가 모든 결정을 한다. 모델이 도구를 부르면 9.4 권한 게이트가 통과 / 거절 / 묻기, 답을 받으면 `state.add_assistant` 가 누적. 깔끔하지만 — _사용자 코드_ 가 _개입할 자리_ 가 없다.
 
-그런데 *정적 규칙* 으로는 표현이 안 되는 자리가 셋 있다.
+**실무는 그 자리가 필요하다**. 흔한 여섯 가지:
 
-**첫째, 컨텍스트 의존 결정.** "`git push` 는 보통 허용하지만, `main` 브랜치에 force-push 는 막아라" 같은 규칙. *현재 브랜치* 와 *명령 옵션* 을 둘 다 봐야 한다. 정규식 한 줄로는 표현 불가능 — 실행 환경을 봐야 하는 결정.
+- **Edit/Write 끝나면 자동 lint + 포맷** — `ruff format`, `eslint --fix`, `prettier` (PostToolUse)
+- **Edit 끝나면 즉시 타입 검사** — `mypy`, `pyright`, `tsc --noEmit` (PostToolUse)
+- **사용자가 발화하면 컨텍스트 자동 주입** — 메모리, 최근 git log, 미해결 TODO (UserPromptSubmit)
+- **세션 시작 시 프로젝트 상태 로드** — 활성 PR, 현재 브랜치, 최근 작업 (SessionStart)
+- **턴 종료 시 작업 알림** — 테스트 결과, Slack notification (Stop)
+- **도구 실행 전 위험 매처** — secret guard, branch 보호 (PreToolUse) — _권한 매처의 한 변형_
 
-**둘째, 동적 입력 변조.** "에이전트가 `Edit` 호출할 때 `file_path` 가 상대 경로면 절대 경로로 바꿔라." 막는 게 아니라 *교체*. 정적 규칙으로는 표현할 수 없는 동작.
+여섯 자리 모두 _사용자 코드가 도구 실행 흐름에 끼어드는_ 자리. 그게 Hook 이다.
 
-**셋째, 외부 시스템과의 통합.** "`Write` 가 호출될 때마다 외부 lint 서버에 보내서 컨벤션을 검사. 위반이면 차단." 미니 클로드 내부에 lint 로직을 박을 게 아니라 *외부 프로세스* 가 결정을 내려야 한다.
+> 💡 **Hook 의 한 줄 정의**: 이벤트가 발생할 때 외부 프로세스를 호출하고, 그 프로세스의 stdout JSON 으로 _컨텍스트 보강 / 입력 교체 / 결정_ 을 받는 메커니즘. 도구 실행의 _전·후·세션 전이·사용자 입력_ 같은 자리에 끼어든다.
 
-세 자리 모두 *사용자 코드가 도구 실행 흐름에 끼어드는* 자리다. 그게 Hook 이다.
-
-> 💡 **Hook 의 한 줄 정의**: 이벤트가 발생할 때 외부 프로세스를 호출하고, 그 프로세스의 stdout JSON 으로 *결정 / 입력 교체 / 컨텍스트 보강* 을 받는 메커니즘. 도구 실행의 *전·후·세션 전이* 같은 자리에 끼어든다.
-
-진짜 Claude Code 의 Hook 시스템은 6.5 에서 본 그대로 — `executeHooks` (`hooks.ts:2143`) 가 async generator 로 매칭된 hook 들을 *병렬* 로 돌리고, 첫 결과를 즉시 흘려보내고, `permissionDecision` / `updatedInput` / `additionalContext` 같은 필드로 결정을 합산한다. 미니 클로드는 이걸 *축약* 해서 가져온다.
+진짜 Claude Code 의 Hook 시스템은 6.5 에서 본 그대로 — `executeHooks` 가 async generator 로 매칭된 hook 들을 _병렬_ 로 돌리고 결과 필드 (`additionalContext` / `updatedInput` / `permissionDecision`) 로 합산한다. 미니 클로드는 _순차 실행 + 첫 응답 사용_ 으로 축약.
 
 ---
 
 ## 완성된 모습 먼저 보기
 
-세 파일로 끝난다.
+세 파일로 끝난다. 가장 흔한 자리 — _Edit/Write 후 자동 포맷_ — 으로 시작한다.
 
 ### ① `~/.mini_claude/hooks.json` (설정)
 
 ```json
 {
   "hooks": {
-    "PreToolUse": [
+    "PostToolUse": [
       {
-        "matcher": "Bash",
-        "command": "python ~/.mini_claude/guard.py",
-        "timeout": 5
-      }
-    ],
-    "Stop": [
-      {
-        "command": "echo $(date) >> ~/.mini_claude/session.log"
+        "matcher": "*",
+        "command": "python ~/.mini_claude/format_hook.py",
+        "timeout": 10
       }
     ]
   }
 }
 ```
 
-`matcher` 는 도구 이름 fnmatch 패턴 — `"Bash"` 는 Bash 만, `"*"` 는 모든 도구. `command` 는 셸이 실행하는 명령. `timeout` 은 초.
+`matcher` 는 도구 이름 fnmatch 패턴 — `"*"` 는 모든 도구 (스크립트가 안에서 분기). `command` 는 셸이 실행하는 명령. `timeout` 은 초.
 
-### ② `~/.mini_claude/guard.py` (Hook 스크립트 — Python 예시)
+### ② `~/.mini_claude/format_hook.py` (Hook 스크립트)
 
 ```python
 #!/usr/bin/env python3
-"""mini_claude 의 PreToolUse hook. Bash 명령 안에 secret 패턴이 있으면 차단."""
+"""Edit/Write 끝나면 .py 파일을 ruff format 으로 자동 포맷."""
 import json
-import re
+import subprocess
 import sys
 
-# stdin 으로 JSON 받음
 payload = json.load(sys.stdin)
-command = payload["tool_input"].get("command", "")
+tool_name = payload.get("tool_name", "")
+file_path = payload["tool_input"].get("file_path", "")
 
-# 위험 패턴 검사
-patterns = [
-    (r"AKIA[0-9A-Z]{16}", "AWS access key"),
-    (r"sk-ant-[a-zA-Z0-9-]{20,}", "Anthropic API key"),
-    (r"BEGIN (RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY", "private key"),
-]
-for pattern, name in patterns:
-    if re.search(pattern, command):
-        # stdout 으로 JSON 반환 → mini_claude 가 차단
-        print(json.dumps({
-            "permissionDecision": "deny",
-            "permissionDecisionReason": f"blocked: {name} in command",
-        }))
-        sys.exit(0)
+# matcher 의 두 번째 단계 — _스크립트 안의 if_
+if tool_name not in ("Edit", "Write") or not file_path.endswith(".py"):
+    sys.exit(0)
 
-# 통과 — 아무것도 출력 안 하면 hook 이 결정에 개입 안 함
-sys.exit(0)
+subprocess.run(["ruff", "format", file_path], check=False)
+
+# additionalContext — 모델이 다음 turn 에 함께 본다
+print(json.dumps({
+    "additionalContext": f"ruff format applied to {file_path}"
+}))
 ```
 
-세 줄짜리 패턴 매칭에 한 줄 JSON 응답. 그 줄을 미니 클로드가 *덱시전 으로* 해석한다.
+JSON 한 줄 응답이 미니 클로드의 _다음 turn 컨텍스트_ 에 합류.
 
 ### ③ 실행 흐름
 
 ```text
-> echo MY_AWS_KEY=AKIAIOSFODNN7EXAMPLE
+> src/users.py 에 get_user 함수 추가해줘
 
-[Bash] {'command': 'echo MY_AWS_KEY=AKIAIOSFODNN7EXAMPLE'}
-Permission denied by hook: blocked: AWS access key in command
+[Edit] {'file_path': 'src/users.py', 'old_string': '...', 'new_string': '...'}
+[hook_context] ruff format applied to src/users.py
+
+함수를 추가하고 ruff format 으로 정렬했다.
 ```
 
-9.4 의 권한 게이트는 *통과* 한다 (`Bash:echo *` 는 deny 룰에 없으니까). Hook 이 *그 뒤에서 한 번 더* 검사해서 차단했다. **정적 규칙으로는 잡을 수 없는 secret 노출** 을 외부 스크립트가 잡아낸 자리.
+모델이 `Edit` 호출 → mini 가 도구 실행 → 결과를 `tool_result` 에 담음 → **Hook 이 그 뒤에서 `ruff format` 실행 + `additionalContext` 응답** → 모델이 다음 turn 에 _포맷 적용됨_ 을 알고 응답을 마무리.
 
-> ⚙️ **왜 fail-open 디자인인가**: `guard.py` 가 깨지거나 timeout 나거나 비-JSON 을 뱉어도 미니 클로드는 *통과* 시킨다. Hook 이 시스템의 *부속물* 이라는 뜻 — 깨져도 본체는 살아 있어야 한다. 명시적 차단(`exit code != 0` 또는 `permissionDecision: "deny"`) 만 deny 로 해석.
+> ⚙️ **왜 fail-open 디자인인가**: `format_hook.py` 가 깨지거나 timeout 나거나 비-JSON 을 뱉어도 미니 클로드는 _그대로_ 진행. Hook 이 시스템의 _부속물_ 이라는 뜻 — 깨져도 본체는 살아 있어야 한다. 명시적 결정 (`permissionDecision: "deny"`) 만 deny 로 해석.
 
 이걸 어떻게 만들지가 챕터의 나머지다.
 
@@ -529,7 +520,7 @@ decision = permissions.check(tool, block["input"])
 
 세 가지가 한꺼번에. `hooks` 가 None 이면 통째로 건너뛴다 (9.5 와 동일 동작). Hook 이 deny 면 `continue` 로 *다음 도구* 로 — 9.4 의 권한 게이트 자체를 건너뛴다. Hook 이 `updatedInput` 을 주면 *block 의 입력을 교체* 한 뒤 9.4 게이트로 넘어간다.
 
-> ⚠️ **`updatedInput` 의 위험**: Hook 이 입력을 교체하면, 그 *교체된 입력* 으로 9.4 권한 게이트가 평가된다. 만약 모델이 `Bash:ls` 를 요청했는데 hook 이 `Bash:rm -rf /` 로 바꾸면 deny 룰 매칭이 일어나서 차단된다. *9.4 가 마지막 방어선* — Hook 이 권한을 *우회* 하는 게 아니라 *우회 시도를 9.4 가 잡는* 구조.
+> ⚠️ **`updatedInput` 은 9.4 게이트 _앞_ 에 끼어든다**: 교체된 입력이 9.4 에 평가되므로 hook 이 _권한 우회_ 를 할 수 없다. 9.4 가 마지막 방어선.
 
 ### 자리 ②: 도구 실행 *직후* (PostToolUse)
 
@@ -669,41 +660,17 @@ fi
 
 *프로토콜 경계* 가 *프로세스 경계* 라서, 언어를 강요하지 않는다. 미니 클로드가 Python 으로 짜여 있어도 hook 은 Node 일 수 있고, Go 일 수도 있고, awk 한 줄일 수도 있다. 이게 Hook 의 *철학적 가치* — *내부* 와 *외부* 의 경계를 분명히 그어두는 디자인.
 
-### `updatedInput` 의 입력 변조 능력
+### Hook 응답 필드 — 세 가지
 
-PreToolUse 의 가장 *재미있는* 기능. 도구 입력을 *부분 또는 전체 교체*. 예시:
+stdout JSON 에 어떤 필드를 채우느냐로 hook 의 자리가 결정된다.
 
-```python
-# guard.py — Edit 호출 시 상대 경로를 절대 경로로 정규화
-import json, sys
-from pathlib import Path
-
-payload = json.load(sys.stdin)
-if payload["tool_name"] == "Edit":
-    file_path = payload["tool_input"].get("file_path", "")
-    if file_path and not file_path.startswith("/"):
-        abs_path = str(Path(payload["cwd"]) / file_path)
-        # 입력을 교체 — 9.4 권한 게이트는 *교체된 입력* 으로 평가
-        print(json.dumps({
-            "updatedInput": {**payload["tool_input"], "file_path": abs_path}
-        }))
-```
-
-*9.4 가 마지막 방어선* 이라고 했었다. `updatedInput` 으로 입력을 교체해도 deny 룰이 매칭되면 차단된다. 그래서 hook 이 *권한을 우회* 할 수 없고 *권한 결정의 컨텍스트만 다듬는* 도구로 자리잡는다.
-
-### `permissionDecision` 과 9.4 의 합산
-
-세 결정값 — `allow` / `deny` / `ask` — 가 9.4 와 어떻게 합쳐지는지.
-
-| Hook 응답 | 9.4 게이트 | 결과 |
+| 필드 | 효과 | 흔한 자리 |
 |---|---|---|
-| (응답 없음 / None) | 평소대로 | 9.4 의 결정 |
-| `permissionDecision: deny` | 건너뜀 | **차단** (hook 의 reason 으로) |
-| `permissionDecision: allow` | 건너뜀 | **통과** |
-| `permissionDecision: ask` | 평소대로 | 9.4 가 ask 로 분기 (mini 는 prompt_user) |
-| `updatedInput` 만 | 평소대로 | 9.4 가 *교체된 입력* 으로 결정 |
+| `additionalContext` | 도구 결과 뒤에 텍스트 추가 — 모델이 다음 turn 에 함께 본다 | _가장 흔함_. lint 결과, 메모리 주입, 보강 정보 |
+| `updatedInput` | 도구 입력 교체 — 9.4 게이트가 _교체된 입력_ 으로 평가 | 상대 경로 → 절대 경로 정규화, 인자 보정 |
+| `permissionDecision: "deny"` | 도구 실행 차단 (`allow` / `ask` 도 가능하나 9.4 우회) | secret guard, 위험 명령 매처 |
 
-진짜 코드는 더 복잡하다 (정책 모드별 분기, ant-mode auto classifier 등). mini 는 *deny 절대 우선*, `allow` / `ask` 는 9.4 게이트 우회. 이게 *최소한의 합산* 인데도 충분한 표현력.
+응답 없으면 (`None` 또는 비-JSON) hook 이 결정에 개입 안 함 — fail-open 의 정수. 한 응답에 세 필드를 _섞을_ 수도 있지만, 보통 _한 자리에 한 필드_.
 
 ### `transcript_path` 로 맥락 기반 판단
 
