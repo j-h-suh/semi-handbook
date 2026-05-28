@@ -70,6 +70,9 @@ body {
   padding: 0.15em 0.4em;
   border-radius: 4px;
   font-family: var(--font-geist-mono), "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+  /* Geist Mono 의 coding ligature (`...`, `=>`, `!=` 등 합성 글리프) 비활성 —
+     학습자가 코드를 글자 그대로 따라 만드는 학습 의도에 맞춤. pre code 도 같은 selector 매칭. */
+  font-variant-ligatures: none;
 }
 
 /* Tailwind Typography 의 디폴트로 인라인 코드 앞뒤에 backtick 이 붙는데, 가독성 저해되므로 제거. */
