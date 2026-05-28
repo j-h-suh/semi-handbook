@@ -90,9 +90,9 @@ EOF
 
 > 💡 **두 안전망의 역할 분담**: `chmod 600` 은 _시스템의 다른 사용자_ 로부터, `.gitignore` 는 _저장소 공유 사고_ 로부터 키를 보호합니다.
 
-## 2. 환경 변수 — `.env` 가 받을 4 개의 의미
+## 2. 환경 변수 — `.env` 가 받을 변수들의 의미
 
-미니 클로드는 `python-dotenv` 가 시작 시 작업 cwd 의 `.env` 를 자동 로드해 아래 4 변수를 환경 변수로 올립니다. _실제 파일 작성과 첫 실행은 9.1 끝_ 에서 진행합니다. 여기서는 _각 변수가 무엇을 받는지_ 만 미리 알아둡니다.
+미니 클로드는 `python-dotenv` 가 시작 시 작업 cwd 의 `.env` 를 자동 로드해 아래 변수를 환경 변수로 올립니다. _실제 파일 작성과 첫 실행은 9.1 끝_ 에서 진행합니다. 여기서는 _각 변수가 무엇을 받는지_ 만 미리 알아둡니다.
 
 | 변수 | 받는 값 | 예시 |
 |---|---|---|
@@ -100,6 +100,7 @@ EOF
 | `VERTEX_PROJECT_ID` | SA JSON 의 `project_id` 필드와 _동일한_ GCP project ID | `your-gcp-project` |
 | `VERTEX_LOCATION` | Vertex region | `global` (기본) / `us-east5` / `europe-west1` |
 | `MINI_LLM_MODEL` | Model Garden 에서 enable 한 모델 alias | `claude-opus-4-7` |
+| `MINI_LLM_MAX_TOKENS` | 한 응답의 max_tokens (선택 — 미설정 시 4096) | `4096` |
 
 > 💡 **JSON 의 `project_id` 와 `VERTEX_PROJECT_ID` 가 다르면 403/404**. SA JSON 파일을 열어 `project_id` 필드를 확인하세요.
 
