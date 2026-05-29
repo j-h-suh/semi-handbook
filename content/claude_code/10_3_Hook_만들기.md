@@ -862,7 +862,7 @@ README.md 의 첫 줄은 "# semi-handbook" 이야.
 **시나리오 2: `.py` 파일 자동 포맷**
 
 ```text
-> src/mini_claude/messages.py 끝에 빈 줄 한 줄만 더해줘
+> Edit tool 을 사용해서 messages.py 끝에 빈 줄 한 줄 추가해줘
 
 [Edit] {'file_path': 'src/mini_claude/messages.py', 'old_string': '...', 'new_string': '...'}
 [hook_context] ruff format applied to src/mini_claude/messages.py
@@ -871,6 +871,8 @@ README.md 의 첫 줄은 "# semi-handbook" 이야.
 ```
 
 모델이 `Edit` 호출 → mini 가 도구 실행 → 결과를 `tool_result` 에 담음 → **PostToolUse hook 이 그 뒤에서 `ruff format` 실행 + `additionalContext` 응답** → 모델이 다음 turn 에 `[hook_context] ruff format applied to ...` 를 보고 응답을 마무리. _사용자가 _포맷해줘_ 라고 안 했는데도_ 자동 적용 — Hook 의 진짜 가치는 _보이지 않는 자동화_.
+
+> ⚙️ **왜 _Edit tool 을 사용해서_ 라고 명시했나**: _빈 줄 한 줄_ 같은 가벼운 수정은 모델이 _Bash 한 줄_ (`echo "" >> file`) 을 _Edit 의 old/new_string 명시_ 보다 _효율적_ 으로 보는 경향. 이번 hook 의 분기 (`if tool_name not in ("Edit", "Write")`) 가 _Bash 를 그냥 통과_ 시키므로 _자동 포맷이 안 일어남_. 진짜 Claude Code 는 system prompt 에서 _Edit/Write 우선_ 을 유도하는데, 미니 클로드는 그 자리가 간소 — 학습 시연에서는 _도구 명시_ 가 가장 단순한 우회.
 
 ---
 
