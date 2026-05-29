@@ -484,6 +484,9 @@ class HookEngine:
 
 ```python
 # src/mini_claude/agent.py — query() 시그니처
+from .hooks import HookEngine   # ← *10.3 에서 추가*
+
+
 async def query(
     *,
     # ... 9.5 의 기존 인자들 ...
