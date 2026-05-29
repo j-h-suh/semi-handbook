@@ -590,33 +590,49 @@ Stop hook 의 응답은 *무시한다*. 턴이 이미 끝났으니 결정에 개
 main.py 쪽에도 *두 자리* 가 더 있다 — SessionStart (REPL 시작 직후) 와 UserPromptSubmit (사용자 입력 직후). agent 가 *턴 단위* 자리에 책임을 갖고, main 이 *세션 / 입력 단위* 자리에 책임을 갖는 분리.
 
 ```python
-# src/mini_claude/main.py 의 핵심 변경
+# src/mini_claude/main.py — 10.2 위의 add-up
 from .hooks import HookEngine   # ← *10.3 에서 추가*
 
 
-hooks = HookEngine.from_file()  # 프로젝트 루트의 hooks.json
-await hooks.session_start(cwd=str(args.cwd))   # SessionStart
+async def main_async() -> None:
+    # ... 9.5 / 10.1 / 10.2 의 초기화 (argparse / VERTEX 검사 / state / permissions /
+    #     parent_tools / SkillTool / AgentTool / md_commands / skills) ...
 
-while True:
-    user_input = await asyncio.to_thread(input, "> ")
-    if not user_input.strip():
-        continue
+    # ⭐ 추가 ①: HookEngine 생성 + SessionStart 발화
+    hooks = HookEngine.from_file()   # 프로젝트 루트의 hooks.json
+    await hooks.session_start(cwd=str(args.cwd))
 
-    # UserPromptSubmit — deny 면 입력 자체를 버린다
-    ups_resp = await hooks.user_prompt_submit(
-        cwd=str(args.cwd), prompt=user_input
-    )
-    if ups_resp and ups_resp.permission_decision == "deny":
-        print(f"[hook] Prompt rejected: {...}")
-        continue
-    if ups_resp and ups_resp.additional_context:
-        user_input = f"{user_input}\n\n[context]\n{ups_resp.additional_context}"
+    print("mini-claude 시작 (Ctrl+D로 종료)")
+    while True:
+        try:
+            user_input = await asyncio.to_thread(input, "> ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nbye.")
+            return
+        if not user_input.strip():
+            continue
 
-    async for chunk in query(
-        user_input=user_input, ...,
-        hooks=hooks,  # ← agent 의 세 자리에 흘러간다
-    ):
-        ...
+        # ⭐ 추가 ②: UserPromptSubmit — deny 면 입력 자체를 버림, additional_context 면 보강
+        ups_resp = await hooks.user_prompt_submit(
+            cwd=str(args.cwd), prompt=user_input
+        )
+        if ups_resp and ups_resp.permission_decision == "deny":
+            print(f"[hook] Prompt rejected: {ups_resp.permission_decision_reason}")
+            continue
+        if ups_resp and ups_resp.additional_context:
+            user_input = f"{user_input}\n\n[context]\n{ups_resp.additional_context}"
+
+        # ... 10.2 의 슬래시 분기 (md_commands / skills 매칭 + active_permissions 임시 사본) ...
+
+        async for chunk in query(
+            user_input=user_input,
+            tools=parent_tools,
+            permissions=active_permissions,
+            cwd=str(args.cwd),
+            state=state,
+            hooks=hooks,   # ← ⭐ 추가 ③: 10.3 의 query() 새 인자
+        ):
+            # ... TextDelta / ToolUseStarted / TurnDone 분기 (10.2 그대로) ...
 ```
 
 다섯 자리 (PreToolUse·PostToolUse·Stop·SessionStart·UserPromptSubmit) 를 *두 파일* 이 책임 분할. 정리하면:
