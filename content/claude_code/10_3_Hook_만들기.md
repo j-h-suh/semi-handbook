@@ -795,45 +795,44 @@ PostToolUse 의 `additionalContext` 는 *시스템 메시지* 로 추가된다 (
 ### 1. 설정 파일과 hook 스크립트 만들기
 
 ```bash
-# 프로젝트 루트에서 두 파일을 만든다 — hooks.json + guard.py
+# 프로젝트 루트에서 두 파일을 만든다 — hooks.json + format_hook.py
 cat > hooks.json << 'EOF'
 {
   "hooks": {
-    "PreToolUse": [
+    "PostToolUse": [
       {
-        "matcher": "Bash",
-        "command": "python3 ./guard.py",
-        "timeout": 5
+        "matcher": "*",
+        "command": "python3 ./format_hook.py",
+        "timeout": 10
       }
     ]
   }
 }
 EOF
 
-cat > guard.py << 'EOF'
+cat > format_hook.py << 'EOF'
 #!/usr/bin/env python3
-"""Bash 명령 안에 secret 패턴이 있으면 차단."""
+"""Edit/Write 끝나면 .py 파일을 ruff format 으로 자동 포맷."""
 import json
-import re
+import subprocess
 import sys
 
 payload = json.load(sys.stdin)
-command = payload["tool_input"].get("command", "")
+tool_name = payload.get("tool_name", "")
+file_path = payload["tool_input"].get("file_path", "")
 
-patterns = [
-    (r"AKIA[0-9A-Z]{16}", "AWS access key"),
-    (r"sk-ant-[a-zA-Z0-9-]{20,}", "Anthropic API key"),
-]
-for pattern, name in patterns:
-    if re.search(pattern, command):
-        print(json.dumps({
-            "permissionDecision": "deny",
-            "permissionDecisionReason": f"blocked: {name} in command",
-        }))
-        sys.exit(0)
+# matcher 의 두 번째 단계 — 스크립트 안의 if
+if tool_name not in ("Edit", "Write") or not file_path.endswith(".py"):
+    sys.exit(0)
+
+subprocess.run(["ruff", "format", file_path], check=False)
+
+print(json.dumps({
+    "additionalContext": f"ruff format applied to {file_path}"
+}))
 EOF
 
-chmod +x guard.py
+chmod +x format_hook.py
 ```
 
 두 파일이 다. `cat > heredoc` 두 번 + `chmod`. shell 세 줄.
@@ -849,44 +848,29 @@ uv run mini-claude   # .env (VERTEX_PROJECT_ID + GOOGLE_APPLICATION_CREDENTIALS 
 
 ### 3. Hook 발동 시나리오
 
-**시나리오 1: 정상 통과**
+**시나리오 1: matcher 통과 + 스크립트 분기로 빠짐**
 
 ```text
-> echo hello
+> README.md 의 첫 줄 한 번 알려줘
 
-[Bash] {'command': 'echo hello'}
-hello
+[Read] {'file_path': 'README.md'}
+README.md 의 첫 줄은 "# semi-handbook" 이야.
 ```
 
-`guard.py` 가 secret 패턴 못 찾고 exit 0. 출력 없음 → `None` 반환 → 9.4 권한 게이트로 통과 → `Bash:echo *` 가 ask 분기 → 사용자 승인 → 실행.
+`matcher: "*"` 라 PostToolUse hook 이 _발화는 됨_. 스크립트의 `if tool_name not in ("Edit", "Write")` 에서 `sys.exit(0)`. 출력 없음 → `None` 반환 → _Hook 이 결정에 개입 안 함_. **출력에 `[hook_context]` 줄이 안 보이는 게 통과의 시각적 신호** — matcher 의 첫 단계 (도구 이름) 와 스크립트 안의 if (두 번째 단계) 가 살아 있는 자리.
 
-**시나리오 2: Hook 이 차단**
+**시나리오 2: `.py` 파일 자동 포맷**
 
 ```text
-> echo MY_AWS_KEY=AKIAIOSFODNN7EXAMPLE
+> src/mini_claude/messages.py 끝에 빈 줄 한 줄만 더해줘
 
-[Bash] {'command': 'echo MY_AWS_KEY=AKIAIOSFODNN7EXAMPLE'}
+[Edit] {'file_path': 'src/mini_claude/messages.py', 'old_string': '...', 'new_string': '...'}
+[hook_context] ruff format applied to src/mini_claude/messages.py
+
+빈 줄을 추가하고 ruff format 으로 줄 끝 공백도 정리됐어.
 ```
 
-화면에 deny 메시지가 *모델에게 흘러간다*. 모델은 다음 턴에서 "AWS key 가 노출되면 안 됩니다" 같은 응답을 한다. **사용자가 권한 다이얼로그를 보기도 전에 hook 이 차단** — 9.4 의 deny 룰 (`Bash:rm -rf *` 같은) 과 같은 위치에 있다.
-
-**시나리오 3: 입력 교체 시나리오**
-
-`guard.py` 에 한 줄 더.
-
-```python
-# guard.py 끝에 추가
-if payload["tool_name"] == "Edit":
-    file_path = payload["tool_input"].get("file_path", "")
-    if file_path and not file_path.startswith("/"):
-        from pathlib import Path
-        abs_path = str(Path(payload["cwd"]) / file_path)
-        print(json.dumps({
-            "updatedInput": {**payload["tool_input"], "file_path": abs_path}
-        }))
-```
-
-모델이 `Edit` 호출 시 *상대 경로* 를 주면 hook 이 *절대 경로로 정규화*. 9.4 권한 게이트는 그 *정규화된 입력* 으로 평가된다. 같은 명령이 *다른 권한 룰* 에 매칭될 수 있다는 흥미로운 자리.
+모델이 `Edit` 호출 → mini 가 도구 실행 → 결과를 `tool_result` 에 담음 → **PostToolUse hook 이 그 뒤에서 `ruff format` 실행 + `additionalContext` 응답** → 모델이 다음 turn 에 `[hook_context] ruff format applied to ...` 를 보고 응답을 마무리. _사용자가 _포맷해줘_ 라고 안 했는데도_ 자동 적용 — Hook 의 진짜 가치는 _보이지 않는 자동화_.
 
 ---
 
