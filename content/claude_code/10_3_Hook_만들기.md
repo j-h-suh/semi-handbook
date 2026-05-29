@@ -72,7 +72,7 @@ file_path = payload["tool_input"].get("file_path", "")
 if tool_name not in ("Edit", "Write") or not file_path.endswith(".py"):
     sys.exit(0)
 
-subprocess.run(["ruff", "format", file_path], check=False)
+subprocess.run(["ruff", "format", file_path], check=False, capture_output=True)
 
 # additionalContext — 모델이 다음 turn 에 함께 본다
 print(json.dumps({
@@ -81,6 +81,8 @@ print(json.dumps({
 ```
 
 JSON 한 줄 응답이 미니 클로드의 _다음 turn 컨텍스트_ 에 합류.
+
+> ⚙️ **stdout 의 두 흐름 — `capture_output=True` 와 `print(json.dumps(...))`**: hook 스크립트의 stdout 은 `runner.py` 가 _PIPE 로 가로채_ 미니 클로드 _내부_ 로만 흐른다 — _사용자 터미널에 안 보임_, LLM 이 다음 turn 에 봐서 `[hook_context]` 줄로만 _간접 가시화_. 그래서 stdout 에는 _순수 JSON 만_ 있어야 한다. `subprocess.run(..., capture_output=True)` 가 ruff 의 자체 출력 (`1 file reformatted` 등) 을 _Python 변수로 가로채_ stdout 오염을 막는다. 빼면 ruff 출력 + JSON 이 _두 줄_ 로 섞여 `json.loads()` 가 _JSONDecodeError_ → `None` 반환 → _hook 무력화_.
 
 ### ③ 실행 흐름
 
@@ -825,7 +827,7 @@ file_path = payload["tool_input"].get("file_path", "")
 if tool_name not in ("Edit", "Write") or not file_path.endswith(".py"):
     sys.exit(0)
 
-subprocess.run(["ruff", "format", file_path], check=False)
+subprocess.run(["ruff", "format", file_path], check=False, capture_output=True)
 
 print(json.dumps({
     "additionalContext": f"ruff format applied to {file_path}"
