@@ -37,7 +37,7 @@
 
 세 파일로 끝난다. 가장 흔한 자리 — _Edit/Write 후 자동 포맷_ — 으로 시작한다.
 
-### ① `~/.mini_claude/hooks.json` (설정)
+### ① `hooks.json` (설정, 프로젝트 루트)
 
 ```json
 {
@@ -45,7 +45,7 @@
     "PostToolUse": [
       {
         "matcher": "*",
-        "command": "python ~/.mini_claude/format_hook.py",
+        "command": "python ./format_hook.py",
         "timeout": 10
       }
     ]
@@ -55,7 +55,7 @@
 
 `matcher` 는 도구 이름 fnmatch 패턴 — `"*"` 는 모든 도구 (스크립트가 안에서 분기). `command` 는 셸이 실행하는 명령. `timeout` 은 초.
 
-### ② `~/.mini_claude/format_hook.py` (Hook 스크립트)
+### ② `format_hook.py` (Hook 스크립트, 프로젝트 루트)
 
 ```python
 #!/usr/bin/env python3
@@ -382,7 +382,8 @@ from .registry import HookRegistry
 from .runner import execute_hook
 
 
-DEFAULT_CONFIG_PATH = Path.home() / ".mini_claude" / "hooks.json"
+# 학습용: src/mini_claude/hooks/__init__.py 의 3 단계 상위가 프로젝트 루트
+DEFAULT_CONFIG_PATH = Path(__file__).resolve().parents[3] / "hooks.json"
 
 
 @dataclass
@@ -587,7 +588,7 @@ main.py 쪽에도 *두 자리* 가 더 있다 — SessionStart (REPL 시작 직�
 
 ```python
 # src/mini_claude/main.py 의 핵심 변경
-hooks = HookEngine.from_file()  # ~/.mini_claude/hooks.json
+hooks = HookEngine.from_file()  # 프로젝트 루트의 hooks.json
 await hooks.session_start(cwd=str(args.cwd))   # SessionStart
 
 while True:
@@ -772,15 +773,14 @@ PostToolUse 의 `additionalContext` 는 *시스템 메시지* 로 추가된다 (
 ### 1. 설정 파일과 hook 스크립트 만들기
 
 ```bash
-mkdir -p ~/.mini_claude
-
-cat > ~/.mini_claude/hooks.json << 'EOF'
+# 프로젝트 루트에서 두 파일을 만든다 — hooks.json + guard.py
+cat > hooks.json << 'EOF'
 {
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Bash",
-        "command": "python3 ~/.mini_claude/guard.py",
+        "command": "python3 ./guard.py",
         "timeout": 5
       }
     ]
@@ -788,7 +788,7 @@ cat > ~/.mini_claude/hooks.json << 'EOF'
 }
 EOF
 
-cat > ~/.mini_claude/guard.py << 'EOF'
+cat > guard.py << 'EOF'
 #!/usr/bin/env python3
 """Bash 명령 안에 secret 패턴이 있으면 차단."""
 import json
@@ -811,10 +811,10 @@ for pattern, name in patterns:
         sys.exit(0)
 EOF
 
-chmod +x ~/.mini_claude/guard.py
+chmod +x guard.py
 ```
 
-세 파일이 다. `mkdir` + `cat > heredoc` + `chmod`. shell 다섯 줄.
+두 파일이 다. `cat > heredoc` 두 번 + `chmod`. shell 세 줄.
 
 ### 2. 미니 클로드 실행
 
