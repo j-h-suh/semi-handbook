@@ -489,6 +489,18 @@ class HookEngine:
 from .hooks import HookEngine   # ← *10.3 에서 추가*
 
 
+# ── 10.3 에서 추가: PostToolUse 의 additionalContext 를 사용자 가시 chunk 로 ──
+@dataclass
+class HookContext:
+    """PostToolUse 의 additionalContext 가 LLM 다음 turn 입력에 합류하면서 사용자에게도 보이게."""
+    name: str       # 도구 이름
+    context: str    # additionalContext 본문
+
+
+# 9.5 union 에 HookContext 추가
+QueryChunk = TextDelta | ToolUseStarted | TurnDone | HookContext
+
+
 async def query(
     *,
     # ... 9.5 의 기존 인자들 ...
@@ -549,7 +561,7 @@ tool_results.append({
     **({"is_error": True} if is_error else {}),
 })
 
-# ── Hook (10.3) — PostToolUse: additional_context 누적 ─
+# ── Hook (10.3) — PostToolUse: additional_context 누적 + 사용자 가시화 ─
 if hooks and not is_error:
     post_resp = await hooks.post_tool_use(
         cwd=cwd,
@@ -561,6 +573,10 @@ if hooks and not is_error:
         tool_results[-1]["content"] = (
             f"{result_text}\n\n[hook_context]\n"
             f"{post_resp.additional_context}"
+        )
+        yield HookContext(   # ⭐ 사용자 가시화 — main.py 의 chunk 분기에서 print
+            name=tool.name,
+            context=post_resp.additional_context,
         )
 ```
 
@@ -593,7 +609,8 @@ main.py 쪽에도 *두 자리* 가 더 있다 — SessionStart (REPL 시작 직�
 
 ```python
 # src/mini_claude/main.py — 10.2 위의 add-up
-from .hooks import HookEngine   # ← *10.3 에서 추가*
+from .agent import HookContext   # ← *10.3 에서 추가* (기존 .agent import 줄에 합쳐도 OK)
+from .hooks import HookEngine    # ← *10.3 에서 추가*
 
 
 async def main_async() -> None:
@@ -634,7 +651,14 @@ async def main_async() -> None:
             state=state,
             hooks=hooks,   # ← ⭐ 추가 ③: 10.3 의 query() 새 인자
         ):
-            # ... TextDelta / ToolUseStarted / TurnDone 분기 (10.2 그대로) ...
+            if isinstance(chunk, TextDelta):
+                print(chunk.text, end="", flush=True)
+            elif isinstance(chunk, ToolUseStarted):
+                print(f"\n[{chunk.name}] {chunk.input}", flush=True)
+            elif isinstance(chunk, HookContext):   # ← ⭐ 추가 ④: 10.3 의 hook 가시화
+                print(f"\n[hook_context] {chunk.context}", flush=True)
+            elif isinstance(chunk, TurnDone):
+                print()   # 마무리 줄 바꿈
 ```
 
 다섯 자리 (PreToolUse·PostToolUse·Stop·SessionStart·UserPromptSubmit) 를 *두 파일* 이 책임 분할. 정리하면:
