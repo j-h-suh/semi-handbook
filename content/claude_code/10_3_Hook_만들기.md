@@ -135,6 +135,8 @@ Hook 스크립트가 받는 JSON 과 반환하는 JSON 의 *모양* 부터 못 �
 
 ```python
 # src/mini_claude/hooks/events.py
+from __future__ import annotations
+
 from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -226,6 +228,8 @@ class HookResponse(BaseModel):
 
 ```python
 # src/mini_claude/hooks/registry.py
+from __future__ import annotations
+
 import fnmatch
 import json
 from dataclasses import dataclass
@@ -248,7 +252,7 @@ class HookRegistry:
     specs: list[HookSpec]
 
     @classmethod
-    def load(cls, path: Path) -> "HookRegistry":
+    def load(cls, path: Path) -> HookRegistry:
         """파일 없으면 빈 registry (= Hook 비활성)."""
         if not path.exists():
             return cls(specs=[])
@@ -290,6 +294,8 @@ class HookRegistry:
 
 ```python
 # src/mini_claude/hooks/runner.py
+from __future__ import annotations
+
 import asyncio
 import json
 from pydantic import ValidationError
@@ -360,6 +366,8 @@ async def execute_hook(
 
 ```python
 # src/mini_claude/hooks/__init__.py
+from __future__ import annotations
+
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -384,7 +392,7 @@ class HookEngine:
     transcript_path: str = ""
 
     @classmethod
-    def from_file(cls, path: Path | None = None) -> "HookEngine":
+    def from_file(cls, path: Path | None = None) -> HookEngine:
         return cls(registry=HookRegistry.load(path or DEFAULT_CONFIG_PATH))
 
     async def pre_tool_use(
