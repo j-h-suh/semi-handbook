@@ -591,6 +591,9 @@ main.py 쪽에도 *두 자리* 가 더 있다 — SessionStart (REPL 시작 직�
 
 ```python
 # src/mini_claude/main.py 의 핵심 변경
+from .hooks import HookEngine   # ← *10.3 에서 추가*
+
+
 hooks = HookEngine.from_file()  # 프로젝트 루트의 hooks.json
 await hooks.session_start(cwd=str(args.cwd))   # SessionStart
 
