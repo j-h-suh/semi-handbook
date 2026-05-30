@@ -866,8 +866,8 @@ chmod +x format_hook.py
 ### 2. 미니 클로드 실행
 
 ```bash
-cd ~/mini-claude     # 학습자 작업 cwd (9.0 SETUP.md §0-2 에서 만든 디렉토리)
-uv run mini-claude   # .env (VERTEX_PROJECT_ID + GOOGLE_APPLICATION_CREDENTIALS 등) 가 준비됐다고 가정 — SETUP.md 참조
+cd ~/mini-claude     # 학습자 작업 cwd (핸드북 9.0 §0-2 에서 만든 디렉토리)
+uv run mini-claude   # .env (VERTEX_PROJECT_ID + GOOGLE_APPLICATION_CREDENTIALS 등) 가 준비됐다고 가정 — 핸드북 9.0 참조
 ```
 
 시작하면 SessionStart hook 이 먼저 발동 (현재는 등록 안 했으니 아무 일 없음). 그 다음 프롬프트.

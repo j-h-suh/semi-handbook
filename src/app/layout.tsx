@@ -4,7 +4,7 @@ import './globals.css';
 import 'katex/dist/katex.min.css';
 import ClientLayout from '@/components/ClientLayout';
 import { buildSearchData } from '@/lib/searchIndex';
-import { getSortedChapters, getSortedClaudeChaptersWithSetup, type ChapterMeta } from '@/lib/markdown';
+import { getSortedChapters, type ChapterMeta } from '@/lib/markdown';
 import { BOOKS, type Book } from '@/lib/books';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -20,12 +20,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // 각 책의 챕터 — claude 만 SETUP.md (9.0) 합류, 나머지는 기본
+  // 각 책의 챕터 — 09_0 학습자 환경 설정은 일반 챕터로 자동 등록
   const chaptersByBook: Record<Book, ChapterMeta[]> = Object.fromEntries(
-    BOOKS.map((b) => [
-      b.id,
-      b.id === 'claude' ? getSortedClaudeChaptersWithSetup() : getSortedChapters(b.id),
-    ]),
+    BOOKS.map((b) => [b.id, getSortedChapters(b.id)]),
   ) as Record<Book, ChapterMeta[]>;
 
   return (
