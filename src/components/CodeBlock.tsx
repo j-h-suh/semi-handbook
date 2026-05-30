@@ -83,6 +83,24 @@ interface CodeBlockProps {
     inTabs?: boolean;
 }
 
+/* ─── 클립보드 폴백 ─── */
+// navigator.clipboard 는 보안 컨텍스트(HTTPS/localhost)에서만 존재.
+// 사내 HTTP 배포 등 비보안 컨텍스트용 폴백 — 화면 밖 textarea + execCommand('copy').
+function fallbackCopy(text: string): void {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    textarea.setAttribute('readonly', '');
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+    } finally {
+        document.body.removeChild(textarea);
+    }
+}
+
 function autoDetectLang(code: string, lang: string): string {
     if (lang && lang !== 'text') return lang;
     const firstLine = code.split('\n').find((l) => l.trim().length > 0)?.trim() ?? '';
@@ -132,7 +150,11 @@ export function CodeBlock({ code, lang, filename, inTabs = false }: CodeBlockPro
 
     const handleCopy = async () => {
         try {
-            await navigator.clipboard.writeText(code);
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(code);
+            } else {
+                fallbackCopy(code);
+            }
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (e) {
