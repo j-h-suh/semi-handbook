@@ -15,6 +15,7 @@ interface BookServerConfig {
   imageRewrite: string;
   excludePattern: (file: string) => boolean;
   getPartFromId: (id: string) => string;
+  wipChapters?: Set<string>;   // 집필/검증 진행 중 — 사이드바에 '공사중' 배지
 }
 
 const SERVER_CONFIGS: Record<Book, BookServerConfig> = {
@@ -67,6 +68,8 @@ const SERVER_CONFIGS: Record<Book, BookServerConfig> = {
       if (id.startsWith('11_')) return '에필로그';
       return '기타';
     },
+    // 본문은 보강됐으나 mini-claude 레포 add-up 검증이 아직 진행 중인 챕터.
+    wipChapters: new Set(['10_7_메시지_큐', '10_8_에이전트_팀']),
   },
 };
 
@@ -83,6 +86,7 @@ export interface ChapterMeta {
   id: string;
   title: string;
   part: string;
+  wip?: boolean;   // 사이드바 '공사중' 배지 — wipChapters 에 속한 챕터
 }
 
 export interface GitCommit {
@@ -117,7 +121,14 @@ export function getSortedChapters(book: Book): ChapterMeta[] {
     const match = fileContents.match(/^#\s+(.*)/m);
     if (match) title = match[1].trim();
 
-    return { id, title, part: config.getPartFromId(id), ...matterResult.data } as ChapterMeta;
+    return {
+      id,
+      title,
+      part: config.getPartFromId(id),
+      ...matterResult.data,
+      // 파일명이 NFD 로 체크아웃되는 환경(macOS 등) 대비 — getChapter 와 동일 정규화.
+      wip: config.wipChapters?.has(id.normalize('NFC')) ?? false,
+    } as ChapterMeta;
   });
 
   return chapters.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
