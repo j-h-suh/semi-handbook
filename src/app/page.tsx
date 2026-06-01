@@ -25,6 +25,7 @@ export default function Home() {
         claude: countRegistryEntries('claudeRegistry.ts'),
         agent_sdk: countRegistryEntries('agentSdkRegistry.ts'),
         memory: countRegistryEntries('memoryRegistry.ts'),
+        llm: countRegistryEntries('llmRegistry.ts'),
     };
 
     // 각 책별 카드 footer — 챕터 + 다이어그램 통일

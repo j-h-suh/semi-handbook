@@ -1,7 +1,7 @@
 // Client/Server 공통 — 핸드북 UI 메타. server-only 모듈 (fs/path/...) 의존성 _없음_.
 // 4 번째 핸드북 추가 시 이 파일의 BOOKS 배열에 한 줄 + markdown.ts 의 SERVER_CONFIGS 에 한 줄.
 
-export type Book = 'semi' | 'stats' | 'claude' | 'agent_sdk' | 'memory';
+export type Book = 'semi' | 'stats' | 'claude' | 'agent_sdk' | 'memory' | 'llm';
 
 export type IconName = 'cpu' | 'trending-up' | 'terminal';
 // 단일 시그니처 — Mintlify brand-green. 향후 다른 색 도입 시 union 확장.
@@ -72,6 +72,17 @@ export const BOOKS: BookMeta[] = [
     description: '에이전트에 어떤 기억을 어떻게 설계할지 판단하고 직접 구현하기',
     landingHref: '/memory/00_1_컨텍스트_윈도우의_벽',
     route: '/memory',
+    iconKey: 'trending-up',
+    accent: 'green',
+  },
+  {
+    id: 'llm',
+    label: 'LLM',
+    fullLabel: 'LLM 핸드북',
+    subtitle: 'RNN으로 충분했다, 그런데 왜 Transformer인가',
+    description: '사이토 1권 이후 — LSTM에서 Transformer로의 전환을 정면으로 답하며 Mini LLM 만들기',
+    landingHref: '/llm/00_1_세_자료의_지도',
+    route: '/llm',
     iconKey: 'trending-up',
     accent: 'green',
   },

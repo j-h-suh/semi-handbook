@@ -10,6 +10,7 @@ export default function GlossaryPage() {
         claude: {},
         agent_sdk: {},
         memory: {},
+        llm: {},
     };
     for (const book of BOOKS) {
         const chapters = getSortedChapters(book.id);

@@ -134,6 +134,43 @@ const SERVER_CONFIGS: Record<Book, BookServerConfig> = {
       '08_1_분석_에이전트_실전', '09_에필로그',
     ]),
   },
+  llm: {
+    contentDir: path.join(process.cwd(), 'content', 'llm'),
+    imageRewrite: '/content/images/llm/',
+    excludePattern: (f) =>
+      f === 'handbook-toc.md' || f === 'chapter-rubric.md' || f === 'writing-brief.md',
+    getPartFromId: (id) => {
+      if (id.startsWith('00_')) return '들어가며';
+      if (id.startsWith('01_')) return 'Part 1: 텍스트를 수로';
+      if (id.startsWith('02_')) return 'Part 2: 순서를 기억하는 기계';
+      if (id.startsWith('03_')) return 'Part 3: Attention의 등장';
+      if (id.startsWith('04_')) return 'Part 4: 전환점';
+      if (id.startsWith('05_')) return 'Part 5: Transformer 블록 쌓기';
+      if (id.startsWith('06_')) return 'Part 6: Mini LLM 만들기';
+      if (id.startsWith('07_')) return 'Part 7: 학습과 실험';
+      if (id.startsWith('08_')) return '에필로그';
+      return '기타';
+    },
+    wipChapters: new Set([
+      '00_1_세_자료의_지도', '00_2_이_책이_답할_질문', '00_3_환경_설정',
+      '01_1_토큰이란_무엇인가', '01_2_어휘와_인덱스', '01_3_임베딩', '01_4_Word2Vec의_직관',
+      '02_1_순서_정보의_문제', '02_2_RNN의_구조', '02_3_LSTM의_등장',
+      '02_4_LSTM_구현', '02_5_언어_모델로서의_LSTM',
+      '03_1_seq2seq의_병목', '03_2_Bahdanau_Attention',
+      '03_3_Query_Key_Value', '03_4_Attention_구현',
+      '04_1_LSTM의_세_가지_한계', '04_2_병렬화가_왜_결정적인가',
+      '04_3_Self-Attention의_직관', '04_4_Attention_Is_All_You_Need',
+      '05_1_Scaled_Dot-Product_Attention', '05_2_Multi-Head_Attention',
+      '05_3_Positional_Encoding', '05_4_Feed-Forward_Layer',
+      '05_5_Residual_Connection과_Layer_Norm', '05_6_Transformer_블록_완성',
+      '05_7_Encoder_vs_Decoder',
+      '06_1_GPT_아키텍처_개요', '06_2_Causal_Self-Attention',
+      '06_3_Mini_GPT_전체_구현', '06_4_텍스트_생성', '06_5_처음부터_끝까지',
+      '07_1_손실과_Perplexity', '07_2_학습_루프',
+      '07_3_하이퍼파라미터_실험', '07_4_스케일의_법칙',
+      '08_1_에필로그',
+    ]),
+  },
 };
 
 export function getBookConfig(book: Book): BookServerConfig {
@@ -318,6 +355,14 @@ export function getSortedMemoryChapters(): ChapterMeta[] {
 
 export async function getMemoryChapterData(id: string): Promise<Chapter> {
   return getChapter('memory', id);
+}
+
+export function getSortedLlmChapters(): ChapterMeta[] {
+  return getSortedChapters('llm');
+}
+
+export async function getLlmChapterData(id: string): Promise<Chapter> {
+  return getChapter('llm', id);
 }
 
 /* ─── claude 챕터: 09_0 학습자 환경 설정 포함 모두 파일 스캔으로 자동 등록 ─── */
