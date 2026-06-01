@@ -23,6 +23,8 @@ export default function Home() {
         semi: countRegistryEntries('semiRegistry.ts'),
         stats: countRegistryEntries('statsRegistry.ts'),
         claude: countRegistryEntries('claudeRegistry.ts'),
+        agent_sdk: countRegistryEntries('agentSdkRegistry.ts'),
+        memory: countRegistryEntries('memoryRegistry.ts'),
     };
 
     // 각 책별 카드 footer — 챕터 + 다이어그램 통일

@@ -2,6 +2,8 @@ import type { ComponentType } from 'react';
 import { semiDiagramRegistry } from './semiRegistry';
 import { statsDiagramRegistry } from './statsRegistry';
 import { claudeDiagramRegistry } from './claudeRegistry';
+import { agentSdkDiagramRegistry } from './agentSdkRegistry';
+import { memoryDiagramRegistry } from './memoryRegistry';
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -11,9 +13,13 @@ import { claudeDiagramRegistry } from './claudeRegistry';
  * Semi diagrams: ./semiRegistry.ts
  * Stats diagrams: ./statsRegistry.ts
  * Claude diagrams: ./claudeRegistry.ts
+ * Agent SDK diagrams: ./agentSdkRegistry.ts
+ * Memory diagrams: ./memoryRegistry.ts
  */
 export const diagramRegistry: Record<string, ComponentType> = {
     ...semiDiagramRegistry,
     ...statsDiagramRegistry,
     ...claudeDiagramRegistry,
+    ...agentSdkDiagramRegistry,
+    ...memoryDiagramRegistry,
 };

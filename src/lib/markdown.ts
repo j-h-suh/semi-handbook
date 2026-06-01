@@ -71,6 +71,69 @@ const SERVER_CONFIGS: Record<Book, BookServerConfig> = {
     // 본문은 보강됐으나 mini-claude 레포 add-up 검증이 아직 진행 중인 챕터.
     wipChapters: new Set(['10_7_메시지_큐', '10_8_에이전트_팀']),
   },
+  agent_sdk: {
+    contentDir: path.join(process.cwd(), 'content', 'agent_sdk'),
+    imageRewrite: '/content/images/agent_sdk/',
+    excludePattern: (f) =>
+      f === 'handbook-toc.md' || f === 'chapter-rubric.md' || f === 'writing-brief.md',
+    getPartFromId: (id) => {
+      if (id.startsWith('00_')) return '들어가며';
+      if (id.startsWith('01_')) return 'Part 1: 첫 에이전트';
+      if (id.startsWith('02_')) return 'Part 2: 능력 주기';
+      if (id.startsWith('03_')) return 'Part 3: 앱으로 감싸기';
+      if (id.startsWith('04_')) return 'Part 4: 상태를 로그로 표현';
+      if (id.startsWith('05_')) return 'Part 5: 시간을 다루기';
+      if (id.startsWith('06_')) return 'Part 6: 관측성';
+      if (id.startsWith('07_')) return 'Part 7: 믿게 만들기';
+      if (id.startsWith('08_')) return 'Part 8: 배포·부채';
+      if (id.startsWith('09_')) return 'Part 9: 실전';
+      if (id.startsWith('99_')) return '에필로그';
+      return '기타';
+    },
+    wipChapters: new Set([
+      '00_1_왜_롤백인가', '00_2_이_책의_자리', '00_3_환경과_첫_호출',
+      '01_1_query_한_번의_호출', '01_2_대화_잇기', '01_3_options_지도와_결과',
+      '02_1_내장_도구_고르기', '02_2_커스텀_도구', '02_3_mcp_연결',
+      '03_1_에이전트_루프를_앱이', '03_2_인터페이스',
+      '04_1_세션이_담지_않는_것', '04_2_event_append', '04_3_nodes와_events', '04_4_replay',
+      '05_1_두_개의_시간축', '05_2_분기_만들기', '05_3_롤백_하기',
+      '05_4_분기_공존과_트리_탐색', '05_5_정합과_함정',
+      '06_1_hook으로_신호_뽑기', '06_2_비용과_토큰',
+      '07_1_비결정_에이전트_테스트', '07_2_인수_조건을_코드로', '07_3_견고함과_안전',
+      '08_1_내보내기', '08_2_다음을_위한_자리',
+      '09_1_처음부터_끝까지', '99_에필로그',
+    ]),
+  },
+  memory: {
+    contentDir: path.join(process.cwd(), 'content', 'memory'),
+    imageRewrite: '/content/images/memory/',
+    excludePattern: (f) =>
+      f === 'handbook-toc.md' || f === 'chapter-rubric.md' || f === 'writing-brief.md',
+    getPartFromId: (id) => {
+      if (id.startsWith('00_')) return '들어가며';
+      if (id.startsWith('01_')) return 'Part 1: 기억의 유형';
+      if (id.startsWith('02_')) return 'Part 2: 어떻게 담나 — 저장';
+      if (id.startsWith('03_')) return 'Part 3: 어떻게 떠올리나 — 인출';
+      if (id.startsWith('04_')) return 'Part 4: 잊기와 갱신';
+      if (id.startsWith('05_')) return 'Part 5: 직접 만들어보기';
+      if (id.startsWith('06_')) return 'Part 6: 프레임워크 지형';
+      if (id.startsWith('07_')) return 'Part 7: Claude 위에서';
+      if (id.startsWith('08_')) return 'Part 8: 실전';
+      if (id.startsWith('09_')) return '에필로그';
+      return '기타';
+    },
+    wipChapters: new Set([
+      '00_1_컨텍스트_윈도우의_벽', '00_2_이_책의_자리', '00_3_기억의_큰_그림',
+      '01_1_단기_컨텍스트', '01_2_장기_세_갈래', '01_3_무엇을_언제',
+      '02_1_벡터_스토어', '02_2_지식_그래프', '02_3_폴리스토어',
+      '03_1_유사도_검색', '03_2_시간_그래프_탐색', '03_3_하이브리드_재랭킹',
+      '04_1_왜_잊어야_하나', '04_2_사실은_변한다', '04_3_두_개의_시간', '04_4_분석_staleness',
+      '05_1_최소_메모리', '05_2_망각_갱신_얹기', '05_3_원리가_프레임워크로',
+      '06_1_지형_한눈에', '06_2_대표_비교', '06_3_선택_프레임',
+      '07_1_네이티브', '07_2_플러그인',
+      '08_1_분석_에이전트_실전', '09_에필로그',
+    ]),
+  },
 };
 
 export function getBookConfig(book: Book): BookServerConfig {
@@ -239,6 +302,22 @@ export function getSortedClaudeChapters(): ChapterMeta[] {
 
 export async function getClaudeChapterData(id: string): Promise<Chapter> {
   return getChapter('claude', id);
+}
+
+export function getSortedAgentSdkChapters(): ChapterMeta[] {
+  return getSortedChapters('agent_sdk');
+}
+
+export async function getAgentSdkChapterData(id: string): Promise<Chapter> {
+  return getChapter('agent_sdk', id);
+}
+
+export function getSortedMemoryChapters(): ChapterMeta[] {
+  return getSortedChapters('memory');
+}
+
+export async function getMemoryChapterData(id: string): Promise<Chapter> {
+  return getChapter('memory', id);
 }
 
 /* ─── claude 챕터: 09_0 학습자 환경 설정 포함 모두 파일 스캔으로 자동 등록 ─── */

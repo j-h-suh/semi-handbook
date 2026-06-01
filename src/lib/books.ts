@@ -1,7 +1,7 @@
 // Client/Server 공통 — 핸드북 UI 메타. server-only 모듈 (fs/path/...) 의존성 _없음_.
 // 4 번째 핸드북 추가 시 이 파일의 BOOKS 배열에 한 줄 + markdown.ts 의 SERVER_CONFIGS 에 한 줄.
 
-export type Book = 'semi' | 'stats' | 'claude';
+export type Book = 'semi' | 'stats' | 'claude' | 'agent_sdk' | 'memory';
 
 export type IconName = 'cpu' | 'trending-up' | 'terminal';
 // 단일 시그니처 — Mintlify brand-green. 향후 다른 색 도입 시 union 확장.
@@ -51,6 +51,28 @@ export const BOOKS: BookMeta[] = [
     landingHref: '/claude/00_0_왜_이_책을_썼는가',
     route: '/claude',
     iconKey: 'terminal',
+    accent: 'green',
+  },
+  {
+    id: 'agent_sdk',
+    label: 'Agent SDK',
+    fullLabel: 'Agent SDK 핸드북',
+    subtitle: '만드는 법은 안다, 이제 굴린다',
+    description: 'Claude Agent SDK로 에이전트 앱을 빈 스크립트에서 프로덕션까지',
+    landingHref: '/agent_sdk/00_1_왜_롤백인가',
+    route: '/agent_sdk',
+    iconKey: 'terminal',
+    accent: 'green',
+  },
+  {
+    id: 'memory',
+    label: '메모리',
+    fullLabel: '에이전트 메모리 핸드북',
+    subtitle: '도구는 바뀐다, 기억의 원리는 남는다',
+    description: '에이전트에 어떤 기억을 어떻게 설계할지 판단하고 직접 구현하기',
+    landingHref: '/memory/00_1_컨텍스트_윈도우의_벽',
+    route: '/memory',
+    iconKey: 'trending-up',
     accent: 'green',
   },
 ];
