@@ -171,6 +171,35 @@ const SERVER_CONFIGS: Record<Book, BookServerConfig> = {
       '08_1_에필로그',
     ]),
   },
+  harness: {
+    contentDir: path.join(process.cwd(), 'content', 'harness'),
+    imageRewrite: '/content/images/harness/',
+    excludePattern: (f) =>
+      f === 'handbook-toc.md' || f === 'chapter-rubric.md' || f === 'writing-brief.md',
+    getPartFromId: (id) => {
+      if (id.startsWith('00_')) return '들어가며';
+      if (id.startsWith('01_')) return 'Part 1: 하네스 해부학';
+      if (id.startsWith('02_')) return 'Part 2: 1차 분류';
+      if (id.startsWith('03_')) return 'Part 3: 축 1 — 상태';
+      if (id.startsWith('04_')) return 'Part 4: 축 2 — 확장';
+      if (id.startsWith('05_')) return 'Part 5: 축 3 — 메모리';
+      if (id.startsWith('06_')) return 'Part 6: 축 4 — 협업';
+      if (id.startsWith('07_')) return 'Part 7: 종합';
+      if (id.startsWith('08_')) return '에필로그';
+      return '기타';
+    },
+    wipChapters: new Set([
+      '00_1_왜_비교하나', '00_2_이_책의_자리', '00_3_등장_5종',
+      '01_1_하네스란_무엇인가', '01_2_다섯_가지_공통_부품', '01_3_비교의_자를_세우다',
+      '02_1_코딩_하네스', '02_2_게이트웨이', '02_3_경계가_흐려진다',
+      '03_1_파일_이벤트로그형', '03_2_서버_DB형', '03_3_계층형', '03_4_세_패턴_트레이드오프',
+      '04_1_도구와_MCP', '04_2_ACP', '04_3_skill과_플러그인',
+      '05_1_트랜스크립트_replay', '05_2_증류된_Memories', '05_3_자기개선',
+      '06_1_서브에이전트', '06_2_코디네이터_모드', '06_3_에이전트_팀',
+      '07_1_5종_종합표', '07_2_내_경우엔_무엇을', '07_3_직접_만든다면',
+      '08_에필로그',
+    ]),
+  },
 };
 
 export function getBookConfig(book: Book): BookServerConfig {
@@ -363,6 +392,14 @@ export function getSortedLlmChapters(): ChapterMeta[] {
 
 export async function getLlmChapterData(id: string): Promise<Chapter> {
   return getChapter('llm', id);
+}
+
+export function getSortedHarnessChapters(): ChapterMeta[] {
+  return getSortedChapters('harness');
+}
+
+export async function getHarnessChapterData(id: string): Promise<Chapter> {
+  return getChapter('harness', id);
 }
 
 /* ─── claude 챕터: 09_0 학습자 환경 설정 포함 모두 파일 스캔으로 자동 등록 ─── */

@@ -11,6 +11,7 @@ export default function GlossaryPage() {
         agent_sdk: {},
         memory: {},
         llm: {},
+        harness: {},
     };
     for (const book of BOOKS) {
         const chapters = getSortedChapters(book.id);

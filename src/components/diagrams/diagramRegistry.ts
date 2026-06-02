@@ -5,6 +5,7 @@ import { claudeDiagramRegistry } from './claudeRegistry';
 import { agentSdkDiagramRegistry } from './agentSdkRegistry';
 import { memoryDiagramRegistry } from './memoryRegistry';
 import { llmDiagramRegistry } from './llmRegistry';
+import { harnessDiagramRegistry } from './harnessRegistry';
 
 /**
  * Registry mapping image paths (as they appear in markdown) to React components.
@@ -24,4 +25,5 @@ export const diagramRegistry: Record<string, ComponentType> = {
     ...agentSdkDiagramRegistry,
     ...memoryDiagramRegistry,
     ...llmDiagramRegistry,
+    ...harnessDiagramRegistry,
 };

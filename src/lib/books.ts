@@ -1,7 +1,7 @@
 // Client/Server 공통 — 핸드북 UI 메타. server-only 모듈 (fs/path/...) 의존성 _없음_.
 // 4 번째 핸드북 추가 시 이 파일의 BOOKS 배열에 한 줄 + markdown.ts 의 SERVER_CONFIGS 에 한 줄.
 
-export type Book = 'semi' | 'stats' | 'claude' | 'agent_sdk' | 'memory' | 'llm';
+export type Book = 'semi' | 'stats' | 'claude' | 'agent_sdk' | 'memory' | 'llm' | 'harness';
 
 export type IconName = 'cpu' | 'trending-up' | 'terminal';
 // 단일 시그니처 — Mintlify brand-green. 향후 다른 색 도입 시 union 확장.
@@ -84,6 +84,17 @@ export const BOOKS: BookMeta[] = [
     landingHref: '/llm/00_1_세_자료의_지도',
     route: '/llm',
     iconKey: 'trending-up',
+    accent: 'green',
+  },
+  {
+    id: 'harness',
+    label: '하네스',
+    fullLabel: '에이전트 하네스 핸드북',
+    subtitle: '하네스는 뜨고 진다, 비교의 축은 남는다',
+    description: '제품 카탈로그가 아니라 어느 하네스든 읽어내는 비교의 축',
+    landingHref: '/harness/00_1_왜_비교하나',
+    route: '/harness',
+    iconKey: 'terminal',
     accent: 'green',
   },
 ];
