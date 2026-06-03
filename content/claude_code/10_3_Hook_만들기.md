@@ -614,7 +614,7 @@ from .hooks import HookEngine    # ← *10.3 에서 추가*
 
 
 async def main_async() -> None:
-    # ... 9.5 / 10.1 / 10.2 의 초기화 (argparse / VERTEX 검사 / state / permissions /
+    # ... 9.5 / 10.1 / 10.2 의 초기화 (argparse / AWS_BEARER_TOKEN_BEDROCK 검사 / state / permissions /
     #     parent_tools / SkillTool / AgentTool / md_commands / skills) ...
 
     # ⭐ 추가 ①: HookEngine 생성 + SessionStart 발화
@@ -867,7 +867,7 @@ chmod +x format_hook.py
 
 ```bash
 cd ~/mini-claude     # 학습자 작업 cwd (핸드북 9.0 §0-2 에서 만든 디렉토리)
-uv run mini-claude   # .env (VERTEX_PROJECT_ID + GOOGLE_APPLICATION_CREDENTIALS 등) 가 준비됐다고 가정 — 핸드북 9.0 참조
+uv run mini-claude   # .env (AWS_BEARER_TOKEN_BEDROCK + AWS_REGION 등) 가 준비됐다고 가정 — 핸드북 9.0 참조
 ```
 
 시작하면 SessionStart hook 이 먼저 발동 (현재는 등록 안 했으니 아무 일 없음). 그 다음 프롬프트.
