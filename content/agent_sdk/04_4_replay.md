@@ -110,7 +110,7 @@ def replay(store, duck, node_id):
 
 이 네 조각이 Part 5의 두 동작을 거의 공짜로 만든다. **롤백**은 더 이른 노드까지만 접는 것이고, **분기**는 새 노드를 더하고 거기에 대화 세션을 묶는 것이다. Part 5가 할 "두 축을 하나로 묶는" 그 일을, 이제 우리는 떠받칠 바닥을 갖고 맞는다.
 
-> ✅ **검증됨 (검증 레포)**: `replay`의 fold(조상 경로만 따라 격리)와 `_apply_merge`의 `LEFT JOIN … USING` + `read_parquet(?)` 값 바인딩을 harness(`replay.py`)로 돌려 확인했다(test_replay 7건 — 조인 구문·파라미터 바인딩 OK, 형제 갈래 비격리). 단 **스냅샷 캐시(`snapshot_of`)는 아직 미구현 — 설계 스케치**이며, 캐시 시점·무효화는 8.2(기술부채)로 남긴다.
+> ✅ **검증됨 (검증 레포)**: `replay`의 fold(조상 경로만 따라 격리)와 `_apply_merge`의 `LEFT JOIN … USING` + `read_parquet(?)` 값 바인딩을 harness(`replay.py`)로 돌려 확인했다(test_replay 7건 — 조인 구문·파라미터 바인딩 OK, 형제 갈래 격리). 머지 결과의 *값 정합*까지 ground-truth 전체 행 대조로 못박았다(`tests/test_ground_truth.py`, 양방향 `EXCEPT ALL`). 단 **스냅샷 캐시(`snapshot_of`)는 아직 미구현 — 설계 스케치**이며, 캐시 시점·무효화는 8.2(기술부채)로 남긴다.
 
 ---
 
