@@ -1,26 +1,16 @@
-import { AnthropicVertex } from '@anthropic-ai/vertex-sdk';
+import { AnthropicBedrock } from '@anthropic-ai/bedrock-sdk';
 import type { StreamTextArgs, StreamTextResult } from './types';
 
-let _client: AnthropicVertex | null = null;
+let _client: AnthropicBedrock | null = null;
 
-// @anthropic-ai/vertex-sdk@0.11.x 는 region 값을 그대로 host prefix 결로 사용해
-// region='global' 일 때 https://global-aiplatform.googleapis.com 결로 합성. 그러나
-// Vertex 의 실제 global endpoint 는 prefix 없는 aiplatform.googleapis.com. SDK 가
-// 고쳐질 때까지 baseURL 을 명시적으로 override.
-function resolveBaseURL(region: string): string | undefined {
-    if (region === 'global') return 'https://aiplatform.googleapis.com/v1';
-    return undefined;
-}
-
-function getClient(): AnthropicVertex {
+function getClient(): AnthropicBedrock {
     if (_client) return _client;
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
-    const region = process.env.CLOUD_ML_REGION ?? 'global';
-    if (!projectId) {
-        throw new Error('GOOGLE_CLOUD_PROJECT 환경변수가 비어 있습니다.');
-    }
-    const baseURL = resolveBaseURL(region);
-    _client = new AnthropicVertex({ projectId, region, ...(baseURL ? { baseURL } : {}) });
+    // AWS_BEARER_TOKEN_BEDROCK 이 환경에 있으면 SDK 가 Bearer 인증을 자동 사용한다.
+    // 없으면 표준 AWS 자격증명 체인(~/.aws, AWS_ACCESS_KEY_ID/SECRET, EC2 IAM role)으로
+    // SigV4 서명한다. region 은 endpoint 결정에 필요 — global inference profile 도 호출
+    // 기점 region 을 요구하므로 기본값을 둔다.
+    const awsRegion = process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION ?? 'us-east-1';
+    _client = new AnthropicBedrock({ awsRegion });
     return _client;
 }
 
@@ -65,7 +55,7 @@ export async function streamText({
     }
 
     // Anthropic SDK MessageStream 은 EventEmitter — 'text'/'end'/'error' 를 큐 기반
-    // async iterator 결로 변환
+    // async iterator 로 변환
     async function* textIterator(): AsyncGenerator<string> {
         const queue: string[] = [];
         let resolveWait: (() => void) | null = null;

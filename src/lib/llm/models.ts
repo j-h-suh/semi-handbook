@@ -1,5 +1,5 @@
 // Client / Server 양쪽에서 안전하게 import 가능한 모델 메타데이터.
-// Server SDK 결로 의존성 없음 — 'use client' 컴포넌트에서 자유롭게 import.
+// Server SDK 의존성 없음 — 'use client' 컴포넌트에서 자유롭게 import.
 
 export interface ModelOption {
     id: string;
@@ -9,8 +9,13 @@ export interface ModelOption {
 
 export const MODEL_OPTIONS: ModelOption[] = [
     {
-        id: 'claude-opus-4-7',
-        label: 'Claude Opus 4.7',
+        id: 'claude-opus-4-8',
+        label: 'Claude Opus 4.8',
+        provider: 'anthropic',
+    },
+    {
+        id: 'claude-haiku-4-5',
+        label: 'Claude Haiku 4.5',
         provider: 'anthropic',
     },
     {
