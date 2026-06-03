@@ -138,7 +138,10 @@ const SERVER_CONFIGS: Record<Book, BookServerConfig> = {
     contentDir: path.join(process.cwd(), 'content', 'llm'),
     imageRewrite: '/content/images/llm/',
     excludePattern: (f) =>
-      f === 'handbook-toc.md' || f === 'chapter-rubric.md' || f === 'writing-brief.md',
+      f === 'handbook-toc.md' ||
+      f === 'chapter-rubric.md' ||
+      f === 'writing-brief.md' ||
+      f === 'handbook-review.md',
     getPartFromId: (id) => {
       if (id.startsWith('00_')) return '들어가며';
       if (id.startsWith('01_')) return 'Part 1: 텍스트를 수로';
