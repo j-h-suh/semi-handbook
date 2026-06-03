@@ -86,7 +86,7 @@ if isinstance(msg, AssistantMessage):
 
 다음 Part는 방향을 튼다. 부르기만 하던 에이전트에게 *능력*을 쥐어준다 — 무슨 도구를 줄지 고르고, 내 로직을 도구로 노출하고, 외부 시스템을 연결한다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요**: 위 옵션 손잡이 이름·메시지 타입(`SystemMessage`/`AssistantMessage`/`ResultMessage`)·블록 타입(`TextBlock`/`ToolUseBlock`)·필드는 설계 초안이다. 정확한 타입명과 속성은 검증 레포에서 실제 SDK 버전으로 확인해야 한다.
+> ✅ **검증됨 (검증 레포)**: `SystemMessage`/`AssistantMessage`/`ResultMessage` 세 타입과 `AssistantMessage.content`의 `TextBlock`(`.text`)을 one-shot `query()`로 실측했고(`probes/basics_probe.py`), `ToolUseBlock`(`.name`)은 도구를 부른 e2e(`probes/c5c_full_scenario.py`)에서 확인했다. `ClaudeAgentOptions`의 `model` 손잡이도 프로브가 실제로 넘겨 동작했다(`allowed_tools`·`permission_mode`는 2.1·8.1에서 검증).
 
 ---
 

@@ -70,7 +70,7 @@ async def count_rows() -> str:
 
 하지만 우리가 만들 건 단발이 아니다. lot_id로 머지하고, wafer 수율을 보고, "그럼 이번엔 wafer_id로" 하며 *대화를 잇는* 분석이다. 그러려면 카운터가 나를 기억해야 한다 — 일회성으론 안 된다. 그 "대화를 잇는" 방법이 다음 챕터의 `ClaudeSDKClient`다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요**: 위 `query()`·`anyio.run`·`ResultMessage.result` 사용은 설계 초안이다. 러너(`anyio` vs `asyncio`)와 결과 필드명은 검증 레포에서 실제 SDK 버전으로 확인해야 한다.
+> ✅ **검증됨 (검증 레포)**: `query()`가 async iterator로 메시지를 흘려보내고 마지막이 `ResultMessage`(`.result`에 답)임을 실측했다(`probes/basics_probe.py`, Bedrock opus-4-8 — 타입 순서 `SystemMessage`→`AssistantMessage`→`ResultMessage`). 러너는 `asyncio.run`으로 돌렸고, 책의 `anyio.run`도 SDK가 지원하는 같은 진입점이라 둘 중 무엇을 써도 된다. `.result` 필드명도 확인.
 
 ---
 

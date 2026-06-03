@@ -81,7 +81,7 @@ options = ClaudeAgentOptions(
 
 다음 챕터는 또 하나의 운영 신호 — 이 에이전트가 *얼마를 쓰고 있나* — 를 같은 자리에서 뽑는다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요**: 위 `HookMatcher`·hook 콜백 시그니처(`input_data`/`tool_use_id`/`context`)·반환 규약(`{}`)은 설계 초안이다. hook 이벤트 이름과 페이로드 구조는 검증 레포에서 실제 SDK 버전으로 확인해야 한다.
+> ✅ **검증됨 (검증 레포)**: `HookMatcher(hooks=[cb])`와 `hooks={"PreToolUse": […], "PostToolUse": […]}` 배선, 콜백 시그니처 `(input_data, tool_use_id, context)`, `{}` 반환 규약을 실측했다(`probes/hook_probe.py`, Bedrock opus-4-8). 도구 호출 턴에서 **Pre가 도구 직전·Post가 직후**에 발동하고, `input_data`에 `tool_name`·`tool_input`이 담기며, `{}`를 돌려줘도 도구가 정상 실행돼 merge 이벤트가 적혔다(관측만, 흐름 무방해). 단 `input_data`·`context`는 실측상 **dict**로 전달된다(위 `input_data["tool_name"]` 접근은 그대로 유효).
 
 ---
 
