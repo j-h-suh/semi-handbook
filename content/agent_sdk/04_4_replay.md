@@ -44,11 +44,16 @@
 `replay`는 이 셋을 한 줄기로 꿴다. SQLite에서 이벤트를 읽어, Parquet 베이스 위에서, DuckDB로 차례차례 실행한다.
 
 ```python
-def replay(store: Store, duck: duckdb.DuckDBPyConnection, node_id: str) -> str:
+def replay(
+    store: Store, duck: duckdb.DuckDBPyConnection, node_id: str, base_parquet: str
+) -> str:
     """루트→node_id의 이벤트를 순서대로 실행해 현재 테이블을 만든다."""
-    duck.execute(f"CREATE OR REPLACE TABLE state AS SELECT * FROM read_parquet('{BASE_PARQUET}')")
-    for node in store.ancestry(node_id):       # 루트→node (4.3 재귀 CTE)
-        for ev in store.events_of(node):       # 노드 안 seq 순
+    duck.execute(
+        "CREATE OR REPLACE TABLE state AS SELECT * FROM read_parquet(?)",
+        [base_parquet],                        # 베이스 경로도 값이니 바인딩
+    )
+    for nid in store.ancestry(node_id):        # 루트→node_id (4.3 재귀 CTE)
+        for ev in store.events_of(nid):        # 노드 안 seq 순
             APPLY[ev.op](duck, "state", ev.payload)
     return "state"
 ```
@@ -57,19 +62,28 @@ def replay(store: Store, duck: duckdb.DuckDBPyConnection, node_id: str) -> str:
 
 ```python
 def _apply_merge(duck: duckdb.DuckDBPyConnection, table: str, payload: dict) -> None:
+    on = _safe_ident(payload["on"])        # 식별자(컬럼명)는 화이트리스트로 검증 (7.3)
     duck.execute(
         f"CREATE OR REPLACE TABLE {table} AS "
         f"SELECT * FROM {table} "
-        f"LEFT JOIN read_parquet(?) USING (?)",
-        [payload["table"], payload["on"]],
+        f"LEFT JOIN read_parquet(?) USING ({on})",   # 경로(값)는 바인딩, 컬럼(식별자)은 검증 후 삽입
+        [payload["table"]],
     )
 
-APPLY = {"merge": _apply_merge, "drop_nulls": _apply_drop_nulls}
+def _apply_noop(duck: duckdb.DuckDBPyConnection, table: str, payload: dict) -> None:
+    """데이터 op가 아닌 이벤트(branch_reason 등)는 상태에 영향이 없다."""
+
+
+APPLY = {
+    "merge": _apply_merge,
+    "drop_nulls": _apply_drop_nulls,
+    "branch_reason": _apply_noop,   # 분기 이정표(5.2)는 상태 무영향 — 안 넣으면 replay가 터진다
+}
 ```
 
 `replay`는 "무슨 연산인지"는 `APPLY` 사전에 위임하고, 자기는 *순서대로 부르는* 일만 한다. 새 연산을 추가하고 싶으면 `APPLY`에 한 줄 더하면 된다 — `replay` 본체는 손대지 않는다.
 
-> ⚠️ **`op`·식별자는 신뢰 경계다**: `payload`의 테이블 이름·컬럼명이 SQL에 직접 들어간다. 위 코드는 값만 바인딩(`?`)했지만 식별자는 그러기 어렵다. 어떤 `op`·식별자를 허용할지 화이트리스트로 막는 일은 7.3(권한·견고)에서 정면으로 다룬다.
+> ⚠️ **`op`·식별자는 신뢰 경계다**: `payload`의 테이블 이름·컬럼명이 SQL에 직접 들어간다. 위 코드는 *값*(파일 경로)만 `?`로 바인딩하고, *식별자*(컬럼명)는 바인딩(`?`)이 안 돼 `_safe_ident`로 화이트리스트 검증 후 넣었다. 어떤 `op`·식별자를 허용할지는 7.3(권한·견고)에서 정면으로 다룬다.
 
 ## 접기 비용과 스냅샷 캐시
 
@@ -96,7 +110,7 @@ def replay(store, duck, node_id):
 
 이 네 조각이 Part 5의 두 동작을 거의 공짜로 만든다. **롤백**은 더 이른 노드까지만 접는 것이고, **분기**는 새 노드를 더하고 거기에 대화 세션을 묶는 것이다. Part 5가 할 "두 축을 하나로 묶는" 그 일을, 이제 우리는 떠받칠 바닥을 갖고 맞는다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요**: 위 `replay`·`_apply_merge`·스냅샷 캐시는 설계 초안이다. DuckDB 조인 구문, `read_parquet` 파라미터 바인딩 가능 여부, 스냅샷 무효화 시점은 검증 레포에서 실제로 돌려 확인해야 한다.
+> ✅ **검증됨 (검증 레포)**: `replay`의 fold(조상 경로만 따라 격리)와 `_apply_merge`의 `LEFT JOIN … USING` + `read_parquet(?)` 값 바인딩을 harness(`replay.py`)로 돌려 확인했다(test_replay 7건 — 조인 구문·파라미터 바인딩 OK, 형제 갈래 비격리). 단 **스냅샷 캐시(`snapshot_of`)는 아직 미구현 — 설계 스케치**이며, 캐시 시점·무효화는 8.2(기술부채)로 남긴다.
 
 ---
 
