@@ -45,9 +45,9 @@ options = ClaudeAgentOptions(
 
 > ⚙️ **`max_turns`는 싼 안전벨트다**: 에이전트가 같은 자리를 맴돌면 비용(6.2)이 샌다. `max_turns`로 상한을 두면 폭주가 자동으로 끊긴다 — 거의 공짜인 안전장치다.
 
-## 받는 우편을 분류한다 — 메시지 타입
+## 받는 신호를 가린다 — 메시지 타입
 
-이제 게이지 쪽. 스트림에서 흘러나오는 메시지는 한 종류가 아니다. 우편함에 청구서·엽서·소포가 섞여 오듯, 종류별로 다른 정보를 싣고 온다. `isinstance`로 분류해 받는다.
+이제 게이지 쪽. 스트림에서 흘러나오는 메시지는 한 종류가 아니다. 계기판에 속도계·연료계·경고등이 따로 있듯, 종류별로 다른 정보를 싣고 온다. `isinstance`로 어느 종류인지 가려 받는다.
 
 ```python
 from claude_agent_sdk import AssistantMessage, ResultMessage, SystemMessage
