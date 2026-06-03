@@ -108,7 +108,7 @@ query 벡터 $q$와 key 벡터 $k$의 각 원소가 서로 독립이고 평균 0
 
 이 함수는 Attention의 *심장*이지만, 아직 한쪽 눈으로만 보는 셈이다. 한 번의 Attention은 한 종류의 관계 — 이를테면 문법적 호응 — 만 포착한다. 실제 Transformer는 여러 개의 Attention을 동시에 굴려 각자 다른 시각을 맡긴다. 그 multi-head 구조가 다음 장이다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요.** 이 장의 `scaled_dot_product_attention`을 포함해 Part 5~7의 모든 코드는 본문 설명을 위한 것으로, 별도 검증 레포에서 실행 확인이 필요하다. 텐서 shape·broadcast·마스크 동작은 실제 실행으로 확정한다.
+> ✅ **코드 검증됨 — `playground/handbook/llm` 프로브 통과.** 이 장의 `scaled_dot_product_attention`은 검증 레포에서 실행 확인했다(probe_1_forward). 텐서 shape·broadcast·마스크 동작 정상.
 
 ---
 

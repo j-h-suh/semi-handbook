@@ -48,6 +48,8 @@ Residual과 Layer Norm을 *어떤 순서로* 배치하느냐에 두 유파가 �
 
 Pre-LN이 깊은 모델에서 더 안정적으로 학습된다고 알려져, GPT 계열 대부분이 이쪽을 쓴다. 이 책의 Mini GPT(Part 6)도 Pre-LN을 따른다.
 
+> 💡 **Pre-LN의 한 가지 귀결 — 종단 LayerNorm**: Pre-LN에서는 각 서브층이 *정규화된* 입력을 받지만, 잔차 줄기 자체는 한 번도 정규화되지 않은 채 흐른다. 그래서 마지막 블록을 빠져나온 출력은 *미정규화 상태*다. 이를 바로잡으려, 블록을 다 쌓은 뒤 스택 전체의 출구에 LayerNorm을 한 번 더 둔다 — Part 6에서 `ln_f`(final LayerNorm)라 부를 그 **종단 LayerNorm**이다. Pre-LN을 쓰면 거의 항상 이 종단 LN이 따라온다.
+
 ```python
 import torch.nn as nn
 
@@ -66,7 +68,7 @@ class ResidualNorm(nn.Module):
         return x + self.dropout(sublayer(self.norm(x)))
 ```
 
-`forward`가 `sublayer`를 인자로 받는 데 주목하자. 이 래퍼 하나로 Attention이든 FFN이든 똑같이 감쌀 수 있다. 5.6에서 이 패턴이 블록을 조립하는 골격이 된다.
+`forward`가 `sublayer`를 인자로 받는 데 주목하자. 이 래퍼 하나로 Attention이든 FFN이든 똑같은 *패턴* — 정규화 → 서브층 → 잔차 더하기 — 으로 감쌀 수 있다. 5.6에서 블록을 조립할 때는 이 클래스를 그대로 쓰기보다 *같은 패턴을 인라인으로* 펼친다 — Attention에 causal mask를 깔끔히 흘려넣기 위해서다. 클래스는 패턴을 한눈에 보여주는 견본이고, 블록은 그 패턴을 손으로 펼친 것이다.
 
 ## 부품은 다 모였다
 
@@ -79,7 +81,7 @@ class ResidualNorm(nn.Module):
 
 흩어진 부품을 하나의 블록으로 조립하고, 그 블록을 쌓아 인코더와 디코더를 만들 차례다. 다음 장에서 조각을 합친다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요.** 이 장의 `ResidualNorm`을 포함한 Part 5~7 코드는 본문 설명용이다. Pre-LN 배치와 dropout 위치, LayerNorm 차원은 실제 실행으로 확정한다.
+> ✅ **코드 검증됨(패턴) — `playground/handbook/llm` 프로브 통과.** Pre-LN + 잔차 *패턴*은 5.6 블록으로 실행 확인했다(probe_1_forward). 단 `ResidualNorm` 래퍼 클래스 자체는 견본이라(5.6은 같은 패턴을 인라인) 직접 인스턴스화하진 않았다.
 
 ---
 

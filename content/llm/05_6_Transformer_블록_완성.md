@@ -38,8 +38,8 @@ class TransformerBlock(nn.Module):
         self.norm1 = nn.LayerNorm(d_model)
         self.attn = MultiHeadAttention(d_model, num_heads)
         self.norm2 = nn.LayerNorm(d_model)
-        self.ffn = FeedForward(d_model, dropout=dropout)
-        self.dropout = nn.Dropout(dropout)
+        self.ffn = FeedForward(d_model)
+        self.dropout = nn.Dropout(dropout)   # attn·ffn 두 잔차 경로에서 한 번씩만 적용
 
     def forward(self, x, mask=None):
         # 1) Attention 서브층 (Pre-LN + 잔차)
@@ -91,7 +91,7 @@ class TransformerStack(nn.Module):
 
 블록 하나가 완성됐고, 쌓는 법도 안다. 그런데 우리가 방금 만든 건 정확히 어떤 블록일까 — 인코더 블록인가, 디코더 블록인가? 둘은 무엇이 다르고, 왜 GPT는 그중 디코더만 쓸까. 다음 장에서 그 갈림길을 본다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요.** 이 장의 `TransformerBlock`·`TransformerStack`을 포함한 Part 5~7 코드는 본문 설명용이다. 서브층 순서, dropout·LayerNorm 배치, mask 전달은 실제 실행으로 확정한다.
+> ✅ **코드 검증됨 — `playground/handbook/llm` 프로브 통과.** 이 장의 `TransformerBlock`은 검증 레포에서 `MiniGPT`의 블록 스택으로 실행 확인했다(probe_1_forward). 서브층 순서·dropout·LayerNorm 배치·mask 전달 정상.
 
 ---
 

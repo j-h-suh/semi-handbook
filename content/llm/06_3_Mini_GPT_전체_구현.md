@@ -34,6 +34,18 @@ class MiniGPT(nn.Module):
         self.ln_f = nn.LayerNorm(n_embd)                       # 최종 정규화 (5.5)
         self.lm_head = nn.Linear(n_embd, vocab_size, bias=False)   # 출력 투영 (2.5)
         self.lm_head.weight = self.tok_emb.weight              # weight tying
+        self.apply(self._init_weights)                        # GPT 표준 초기화
+
+    @staticmethod
+    def _init_weights(module):
+        # Linear·Embedding 을 N(0, 0.02) 로. 안 하면 기본 Embedding(std=1)이
+        # logit 을 폭주시켜 초기 loss 가 ln(V) 가 아니라 수십으로 뜬다.
+        if isinstance(module, nn.Linear):
+            nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
@@ -77,13 +89,13 @@ self.lm_head.weight = self.tok_emb.weight    # weight tying
 
 입력 임베딩 행렬과 출력 투영 행렬을 *같은 가중치*로 묶었다. 이를 **weight tying(가중치 묶기)**이라 한다. 직관은 이렇다 — "토큰을 벡터로 바꾸는 사전"과 "벡터를 토큰 점수로 바꾸는 사전"은 사실 같은 사전의 양방향이다. 둘을 묶으면 파라미터가 줄고, 대개 성능도 더 낫다.
 
-> ⚙️ **GPT-3와 구조가 같다**: 이 `MiniGPT`는 `n_layer`, `n_embd` 같은 숫자만 작을 뿐, GPT-3와 *구조적으로 동일*하다. 6.1에서 말한 그대로다. 진짜 GPT 구현은 dropout 위치, 가중치 초기화, 효율화 같은 디테일이 더 붙지만, 뼈대는 이 한 클래스가 다 담고 있다. 50줄 남짓이 언어 모델의 본체라는 게, GPT의 단순함을 다시 증명한다.
+> ⚙️ **GPT-3와 구조가 같다 — 그리고 `_init_weights`는 왜 빼면 안 되나**: 이 `MiniGPT`는 `n_layer`, `n_embd` 같은 숫자만 작을 뿐, GPT-3와 *구조적으로 동일*하다. 6.1에서 말한 그대로다. 한 가지, `N(0, 0.02)` 초기화는 *장식이 아니라 필수*라 넣었다 — 빼면 `nn.Embedding`의 기본값(std=1)이 weight-tied logit을 폭주시켜, 초기 loss가 `ln(어휘)`(≈4)이 아니라 *수십*으로 뜬다(7.1의 "잘 초기화하면 어휘 크기 근처에서 시작"이 정확히 이 조건이다). 그 밖의 디테일 — 더 세밀한 dropout 배치, 효율화 — 은 진짜 구현에 더 붙지만, 뼈대는 이 한 클래스가 다 담는다. 단순한 본체가 GPT의 단순함을 다시 증명한다.
 
 > ⚠️ **"Mini"를 잊지 말 것**: 구조가 같다고 능력이 같은 건 아니다. 이 모델을 작은 텍스트로 학습하면 그럴듯한 글자 시퀀스를 흉내 내는 정도다. GPT-3의 능력은 이 구조에 *막대한 규모와 데이터*가 더해져 창발한 것이다. 우리가 만든 건 *메커니즘*이지 *능력*이 아니다 — 그리고 메커니즘을 끝까지 이해하는 게 이 책의 목표다.
 
 모델이 섰다. 이제 이 모델로 텍스트를 *만들* 차례다. logit에서 다음 토큰을 뽑아 이어 붙이는 생성이 다음 장이다.
 
-> ⚠️ **코드 미검증 — 검증 레포 실행 필요.** 이 장의 `MiniGPT`를 포함한 Part 5~7 코드는 본문 설명용이다. 모듈 import 경로, weight tying의 shape 정합, `view` 차원은 실제 실행으로 확정한다.
+> ✅ **코드 검증됨 — `playground/handbook/llm` 프로브 통과.** 이 장의 `MiniGPT`는 검증 레포에서 실행 확인했다(probe_1_forward). import 경로·weight tying shape·`view`·`_init_weights` 정상(초기 loss ≈ ln(어휘) 확인 — init 이 빠지면 수십으로 뜸).
 
 ---
 
