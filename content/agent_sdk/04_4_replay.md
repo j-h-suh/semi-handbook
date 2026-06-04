@@ -89,15 +89,16 @@ APPLY = {
 
 여기서 4.2가 미뤄둔 정직한 약점을 마주한다. **매번 루트부터 다시 조리하는 건 비싸다.** 이벤트가 수백 개면 괜찮지만, 90GB 위에서 수천 번의 머지를 매 조회마다 다시 돈다면 사람이 기다리지 못한다.
 
-답은 부엌의 상식 그대로다. **자주 먹는 요리는 만들어 냉장고에 넣어둔다.** 특정 노드까지 접은 결과를 Parquet으로 한 번 저장해 두면(materialized snapshot), 다음엔 거기서부터 조리하면 된다.
+답은 부엌의 상식 그대로다. **자주 먹는 요리는 만들어 냉장고에 넣어둔다.** 특정 노드까지 접은 결과를 Parquet으로 한 번 저장해 두면(materialized snapshot), *그 노드*를 다시 조회할 땐 접지 않고 바로 읽는다. (가장 가까운 조상 스냅샷에서 *이후 이벤트만* 다시 접는 더 본격적인 캐시는 8.2에서 판다 — 위 스케치는 동일 노드 캐시까지다.)
 
 ```python
-def replay(store, duck, node_id):
-    cached = store.snapshot_of(node_id)        # 접어 둔 결과가 있나?
+def replay(store, duck, node_id, base_parquet):
+    cached = store.snapshot_of(node_id)        # 이 노드까지 접어 둔 결과가 있나?
     if cached is not None:
-        duck.execute(f"CREATE OR REPLACE TABLE state AS SELECT * FROM read_parquet('{cached}')")
+        duck.execute("CREATE OR REPLACE TABLE state AS SELECT * FROM read_parquet(?)",
+                     [cached])                 # 경로도 값이니 ? 바인딩 (본문 규율 그대로)
         return "state"
-    ...  # 없으면 위처럼 루트부터 접는다
+    ...  # 없으면 base_parquet 위에 루트부터 접는다 (앞 본체)
 ```
 
 여기서 규율 하나가 중요하다. **스냅샷은 진실의 원천이 아니라 캐시일 뿐이다.** 단일 진실은 여전히 이벤트 로그다. 스냅샷은 지워도 되고(다시 접으면 그만), 이벤트와 어긋나면 이벤트가 이긴다. 4.2의 ADR-001이 "스냅샷이 아니라 append"라고 한 건 *스냅샷을 절대 쓰지 말라*가 아니라 *진실을 스냅샷에 두지 말라*는 뜻이었다. 캐시로서의 스냅샷은 환영이다. 언제·어느 간격으로 캐시할지는 8.2(기술부채)에서 더 판다.
