@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Bot, ChevronDown, Check, RotateCcw } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 import { DEFAULT_MODEL_ID, MODEL_OPTIONS } from '@/lib/llm/models';
 
 import ReactMarkdown from 'react-markdown';
@@ -187,11 +186,15 @@ export default function QnAPanel() {
             });
 
             const chapterMatch = decodeURIComponent(pathname).match(/\/chapter\/(.+)/);
-            supabase.from('qna_logs').insert({
-                chapter_id: chapterMatch ? chapterMatch[1] : null,
-                question: userMsg,
-                answer: accumulatedText,
-            }).then(() => { });
+            fetch('/api/qna-logs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chapter_id: chapterMatch ? chapterMatch[1] : null,
+                    question: userMsg,
+                    answer: accumulatedText,
+                }),
+            }).catch(() => { });
         } catch (error: unknown) {
             const errMsg = error instanceof Error ? error.message : String(error);
             console.error(error);

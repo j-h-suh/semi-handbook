@@ -1,0 +1,31 @@
+# 빌드 컨텍스트에서 제외 (이미지/전송 비대 방지)
+
+node_modules
+.next
+out
+build
+
+# 117MB 참고 PDF 모음 — 앱이 안 읽음
+next/
+
+# 비밀값/자격증명
+secrets/
+.env*
+!.env.example
+
+# git — 기본 제외(챕터 이력 비워짐). 이력 표시하려면 이 줄을 지우고
+# Dockerfile builder 에 git 설치할 것.
+.git
+.gitignore
+
+# QnA 참조용 대용량 소스 / 파이썬 학습 프로젝트 잔여물 (gitignore 와 동일)
+content/claude_code/code_repository/
+content/claude_code/mini_claude/.venv/
+**/__pycache__/
+
+# 기타
+.DS_Store
+npm-debug.log*
+*.tsbuildinfo
+.vscode
+.idea

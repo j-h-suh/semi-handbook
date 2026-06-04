@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { supabase, type Post, type Comment } from '@/lib/supabase';
+import { type Post, type Comment } from '@/lib/board-types';
 import { MessageSquarePlus, X, Send, Clock, Tag, Pencil, Trash2, MessageCircle, CheckCircle2 } from 'lucide-react';
 
 const CATEGORIES = ['전체', '질문', '수정요청', '자유'] as const;
@@ -9,12 +9,9 @@ const WRITE_CATEGORIES = ['질문', '수정요청', '자유'] as const;
 const BOOKS = ['전체', '반도체', '통계학', 'Claude Code', '공통'] as const;
 const WRITE_BOOKS = ['반도체', '통계학', 'Claude Code', '공통'] as const;
 
-// Simple SHA-256 hash
-async function hashPassword(pw: string): Promise<string> {
-    const data = new TextEncoder().encode(pw);
-    const buf = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
+// 비밀번호는 서버에서 검증/해시한다 — 클라이언트는 평문을 그대로 API 로 보낸다.
 
 export default function BoardClient() {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -53,79 +50,65 @@ export default function BoardClient() {
     const [commentPwError, setCommentPwError] = useState('');
     const [editingComment, setEditingComment] = useState<Comment | null>(null);
     const [editCommentContent, setEditCommentContent] = useState('');
+    const [editCommentPassword, setEditCommentPassword] = useState('');
 
     const fetchPosts = useCallback(async () => {
         setLoading(true);
-        let query = supabase.from('posts').select('*').order('created_at', { ascending: false });
-        if (activeCategory !== '전체') {
-            query = query.eq('category', activeCategory);
-        }
-        if (activeBook !== '전체') {
-            query = query.eq('book', activeBook);
-        }
-        const { data } = await query;
-        setPosts(data ?? []);
-
-        // Fetch category counts (always from all posts)
-        const { data: allPosts } = await supabase.from('posts').select('category');
-        const catMap: Record<string, number> = {};
-        let total = 0;
-        (allPosts ?? []).forEach((p: { category: string }) => {
-            catMap[p.category] = (catMap[p.category] || 0) + 1;
-            total++;
-        });
-        catMap['전체'] = total;
-        setCategoryCounts(catMap);
-
-        // Fetch comment counts
-        if (data && data.length > 0) {
-            const ids = data.map((p: Post) => p.id);
-            const { data: counts } = await supabase
-                .from('comments')
-                .select('post_id')
-                .in('post_id', ids);
-            const countMap: Record<number, number> = {};
-            (counts ?? []).forEach((c: { post_id: number }) => {
-                countMap[c.post_id] = (countMap[c.post_id] || 0) + 1;
-            });
-            setCommentCounts(countMap);
-        }
+        const qs = new URLSearchParams();
+        if (activeCategory !== '전체') qs.set('category', activeCategory);
+        if (activeBook !== '전체') qs.set('book', activeBook);
+        const res = await fetch(`/api/board/posts?${qs.toString()}`);
+        const data = await res.json();
+        setPosts(data.posts ?? []);
+        setCategoryCounts(data.categoryCounts ?? {});
+        setCommentCounts(data.commentCounts ?? {});
         setLoading(false);
     }, [activeCategory, activeBook]);
 
     useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
+    const refetchComments = async (postId: number) => {
+        const d = await (await fetch(`/api/board/comments?post_id=${postId}`)).json();
+        setComments(d.comments ?? []);
+    };
+
     // Fetch comments when a post is selected
     useEffect(() => {
         if (!selectedPost) { setComments([]); return; }
-        supabase.from('comments').select('*').eq('post_id', selectedPost.id).order('created_at', { ascending: true })
-            .then(({ data }) => setComments(data ?? []));
+        fetch(`/api/board/comments?post_id=${selectedPost.id}`)
+            .then(r => r.json())
+            .then(d => setComments(d.comments ?? []));
     }, [selectedPost]);
 
     const handleSubmit = async () => {
-        if (!form.title.trim() || !form.content.trim() || !form.password.trim()) return;
+        if (!form.title.trim() || !form.content.trim() || (!editingPost && !form.password.trim())) return;
         setSubmitting(true);
-        const pw_hash = await hashPassword(form.password);
 
         if (editingPost) {
-            // Update existing post
-            await supabase.from('posts').update({
-                nickname: form.nickname.trim() || '익명',
-                category: form.category,
-                book: form.book,
-                title: form.title.trim(),
-                content: form.content.trim(),
-            }).eq('id', editingPost.id).eq('password_hash', pw_hash);
+            await fetch(`/api/board/posts/${editingPost.id}`, {
+                method: 'PATCH',
+                headers: JSON_HEADERS,
+                body: JSON.stringify({
+                    password: form.password,
+                    nickname: form.nickname.trim() || '익명',
+                    category: form.category,
+                    book: form.book,
+                    title: form.title.trim(),
+                    content: form.content.trim(),
+                }),
+            });
         } else {
-            // Insert new post
-            await supabase.from('posts').insert({
-                nickname: form.nickname.trim() || '익명',
-                category: form.category,
-                book: form.book,
-                title: form.title.trim(),
-                content: form.content.trim(),
-                password_hash: pw_hash,
-                status: (form.category === '질문' || form.category === '수정요청') ? '대기' : null,
+            await fetch('/api/board/posts', {
+                method: 'POST',
+                headers: JSON_HEADERS,
+                body: JSON.stringify({
+                    nickname: form.nickname.trim() || '익명',
+                    category: form.category,
+                    book: form.book,
+                    title: form.title.trim(),
+                    content: form.content.trim(),
+                    password: form.password,
+                }),
             });
         }
         setForm({ nickname: '', category: '자유', book: '반도체', title: '', content: '', password: '' });
@@ -137,19 +120,24 @@ export default function BoardClient() {
 
     const handlePasswordAction = async () => {
         if (!pwPrompt || !pwInput.trim()) return;
-        const pw_hash = await hashPassword(pwInput);
-
-        if (pw_hash !== pwPrompt.post.password_hash) {
-            setPwError('비밀번호가 일치하지 않습니다.');
-            return;
-        }
 
         if (pwPrompt.action === 'delete') {
-            await supabase.from('posts').delete().eq('id', pwPrompt.post.id).eq('password_hash', pw_hash);
+            const res = await fetch(`/api/board/posts/${pwPrompt.post.id}`, {
+                method: 'DELETE',
+                headers: JSON_HEADERS,
+                body: JSON.stringify({ password: pwInput }),
+            });
+            if (!res.ok) { setPwError('비밀번호가 일치하지 않습니다.'); return; }
             setSelectedPost(null);
             fetchPosts();
         } else {
-            // Open edit form
+            const res = await fetch('/api/board/verify', {
+                method: 'POST',
+                headers: JSON_HEADERS,
+                body: JSON.stringify({ kind: 'post', id: pwPrompt.post.id, password: pwInput }),
+            });
+            if (!res.ok) { setPwError('비밀번호가 일치하지 않습니다.'); return; }
+            // Open edit form (저장 시 PATCH 로 비번 재검증됨)
             setForm({
                 nickname: pwPrompt.post.nickname,
                 category: pwPrompt.post.category,
@@ -171,49 +159,63 @@ export default function BoardClient() {
         if (!selectedPost || !commentForm.content.trim() || !commentForm.password.trim() || commentGuard.current) return;
         commentGuard.current = true;
         setCommentSubmitting(true);
-        const pw_hash = await hashPassword(commentForm.password);
-        await supabase.from('comments').insert({
-            post_id: selectedPost.id,
-            nickname: commentForm.nickname.trim() || '익명',
-            content: commentForm.content.trim(),
-            password_hash: pw_hash,
+        await fetch('/api/board/comments', {
+            method: 'POST',
+            headers: JSON_HEADERS,
+            body: JSON.stringify({
+                post_id: selectedPost.id,
+                nickname: commentForm.nickname.trim() || '익명',
+                content: commentForm.content.trim(),
+                password: commentForm.password,
+            }),
         });
         setCommentForm({ nickname: '', content: '', password: '' });
-        const { data } = await supabase.from('comments').select('*').eq('post_id', selectedPost.id).order('created_at', { ascending: true });
-        setComments(data ?? []);
+        await refetchComments(selectedPost.id);
         setCommentSubmitting(false);
         commentGuard.current = false;
     };
 
     const handleCommentPwAction = async () => {
         if (!commentPwPrompt || !commentPwInput.trim()) return;
-        const pw_hash = await hashPassword(commentPwInput);
-        if (pw_hash !== commentPwPrompt.comment.password_hash) {
-            setCommentPwError('비밀번호가 일치하지 않습니다.');
-            return;
-        }
-        if (commentPwPrompt.action === 'delete') {
-            await supabase.from('comments').delete().eq('id', commentPwPrompt.comment.id);
+        const isDelete = commentPwPrompt.action === 'delete';
+
+        if (isDelete) {
+            const res = await fetch(`/api/board/comments/${commentPwPrompt.comment.id}`, {
+                method: 'DELETE',
+                headers: JSON_HEADERS,
+                body: JSON.stringify({ password: commentPwInput }),
+            });
+            if (!res.ok) { setCommentPwError('비밀번호가 일치하지 않습니다.'); return; }
         } else {
+            const res = await fetch('/api/board/verify', {
+                method: 'POST',
+                headers: JSON_HEADERS,
+                body: JSON.stringify({ kind: 'comment', id: commentPwPrompt.comment.id, password: commentPwInput }),
+            });
+            if (!res.ok) { setCommentPwError('비밀번호가 일치하지 않습니다.'); return; }
             setEditingComment(commentPwPrompt.comment);
             setEditCommentContent(commentPwPrompt.comment.content);
+            setEditCommentPassword(commentPwInput);
         }
         setCommentPwPrompt(null);
         setCommentPwInput('');
         setCommentPwError('');
-        if (commentPwPrompt.action === 'delete' && selectedPost) {
-            const { data } = await supabase.from('comments').select('*').eq('post_id', selectedPost.id).order('created_at', { ascending: true });
-            setComments(data ?? []);
+        if (isDelete && selectedPost) {
+            await refetchComments(selectedPost.id);
         }
     };
 
     const handleCommentEditSave = async () => {
         if (!editingComment || !editCommentContent.trim() || !selectedPost) return;
-        await supabase.from('comments').update({ content: editCommentContent.trim() }).eq('id', editingComment.id);
+        await fetch(`/api/board/comments/${editingComment.id}`, {
+            method: 'PATCH',
+            headers: JSON_HEADERS,
+            body: JSON.stringify({ password: editCommentPassword, content: editCommentContent.trim() }),
+        });
         setEditingComment(null);
         setEditCommentContent('');
-        const { data } = await supabase.from('comments').select('*').eq('post_id', selectedPost.id).order('created_at', { ascending: true });
-        setComments(data ?? []);
+        setEditCommentPassword('');
+        await refetchComments(selectedPost.id);
     };
 
     const formatDate = (iso: string) => {
