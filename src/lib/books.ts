@@ -70,7 +70,7 @@ export const BOOKS: BookMeta[] = [
     fullLabel: 'Agent SDK 핸드북',
     subtitle: '만드는 법은 안다, 이제 굴린다',
     description: 'Claude Agent SDK로 에이전트 앱을 빈 스크립트에서 프로덕션까지',
-    landingHref: '/agent_sdk/00_1_왜_롤백인가',
+    landingHref: '/agent_sdk/00_1_들어가며',
     route: '/agent_sdk',
     iconKey: 'terminal',
     accent: 'green',
