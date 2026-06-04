@@ -1,0 +1,9 @@
+# Terraform 상태/캐시 — 절대 커밋 금지 (시크릿 포함될 수 있음)
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# 실제 변수 값 (시크릿 포함) — 예시 파일만 커밋
+*.tfvars
+!*.tfvars.example

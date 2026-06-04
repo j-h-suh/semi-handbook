@@ -1,0 +1,28 @@
+# 복사해서 terraform.tfvars 로 채울 것 (terraform.tfvars 는 gitignore 됨).
+project_id      = "your-gcp-project-id"
+region          = "asia-northeast3"
+image           = "asia-northeast3-docker.pkg.dev/your-gcp-project-id/handbook/semi-handbook:v1"
+entra_client_id = "<entra-application-client-id>"
+entra_issuer    = "https://login.microsoftonline.com/<tenant-id>/v2.0"
+min_instances   = 0 # 콜드스타트 없애려면 1
+
+# Bedrock(Claude 챗봇) — region/모델은 기본값 있음. 다르면 덮어쓰기:
+# aws_region   = "ap-northeast-2"
+# gemini_model = "gemini-3.5-flash"
+
+# ─── Cloud SQL (게시판/Q&A 로그) — 기본 off. 공용 DB 준비되면 켜기 ───
+# enable_cloudsql                   = true
+# cloudsql_instance_connection_name = "data-project:asia-northeast3:handbook-pg"
+# cloudsql_project                  = "data-project"   # 크로스 프로젝트면 데이터 프로젝트 ID
+# database_url 은 시크릿 — 아래 방법 A 로 gcloud 주입 권장:
+#   postgres://handbook:<pw>@/handbook?host=/cloudsql/data-project:asia-northeast3:handbook-pg
+
+# ─── 시크릿 ───
+# 방법 A (권장): 아래를 비운 채 두고, 값은 gcloud 로 직접 버전 추가 (상태에 평문 안 남김):
+#   echo -n "<AUTH_SECRET>"    | gcloud secrets versions add semi-handbook-auth-secret    --data-file=- --project <proj>
+#   echo -n "<ENTRA_SECRET>"   | gcloud secrets versions add semi-handbook-entra-secret   --data-file=- --project <proj>
+#   echo -n "<BEDROCK_TOKEN>"  | gcloud secrets versions add semi-handbook-bedrock-token  --data-file=- --project <proj>
+# 방법 B: GCS 백엔드+접근제한 상태에서만 — gitignore 된 secrets.auto.tfvars 에 넣기:
+#   auth_secret          = "..."
+#   entra_client_secret  = "..."
+#   bedrock_bearer_token = "..."
