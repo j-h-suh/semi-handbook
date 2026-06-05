@@ -2,9 +2,15 @@ terraform {
   required_version = ">= 1.5"
 
   required_providers {
+    # Cloud Run 직접 IAP(iap_enabled)는 google provider 7.x 부터 지원
     google = {
       source  = "hashicorp/google"
-      version = "~> 6.0"
+      version = "~> 7.0"
+    }
+    # google_project_service_identity (IAP 서비스 에이전트 선생성) 용
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 7.0"
     }
   }
 
@@ -17,6 +23,11 @@ terraform {
 }
 
 provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+provider "google-beta" {
   project = var.project_id
   region  = var.region
 }

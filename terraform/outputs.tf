@@ -1,6 +1,6 @@
 output "service_url" {
   value       = google_cloud_run_v2_service.handbook.uri
-  description = "Cloud Run 서비스 URL — 이 도메인의 /api/auth/callback/microsoft-entra-id 를 Entra Redirect URI 에 추가할 것"
+  description = "Cloud Run 서비스 URL — IAP 게이트 뒤. iap_members 에 든 주체만 접근 가능"
 }
 
 output "runtime_service_account" {

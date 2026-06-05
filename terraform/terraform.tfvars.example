@@ -1,10 +1,14 @@
 # 복사해서 terraform.tfvars 로 채울 것 (terraform.tfvars 는 gitignore 됨).
-project_id      = "your-gcp-project-id"
-region          = "asia-northeast3"
-image           = "asia-northeast3-docker.pkg.dev/your-gcp-project-id/handbook/semi-handbook:v1"
-entra_client_id = "<entra-application-client-id>"
-entra_issuer    = "https://login.microsoftonline.com/<tenant-id>/v2.0"
-min_instances   = 0 # 콜드스타트 없애려면 1
+project_id    = "your-gcp-project-id"
+region        = "asia-northeast3"
+image         = "asia-northeast3-docker.pkg.dev/your-gcp-project-id/handbook/semi-handbook:v1"
+min_instances = 0 # 콜드스타트 없애려면 1
+
+# ─── IAP 게이트 (전사 접근 제어) ───
+# IAP 접근 허용 주체 (Google 신원 기준). 전사 허용 예:
+iap_members = ["domain:semiai.ai"]
+# 그룹/개별로 좁히려면:
+# iap_members = ["group:handbook-users@semiai.ai", "user:alice@semiai.ai"]
 
 # Bedrock(Claude 챗봇) — region/모델은 기본값 있음. 다르면 덮어쓰기:
 # aws_region   = "ap-northeast-2"
@@ -19,10 +23,6 @@ min_instances   = 0 # 콜드스타트 없애려면 1
 
 # ─── 시크릿 ───
 # 방법 A (권장): 아래를 비운 채 두고, 값은 gcloud 로 직접 버전 추가 (상태에 평문 안 남김):
-#   echo -n "<AUTH_SECRET>"    | gcloud secrets versions add semi-handbook-auth-secret    --data-file=- --project <proj>
-#   echo -n "<ENTRA_SECRET>"   | gcloud secrets versions add semi-handbook-entra-secret   --data-file=- --project <proj>
 #   echo -n "<BEDROCK_TOKEN>"  | gcloud secrets versions add semi-handbook-bedrock-token  --data-file=- --project <proj>
 # 방법 B: GCS 백엔드+접근제한 상태에서만 — gitignore 된 secrets.auto.tfvars 에 넣기:
-#   auth_secret          = "..."
-#   entra_client_secret  = "..."
 #   bedrock_bearer_token = "..."

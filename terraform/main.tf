@@ -6,6 +6,7 @@ locals {
     "secretmanager.googleapis.com",
     "aiplatform.googleapis.com",
     "cloudbuild.googleapis.com",
+    "iap.googleapis.com", # 전사 게이트 (Cloud Run 직접 IAP)
   ]
 }
 
@@ -13,6 +14,17 @@ resource "google_project_service" "enabled" {
   for_each           = toset(local.apis)
   service            = each.value
   disable_on_destroy = false
+}
+
+# 프로젝트 번호 (IAP 서비스 에이전트 이메일 구성에 필요)
+data "google_project" "this" {}
+
+# IAP 서비스 에이전트 (service-<num>@gcp-sa-iap...) 를 미리 생성 — 첫 apply 의
+# run.invoker 부여 경합을 막는다. (자동 생성되지만 타이밍 보장용)
+resource "google_project_service_identity" "iap" {
+  provider   = google-beta
+  service    = "iap.googleapis.com"
+  depends_on = [google_project_service.enabled]
 }
 
 # ─── Artifact Registry (이미지 저장소) ───
@@ -37,47 +49,6 @@ resource "google_project_iam_member" "vertex_user" {
 }
 
 # ─── Secret Manager ───
-resource "google_secret_manager_secret" "auth_secret" {
-  secret_id = "${var.service_name}-auth-secret"
-  replication {
-    auto {}
-  }
-  depends_on = [google_project_service.enabled]
-}
-
-resource "google_secret_manager_secret_version" "auth_secret" {
-  count       = var.auth_secret == "" ? 0 : 1
-  secret      = google_secret_manager_secret.auth_secret.id
-  secret_data = var.auth_secret
-}
-
-resource "google_secret_manager_secret" "entra_secret" {
-  secret_id = "${var.service_name}-entra-secret"
-  replication {
-    auto {}
-  }
-  depends_on = [google_project_service.enabled]
-}
-
-resource "google_secret_manager_secret_version" "entra_secret" {
-  count       = var.entra_client_secret == "" ? 0 : 1
-  secret      = google_secret_manager_secret.entra_secret.id
-  secret_data = var.entra_client_secret
-}
-
-# 런타임 SA 에 시크릿 읽기 권한
-resource "google_secret_manager_secret_iam_member" "auth_secret_access" {
-  secret_id = google_secret_manager_secret.auth_secret.id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.run.email}"
-}
-
-resource "google_secret_manager_secret_iam_member" "entra_secret_access" {
-  secret_id = google_secret_manager_secret.entra_secret.id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.run.email}"
-}
-
 # Bedrock 토큰 (Claude 챗봇) — GCP 에서 AWS 는 keyless 불가라 시크릿으로 주입
 resource "google_secret_manager_secret" "bedrock_token" {
   secret_id = "${var.service_name}-bedrock-token"
@@ -101,7 +72,7 @@ resource "google_secret_manager_secret_iam_member" "bedrock_token_access" {
 
 # ─── Cloud SQL 연결 (게시판/Q&A 로그) — 기본 off ───
 # 공용 DB(크로스 프로젝트 가능)가 준비되면 enable_cloudsql=true + connection name/project 채우고 apply.
-# 커넥터(소켓) 방식이라 VPC 불필요 — 인터넷 API(Bedrock/Vertex/Entra) egress 와 충돌 없음.
+# 커넥터(소켓) 방식이라 VPC 불필요 — 인터넷 API(Bedrock/Vertex) egress 와 충돌 없음.
 resource "google_project_service" "sqladmin" {
   count              = var.enable_cloudsql ? 1 : 0
   service            = "sqladmin.googleapis.com"
@@ -139,11 +110,12 @@ resource "google_secret_manager_secret_iam_member" "database_url_access" {
   member    = "serviceAccount:${google_service_account.run.email}"
 }
 
-# ─── Cloud Run 서비스 ───
+# ─── Cloud Run 서비스 (전사 게이트는 IAP 가 담당) ───
 resource "google_cloud_run_v2_service" "handbook" {
-  name     = var.service_name
-  location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL"
+  name        = var.service_name
+  location    = var.region
+  ingress     = "INGRESS_TRAFFIC_ALL"
+  iap_enabled = true # 모든 요청은 IAP 인증을 통과해야 함
 
   template {
     service_account = google_service_account.run.email
@@ -173,14 +145,6 @@ resource "google_cloud_run_v2_service" "handbook" {
 
       # 비-시크릿 env
       env {
-        name  = "AUTH_MICROSOFT_ENTRA_ID_ID"
-        value = var.entra_client_id
-      }
-      env {
-        name  = "AUTH_MICROSOFT_ENTRA_ID_ISSUER"
-        value = var.entra_issuer
-      }
-      env {
         name  = "GOOGLE_CLOUD_PROJECT"
         value = var.project_id
       }
@@ -207,24 +171,6 @@ resource "google_cloud_run_v2_service" "handbook" {
       }
 
       # 시크릿 env (Secret Manager 참조)
-      env {
-        name = "AUTH_SECRET"
-        value_source {
-          secret_key_ref {
-            secret  = google_secret_manager_secret.auth_secret.secret_id
-            version = "latest"
-          }
-        }
-      }
-      env {
-        name = "AUTH_MICROSOFT_ENTRA_ID_SECRET"
-        value_source {
-          secret_key_ref {
-            secret  = google_secret_manager_secret.entra_secret.secret_id
-            version = "latest"
-          }
-        }
-      }
       env {
         name = "AWS_BEARER_TOKEN_BEDROCK"
         value_source {
@@ -259,21 +205,34 @@ resource "google_cloud_run_v2_service" "handbook" {
   }
 
   depends_on = [
-    google_secret_manager_secret_iam_member.auth_secret_access,
-    google_secret_manager_secret_iam_member.entra_secret_access,
     google_secret_manager_secret_iam_member.bedrock_token_access,
     google_secret_manager_secret_iam_member.database_url_access,
     google_project_service.enabled,
   ]
 }
 
-# ─── 공개 ingress (인증은 앱 내 Entra SSO 가 담당) ───
-# ⚠️ 조직 정책 'domain restricted sharing' 이 켜져 있으면 allUsers 바인딩이 거부될 수 있음.
-#    그 경우 IAP 대신 정책 예외 또는 내부 LB 경로를 IT 와 협의.
-resource "google_cloud_run_v2_service_iam_member" "public" {
-  count    = var.allow_unauthenticated ? 1 : 0
+# ─── IAP 게이트 ───
+# allUsers 바인딩이 없으므로 'domain restricted sharing' 조직 정책과 충돌하지 않는다.
+# 1) IAP 서비스 에이전트가 Cloud Run 을 호출(invoke)하도록 run.invoker 부여
+resource "google_cloud_run_v2_service_iam_member" "iap_invoker" {
+  project  = google_cloud_run_v2_service.handbook.project
   location = google_cloud_run_v2_service.handbook.location
   name     = google_cloud_run_v2_service.handbook.name
   role     = "roles/run.invoker"
-  member   = "allUsers"
+  member   = "serviceAccount:service-${data.google_project.this.number}@gcp-sa-iap.iam.gserviceaccount.com"
+
+  depends_on = [google_project_service_identity.iap]
+}
+
+# 2) 실제 접근 주체(전사 도메인 또는 그룹)에게 IAP 접근 권한 부여.
+#    member 는 Google 신원 기준 — domain:<workspace 도메인> 또는 group:<그룹 메일>.
+resource "google_iap_web_cloud_run_service_iam_member" "members" {
+  for_each               = toset(var.iap_members)
+  project                = google_cloud_run_v2_service.handbook.project
+  location               = google_cloud_run_v2_service.handbook.location
+  cloud_run_service_name = google_cloud_run_v2_service.handbook.name
+  role                   = "roles/iap.httpsResourceAccessor"
+  member                 = each.value
+
+  depends_on = [google_project_service.enabled]
 }

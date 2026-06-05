@@ -31,23 +31,18 @@ variable "max_instances" {
   default = 4
 }
 
-variable "allow_unauthenticated" {
-  type        = bool
-  description = "공개 ingress (인증은 앱 내 Entra SSO 가 담당). 전사 SSO 면 true."
-  default     = true
+# ─── IAP 게이트 (전사 접근 제어) ───
+# IAP 접근을 허용할 주체 목록. Google 신원 기준이다.
+#   - 전사 허용: ["domain:<workspace 도메인>"]   예) ["domain:semiai.ai"]
+#   - 그룹 제한: ["group:handbook-users@semiai.ai"]
+#   - 개별 사용자: ["user:alice@semiai.ai"]
+# ⚠️ domain restricted sharing 이 켜져 있어도, 자사 도메인/그룹은 정책상 허용된다.
+variable "iap_members" {
+  type        = list(string)
+  description = "roles/iap.httpsResourceAccessor 를 부여할 주체 (domain:/group:/user:)"
 }
 
 # ─── 비-시크릿 런타임 env ───
-variable "entra_client_id" {
-  type        = string
-  description = "AUTH_MICROSOFT_ENTRA_ID_ID"
-}
-
-variable "entra_issuer" {
-  type        = string
-  description = "AUTH_MICROSOFT_ENTRA_ID_ISSUER (https://login.microsoftonline.com/<tenant>/v2.0)"
-}
-
 variable "cloud_ml_region" {
   type    = string
   default = "global"
@@ -80,20 +75,6 @@ variable "haiku_model" {
 # ⚠️ 값을 tfvars 로 넣으면 Terraform 상태에 평문 저장됨.
 #    - 권장 A: 값은 gcloud 로 직접 버전 추가하고, 여기선 비워둠("") → 아래 secret_version 은 생성 스킵.
 #    - 권장 B: GCS 백엔드 + 접근 제한 상태에서 sensitive 변수로 주입(gitignore 된 secrets.auto.tfvars).
-variable "auth_secret" {
-  type        = string
-  description = "AUTH_SECRET"
-  sensitive   = true
-  default     = ""
-}
-
-variable "entra_client_secret" {
-  type        = string
-  description = "AUTH_MICROSOFT_ENTRA_ID_SECRET"
-  sensitive   = true
-  default     = ""
-}
-
 variable "bedrock_bearer_token" {
   type        = string
   description = "AWS_BEARER_TOKEN_BEDROCK (Bedrock API key)"
