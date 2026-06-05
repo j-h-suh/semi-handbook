@@ -12,6 +12,11 @@ terraform {
       source  = "hashicorp/google-beta"
       version = "~> 7.0"
     }
+    # Cloud SQL DB 유저 비밀번호 생성용
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
   }
 
   # 상태를 팀과 공유하려면 GCS 백엔드 권장.

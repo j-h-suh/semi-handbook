@@ -82,28 +82,37 @@ variable "bedrock_bearer_token" {
   default     = ""
 }
 
-# ─── Cloud SQL (게시판/Q&A 로그) — 기본 off, 공용 DB 준비되면 켜기 ───
+# ─── Cloud SQL (게시판/Q&A 로그) — 이 프로젝트 전용 인스턴스, 기본 off ───
 variable "enable_cloudsql" {
   type        = bool
-  description = "공용 Cloud SQL 연결 활성화. true 면 connection name·project 필요."
+  description = "이 프로젝트에 Postgres 인스턴스를 생성하고 Cloud Run 에 연결. true 면 상시 비용 발생."
   default     = false
 }
 
-variable "cloudsql_instance_connection_name" {
+variable "cloudsql_tier" {
   type        = string
-  description = "크로스 프로젝트 가능 — 'dataProject:region:instance'"
-  default     = ""
+  description = "Cloud SQL 머신 타입 (db-f1-micro=최소·공유코어, db-g1-small=조금 여유)"
+  default     = "db-f1-micro"
 }
 
-variable "cloudsql_project" {
-  type        = string
-  description = "Cloud SQL 이 있는 프로젝트 ID (cloudsql.client IAM 부여 대상; 크로스 프로젝트면 데이터 프로젝트)"
-  default     = ""
+variable "cloudsql_disk_size" {
+  type        = number
+  description = "데이터 디스크 크기(GB). 자동 증가(disk_autoresize) 켜짐."
+  default     = 10
 }
 
-variable "database_url" {
-  type        = string
-  description = "DATABASE_URL (소켓: postgres://u:p@/db?host=/cloudsql/<conn>). 비우면 gcloud 로 직접 버전 추가."
-  sensitive   = true
-  default     = ""
+variable "cloudsql_db_name" {
+  type    = string
+  default = "handbook"
+}
+
+variable "cloudsql_db_user" {
+  type    = string
+  default = "handbook"
+}
+
+variable "cloudsql_deletion_protection" {
+  type        = bool
+  description = "true 면 terraform destroy 로 인스턴스가 지워지지 않음(실수 방지)."
+  default     = true
 }

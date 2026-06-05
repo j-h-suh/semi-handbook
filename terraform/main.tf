@@ -70,24 +70,71 @@ resource "google_secret_manager_secret_iam_member" "bedrock_token_access" {
   member    = "serviceAccount:${google_service_account.run.email}"
 }
 
-# ─── Cloud SQL 연결 (게시판/Q&A 로그) — 기본 off ───
-# 공용 DB(크로스 프로젝트 가능)가 준비되면 enable_cloudsql=true + connection name/project 채우고 apply.
-# 커넥터(소켓) 방식이라 VPC 불필요 — 인터넷 API(Bedrock/Vertex) egress 와 충돌 없음.
+# ─── Cloud SQL (게시판/Q&A 로그) — 이 프로젝트 전용 인스턴스 ───
+# enable_cloudsql=true 면 Terraform 이 *이 프로젝트에* Postgres 인스턴스·DB·유저를 만들고
+# Cloud Run 에 소켓으로 연결. 기본 off
 resource "google_project_service" "sqladmin" {
   count              = var.enable_cloudsql ? 1 : 0
   service            = "sqladmin.googleapis.com"
   disable_on_destroy = false
 }
 
-# 크로스 프로젝트: 런타임 SA 에 Cloud SQL 이 있는 프로젝트의 cloudsql.client 부여
-# (TF 주체가 그 프로젝트 IAM admin 이 아니면 데이터 프로젝트 소유자가 대신 부여)
+resource "google_sql_database_instance" "handbook" {
+  count               = var.enable_cloudsql ? 1 : 0
+  name                = "${var.service_name}-pg"
+  region              = var.region
+  database_version    = "POSTGRES_16"
+  deletion_protection = var.cloudsql_deletion_protection
+
+  settings {
+    tier              = var.cloudsql_tier
+    availability_type = "ZONAL"
+    disk_size         = var.cloudsql_disk_size
+    disk_autoresize   = true
+
+    # 공인 IP 만 활성화하되 authorized_networks 는 비움 → 인터넷 직접 접속 불가.
+    # Cloud Run 네이티브 커넥터(Cloud SQL Auth Proxy)가 IAM 인증으로 붙으므로 VPC 불필요.
+    ip_configuration {
+      ipv4_enabled = true
+    }
+
+    backup_configuration {
+      enabled = true
+    }
+  }
+
+  depends_on = [google_project_service.sqladmin]
+}
+
+resource "google_sql_database" "handbook" {
+  count    = var.enable_cloudsql ? 1 : 0
+  name     = var.cloudsql_db_name
+  instance = google_sql_database_instance.handbook[0].name
+}
+
+# DB 유저 비밀번호는 Terraform 이 생성 → DATABASE_URL 시크릿에만 박힌다(수동 관리 X).
+resource "random_password" "db" {
+  count   = var.enable_cloudsql ? 1 : 0
+  length  = 32
+  special = false # 소켓 URL 인코딩 이슈 회피
+}
+
+resource "google_sql_user" "handbook" {
+  count    = var.enable_cloudsql ? 1 : 0
+  name     = var.cloudsql_db_user
+  instance = google_sql_database_instance.handbook[0].name
+  password = random_password.db[0].result
+}
+
+# 런타임 SA 에 Cloud SQL 접속 권한 (이 프로젝트)
 resource "google_project_iam_member" "cloudsql_client" {
   count   = var.enable_cloudsql ? 1 : 0
-  project = var.cloudsql_project
+  project = var.project_id
   role    = "roles/cloudsql.client"
   member  = "serviceAccount:${google_service_account.run.email}"
 }
 
+# DATABASE_URL (소켓 형식) — Terraform 이 인스턴스 connection_name 으로 조립해 시크릿에 저장
 resource "google_secret_manager_secret" "database_url" {
   count     = var.enable_cloudsql ? 1 : 0
   secret_id = "${var.service_name}-database-url"
@@ -98,9 +145,9 @@ resource "google_secret_manager_secret" "database_url" {
 }
 
 resource "google_secret_manager_secret_version" "database_url" {
-  count       = var.enable_cloudsql && var.database_url != "" ? 1 : 0
+  count       = var.enable_cloudsql ? 1 : 0
   secret      = google_secret_manager_secret.database_url[0].id
-  secret_data = var.database_url
+  secret_data = "postgres://${var.cloudsql_db_user}:${random_password.db[0].result}@/${var.cloudsql_db_name}?host=/cloudsql/${google_sql_database_instance.handbook[0].connection_name}"
 }
 
 resource "google_secret_manager_secret_iam_member" "database_url_access" {
@@ -131,7 +178,7 @@ resource "google_cloud_run_v2_service" "handbook" {
       content {
         name = "cloudsql"
         cloud_sql_instance {
-          instances = [var.cloudsql_instance_connection_name]
+          instances = [google_sql_database_instance.handbook[0].connection_name]
         }
       }
     }
